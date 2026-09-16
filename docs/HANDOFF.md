@@ -22,7 +22,11 @@
 
 ### Vérifié
 - Tests JVM locaux : 32 OK (dont Check-lists, plan de câble, DDB synthétique + **échantillon réel DDB** : 36 559 fiches, 1 771 planeurs F-C, 355 non suivis).
-- CI : build + lint + APK verts sur 942a8f1. Captures émulateur : voir ci-dessous.
+- CI verte sur c301cb1 : tests, lint, APK, 10 captures émulateur (Pixel 6 / API 34) : avertissement, Prévol, appairage, météo, Check-lists (dont cases cochées), Pilotage (normal, profil réduit, vario replié).
+- Appairage réel en CI : **F-CPHI → FLARM ID 004839 · Duo Discus** (base OGN téléchargée par l'émulateur).
+- Émulateur CI : avec `-gpu swiftshader_indirect`, l'émulateur tombait à l'ouverture de Pilotage (hôte, pas l'app : aucun crash applicatif au logcat).
+  Passé en `-gpu swangle_indirect`, captures bornées par des `timeout`, trace et logcat continus publiés dans `ci-data/screens`.
+- Livrables : `Planneur APP/Session 2/glidy-v0.2-debug.apk` et `Session 2/captures/` (Session 1 intacte).
 
 ### Limites / à faire
 - Pilotage toujours sur signal de démonstration (carte S3, capteurs S5, sécurité réelle S6).
