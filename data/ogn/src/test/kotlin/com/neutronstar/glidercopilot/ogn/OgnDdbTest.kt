@@ -64,3 +64,20 @@ class OgnDdbTest {
         assertTrue(none is PairingLookup.Unavailable)
     }
 }
+
+/** Échantillon réel de la DDB OGN (planeurs F-C, enregistré par la CI le 16/09/2026). */
+class RealDdbTest {
+    private val list = DdbParser.parse(javaClass.classLoader!!.getResource("real_ddb_fc_sample_20260916.json")!!.readText())
+
+    @Test fun parsesRealSample() {
+        assertEquals(400, list.size)
+        assertTrue(list.all { it.registration.startsWith("F-C") })
+    }
+
+    @Test fun findsRealGlider() {
+        val hit = DdbParser.find(list, "f-cphi").first()
+        assertEquals("004839", hit.deviceId)
+        assertEquals("Duo Discus", hit.aircraftModel)
+        assertEquals("FLARM", hit.deviceTypeLabel)
+    }
+}

@@ -1,0 +1,4004 @@
+{
+"devices": [
+{
+"device_type": "F",
+"device_id": "002858",
+"aircraft_model": "DG-500",
+"registration": "F-CMAE",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "004839",
+"aircraft_model": "Duo Discus",
+"registration": "F-CPHI",
+"cn": "A2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "014443",
+"aircraft_model": "ASW-27",
+"registration": "F-CJJC",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "086542",
+"aircraft_model": "Alliance 34",
+"registration": "F-CJBB",
+"cn": "BB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "108279",
+"aircraft_model": "LS-8 18",
+"registration": "F-CKLH",
+"cn": "JB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "1C68B0",
+"aircraft_model": "DG-1000 T",
+"registration": "F-CFEH",
+"cn": "D10",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "219E8E",
+"aircraft_model": "LS-1 f",
+"registration": "F-CEKV",
+"cn": "L72",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "2CDBC9",
+"aircraft_model": "LS-6 18",
+"registration": "F-CGUJ",
+"cn": "SJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "34E935",
+"aircraft_model": "PIK-16 Vasama",
+"registration": "F-CCPS",
+"cn": "CPS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "380968",
+"aircraft_model": "Balloon",
+"registration": "F-CNES",
+"cn": "NES",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 6
+},
+{
+"device_type": "F",
+"device_id": "38295B",
+"aircraft_model": "Ventus 2",
+"registration": "F-CIJN",
+"cn": "EP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3838BB",
+"aircraft_model": "LS-6",
+"registration": "F-CGUE",
+"cn": "ZEN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "383C9B",
+"aircraft_model": "LS-7",
+"registration": "F-CGYD",
+"cn": "VX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "383F3B",
+"aircraft_model": "Duo Discus xt",
+"registration": "F-CIDM",
+"cn": "DM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38407B",
+"aircraft_model": "SF-25",
+"registration": "F-CHCB",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3840BB",
+"aircraft_model": "Ventus 2",
+"registration": "F-CGLX",
+"cn": "LX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3844FB",
+"aircraft_model": "Ventus 2ct",
+"registration": "F-CIJF",
+"cn": "JF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38519B",
+"aircraft_model": "Pegase",
+"registration": "F-CGOC",
+"cn": "U2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3859BB",
+"aircraft_model": "PIK-30",
+"registration": "F-CFPI",
+"cn": "PIK",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38759B",
+"aircraft_model": "Ventus 2CXa",
+"registration": "F-CIJU",
+"cn": "F",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "387F1B",
+"aircraft_model": "ASG-29E",
+"registration": "F-CJER",
+"cn": "AC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "388A3B",
+"aircraft_model": "LS-6 18",
+"registration": "F-CGUL",
+"cn": "EI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "389A1B",
+"aircraft_model": "ASH-25",
+"registration": "F-CHMP",
+"cn": "FM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38ADBB",
+"aircraft_model": "DG-600",
+"registration": "F-CILF",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38AE9B",
+"aircraft_model": "LS-4",
+"registration": "F-CAHA",
+"cn": "SI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38AEBB",
+"aircraft_model": "LS-8 st 18",
+"registration": "F-COOL",
+"cn": "KIS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38AEFB",
+"aircraft_model": "DG-600",
+"registration": "F-CKBS",
+"cn": "CM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B15B",
+"aircraft_model": "Arcus M",
+"registration": "F-CJGG",
+"cn": "JGG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B17B",
+"aircraft_model": "DG-808 C",
+"registration": "F-CGHI",
+"cn": "HI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B2DB",
+"aircraft_model": "ASH-25",
+"registration": "F-CGKZ",
+"cn": "3Z",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B41B",
+"aircraft_model": "AS 33",
+"registration": "F-CVGD",
+"cn": "JO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B61B",
+"aircraft_model": "Discus 2",
+"registration": "F-CPFV",
+"cn": "AX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B75B",
+"aircraft_model": "ASW-28 18",
+"registration": "F-CALP",
+"cn": "LP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B7BB",
+"aircraft_model": "Arcus M",
+"registration": "F-CLBC",
+"cn": "YB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38B91B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEU",
+"cn": "F7",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B93B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEI",
+"cn": "F8",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B97B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEN",
+"cn": "F10",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B99B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEO",
+"cn": "F11",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B9DB",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEV",
+"cn": "F14",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38B9FB",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJES",
+"cn": "F13",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BA1B",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHC",
+"cn": "A10",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BA3B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEQ",
+"cn": "F12",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BB3B",
+"aircraft_model": "Ventus 3F",
+"registration": "F-CPRG",
+"cn": "RG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BCDB",
+"aircraft_model": "Pegase",
+"registration": "F-CFRF",
+"cn": "RF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BD3B",
+"aircraft_model": "Ka-6 e",
+"registration": "F-CJOC",
+"cn": "NE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BD7B",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHK",
+"cn": "A15",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BD9B",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHJ",
+"cn": "A14",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BDBB",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHF",
+"cn": "A16",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BDDB",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHE",
+"cn": "A12",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BDFB",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CPHD",
+"cn": "A11",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BE1B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJEB",
+"cn": "F9",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38BE3B",
+"aircraft_model": "Janus B",
+"registration": "F-CEPT",
+"cn": "EPT",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38BF9B",
+"aircraft_model": "ASG-29E",
+"registration": "F-CUBA",
+"cn": "W",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38C2BB",
+"aircraft_model": "LS-8 18",
+"registration": "F-COMB",
+"cn": "C3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38C89B",
+"aircraft_model": "LS-6",
+"registration": "F-CBET",
+"cn": "ET",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38D99B",
+"aircraft_model": "LS-4",
+"registration": "F-CEIG",
+"cn": "V08",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38D9BB",
+"aircraft_model": "ASW-24",
+"registration": "F-CHAI",
+"cn": "AI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38D9DB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CHTY",
+"cn": "CW",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38D9FB",
+"aircraft_model": "LS-4",
+"registration": "F-CFZE",
+"cn": "V33",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38DADB",
+"aircraft_model": "LS-8",
+"registration": "F-CGZR",
+"cn": "A0",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38DBBB",
+"aircraft_model": "Arcus S",
+"registration": "F-CHMT",
+"cn": "CHM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38DE3B",
+"aircraft_model": "Duo Discus xl",
+"registration": "F-CLDE",
+"cn": "DE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38E75B",
+"aircraft_model": "Arcus T",
+"registration": "F-CIFF",
+"cn": "FP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38E8DB",
+"aircraft_model": "Libelle Std",
+"registration": "F-CGVS",
+"cn": "JS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "38E9BB",
+"aircraft_model": "ASW-27",
+"registration": "F-CMHN",
+"cn": "H",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38EC7B",
+"aircraft_model": "Pegase",
+"registration": "F-CHGZ",
+"cn": "632",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38EE3B",
+"aircraft_model": "Discus",
+"registration": "F-CFDL",
+"cn": "D31",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38EE5B",
+"aircraft_model": "Discus bT",
+"registration": "F-CGGG",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38EE7B",
+"aircraft_model": "LS-4",
+"registration": "F-CFZV",
+"cn": "ZV",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F01B",
+"aircraft_model": "LS-4 W",
+"registration": "F-CJSA",
+"cn": "SA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F25B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CJEK",
+"cn": "A6",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F27B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CJED",
+"cn": "A5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F33B",
+"aircraft_model": "ASH-25 MI",
+"registration": "F-CLLC",
+"cn": "LC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F47B",
+"aircraft_model": "Nimbus 3DT",
+"registration": "F-CFUP",
+"cn": "UP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "38F7BC",
+"aircraft_model": "Duo Discus xlt",
+"registration": "F-CFOU",
+"cn": "ABB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39017B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CIEZ",
+"cn": "F5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3902DB",
+"aircraft_model": "Nimbus 3",
+"registration": "F-CNNN",
+"cn": "YZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39035B",
+"aircraft_model": "ASG-29E",
+"registration": "F-CHUG",
+"cn": "FF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3903DB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CBEU",
+"cn": "A7",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39077B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CJFM",
+"cn": "572",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3908FB",
+"aircraft_model": "Arcus M",
+"registration": "F-CLDF",
+"cn": "DF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3909FB",
+"aircraft_model": "Stemme S-12",
+"registration": "F-CJLG",
+"cn": "LG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "390F3B",
+"aircraft_model": "Arcus S",
+"registration": "F-CBER",
+"cn": "ER",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3919FB",
+"aircraft_model": "SZD-54 Perkoz",
+"registration": "F-CUBE",
+"cn": "BE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "391C1B",
+"aircraft_model": "LS-4",
+"registration": "F-CAJS",
+"cn": "SH",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "391E7B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CUVV",
+"cn": "CI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "391EDB",
+"aircraft_model": "Ventus 2",
+"registration": "F-CJPR",
+"cn": "JP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "391F3B",
+"aircraft_model": "LAK-17 A",
+"registration": "F-C",
+"cn": "71",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "391FFB",
+"aircraft_model": "Libelle Std",
+"registration": "F-CDAF",
+"cn": "735",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39207B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CAGA",
+"cn": "F3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39209B",
+"aircraft_model": "ASK-21",
+"registration": "F-CBMV",
+"cn": "MV",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39237B",
+"aircraft_model": "DG-1000",
+"registration": "F-CJCA",
+"cn": "CA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39255B",
+"aircraft_model": "Discus 2",
+"registration": "F-CFDY",
+"cn": "F2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "392A1B",
+"aircraft_model": "Pegase",
+"registration": "F-CGNN",
+"cn": "NN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "392A3B",
+"aircraft_model": "Marianne",
+"registration": "F-CGTS",
+"cn": "GTS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "392A5B",
+"aircraft_model": "SF-25",
+"registration": "F-CJDR",
+"cn": "DR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "392A7B",
+"aircraft_model": "Pegase",
+"registration": "F-CGOD",
+"cn": "LU",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "392A9B",
+"aircraft_model": "ASK-21",
+"registration": "F-CGCI",
+"cn": "CI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "392BDB",
+"aircraft_model": "Pegase",
+"registration": "F-CHKS",
+"cn": "KS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39311B",
+"aircraft_model": "Discus",
+"registration": "F-CGGI",
+"cn": "D10",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39321B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CMBE",
+"cn": "A3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3932FB",
+"aircraft_model": "Discus 2c",
+"registration": "F-CVRB",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39331B",
+"aircraft_model": "Pegase",
+"registration": "F-CGFH",
+"cn": "ZZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39333B",
+"aircraft_model": "Ventus c",
+"registration": "F-COOO",
+"cn": "LG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3936DB",
+"aircraft_model": "DG-1000",
+"registration": "F-CMPY",
+"cn": "PY",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39375B",
+"aircraft_model": "LS-1 d",
+"registration": "F-CDVW",
+"cn": "VW",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39377B",
+"aircraft_model": "Pegase",
+"registration": "F-CGFL",
+"cn": "FL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39379B",
+"aircraft_model": "LS-6 18",
+"registration": "F-CGUS",
+"cn": "US",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3937BB",
+"aircraft_model": "Pegase",
+"registration": "F-CHFI",
+"cn": "FI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3937DB",
+"aircraft_model": "Pegase",
+"registration": "F-CHKU",
+"cn": "KU",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3937FB",
+"aircraft_model": "Pegase",
+"registration": "F-CHUD",
+"cn": "DD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39381B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CIRS",
+"cn": "A17",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39383B",
+"aircraft_model": "SF-28",
+"registration": "F-CPPM",
+"cn": "PM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3938DB",
+"aircraft_model": "LAK-17 A",
+"registration": "F-CAIF",
+"cn": "HB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "393DBB",
+"aircraft_model": "Arcus M",
+"registration": "F-CTMS",
+"cn": "MS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39443B",
+"aircraft_model": "LS-4",
+"registration": "F-CFZD",
+"cn": "V32",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39455B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CPHB",
+"cn": "A2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394A1B",
+"aircraft_model": "LS-4",
+"registration": "F-CEIM",
+"cn": "SD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "394A3B",
+"aircraft_model": "LS-4",
+"registration": "F-CMDA",
+"cn": "SC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394A5B",
+"aircraft_model": "LS-4",
+"registration": "F-CODE",
+"cn": "SE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "394BFB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CVIP",
+"cn": "IP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394C76",
+"aircraft_model": "Arcus T",
+"registration": "F-COMG",
+"cn": "MG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394D3B",
+"aircraft_model": "ASG-29",
+"registration": "F-CPIV",
+"cn": "V",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "394FBB",
+"aircraft_model": "DG-1000",
+"registration": "F-CNCH",
+"cn": "D5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394FDB",
+"aircraft_model": "DG-1000",
+"registration": "F-CNRB",
+"cn": "D3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "394FFB",
+"aircraft_model": "DG-1000",
+"registration": "F-CNRB",
+"cn": "D3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39507B",
+"aircraft_model": "Discus 2c",
+"registration": "F-CXXD",
+"cn": "F6",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3951BB",
+"aircraft_model": "Janus Ce",
+"registration": "F-CGQL",
+"cn": "QL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3955DB",
+"aircraft_model": "RF 3",
+"registration": "F-CLEP",
+"cn": "EP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3959BB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CAGY",
+"cn": "A9",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "395CFB",
+"aircraft_model": "HPH 304S Shark",
+"registration": "F-CKFB",
+"cn": "FB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "395D1B",
+"aircraft_model": "DG-1000",
+"registration": "F-CNLM",
+"cn": "D6",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "395E5B",
+"aircraft_model": "LS-4",
+"registration": "F-CGYG",
+"cn": "YG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "395EBB",
+"aircraft_model": "Ventus 2",
+"registration": "F-CVOL",
+"cn": "ADx",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3960BB",
+"aircraft_model": "SZD-42 Jantar 2/2b",
+"registration": "F-CLIC",
+"cn": "2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39627B",
+"aircraft_model": "Towplane",
+"registration": "F-CLMX",
+"cn": "MX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 2
+},
+{
+"device_type": "I",
+"device_id": "39639B",
+"aircraft_model": "Ventus 2ct",
+"registration": "F-CIJH",
+"cn": "JH",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3966FB",
+"aircraft_model": "Pegase",
+"registration": "F-CHEH",
+"cn": "FF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "396ABB",
+"aircraft_model": "Ventus 3T",
+"registration": "F-CJCG",
+"cn": "CG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "396FFB",
+"aircraft_model": "AS 33",
+"registration": "F-CVGD",
+"cn": "JO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39727B",
+"aircraft_model": "ASW-20",
+"registration": "F-CGKB",
+"cn": "KB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3972DB",
+"aircraft_model": "ASW-28",
+"registration": "F-CJLD",
+"cn": "FD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39785B",
+"aircraft_model": "Ka-6 e",
+"registration": "F-CJOC",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3979DB",
+"aircraft_model": "DG-400",
+"registration": "F-CPIN",
+"cn": "GMH",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "397A9B",
+"aircraft_model": "ASG-29E",
+"registration": "F-CUBA",
+"cn": "W",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "397C7B",
+"aircraft_model": "Nimbus 3",
+"registration": "F-CFTO",
+"cn": "RH",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "397D5B",
+"aircraft_model": "ASH-30",
+"registration": "F-CJRC",
+"cn": "RC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39801B",
+"aircraft_model": "DG-1000 T",
+"registration": "F-CFEG",
+"cn": "eD9",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39803B",
+"aircraft_model": "DG-1000 T",
+"registration": "F-CFEF",
+"cn": "eD8",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39809B",
+"aircraft_model": "Ventus 3M",
+"registration": "F-CXDD",
+"cn": "D2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3980FB",
+"aircraft_model": "Unknown",
+"registration": "F-CTJM",
+"cn": "PJM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 6
+},
+{
+"device_type": "F",
+"device_id": "39835B",
+"aircraft_model": "LS-7",
+"registration": "F-CVDM",
+"cn": "5L",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3983BB",
+"aircraft_model": "LS-1 f",
+"registration": "F-CEKV",
+"cn": "L72",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3983DB",
+"aircraft_model": "ASH-25",
+"registration": "F-CBPM",
+"cn": "PM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3983FB",
+"aircraft_model": "ASK-21",
+"registration": "F-CHIN",
+"cn": "IN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39841B",
+"aircraft_model": "ASK-21",
+"registration": "F-CBDQ",
+"cn": "DQ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3984FB",
+"aircraft_model": "ASG-29E",
+"registration": "F-CTPI",
+"cn": "PI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39851B",
+"aircraft_model": "Twin Shark",
+"registration": "F-CVNB",
+"cn": "NB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39857B",
+"aircraft_model": "Ventus 3M",
+"registration": "F-CIMD",
+"cn": "NJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39867B",
+"aircraft_model": "Duo Discus x",
+"registration": "F-CIRT",
+"cn": "A18",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39879B",
+"aircraft_model": "PIK-30",
+"registration": "F-CFPJ",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39891B",
+"aircraft_model": "LS-10",
+"registration": "F-CLLS",
+"cn": "Y",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39895B",
+"aircraft_model": "LS-4",
+"registration": "F-CAHQ",
+"cn": "SG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "398A1B",
+"aircraft_model": "ASW-17",
+"registration": "F-CAJO",
+"cn": "A53",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "398ADB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CJDD",
+"cn": "A19",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "398AFB",
+"aircraft_model": "ASK-21",
+"registration": "F-CNOR",
+"cn": "OR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "398DFB",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CPIF",
+"cn": "IF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "398FBB",
+"aircraft_model": "AS 33",
+"registration": "F-CPPP",
+"cn": "3P",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39903B",
+"aircraft_model": "Ventus",
+"registration": "F-CBXN",
+"cn": "R2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "39987B",
+"aircraft_model": "ASW-20",
+"registration": "F-CSGM",
+"cn": "XA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39989B",
+"aircraft_model": "HPH 304S Shark",
+"registration": "F-CPSA",
+"cn": "PS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39A33B",
+"aircraft_model": "Ventus 3M",
+"registration": "F-CTIB",
+"cn": "GP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39A3BB",
+"aircraft_model": "Duo Discus",
+"registration": "F-CMFJ",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39A57B",
+"aircraft_model": "DG-500",
+"registration": "F-CILG",
+"cn": "LG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39A5DB",
+"aircraft_model": "ASW-28",
+"registration": "F-CPKM",
+"cn": "KM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39A8FB",
+"aircraft_model": "DG-1000",
+"registration": "F-CNMC",
+"cn": "D11",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39AB9B",
+"aircraft_model": "DG-1000",
+"registration": "F-CNDP",
+"cn": "D12",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "39B9FB",
+"aircraft_model": "Discus 2c",
+"registration": "F-CJES",
+"cn": "F13",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "3AE266",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CLCX",
+"cn": "Cx",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "3BB6BE",
+"aircraft_model": "Castel 25-S",
+"registration": "F-CRHX",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "3C612D",
+"aircraft_model": "LS-6 18",
+"registration": "F-CIPR",
+"cn": "IP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3E6282",
+"aircraft_model": "Arcus M",
+"registration": "F-CPRI",
+"cn": "MS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3E647C",
+"aircraft_model": "DG-1000 T",
+"registration": "F-CFEE",
+"cn": "eD7",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3E73F4",
+"aircraft_model": "Ventus 3F",
+"registration": "F-CJCM",
+"cn": "CM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3E7A0B",
+"aircraft_model": "ASH-25",
+"registration": "F-CLKL",
+"cn": "KL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3ED9DD",
+"aircraft_model": "Pegase",
+"registration": "F-CHLM",
+"cn": "EO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3EE7C1",
+"aircraft_model": "ASW-27",
+"registration": "F-CJZV",
+"cn": "ZV",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3EE80A",
+"aircraft_model": "LS-7",
+"registration": "F-CTRL",
+"cn": "RL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3EEAA2",
+"aircraft_model": "LS-6 18",
+"registration": "F-CPCM",
+"cn": "YF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3EEDB8",
+"aircraft_model": "ASG-32 MI",
+"registration": "F-CVRG",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3EFEBD",
+"aircraft_model": "LS-8a",
+"registration": "F-CVMA",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3F00AE",
+"aircraft_model": "LS-8 18",
+"registration": "F-CJMR",
+"cn": "PMR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3F01B8",
+"aircraft_model": "Arcus S",
+"registration": "F-CPVM",
+"cn": "VM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "3FEAE0",
+"aircraft_model": "Ventus 2c",
+"registration": "F-CLUB",
+"cn": "M",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "484792",
+"aircraft_model": "Duo Discus",
+"registration": "F-CPSD",
+"cn": "T12",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "48495E",
+"aircraft_model": "ASH-25",
+"registration": "F-CUTY",
+"cn": "AT",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "48502C",
+"aircraft_model": "Ventus 2c",
+"registration": "F-CVAR",
+"cn": "VAR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "485300",
+"aircraft_model": "ASK-21",
+"registration": "F-CJMB",
+"cn": "MB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "485FB4",
+"aircraft_model": "Mini Nimbus",
+"registration": "F-CFAB",
+"cn": "AB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "4B50F8",
+"aircraft_model": "Duo Discus",
+"registration": "F-CNAB",
+"cn": "W2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "4B5195",
+"aircraft_model": "Nimbus 3",
+"registration": "F-COME",
+"cn": "ME",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "512424",
+"aircraft_model": "Pegase",
+"registration": "F-CFRA",
+"cn": "01",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "552494",
+"aircraft_model": "Pegase",
+"registration": "F-CGFR",
+"cn": "FR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "57E6F0",
+"aircraft_model": "LAK-12",
+"registration": "F-CIGO",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "5CA410",
+"aircraft_model": "Phoebus",
+"registration": "F-CHNE",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "64F0B2",
+"aircraft_model": "Janus C",
+"registration": "F-CGQP",
+"cn": "C9",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "I",
+"device_id": "700000",
+"aircraft_model": "ASG-29",
+"registration": "F-CIFB",
+"cn": "FB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "87D70C",
+"aircraft_model": "ASH-25",
+"registration": "F-CGCE",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "889FD8",
+"aircraft_model": "Ka-6 cr",
+"registration": "F-CPOU",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "8CECDA",
+"aircraft_model": "ASK-13",
+"registration": "F-CDYC",
+"cn": "YC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "A21351",
+"aircraft_model": "Pegase",
+"registration": "F-CGFB",
+"cn": "213",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "A72E31",
+"aircraft_model": "LS-8 18",
+"registration": "F-COMB",
+"cn": "C3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "AA9EF9",
+"aircraft_model": "LS-4",
+"registration": "F-CVLC",
+"cn": "MC4",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "B01145",
+"aircraft_model": "Other",
+"registration": "F-CFRB",
+"cn": "10",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "B7F072",
+"aircraft_model": "Ka-6 cr",
+"registration": "F-CPOU",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "BE9D6C",
+"aircraft_model": "Ultralight",
+"registration": "F-CRXF",
+"cn": "RXF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 3
+},
+{
+"device_type": "F",
+"device_id": "C00205",
+"aircraft_model": "OldTimer",
+"registration": "F-CBFR",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "C01773",
+"aircraft_model": "WA26 Squale",
+"registration": "F-CDQO",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00132",
+"aircraft_model": "Ventus 2CXa",
+"registration": "F-CVOL",
+"cn": "ADx",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0016C",
+"aircraft_model": "Discus 2",
+"registration": "F-CFDO",
+"cn": "L2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0016F",
+"aircraft_model": "Nimbus 3",
+"registration": "F-CITF",
+"cn": "D90",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0017F",
+"aircraft_model": "LS-4",
+"registration": "F-CGYI",
+"cn": "V57",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "D001BD",
+"aircraft_model": "DG-500 M",
+"registration": "F-CPAC",
+"cn": "AC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D001C6",
+"aircraft_model": "LAK-17 A",
+"registration": "F-CAIF",
+"cn": "JS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "D001D9",
+"aircraft_model": "Janus C",
+"registration": "F-CGQP",
+"cn": "C9",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0027B",
+"aircraft_model": "Ventus 2bx",
+"registration": "F-CLNA",
+"cn": "KX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D002AA",
+"aircraft_model": "Astir Club",
+"registration": "F-CFMA",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D002D0",
+"aircraft_model": "Pegase",
+"registration": "F-CHKX",
+"cn": "KB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D003AE",
+"aircraft_model": "ASH-30",
+"registration": "F-CJRC",
+"cn": "RC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D003BC",
+"aircraft_model": "ASG-29E",
+"registration": "F-CASN",
+"cn": "SN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D003F4",
+"aircraft_model": "Pegase",
+"registration": "F-CGBS",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0041D",
+"aircraft_model": "JS-1 Revelation",
+"registration": "F-CJET",
+"cn": "7",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00423",
+"aircraft_model": "Pegase",
+"registration": "F-CGEN",
+"cn": "EN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0046E",
+"aircraft_model": "Arcus M",
+"registration": "F-CGPJ",
+"cn": "4A",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00481",
+"aircraft_model": "Ka-6 e",
+"registration": "F-CISB",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00493",
+"aircraft_model": "Marianne",
+"registration": "F-CGTO",
+"cn": "TO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00495",
+"aircraft_model": "Nimbus 2",
+"registration": "F-CAPJ",
+"cn": "PJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D004AF",
+"aircraft_model": "Pegase",
+"registration": "F-CGNL",
+"cn": "NL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D004C4",
+"aircraft_model": "Pegase",
+"registration": "F-CHUC",
+"cn": "UC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D004C5",
+"aircraft_model": "Pegase",
+"registration": "F-CLAP",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D004E1",
+"aircraft_model": "Pegase",
+"registration": "F-CHGD",
+"cn": "D",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D004E3",
+"aircraft_model": "Janus C",
+"registration": "F-CHVE",
+"cn": "E4W",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0053A",
+"aircraft_model": "Duo Discus",
+"registration": "F-CBPY",
+"cn": "GD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0055C",
+"aircraft_model": "DG-300",
+"registration": "F-CBSZ",
+"cn": "SZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00561",
+"aircraft_model": "LS-8",
+"registration": "F-CIBA",
+"cn": "V60",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D006C1",
+"aircraft_model": "Marianne",
+"registration": "F-CGTM",
+"cn": "TM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D006D0",
+"aircraft_model": "Pegase",
+"registration": "F-CGOU",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D006F7",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CJGS",
+"cn": "UJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00714",
+"aircraft_model": "Janus C",
+"registration": "F-CHPT",
+"cn": "PT",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00751",
+"aircraft_model": "ASK-13",
+"registration": "F-CEJK",
+"cn": "JK",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00900",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CILB",
+"cn": "LB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0091D",
+"aircraft_model": "LS-8 18",
+"registration": "F-CGZQ",
+"cn": "ZQ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00923",
+"aircraft_model": "DG-1000",
+"registration": "F-CNRB",
+"cn": "D3",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0092F",
+"aircraft_model": "Ventus 2cxT",
+"registration": "F-CIJM",
+"cn": "FP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00951",
+"aircraft_model": "DG-1000",
+"registration": "F-CNGC",
+"cn": "D2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0095F",
+"aircraft_model": "DG-1000",
+"registration": "F-CNCH",
+"cn": "D5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0096A",
+"aircraft_model": "DG-1000",
+"registration": "F-CNPG",
+"cn": "D4",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00978",
+"aircraft_model": "Duo Discus",
+"registration": "F-CVIP",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00983",
+"aircraft_model": "LS-8",
+"registration": "F-CGZZ",
+"cn": "ZZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0099D",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CAKM",
+"cn": "KM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D009B0",
+"aircraft_model": "LS-8",
+"registration": "F-CGZX",
+"cn": "V92",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00A1A",
+"aircraft_model": "Duo Discus",
+"registration": "F-CIDF",
+"cn": "CO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00A47",
+"aircraft_model": "ASK-13",
+"registration": "F-CEJJ",
+"cn": "EJJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00A98",
+"aircraft_model": "ASH-25 MI",
+"registration": "F-CZCG",
+"cn": "EW",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00AA1",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CLDH",
+"cn": "FQ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00AC8",
+"aircraft_model": "ASH-25",
+"registration": "F-CHMD",
+"cn": "MD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00B03",
+"aircraft_model": "Janus C",
+"registration": "F-CBKR",
+"cn": "KR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BC1",
+"aircraft_model": "LS-6 18WJ",
+"registration": "F-CJGT",
+"cn": "GT",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BD1",
+"aircraft_model": "LAK-17 A",
+"registration": "F-CNAK",
+"cn": "LZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BD2",
+"aircraft_model": "Pegase",
+"registration": "F-CFRK",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BE9",
+"aircraft_model": "Cirrus Std",
+"registration": "F-CEQZ",
+"cn": "C38",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BF2",
+"aircraft_model": "Astir Club",
+"registration": "F-CFIN",
+"cn": "IN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00BFF",
+"aircraft_model": "Pegase",
+"registration": "F-CHUC",
+"cn": "UC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00C90",
+"aircraft_model": "Discus 2cT",
+"registration": "F-CIGB",
+"cn": "GB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00C92",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CNGF",
+"cn": "1V",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00D0B",
+"aircraft_model": "ASK-21",
+"registration": "F-CJOD",
+"cn": "OD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00D27",
+"aircraft_model": "SF-25",
+"registration": "F-CHCF",
+"cn": "CF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00D31",
+"aircraft_model": "ASK-21",
+"registration": "F-CBMV",
+"cn": "MV",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00D7B",
+"aircraft_model": "Swift",
+"registration": "F-CHBA",
+"cn": "ES",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00DC4",
+"aircraft_model": "Discus 2",
+"registration": "F-CGDX",
+"cn": "JPA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00DD7",
+"aircraft_model": "Discus 2cFES",
+"registration": "F-CKSF",
+"cn": "SF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00DF4",
+"aircraft_model": "ASK-13",
+"registration": "F-CEGA",
+"cn": "GA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00DF5",
+"aircraft_model": "ASK-21",
+"registration": "F-CNOG",
+"cn": "OG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00DF9",
+"aircraft_model": "Duo Discus",
+"registration": "F-CGDR",
+"cn": "DR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E03",
+"aircraft_model": "IS-28B2",
+"registration": "F-CACN",
+"cn": "S14",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E04",
+"aircraft_model": "Duo Discus xlt",
+"registration": "F-CIDR",
+"cn": "SVR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E09",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CHSD",
+"cn": "85",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E10",
+"aircraft_model": "Grob G109",
+"registration": "F-CGDS",
+"cn": "666",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E2E",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CKIL",
+"cn": "KW",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E35",
+"aircraft_model": "Janus C",
+"registration": "F-CLMT",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E81",
+"aircraft_model": "Pegase",
+"registration": "F-CHFP",
+"cn": "486",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E8F",
+"aircraft_model": "Pegase",
+"registration": "F-CHDO",
+"cn": "DO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00E9F",
+"aircraft_model": "ASW-24 E",
+"registration": "F-CENT",
+"cn": "357",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00EA0",
+"aircraft_model": "DG-200",
+"registration": "F-CHBJ",
+"cn": "BJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00EC4",
+"aircraft_model": "Ventus ct",
+"registration": "F-CIJS",
+"cn": "R16",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00ECA",
+"aircraft_model": "Discus 2cFES",
+"registration": "F-CBAX",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00ED0",
+"aircraft_model": "JS-3 18M",
+"registration": "F-CLDG",
+"cn": "FM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00FC2",
+"aircraft_model": "LS-8",
+"registration": "F-CLCA",
+"cn": "CA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00FD0",
+"aircraft_model": "Discus 2",
+"registration": "F-CFDS",
+"cn": "ET",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00FD1",
+"aircraft_model": "Pegase",
+"registration": "F-CHGU",
+"cn": "GU",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D00FDC",
+"aircraft_model": "Astir CS",
+"registration": "F-CIAN",
+"cn": "AN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01006",
+"aircraft_model": "ASG-29E",
+"registration": "F-CMVO",
+"cn": "IC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01015",
+"aircraft_model": "DG-808 C",
+"registration": "F-CHYF",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0101A",
+"aircraft_model": "miniLAK FES",
+"registration": "F-CKAM",
+"cn": "08",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01027",
+"aircraft_model": "LS-6",
+"registration": "F-CKMA",
+"cn": "MA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01034",
+"aircraft_model": "Discus 2",
+"registration": "F-CFDQ",
+"cn": "DA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01050",
+"aircraft_model": "ASH-25",
+"registration": "F-CLAB",
+"cn": "11",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01095",
+"aircraft_model": "Astir Jeans",
+"registration": "F-CFML",
+"cn": "ML",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0128C",
+"aircraft_model": "Discus",
+"registration": "F-CFDH",
+"cn": "82",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D012CE",
+"aircraft_model": "Duo Discus",
+"registration": "F-CHTD",
+"cn": "TD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D012D5",
+"aircraft_model": "LS-7",
+"registration": "F-CGYC",
+"cn": "HG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D012D8",
+"aircraft_model": "LS-4",
+"registration": "F-CHPB",
+"cn": "XF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D012E7",
+"aircraft_model": "Duo Discus",
+"registration": "F-CPHI",
+"cn": "HI",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D012F4",
+"aircraft_model": "ASW-24",
+"registration": "F-CHIG",
+"cn": "Vkg",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01300",
+"aircraft_model": "LS-6",
+"registration": "F-CGUX",
+"cn": "X",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0132F",
+"aircraft_model": "Astir Club",
+"registration": "F-CFMD",
+"cn": "MD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0137B",
+"aircraft_model": "DG-800",
+"registration": "F-CHYA",
+"cn": "PL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01381",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CNOB",
+"cn": "NB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01442",
+"aircraft_model": "ASW-22",
+"registration": "F-CBDE",
+"cn": "1Z",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01468",
+"aircraft_model": "Duo Discus",
+"registration": "F-CKJN",
+"cn": "LT",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0147B",
+"aircraft_model": "DG-300",
+"registration": "F-CGDM",
+"cn": "H5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D014A1",
+"aircraft_model": "Libelle Std",
+"registration": "F-CDPH",
+"cn": "TB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D014DE",
+"aircraft_model": "LS-4",
+"registration": "F-CHBL",
+"cn": "VS",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0150B",
+"aircraft_model": "SF-28",
+"registration": "F-CEYL",
+"cn": "EYL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0152C",
+"aircraft_model": "SF-25",
+"registration": "F-CAQA",
+"cn": "QA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0155B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CNON",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0157B",
+"aircraft_model": "Astir Club",
+"registration": "F-CFMG",
+"cn": "R67",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0158E",
+"aircraft_model": "Ventus 2",
+"registration": "F-CLUB",
+"cn": "M",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015A3",
+"aircraft_model": "Ka-8",
+"registration": "F-CHOK",
+"cn": "OK",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015A8",
+"aircraft_model": "SZD-55",
+"registration": "F-CLEF",
+"cn": "EF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015A9",
+"aircraft_model": "LS-8 18",
+"registration": "F-CFNZ",
+"cn": "MNZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015B1",
+"aircraft_model": "Duo Discus",
+"registration": "F-CIDD",
+"cn": "DD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015DD",
+"aircraft_model": "Pegase",
+"registration": "F-CHEV",
+"cn": "EV",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D015EC",
+"aircraft_model": "DG-505",
+"registration": "F-CHJP",
+"cn": "MC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D017E3",
+"aircraft_model": "Pegase",
+"registration": "F-CFXK",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D017ED",
+"aircraft_model": "SZD-55",
+"registration": "F-CHSO",
+"cn": "5-5",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01802",
+"aircraft_model": "Marianne",
+"registration": "F-CBLZ",
+"cn": "ELZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0184C",
+"aircraft_model": "ASK-13",
+"registration": "F-CBAR",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01903",
+"aircraft_model": "Ventus 2c",
+"registration": "F-CPIT",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01911",
+"aircraft_model": "SF-28",
+"registration": "F-CEYA",
+"cn": "YA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0191D",
+"aircraft_model": "JS-1 C21",
+"registration": "F-CAHV",
+"cn": "FC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01931",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CPTN",
+"cn": "DY",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01939",
+"aircraft_model": "Ventus 2",
+"registration": "F-CJCZ",
+"cn": "CZ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01940",
+"aircraft_model": "Pegase",
+"registration": "F-CFQP",
+"cn": "SR",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01967",
+"aircraft_model": "LS-8 st 18",
+"registration": "F-CIRJ",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0196A",
+"aircraft_model": "Janus B",
+"registration": "F-CFAX",
+"cn": "EAX",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01970",
+"aircraft_model": "Janus B",
+"registration": "F-CPQC",
+"cn": "QC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01971",
+"aircraft_model": "LS-7",
+"registration": "F-CNAG",
+"cn": "AC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01C3A",
+"aircraft_model": "ASK-21",
+"registration": "F-CBDY",
+"cn": "DY",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01C95",
+"aircraft_model": "Other",
+"registration": "F-CCGK",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "O",
+"device_id": "D01CAE",
+"aircraft_model": "SF-25",
+"registration": "F-CHNB",
+"cn": "NB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01CCB",
+"aircraft_model": "Pegase",
+"registration": "F-CHFM",
+"cn": "GP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01CD5",
+"aircraft_model": "Discus",
+"registration": "F-CMAS",
+"cn": "BG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01CF5",
+"aircraft_model": "Astir CS-77",
+"registration": "F-CJHA",
+"cn": "HA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01CFF",
+"aircraft_model": "LAK-17B FES",
+"registration": "F-CLDM",
+"cn": "DM",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D0F",
+"aircraft_model": "Janus Ce",
+"registration": "F-CBYY",
+"cn": "2Y",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D16",
+"aircraft_model": "LS-6 18",
+"registration": "F-CGUR",
+"cn": "3A",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D21",
+"aircraft_model": "Ventus 3M",
+"registration": "F-CPUR",
+"cn": "CK",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D23",
+"aircraft_model": "ASK-13",
+"registration": "F-CJYJ",
+"cn": "YJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D41",
+"aircraft_model": "Duo Discus",
+"registration": "F-CGDJ",
+"cn": "DJ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D4C",
+"aircraft_model": "DG-400",
+"registration": "F-CJJB",
+"cn": "JB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01D74",
+"aircraft_model": "ASK-23",
+"registration": "F-CPVD",
+"cn": "VD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01ED7",
+"aircraft_model": "Duo Discus",
+"registration": "F-CIDB",
+"cn": "DB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F40",
+"aircraft_model": "ASH-25",
+"registration": "F-CJPG",
+"cn": "PG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F4F",
+"aircraft_model": "Twin Astir III",
+"registration": "F-CIOL",
+"cn": "OL",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F54",
+"aircraft_model": "LS-8 18",
+"registration": "F-CPLS",
+"cn": "GW",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F66",
+"aircraft_model": "ASH-25",
+"registration": "F-CASH",
+"cn": "CN",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F7B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CIAA",
+"cn": "MCC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D01F80",
+"aircraft_model": "Ventus 2",
+"registration": "F-CBPE",
+"cn": "FA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0208F",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CMPA",
+"cn": "PA",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D020C0",
+"aircraft_model": "LAK-17 A",
+"registration": "F-CAIF",
+"cn": "HB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D020FC",
+"aircraft_model": "JS-3 18M RES",
+"registration": "F-CIEB",
+"cn": "EB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02162",
+"aircraft_model": "Ventus 2a",
+"registration": "F-CJPR",
+"cn": "GO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0222B",
+"aircraft_model": "Duo Discus",
+"registration": "F-CHTH",
+"cn": "TH",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0222E",
+"aircraft_model": "JS-1 Revelation",
+"registration": "F-CBYO",
+"cn": "BYO",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D022E9",
+"aircraft_model": "Nimbus 3",
+"registration": "F-CFUR",
+"cn": "1S",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D024D0",
+"aircraft_model": "LS-6 18",
+"registration": "F-CJRP",
+"cn": "1G",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D024DC",
+"aircraft_model": "LS-4",
+"registration": "F-CPOP",
+"cn": "SP",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0250B",
+"aircraft_model": "Twin Astir I",
+"registration": "F-CFBB",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02555",
+"aircraft_model": "ASH-25",
+"registration": "F-CGCE",
+"cn": "CE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02592",
+"aircraft_model": "DG-505",
+"registration": "F-CLIM",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0259C",
+"aircraft_model": "ASK-13",
+"registration": "F-CEGD",
+"cn": "EGD",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D025A2",
+"aircraft_model": "Pegase",
+"registration": "F-CHGP",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D025CA",
+"aircraft_model": "Calif A21S",
+"registration": "F-CHPV",
+"cn": "CC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0260D",
+"aircraft_model": "Ka-6 e",
+"registration": "F-CECE",
+"cn": "CE",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02615",
+"aircraft_model": "Duo Discus",
+"registration": "F-CGDF",
+"cn": "DF",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02644",
+"aircraft_model": "ASH-25",
+"registration": "F-CHOT",
+"cn": "IQ",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02651",
+"aircraft_model": "Duo Discus x",
+"registration": "F-CPVC",
+"cn": "VC",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D026C2",
+"aircraft_model": "ASW-15",
+"registration": "F-CEGQ",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D026C7",
+"aircraft_model": "M-200 Foehn",
+"registration": "F-CCXY",
+"cn": "5A6",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D026D5",
+"aircraft_model": "DG-300",
+"registration": "F-CLEG",
+"cn": "EG",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0271B",
+"aircraft_model": "LS-4",
+"registration": "F-CEIS",
+"cn": "V22",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02720",
+"aircraft_model": "ASW-20",
+"registration": "F-CFFV",
+"cn": "X29",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D0274A",
+"aircraft_model": "Duo Discus",
+"registration": "F-CHVV",
+"cn": "V2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02792",
+"aircraft_model": "Ventus 3M",
+"registration": "F-CXDD",
+"cn": "D2",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D02793",
+"aircraft_model": "Pegase",
+"registration": "F-CHED",
+"cn": "382",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D027BE",
+"aircraft_model": "Breguet 904",
+"registration": "F-CCFN",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D027E0",
+"aircraft_model": "ASK-13",
+"registration": "F-CERB",
+"cn": "ERB",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D027E1",
+"aircraft_model": "Alliance 34",
+"registration": "F-CIHI",
+"cn": "",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+},
+{
+"device_type": "F",
+"device_id": "D027E4",
+"aircraft_model": "DG-1000",
+"registration": "F-CGRM",
+"cn": "RM1",
+"tracked": "Y",
+"identified": "Y",
+"aircraft_type": 1
+}
+]
+}
