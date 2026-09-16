@@ -1,0 +1,145 @@
++ date -u
+Wed Sep 16 19:48:49 UTC 2026
+++ ls apk/app-debug.apk
+++ head -1
++ APK=apk/app-debug.apk
++ timeout 180 adb install -r apk/app-debug.apk
+Performing Streamed Install
+Success
++ adb shell pm clear com.neutronstar.glidercopilot
+Success
++ adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
++ adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION
++ adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
++ sleep 12
++ timeout 20 adb exec-out screencap -p
+++ tap_text 'J'\''ai compris'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'J'\''ai compris'
++ P='540 2205'
++ '[' -n '540 2205' ']'
++ timeout 10 adb shell input tap 540 2205
++ sleep 35
++ timeout 20 adb exec-out screencap -p
+++ tap_text 'Immatriculation du planeur'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Immatriculation du planeur'
++ P='357 474'
++ '[' -n '357 474' ']'
++ timeout 10 adb shell input tap 357 474
++ sleep 1
++ adb shell input text F-CPHI
++ sleep 1
++ adb shell input keyevent 111
++ sleep 1
+++ tap_text Valider
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Valider
++ P='769 474'
++ '[' -n '769 474' ']'
++ timeout 10 adb shell input tap 769 474
++ sleep 40
++ timeout 20 adb exec-out screencap -p
++ adb shell input swipe 540 1600 540 500 400
++ sleep 2
++ timeout 20 adb exec-out screencap -p
+++ tap_text Check-lists
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Check-lists
++ P='540 2292'
++ '[' -n '540 2292' ']'
++ timeout 10 adb shell input tap 540 2292
++ sleep 3
++ timeout 20 adb exec-out screencap -p
+++ tap_text 'Visite prévol ou tour complet du planeur effectué'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Visite prévol ou tour complet du planeur effectué'
++ P='540 1047'
++ '[' -n '540 1047' ']'
++ timeout 10 adb shell input tap 540 1047
+++ tap_text 'Masse et centrage vérifiés'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Masse et centrage vérifiés'
++ P='540 1203'
++ '[' -n '540 1203' ']'
++ timeout 10 adb shell input tap 540 1203
++ sleep 1
++ timeout 20 adb exec-out screencap -p
++ adb shell input swipe 540 1700 540 400 400
++ sleep 2
++ timeout 20 adb exec-out screencap -p
+++ tap_text Pilotage
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Pilotage
++ P='886 2292'
++ '[' -n '886 2292' ']'
++ timeout 10 adb shell input tap 886 2292
++ sleep 8
++ timeout 20 adb exec-out screencap -p
+++ tap_text Réduire
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ echo 'uiautomator indisponible pour: Réduire'
+uiautomator indisponible pour: Réduire
+++ return 0
++ P=
++ '[' -n '' ']'
++ sleep 2
++ timeout 20 adb exec-out screencap -p
+error: device 'emulator-5554' not found
+++ tap_text 'Masquer le vario'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ echo 'uiautomator indisponible pour: Masquer le vario'
+uiautomator indisponible pour: Masquer le vario
+++ return 0
++ P=
++ '[' -n '' ']'
++ sleep 2
++ timeout 20 adb exec-out screencap -p
+error: device 'emulator-5554' not found
++ timeout 30 adb logcat -d -t 600
+- waiting for device -
++ true
++ ls -la screens
+total 1548
+drwxr-xr-x  2 runner runner   4096 Sep 16 19:51 .
+drwxr-xr-x 13 runner runner   4096 Sep 16 19:48 ..
+-rw-r--r--  1 runner runner 100664 Sep 16 19:49 01-avertissement.png
+-rw-r--r--  1 runner runner 205312 Sep 16 19:49 02-prevol.png
+-rw-r--r--  1 runner runner 204179 Sep 16 19:50 03-prevol-appairage.png
+-rw-r--r--  1 runner runner 235201 Sep 16 19:50 04-prevol-meteo.png
+-rw-r--r--  1 runner runner 263288 Sep 16 19:50 05-checklists.png
+-rw-r--r--  1 runner runner 265116 Sep 16 19:50 06-checklists-cases.png
+-rw-r--r--  1 runner runner 280485 Sep 16 19:50 07-checklists-suite.png
+-rw-r--r--  1 runner runner      0 Sep 16 19:51 08-pilotage.png
+-rw-r--r--  1 runner runner      0 Sep 16 19:51 09-pilotage-profil-reduit.png
+-rw-r--r--  1 runner runner      0 Sep 16 19:51 10-pilotage-vario-replie.png
+-rw-r--r--  1 runner runner      0 Sep 16 19:51 logcat.txt
+-rw-r--r--  1 runner runner   4145 Sep 16 19:52 trace.txt
