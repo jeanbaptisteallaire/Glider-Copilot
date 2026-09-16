@@ -14,6 +14,9 @@ fun interface StreamOpener {
     fun open(url: String, offset: Long): Pair<InputStream, Long>
 }
 
+/** Le serveur ne peut pas reprendre au point demandé : le fichier partiel doit être jeté. */
+class RangeException(message: String) : IOException(message)
+
 class UrlStreamOpener(private val userAgent: String) : StreamOpener {
     override fun open(url: String, offset: Long): Pair<InputStream, Long> {
         var target = URL(url)
@@ -27,10 +30,11 @@ class UrlStreamOpener(private val userAgent: String) : StreamOpener {
             when (val code = c.responseCode) {
                 in 300..399 -> { target = URL(target, c.getHeaderField("Location")); c.disconnect() }
                 200 -> {
-                    if (offset > 0) { c.disconnect(); throw IOException("reprise refusée par le serveur") }
+                    if (offset > 0) { c.disconnect(); throw RangeException("reprise refusée par le serveur") }
                     return c.inputStream to c.contentLengthLong
                 }
                 206 -> return c.inputStream to c.contentLengthLong
+                416 -> { c.disconnect(); throw RangeException("HTTP 416") }
                 else -> { c.disconnect(); throw IOException("HTTP $code") }
             }
         }
@@ -59,22 +63,20 @@ class PackDownloader(private val opener: StreamOpener) {
                 continue
             }
             val part = File(dir, f.name + ".part")
-            if (part.length() > f.size) part.delete()
             var attempt = 0
             while (true) {
                 try {
-                    fetch(f, part, before, total, progress, cancelled)
-                    break
+                    if (part.length() > f.size) part.delete()
+                    if (part.length() < f.size) fetch(f, part, before, total, progress, cancelled)
+                    if (sha256(part).equals(f.sha256, ignoreCase = true)) break
+                    part.delete()
+                    throw IOException("empreinte invalide pour ${f.name}")
                 } catch (e: IOException) {
                     if (cancelled() || ++attempt >= 3) throw e
-                    if (e.message == "reprise refusée par le serveur") part.delete()
+                    // reprise impossible (fichier remplacé sur le serveur, 416) : on repart de zéro
+                    if (e is RangeException || e.message?.startsWith("empreinte") == true) part.delete()
                     Thread.sleep(2_000L * attempt)
                 }
-            }
-            val sum = sha256(part)
-            if (!sum.equals(f.sha256, ignoreCase = true)) {
-                part.delete()
-                throw IOException("empreinte invalide pour ${f.name}")
             }
             dest.delete()
             if (!part.renameTo(dest)) throw IOException("impossible d'installer ${f.name}")

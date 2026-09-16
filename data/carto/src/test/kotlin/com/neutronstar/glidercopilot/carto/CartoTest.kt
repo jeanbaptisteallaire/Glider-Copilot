@@ -142,3 +142,30 @@ class CartoTest {
         assertNull(PackDownloader.installed(root, "r"))
     }
 }
+
+class DownloaderRecoveryTest {
+    private fun sha(b: ByteArray) = java.security.MessageDigest.getInstance("SHA-256").digest(b).joinToString("") { "%02x".format(it) }
+
+    @org.junit.Test fun restartsFromZeroWhenServerRefusesRange() {
+        val data = ByteArray(200_000) { (it % 13).toByte() }
+        val root = java.nio.file.Files.createTempDirectory("packs").toFile()
+        val dir = java.io.File(root, "r").apply { mkdirs() }
+        // fichier partiel d'une ancienne version, plus long que la nouvelle
+        java.io.File(dir, "r-fond.pmtiles.part").writeBytes(ByteArray(250_000))
+        val pack = PackInfo("r", "R", "2", null, doubleArrayOf(0.0, 0.0, 1.0, 1.0), null, "",
+            listOf(PackFile("fond", "r-fond.pmtiles", "u", data.size.toLong(), sha(data))))
+        var calls = 0
+        val opener = StreamOpener { _, offset ->
+            calls++
+            if (calls == 1) {
+                // coupure après 50 000 octets
+                java.io.ByteArrayInputStream(data.copyOfRange(0, 50_000)) to 50_000L
+            } else if (offset > 0 && calls == 2) {
+                throw RangeException("HTTP 416")
+            } else java.io.ByteArrayInputStream(data.copyOfRange(offset.toInt(), data.size)) to (data.size - offset)
+        }
+        PackDownloader(opener).install(pack, "{\"id\":\"r\",\"bbox\":[0,0,1,1],\"files\":[{\"role\":\"fond\",\"name\":\"r-fond.pmtiles\",\"url\":\"u\",\"size\":200000,\"sha256\":\"${sha(data)}\"}]}", root)
+        org.junit.Assert.assertEquals(3, calls)
+        org.junit.Assert.assertNotNull(PackDownloader.installed(root, "r"))
+    }
+}

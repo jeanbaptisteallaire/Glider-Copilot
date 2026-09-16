@@ -78,7 +78,9 @@ data class FlightStatus(val gps: Boolean = false, val baro: Boolean = false, val
 
 /** Terrain de référence affiché (OACI du club), fourni par la carte ; LFNL par défaut. */
 private val LocalFieldId = androidx.compose.runtime.staticCompositionLocalOf { "LFNL" }
-private const val FIELD_ELEV = 262.0
+private const val DEFAULT_FIELD_ELEV = 183.0
+/** Altitude du terrain de référence (openAIP quand la carte est installée). */
+private val LocalFieldElev = androidx.compose.runtime.staticCompositionLocalOf { DEFAULT_FIELD_ELEV }
 private const val FIELD_DIST_KM = 7.4
 private const val FIELD_BRG = 285.0
 private const val ARRIVAL_MARGIN = 300.0
@@ -123,7 +125,8 @@ fun FlightScreen(
     // Signal de démonstration : spirale dans une pompe de ~1,5 m/s.
     val v = 1.4 + 1.3 * sin(t * 2 * Math.PI / 26) + 0.3 * sin(t * 1.7)
     val alt = 1250.0 + 40 * sin(t / 30)
-    val need = FIELD_ELEV + ARRIVAL_MARGIN + FIELD_DIST_KM * 1000 / finesse
+    val fieldElev = map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV
+    val need = fieldElev + ARRIVAL_MARGIN + FIELD_DIST_KM * 1000 / finesse
     val marge = alt - need
     val trend = 40 / 30.0 * cos(t / 30)
 
@@ -137,7 +140,7 @@ fun FlightScreen(
         onDispose { tone.stop() }
     }
 
-    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL")) {
+    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL"), LocalFieldElev provides (map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV)) {
     Column(modifier.fillMaxSize().background(c.background)) {
         SafetyZone(marge, alt, need, trend, finesse, pendingRaise) { f ->
             when {
@@ -293,6 +296,7 @@ private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Dou
     val c = Gc.colors
     val tm = rememberTextMeasurer()
     val FIELD_ID = LocalFieldId.current
+    val FIELD_ELEV = LocalFieldElev.current
     Canvas(Modifier.fillMaxWidth().height(88.dp).semantics { contentDescription = "Coupe du terrain vers $FIELD_ID" }) {
         val w = size.width
         val h = size.height

@@ -91,6 +91,7 @@ private fun MainScaffold(container: AppContainer) {
             fieldId = club?.airfieldIcao ?: "TERRAIN",
             field = field,
             attribution = "© OpenStreetMap · openAIP · Copernicus",
+            fieldElevationM = club?.airfieldIcao?.let { icao -> m.aero.airports.firstOrNull { it.icao == icao }?.elevationM },
         )
     }
 

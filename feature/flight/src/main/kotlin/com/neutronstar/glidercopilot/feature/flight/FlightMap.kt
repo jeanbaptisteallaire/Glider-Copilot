@@ -43,6 +43,8 @@ data class FlightMapConfig(
     val fieldId: String,
     val field: LatLon,
     val attribution: String,
+    /** Altitude du terrain (openAIP), null si inconnue. */
+    val fieldElevationM: Int? = null,
 )
 
 /** Position démo du planeur et trace colorée, en coordonnées géographiques. */
