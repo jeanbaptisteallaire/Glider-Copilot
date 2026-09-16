@@ -105,8 +105,8 @@ fun FlightScreen(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(100)
-            t += 0.1
+            delay(250)   // 4 Hz : suffisant pour l'affichage, sobre en batterie
+            t += 0.25
         }
     }
     LaunchedEffect(pendingRaise) {

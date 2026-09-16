@@ -7,6 +7,8 @@ date -u
 APK=$(ls apk/*.apk | head -1)
 timeout 180 adb install -r "$APK"
 adb shell pm clear com.neutronstar.glidercopilot || true
+adb logcat -c || true
+(adb logcat -v time > "$OUT/logcat-live.txt" 2>&1 &)
 # localisation accordée d'avance : pas de boîte de dialogue pendant les captures
 adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION || true
 adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION || true

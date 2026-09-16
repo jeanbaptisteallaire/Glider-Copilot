@@ -31,7 +31,7 @@ class GliderRepository(private val prefs: UserPreferences, private val ddb: OgnD
             is PairingLookup.Found -> {
                 val d = r.devices.first()
                 PairingStatus.Paired(
-                    device = listOfNotNull("${d.deviceTypeLabel} ${d.deviceId}", d.aircraftModel).joinToString(" · "),
+                    device = listOfNotNull((if (d.deviceType == "F") "ID " else "${d.deviceTypeLabel} ") + d.deviceId, d.aircraftModel).joinToString(" · "),
                     source = source(r.fetchedAt, r.offline),
                 )
             }

@@ -1,4 +1,34 @@
-# HANDOFF — état du projet
+# HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
+
+## Session 2 — GLIDY, charte v8, Check-lists, Pilotage v8, appairage FLARM (16/09/2026)
+
+### Livré
+- **Nom : GLIDY** (libellé de l'app, écran d'avertissement, user-agent). `applicationId` conservé (`com.neutronstar.glidercopilot`) : aucune publication encore, renommage possible avant la fiche Play Store.
+- **Charte v8** (`planeur-pilotage-prevol-v8.html`) dans `core/designsystem/Theme.kt` : fond noir, vert `#b7f7a5`, orange `#ff9f43`,
+  texte `#f5f5f5/#c4c4c4/#adadad`, filets `#383838/#292929`, commandes `#171717/#292929`, échelle vario v8
+  (`#2d7043 → #7dc77e → #bebebe → #ffbd70 → #ff9130 → #ff8078`), police système. Polices B612/Barlow retirées. Plus aucune couleur codée dans les écrans.
+- **Navigation** v8 : Prévol · Check-lists · Pilotage, pictogrammes au trait, passage direct d'un toucher (la confirmation de sortie du vol de S1 est supprimée, conformément à la maquette).
+- **Check-lists** (`feature:checklist`, contenu dans `core:domain/checklist`) : copie de la maquette (CRIS 18, TVBCR 10, VERDO 8, APRÈS 7),
+  briefing rupture de câble avec plan généré (mêmes règles que `renderCablePlan()`), progression par carte, « Tout effacer ».
+  **Toutes les polices × 1,3** (constante `SCALE`). Cases et briefing persistés localement.
+- **Pilotage** v8 : marge verte (orange sous la sécurité), finesse F20/F15/F10, terrain AUTO + distance/cap ;
+  **profil de retour au terrain rétractable** (Réduire/Déployer) ; carte avec **GPS · BARO · DATA en bas à gauche** et **chrono en bas au centre** ;
+  **vario simplifié sans conseil** (valeur colorée, barre, Spirale/Pompe/Jour, bande altitude 5 min) ; **colonne d'actions : son du vario + repli du vario**.
+  Son réel (AudioTrack, règles de la maquette), coupé au repli. Pastilles : GPS = permission précise + récepteur actif, BARO = capteur de pression présent, DATA = réseau validé.
+- **Prévol** : carte **Planeur du jour · FLARM** (saisie immatriculation, Valider/Annuler, statut, pastille), 3 dernières immatriculations en raccourcis,
+  interrupteur « Détec. auto. décollage » (réglage mémorisé ; branchement GPS en S5).
+  Vérification dans la **Device Database OGN** (`data:ogn`) : cache 24 h, copie locale hors réseau, respect de `tracked=N` (pas d'appairage) et de `identified`.
+- **Club le plus proche** : permission de localisation demandée une fois ; club choisi à la main > club géolocalisé le plus proche > CVV Montpellier.
+
+### Vérifié
+- Tests JVM locaux : 32 OK (dont Check-lists, plan de câble, DDB synthétique + **échantillon réel DDB** : 36 559 fiches, 1 771 planeurs F-C, 355 non suivis).
+- CI : build + lint + APK verts sur 942a8f1. Captures émulateur : voir ci-dessous.
+
+### Limites / à faire
+- Pilotage toujours sur signal de démonstration (carte S3, capteurs S5, sécurité réelle S6).
+- La DDB complète (5,5 Mo) est téléchargée à la première validation ; prévoir un index compact si la mémoire pose problème sur petits téléphones.
+- Chrono de vol : affiché à 0 h 00 tant que la détection de décollage n'a pas de source GPS.
+
 
 ## Session 1 — Fondations + Prévol météo (16/09/2026)
 
@@ -28,9 +58,9 @@
 - Profil ARPEGE limité à 3 000 m sol : plafond « ≥ sommet » possible en montagne.
 - Maille ARPEGE ~10 km ; AROME (1 km) à intégrer pour la surface en relief.
 - Nébulosité basse ARPEGE parfois ~100 % alors que le modèle prévoit des cumulus : alerte affichée, pondération à affiner avec un pilote.
-- Charte provisoire : remplacée en S2 par la charte de JB.
+- Charte provisoire : remplacée en S2 par la charte v8 de JB.
 
-### Pour la session 2
+### Pour la session 2 (bilan en tête de fichier)
 1. Appliquer la charte graphique de JB (`core/designsystem`).
 2. Saisie d'immatriculation → fiche planeur via OGN DDB, mémoire des 3 dernières.
 3. Club le plus proche de la position (permission localisation « approximative »), repli sur le choix manuel.
