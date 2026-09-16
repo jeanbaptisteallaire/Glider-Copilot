@@ -1,0 +1,41 @@
+name: record-ogn
+# Mesure réelle du flux OGN (cadence, latence) et extrait anonymisé pour les tests et le rejeu.
+# Le flux brut reste un artefact de 1 jour : jamais publié dans le dépôt (règle OGN des 24 h).
+on:
+  workflow_dispatch:
+    inputs:
+      seconds: { description: "Durée d'enregistrement (s)", default: "600" }
+      filter: { description: "Filtre APRS (vide = flux complet mondial)", default: "" }
+  push:
+    branches: [main]
+    paths: ['tools/ogn/**', '.github/workflows/record-ogn.yml']
+  schedule:
+    - cron: '20 12 * * *'   # 14 h 20 en France : vols à voile en cours
+permissions:
+  contents: write
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enregistrer
+        run: |
+          SEC="${{ github.event.inputs.seconds }}"; FLT="${{ github.event.inputs.filter }}"
+          if [ "${{ github.event_name }}" = "schedule" ]; then SEC=900; FLT="r/44.2/4.5/450"; fi
+          python3 tools/ogn/record.py --seconds "${SEC:-600}" --filter "$FLT" --out out | tail -60
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ogn-raw
+          path: out/raw.log
+          retention-days: 1
+      - name: Publier statistiques et extrait anonymisé (ci-data)
+        run: |
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-data "$R" . || { git init -q -b ci-data . && git remote add origin "$R"; }
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          D="ogn-live/$(date -u +%Y%m%dT%H%M)"; mkdir -p "$D"
+          cp "$GITHUB_WORKSPACE/out/stats.json" "$GITHUB_WORKSPACE/out/excerpt_anon.aprs" "$D/"
+          git add -A && git commit -qm "ogn $D" || true
+          for i in 1 2 3 4 5; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 5; done
