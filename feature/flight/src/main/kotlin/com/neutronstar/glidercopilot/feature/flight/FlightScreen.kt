@@ -376,7 +376,7 @@ private fun DemoMap(t: Double, v: Double) {
     val c = Gc.colors
     val tm = rememberTextMeasurer()
     Canvas(Modifier.fillMaxSize().semantics { contentDescription = "Carte vue de dessus, démonstration" }) {
-        drawRect(Brush.radialGradient(listOf(c.mapHigh, c.mapLow), center = Offset(size.width * 0.35f, size.height * 0.3f), radius = size.maxDimension))
+        drawRect(c.mapLow)
         val step = 40.dp.toPx()
         var gx = 0f
         while (gx < size.width) { drawLine(Color.White.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
