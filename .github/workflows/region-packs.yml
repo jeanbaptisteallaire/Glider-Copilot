@@ -109,6 +109,7 @@ jobs:
           FILES=$(find out -mindepth 2 -type f \( -name '*.pmtiles' -o -name '*.geojson' -o -name '*-manifest.json' \))
           [ -n "$FILES" ] && gh release upload cartes $FILES --clobber
           gh release upload cartes out/catalog.json --clobber
+          python3 tools/pack/prune_release.py out/catalog.json || echo "nettoyage de la release ignoré"
       - name: Catalogue et échantillon aéro (ci-data)
         run: |
           cd /tmp && rm -rf cidata && mkdir cidata && cd cidata

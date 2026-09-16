@@ -2,10 +2,10 @@
 """Fabrique un pack de carte hors ligne GLIDY pour une région.
 
 Sorties dans OUT/<id>/ :
-  <id>-fond.pmtiles     fond OpenStreetMap vectoriel (extrait Protomaps, ODbL)
-  <id>-relief.pmtiles   modèle numérique de terrain Copernicus GLO-30 encodé Terrarium (tuiles 512 px)
-  <id>-courbes.pmtiles  courbes de niveau tous les 100 m (couche « contours », attribut « ele »)
-  <id>-aero.geojson     espaces aériens, terrains, balises, points de report openAIP (propriétés aplaties)
+  <id>-<version>-fond.pmtiles     fond OpenStreetMap vectoriel (extrait Protomaps, ODbL)
+  <id>-<version>-relief.pmtiles   modèle numérique de terrain Copernicus GLO-30 encodé Terrarium (tuiles 512 px)
+  <id>-<version>-courbes.pmtiles  courbes de niveau tous les 100 m (couche « contours », attribut « ele »)
+  <id>-<version>-aero.geojson     espaces aériens, terrains, balises, points de report openAIP (propriétés aplaties)
   <id>-manifest.json    version, emprise, validité des données aéro, tailles et SHA-256
 
 Dépendances : gdal (python3-gdal, gdal-bin), numpy, tippecanoe, pmtiles (go-pmtiles).
@@ -271,7 +271,9 @@ def main():
     os.makedirs(work, exist_ok=True)
     skip = set(filter(None, args.skip.split(",")))
 
-    files = {"fond": f"{rid}-fond.pmtiles", "relief": f"{rid}-relief.pmtiles", "courbes": f"{rid}-courbes.pmtiles", "aero": f"{rid}-aero.geojson"}
+    # noms versionnés : un téléphone qui télécharge l'ancienne version n'est jamais pris à revers par une publication
+    version = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d%H%M")
+    files = {role: f"{rid}-{version}-{role}.{'geojson' if role == 'aero' else 'pmtiles'}" for role in ("fond", "relief", "courbes", "aero")}
     sources = {}
     if "fond" not in skip:
         sources["protomaps"] = build_basemap(bbox, os.path.join(out, files["fond"]))
@@ -288,7 +290,7 @@ def main():
         "format": 1,
         "id": rid,
         "name": region["name"],
-        "version": now.strftime("%Y%m%d%H%M"),
+        "version": version,
         "created": now.isoformat().replace("+00:00", "Z"),
         "bbox": bbox,
         "basemapMaxZoom": BASEMAP_MAXZOOM,
