@@ -11,6 +11,7 @@ precog/mtg_flashes 200 3898 https://precog-api.com/v1/mtg-li/flashes?limit=5
 precog/arpege_profile_09Z 200 12678 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T09%3A00%3A00Z
 precog/arpege_profile_12Z 200 12769 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T12%3A00%3A00Z
 precog/arpege_profile_15Z 200 12695 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T15%3A00%3A00Z
-precog/station_series 200 20289 https://precog-api.com/v1/observations/stations/34274001/series?frequency=6m&hours=3
+precog/station_series 200 20305 https://precog-api.com/v1/observations/stations/34274001/series?frequency=6m&hours=3
 precog/arpege_runs_latest_304 304  https://precog-api.com/v1/arpege/runs/latest
-openaip SKIP (pas de secret OPENAIP_KEY)
+openaip/airports_lfnl 200 43957 https://api.core.openaip.net/api/airports?pos=43.80028,3.78167&dist=60000&limit=50
+openaip/airspaces_lfnl 429 1385 https://api.core.openaip.net/api/airspaces?pos=43.80028,3.78167&dist=60000&limit=50
