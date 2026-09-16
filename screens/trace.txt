@@ -1,5 +1,5 @@
 + date -u
-Wed Sep 16 20:35:02 UTC 2026
+Wed Sep 16 20:45:57 UTC 2026
 ++ ls apk/app-debug.apk
 ++ head -1
 + APK=apk/app-debug.apk
@@ -124,19 +124,19 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 + timeout 20 adb exec-out screencap -p
 + timeout 30 adb logcat -d -t 600
 + ls -la screens
-total 7916
-drwxr-xr-x  2 runner runner    4096 Sep 16 20:37 .
-drwxr-xr-x 13 runner runner    4096 Sep 16 20:35 ..
--rw-r--r--  1 runner runner  100584 Sep 16 20:35 01-avertissement.png
--rw-r--r--  1 runner runner  205214 Sep 16 20:35 02-prevol.png
--rw-r--r--  1 runner runner  203497 Sep 16 20:36 03-prevol-appairage.png
--rw-r--r--  1 runner runner  246096 Sep 16 20:36 04-prevol-meteo.png
--rw-r--r--  1 runner runner  263402 Sep 16 20:37 05-checklists.png
--rw-r--r--  1 runner runner  265645 Sep 16 20:37 06-checklists-cases.png
--rw-r--r--  1 runner runner  286881 Sep 16 20:37 07-checklists-suite.png
--rw-r--r--  1 runner runner  212193 Sep 16 20:37 08-pilotage.png
--rw-r--r--  1 runner runner  176384 Sep 16 20:37 09-pilotage-profil-reduit.png
--rw-r--r--  1 runner runner  145333 Sep 16 20:37 10-pilotage-vario-replie.png
--rw-r--r--  1 runner runner 5878769 Sep 16 20:37 logcat-live.txt
--rw-r--r--  1 runner runner   78566 Sep 16 20:37 logcat.txt
--rw-r--r--  1 runner runner    4023 Sep 16 20:37 trace.txt
+total 7532
+drwxr-xr-x  2 runner runner    4096 Sep 16 20:48 .
+drwxr-xr-x 14 runner runner    4096 Sep 16 20:45 ..
+-rw-r--r--  1 runner runner  100584 Sep 16 20:46 01-avertissement.png
+-rw-r--r--  1 runner runner  205214 Sep 16 20:46 02-prevol.png
+-rw-r--r--  1 runner runner  203340 Sep 16 20:47 03-prevol-appairage.png
+-rw-r--r--  1 runner runner  252733 Sep 16 20:47 04-prevol-meteo.png
+-rw-r--r--  1 runner runner  263402 Sep 16 20:48 05-checklists.png
+-rw-r--r--  1 runner runner  265645 Sep 16 20:48 06-checklists-cases.png
+-rw-r--r--  1 runner runner  280107 Sep 16 20:48 07-checklists-suite.png
+-rw-r--r--  1 runner runner  210403 Sep 16 20:48 08-pilotage.png
+-rw-r--r--  1 runner runner  175953 Sep 16 20:48 09-pilotage-profil-reduit.png
+-rw-r--r--  1 runner runner  142255 Sep 16 20:48 10-pilotage-vario-replie.png
+-rw-r--r--  1 runner runner 5500567 Sep 16 20:48 logcat-live.txt
+-rw-r--r--  1 runner runner   81916 Sep 16 20:48 logcat.txt
+-rw-r--r--  1 runner runner    4023 Sep 16 20:48 trace.txt
