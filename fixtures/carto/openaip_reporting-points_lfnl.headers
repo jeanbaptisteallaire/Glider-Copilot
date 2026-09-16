@@ -1,17 +1,17 @@
 HTTP/2 429 
-date: Wed, 16 Sep 2026 20:31:59 GMT
+date: Wed, 16 Sep 2026 20:33:22 GMT
 content-type: text/html; charset=UTF-8
 via: 1.1 google
 alt-svc: h3=":443"; ma=86400
 cf-cache-status: DYNAMIC
 strict-transport-security: max-age=2592000; includeSubDomains; preload
 x-content-type-options: nosniff
-report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=waerTFo8RfhksAGN%2BmrgoBQlXnnzUzIYiE1xMkmpVqUDyK%2FIM3IXjCrgDONyZGQoSZ3tOE9FyU2gHUwDwzBLnln5tt6b5MIJhDyo9rHvFMPR9kRhVsUfqY2nKNRlBmJ4c3lvX3XX"}]}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=%2BF0Br1ifvmScUxKgZso7mUR7sCbXZaMJAMk%2FTEdKgnadTT8pSlfoxeu8dxJc4ijRIDM8w%2BpZkVigJNze2FMiVoyuNv3a4zQTifvSwx6Y95wuP39Swk9s1PfBwMtnPGeZdHP8UPet"}]}
 nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
 expect-ct: max-age=86400, enforce
 referrer-policy: same-origin
 x-frame-options: SAMEORIGIN
 x-xss-protection: 1; mode=block
 server: cloudflare
-cf-ray: a3c2a3460b792b57-LAX
+cf-ray: a3c2a5532dd8e9e1-LAX
 
