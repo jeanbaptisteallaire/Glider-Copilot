@@ -19,10 +19,15 @@
 - **Vol** : squelette des 3 zones sur signal de démonstration, boutons F20/F15/F10 (relèvement confirmé), vario fermable (croix = masquer + couper le son, bouton pour rouvrir).
 - CI GitHub Actions : tests JVM, lint, APK debug, captures sur émulateur, enregistrement de vraies réponses precog/openAIP → branche `ci-data`.
 
+### Vérifié (16/09/2026)
+- CI verte : tests JVM (17, dont 4 sur réponses precog **réelles** relevées à LFNL), lint (31 avertissements, 0 erreur), APK debug, captures émulateur Pixel 6 / API 34.
+- Journée réelle du 16/09 à LFNL : sol modèle 213 m, plafond 12 UTC 2 078 m QNH sous cumulus (base Espy 1 865 m sol), w* 2,2 m/s, montée estimée 1,1 m/s, vigilance verte (34).
+- openAIP : clé en secret `OPENAIP_KEY`, `/api/airports` OK ; `/api/airspaces` a répondu 429 (limite de débit) → espacer les appels en CI.
+
 ### Hypothèses et limites connues
 - Profil ARPEGE limité à 3 000 m sol : plafond « ≥ sommet » possible en montagne.
 - Maille ARPEGE ~10 km ; AROME (1 km) à intégrer pour la surface en relief.
-- Structure fine du JSON Vigilance lue défensivement (périodes → domain_ids) : à confirmer sur la fixture réelle.
+- Nébulosité basse ARPEGE parfois ~100 % alors que le modèle prévoit des cumulus : alerte affichée, pondération à affiner avec un pilote.
 - Charte provisoire : remplacée en S2 par la charte de JB.
 
 ### Pour la session 2
