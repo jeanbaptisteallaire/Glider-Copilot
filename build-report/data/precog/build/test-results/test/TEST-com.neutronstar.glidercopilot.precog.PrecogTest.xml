@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.precog.PrecogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-16T14:26:25" hostname="runnervmlun5p" time="0.666">
+<testsuite name="com.neutronstar.glidercopilot.precog.PrecogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-16T14:29:43" hostname="runnervmlun5p" time="0.304">
   <properties/>
-  <testcase name="repositoryBuildsDay" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.628"/>
+  <testcase name="repositoryBuildsDay" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.289"/>
   <testcase name="unknownUnitIsNeverGuessed" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.0"/>
   <testcase name="parsesJsonEdgeCases" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.001"/>
-  <testcase name="vigilanceForDepartement" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.007"/>
-  <testcase name="etagRevalidationAndOfflineFallback" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.009"/>
-  <testcase name="differentiatesAccumulatedFlux" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.013"/>
-  <testcase name="mapsProfileAndAnalyses" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.005"/>
+  <testcase name="vigilanceForDepartement" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.002"/>
+  <testcase name="etagRevalidationAndOfflineFallback" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.001"/>
+  <testcase name="differentiatesAccumulatedFlux" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.007"/>
+  <testcase name="mapsProfileAndAnalyses" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
