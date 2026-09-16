@@ -60,4 +60,40 @@ keys=sorted({k for x in dev[:50] for k in x})
 print('ogn ddb total',len(dev),'F-C',len(fc),'keys',keys,'tracked N',sum(1 for x in dev if x.get('tracked')=='N'))
 PY2
 rm -f "$OUT/ogn/ddb_full.json"
+# --- Session 3 : cartographie ---------------------------------------------------------------
+mkdir -p "$OUT/carto"
+# openAIP : spécification de l'API (énumérations), espaces/navaids avec délai anti-429, exports publics
+curl -sS -m 60 https://docs.openaip.net/ -o "$OUT/carto/openaip_docs.html"; echo "openaip docs $(stat -c %s "$OUT/carto/openaip_docs.html")" | tee -a "$OUT/index.txt"
+grep -oE '(src|href|url)="?[^" >]+\.(js|json|yaml)' "$OUT/carto/openaip_docs.html" | head -20 | tee -a "$OUT/index.txt"
+for u in $(grep -oE '"[^"]+\.(json|yaml)"' "$OUT/carto/openaip_docs.html" | tr -d '"' | head -5); do
+  case "$u" in http*) U="$u";; /*) U="https://docs.openaip.net$u";; *) U="https://docs.openaip.net/$u";; esac
+  get "carto/spec_$(basename "$u" | tr -c 'A-Za-z0-9._-' _)" "$U"
+done
+for U in https://api.core.openaip.net/api/system/specs https://docs.openaip.net/openapi.json https://docs.openaip.net/swagger.json https://api.core.openaip.net/api/docs-json; do
+  get "carto/spec_try_$(echo "$U" | md5sum | cut -c1-6)" "$U" ${OPENAIP_KEY:+-H "x-openaip-api-key: $OPENAIP_KEY"}
+done
+if [ -n "${OPENAIP_KEY:-}" ]; then
+  for L in airspaces navaids reporting-points; do
+    for try in 1 2 3; do
+      sleep 8
+      get "carto/openaip_${L}_lfnl" "https://api.core.openaip.net/api/$L?pos=$LAT,$LON&dist=80000&limit=100" -H "x-openaip-api-key: $OPENAIP_KEY"
+      head -c 1 "$OUT/carto/openaip_${L}_lfnl.json" | grep -q '{' && break
+    done
+  done
+fi
+B2=https://storage.googleapis.com/29f98e10-a489-4c82-ae5e-489dbcd4912f
+for F in fr_asp.geojson fr_apt.geojson fr_nav.geojson fr_asp.json fr_apt.json; do
+  code=$(curl -sS -m 120 -o "$OUT/carto/export_$F" -w '%{http_code}' "$B2/$F" || echo ERR)
+  echo "export $F $code $(stat -c %s "$OUT/carto/export_$F" 2>/dev/null)" | tee -a "$OUT/index.txt"
+  [ "$code" = 200 ] && [ "$(stat -c %s "$OUT/carto/export_$F")" -gt 20000000 ] && { head -c 3000 "$OUT/carto/export_$F" > "$OUT/carto/export_${F}.head"; rm -f "$OUT/carto/export_$F"; }
+done
+# Protomaps : liste des builds quotidiens ; Copernicus GLO-30 : tuile de LFNL
+get carto/protomaps_builds "https://build-metadata.protomaps.dev/builds.json"
+code=$(curl -sS -m 60 -I -o "$OUT/carto/cop30_head.txt" -w '%{http_code}' "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_E003_00_DEM/Copernicus_DSM_COG_10_N43_00_E003_00_DEM.tif" || echo ERR)
+echo "cop30 N43E003 $code" | tee -a "$OUT/index.txt"
+# polices de carte (glyphes MapLibre) Protomaps
+for R in 0-255 256-511; do
+  code=$(curl -sS -m 60 -o "$OUT/carto/glyph_$R.pbf" -w '%{http_code}' "https://raw.githubusercontent.com/protomaps/basemaps-assets/main/fonts/Noto%20Sans%20Regular/$R.pbf" || echo ERR)
+  echo "glyph $R $code $(stat -c %s "$OUT/carto/glyph_$R.pbf" 2>/dev/null)" | tee -a "$OUT/index.txt"
+done
 exit 0
