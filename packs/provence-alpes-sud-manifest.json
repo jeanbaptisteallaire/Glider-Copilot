@@ -2,8 +2,8 @@
  "format": 1,
  "id": "provence-alpes-sud",
  "name": "Provence · Alpes du Sud",
- "version": "202609162046",
- "created": "2026-09-16T20:46:28Z",
+ "version": "202609162056",
+ "created": "2026-09-16T20:56:56Z",
  "bbox": [
   4.55,
   43.35,
@@ -11,11 +11,11 @@
   45.15
  ],
  "basemapMaxZoom": 12,
- "demMaxZoom": 11,
+ "demMaxZoom": 10,
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-14T20:46:28Z",
+ "aeroValidUntil": "2026-10-14T20:56:56Z",
  "aeroCounts": {
   "airspace": 253,
   "airport": 115,
@@ -25,7 +25,7 @@
  "sources": {
   "protomaps": "20260916.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-09-16T20:46:28Z"
+  "openaip": "2026-09-16T20:56:56Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
@@ -40,8 +40,8 @@
    "role": "relief",
    "name": "provence-alpes-sud-relief.pmtiles",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-relief.pmtiles",
-   "size": 146305233,
-   "sha256": "e9328fbb3d794d71c848b7e71dadbedd4d4d41d1220f4ceb6082a1f23ad57114"
+   "size": 17225494,
+   "sha256": "a5b214cb4a44287a20994eeb9c0c7668efd43a018bc42ad354e08e63358dd3bc"
   },
   {
    "role": "courbes",
@@ -55,7 +55,7 @@
    "name": "provence-alpes-sud-aero.geojson",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-aero.geojson",
    "size": 515713,
-   "sha256": "60fc48e3b8f98f2d6150db3343c2f82218c24954e39f8d6ec67f5ff250c8d3c4"
+   "sha256": "21518f3993578c2f349c5eb9424891c6baea8f2425190316c8a79552fd32cfe6"
   }
  ]
 }
