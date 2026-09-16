@@ -62,6 +62,7 @@ import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcColors
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.vario
+import com.neutronstar.glidercopilot.domain.LatLon
 import kotlinx.coroutines.delay
 import java.util.Locale
 import kotlin.math.abs
@@ -75,7 +76,8 @@ import kotlin.math.sin
 /** État des sources affiché sur la carte (pastilles GPS, BARO, DATA de la maquette v8). */
 data class FlightStatus(val gps: Boolean = false, val baro: Boolean = false, val data: Boolean = false)
 
-private const val FIELD_ID = "LFNL"
+/** Terrain de référence affiché (OACI du club), fourni par la carte ; LFNL par défaut. */
+private val LocalFieldId = androidx.compose.runtime.staticCompositionLocalOf { "LFNL" }
 private const val FIELD_ELEV = 262.0
 private const val FIELD_DIST_KM = 7.4
 private const val FIELD_BRG = 285.0
@@ -91,6 +93,7 @@ private const val CEILING = 1880.0
 fun FlightScreen(
     status: FlightStatus,
     modifier: Modifier = Modifier,
+    map: FlightMapConfig? = null,
     flightSeconds: Long = 0,
 ) {
     val c = Gc.colors
@@ -102,6 +105,7 @@ fun FlightScreen(
     var soundOn by rememberSaveable { mutableStateOf(false) }
     val history = remember { mutableStateListOf<Sample>() }
     val tone = remember { VarioTone() }
+    val controller = remember { MapController() }
 
     LaunchedEffect(Unit) {
         while (true) {
@@ -133,6 +137,7 @@ fun FlightScreen(
         onDispose { tone.stop() }
     }
 
+    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL")) {
     Column(modifier.fillMaxSize().background(c.background)) {
         SafetyZone(marge, alt, need, trend, finesse, pendingRaise) { f ->
             when {
@@ -144,8 +149,12 @@ fun FlightScreen(
         }
         ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, finesse.toDouble(), marge)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
-            DemoMap(t, v)
-            MapOverlays(status, flightSeconds)
+            if (map != null) {
+                LiveMap(map, demoFrame(map.field, t), controller, Modifier.fillMaxSize())
+            } else {
+                DemoMap(t, v)
+            }
+            MapOverlays(status, flightSeconds, map, controller)
         }
         VarioPanel(
             open = varioOpen,
@@ -157,6 +166,7 @@ fun FlightScreen(
             onSound = { soundOn = !soundOn },
             onToggle = { varioOpen = !varioOpen },
         )
+    }
     }
 }
 
@@ -220,7 +230,7 @@ private fun SafetyZone(marge: Double, alt: Double, need: Double, trend: Double, 
             Column(Modifier.fillMaxWidth().heightIn(min = 44.dp).padding(horizontal = 2.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text("AUTO", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
-                    Text(FIELD_ID, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink))
+                    Text(LocalFieldId.current, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink))
                     Spacer(Modifier.weight(1f))
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
                 }
@@ -282,6 +292,7 @@ private fun demoElevation(s: Double): Double =
 private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Double) {
     val c = Gc.colors
     val tm = rememberTextMeasurer()
+    val FIELD_ID = LocalFieldId.current
     Canvas(Modifier.fillMaxWidth().height(88.dp).semantics { contentDescription = "Coupe du terrain vers $FIELD_ID" }) {
         val w = size.width
         val h = size.height
@@ -374,6 +385,7 @@ private fun DrawScope.label(tm: TextMeasurer, text: String, x: Float, cy: Float,
 @Composable
 private fun DemoMap(t: Double, v: Double) {
     val c = Gc.colors
+    val FIELD_ID = LocalFieldId.current
     val tm = rememberTextMeasurer()
     Canvas(Modifier.fillMaxSize().semantics { contentDescription = "Carte vue de dessus, démonstration" }) {
         drawRect(c.mapLow)
@@ -424,16 +436,21 @@ private fun DrawScope.drawGlider(x: Float, y: Float, headingDeg: Float, color: C
 }
 
 @Composable
-private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long) {
+private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long, map: FlightMapConfig?, controller: MapController) {
     val c = Gc.colors
     // démonstration
     Text(
-        "DÉMO · carte réelle en session 3",
+        if (map != null) "DÉMO · planeur simulé" else "Carte hors ligne à télécharger dans Prévol",
         style = TextStyle(fontSize = 9.sp, color = c.faint),
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 14.dp).background(c.overlay, RoundedCornerShape(7.dp)).padding(horizontal = 8.dp, vertical = 4.dp),
     )
     // orientation
-    RoundTool("AUTO", Modifier.align(Alignment.TopStart).padding(start = 13.dp, top = 10.dp), "Orientation de la carte")
+    RoundTool(
+        if (controller.follow) "AUTO" else "LIBRE",
+        Modifier.align(Alignment.TopStart).padding(start = 13.dp, top = 10.dp),
+        if (controller.follow) "Carte centrée sur le planeur" else "Recentrer la carte sur le planeur",
+        onClick = controller::recenter,
+    )
     // vent
     Column(
         Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 45.dp).width(44.dp)
@@ -454,13 +471,14 @@ private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long) {
     }
     // zoom
     Column(Modifier.align(Alignment.BottomEnd).padding(end = 13.dp, bottom = 15.dp).background(c.background, RoundedCornerShape(22.dp))) {
-        Text("+", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).padding(top = 6.dp).semantics { contentDescription = "Zoom avant" })
-        Text("−", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).padding(top = 6.dp).semantics { contentDescription = "Zoom arrière" })
+        Text("+", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomIn).padding(top = 6.dp).semantics { contentDescription = "Zoom avant" })
+        Text("−", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomOut).padding(top = 6.dp).semantics { contentDescription = "Zoom arrière" })
     }
     // échelle de distance
+    val (scaleLabel, scaleDp) = if (map != null) controller.scale() else "500 m" to 60f
     Column(Modifier.align(Alignment.BottomStart).padding(start = 10.dp, bottom = 12.dp)) {
-        Text("500 m", style = TextStyle(fontSize = 9.sp, color = c.dim))
-        Canvas(Modifier.padding(top = 2.dp).size(width = 60.dp, height = 5.dp)) {
+        Text(scaleLabel, style = TextStyle(fontSize = 9.sp, color = c.dim))
+        Canvas(Modifier.padding(top = 2.dp).size(width = scaleDp.dp, height = 5.dp)) {
             val s = 1.5.dp.toPx()
             drawLine(c.dim, Offset(0f, size.height), Offset(size.width, size.height), s)
             drawLine(c.dim, Offset(s / 2, 0f), Offset(s / 2, size.height), s)
@@ -477,6 +495,15 @@ private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long) {
         StatusBox("GPS", status.gps)
         StatusBox("BARO", status.baro)
         StatusBox("DATA", status.data)
+    }
+    // attribution des données de carte
+    if (map != null) {
+        Text(
+            map.attribution,
+            style = TextStyle(fontSize = 7.sp, color = c.faint),
+            maxLines = 1,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 1.dp),
+        )
     }
     // chrono de vol
     Box(
@@ -503,13 +530,41 @@ private fun StatusBox(label: String, on: Boolean) {
 }
 
 @Composable
-private fun RoundTool(text: String, modifier: Modifier, description: String) {
+private fun RoundTool(text: String, modifier: Modifier, description: String, onClick: () -> Unit = {}) {
     val c = Gc.colors
     Box(
         modifier.size(44.dp).background(c.background, CircleShape).border(1.dp, Color.White.copy(alpha = 0.035f), CircleShape)
+            .clickable(role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
     ) { Text(text, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.ink)) }
+}
+
+/** Point à [distKm] de [from] au relèvement [bearingDeg] (approximation locale, suffisante à quelques km). */
+private fun destination(from: LatLon, bearingDeg: Double, distKm: Double): LatLon {
+    val b = Math.toRadians(bearingDeg)
+    return LatLon(from.lat + distKm * cos(b) / 111.32, from.lon + distKm * sin(b) / (111.32 * cos(Math.toRadians(from.lat))))
+}
+
+/** Planeur démo spiralant à FIELD_DIST_KM du terrain de référence, trace colorée par le vario simulé. */
+@Composable
+private fun demoFrame(field: LatLon, t: Double): GeoFrame {
+    val c = Gc.colors
+    val center = destination(field, (FIELD_BRG + 180) % 360, FIELD_DIST_KM)
+    val r = 0.18
+    fun at(a: Double, driftKm: Double): LatLon {
+        val p = destination(center, 300.0 - 180.0, driftKm)   // la spirale dérive sous le vent (vent du 300°)
+        return LatLon(p.lat + r * sin(a) / 111.32, p.lon + r * cos(a) / (111.32 * cos(Math.toRadians(p.lat))))
+    }
+    val a0 = t * 2 * Math.PI / 26
+    val trace = (0 until 60).map { k ->
+        val a1 = a0 - k * 0.12
+        val a2 = a0 - (k + 1) * 0.12
+        val vv = 1.4 + 1.3 * sin(a1) + 0.3 * sin((t - k * 0.5) * 1.7)
+        Triple(at(a1, -k * 0.004), at(a2, -(k + 1) * 0.004), c.vario(vv))
+    }
+    val heading = (Math.toDegrees(kotlin.math.atan2(-sin(a0), cos(a0))) + 360) % 360
+    return GeoFrame(at(a0, 0.0), heading, trace, field)
 }
 
 // ---------------------------------------------------------------- vario

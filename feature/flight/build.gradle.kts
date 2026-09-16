@@ -18,7 +18,8 @@ kotlin { jvmToolchain(17) }
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:domain"))
-    
+    implementation(project(":data:carto"))
+    implementation(libs.maplibre.android)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.kotlinx.coroutines.android)

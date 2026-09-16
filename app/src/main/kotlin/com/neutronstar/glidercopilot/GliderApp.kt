@@ -31,6 +31,7 @@ class AppContainer(app: Application) {
         OgnDeviceDatabase(UrlConnectionHttpClient(userAgent = userAgent, timeoutMs = 30_000), FileResponseCache(File(app.cacheDir, "ogn"))),
     )
     val checklist = ChecklistRepository(prefs)
+    val carto = CartoRepository(app, UrlConnectionHttpClient(userAgent = userAgent), clubs, userAgent)
 }
 
 class GliderApp : Application() {
@@ -39,6 +40,7 @@ class GliderApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        org.maplibre.android.MapLibre.getInstance(this)
         container = AppContainer(this)
         container.location.refresh()
     }

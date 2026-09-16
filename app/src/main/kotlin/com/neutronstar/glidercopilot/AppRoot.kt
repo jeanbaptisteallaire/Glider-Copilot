@@ -28,11 +28,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
@@ -46,6 +48,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.feature.checklist.ChecklistScreen
+import com.neutronstar.glidercopilot.carto.MapStyle
+import com.neutronstar.glidercopilot.feature.flight.FlightMapConfig
 import com.neutronstar.glidercopilot.feature.flight.FlightScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolViewModel
@@ -75,6 +79,20 @@ private fun MainScaffold(container: AppContainer) {
     var tab by rememberSaveable { mutableStateOf(Tab.PREVOL) }
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
     val status = rememberFlightStatus()
+    val activeMap by container.carto.active.collectAsState()
+    val club by container.clubs.selectedClub.collectAsState(initial = null)
+    val palette = rememberMapPalette()
+    val flightMap = remember(activeMap, club?.id) {
+        val m = activeMap ?: return@remember null
+        val field = club?.position ?: m.pack.center
+        FlightMapConfig(
+            styleJson = MapStyle.build(m.pack, m.dir, m.aeroText, palette),
+            styleKey = "${m.pack.id}-${m.pack.version}",
+            fieldId = club?.airfieldIcao ?: "TERRAIN",
+            field = field,
+            attribution = "© OpenStreetMap · openAIP · Copernicus",
+        )
+    }
 
     // Localisation demandée une seule fois : club le plus proche et pastille GPS. Refus = club par défaut.
     val asked by container.prefs.locationAsked.collectAsState(initial = true)
@@ -93,9 +111,9 @@ private fun MainScaffold(container: AppContainer) {
     Column(Modifier.fillMaxSize().background(c.background).statusBarsPadding()) {
         Box(Modifier.weight(1f)) {
             when (tab) {
-                Tab.PREVOL -> PrevolScreen(prevolVm)
+                Tab.PREVOL -> PrevolScreen(prevolVm, container.carto)
                 Tab.CHECKLIST -> ChecklistScreen(container.checklist)
-                Tab.PILOTAGE -> FlightScreen(status)
+                Tab.PILOTAGE -> FlightScreen(status, map = flightMap)
             }
         }
         Row(
@@ -157,5 +175,19 @@ private fun Disclaimer(onAccept: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(containerColor = c.ok, contentColor = c.onAccent),
         ) { Text("J'ai compris", style = Gc.type.body.copy(color = c.onAccent, fontWeight = FontWeight.Bold)) }
+    }
+}
+
+/** Couleurs de carte tirées de la charte GLIDY. */
+@Composable
+private fun rememberMapPalette(): com.neutronstar.glidercopilot.carto.MapPalette {
+    val c = Gc.colors
+    return remember(c) {
+        fun h(color: androidx.compose.ui.graphics.Color) = String.format("#%06X", color.toArgb() and 0xFFFFFF)
+        com.neutronstar.glidercopilot.carto.MapPalette(
+            background = h(c.background), label = h(c.dim), halo = h(c.background),
+            controlled = h(c.air), restricted = h(c.warn), information = h(c.ok), other = h(c.faint),
+            airport = h(c.ok), navaid = h(c.dim), route = h(c.route), glider = h(c.ink),
+        )
     }
 }

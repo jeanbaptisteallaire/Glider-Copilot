@@ -16,7 +16,7 @@ import argparse, datetime as dt, glob, hashlib, json, math, os, shutil, subproce
 UA = "GLIDY-pack-builder/1.0 (+https://github.com/jeanbaptisteallaire/Glider-Copilot)"
 AERO_VALIDITY_DAYS = 28   # un cycle AIRAC : au-delà, l'app signale des données aéro à rafraîchir
 BASEMAP_MAXZOOM = 12
-DEM_MAXZOOM = 11          # tuiles 512 px : résolution effective ≈ 38 m
+DEM_MAXZOOM = 10          # tuiles 512 px : résolution effective ≈ 76 m (ombrage et coupe), pack léger
 CONTOUR_STEP = 100
 
 
@@ -117,10 +117,11 @@ def build_relief(bbox, work, out_relief, out_contours):
     src = gdal.Open(merc)
     h = src.GetRasterBand(1).ReadAsArray().astype("float32")
     h[(h < -500) | ~np.isfinite(h)] = 0.0
-    v = h + 32768.0
+    # altitude arrondie au mètre : le canal bleu (fraction) reste à 0 et le PNG se compresse bien mieux
+    v = np.rint(h) + 32768.0
     r = np.floor(v / 256.0)
-    g = np.floor(v) - r * 256.0
-    b = np.floor((v - np.floor(v)) * 256.0)
+    g = v - r * 256.0
+    b = np.zeros_like(v)
     rgb_path = os.path.join(work, "terrarium.tif")
     drv = gdal.GetDriverByName("GTiff")
     dst = drv.Create(rgb_path, src.RasterXSize, src.RasterYSize, 3, gdal.GDT_Byte, ["COMPRESS=DEFLATE", "TILED=YES", "PHOTOMETRIC=RGB"])

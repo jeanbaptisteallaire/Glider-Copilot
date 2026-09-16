@@ -11,7 +11,9 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.2.0"
+        versionName = "0.3.0"
+        // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
+        ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
     }
     buildTypes {
         release {
@@ -41,6 +43,8 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":data:precog"))
     implementation(project(":data:ogn"))
+    implementation(project(":data:carto"))
+    implementation(libs.maplibre.android)
     implementation(project(":feature:checklist"))
     implementation(project(":feature:prevol"))
     implementation(project(":feature:flight"))

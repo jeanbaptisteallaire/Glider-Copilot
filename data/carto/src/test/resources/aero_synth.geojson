@@ -1,0 +1,7 @@
+{"type":"FeatureCollection","fetched":"2026-09-16T20:30:00Z","features":[
+{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[3.6,43.7],[4.0,43.7],[4.0,43.9],[3.6,43.9],[3.6,43.7]]]},"properties":{"layer":"airspace","id":"a1","name":"TMA MONTPELLIER 3","type":7,"cls":3,"notam":false,"lo_v":2500,"lo_u":1,"lo_r":1,"up_v":145,"up_u":6,"up_r":2}},
+{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[3.9,43.5],[4.2,43.5],[4.2,43.6],[3.9,43.6],[3.9,43.5]],[[4.0,43.52],[4.1,43.52],[4.1,43.58],[4.0,43.58],[4.0,43.52]]]},"properties":{"layer":"airspace","id":"a2","name":"LF-R TROU","type":1,"cls":8,"notam":true,"lo_v":0,"lo_u":1,"lo_r":0,"up_v":1000,"up_u":1,"up_r":0}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[3.96083,43.57611]},"properties":{"layer":"airport","id":"p1","name":"MONTPELLIER MEDITERRANEE","icao":"LFMT","type":9,"elev":5,"freq":"130.855","rwy":"12R"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[3.95,43.58]},"properties":{"layer":"navaid","id":"n1","name":"MONTPELLIER","ident":"FJR","type":4,"freq":"114.450"}},
+{"type":"Feature","geometry":{"type":"Point","coordinates":[3.7,43.6]},"properties":{"layer":"reporting","id":"r1","name":"NW","compulsory":true}}
+]}
