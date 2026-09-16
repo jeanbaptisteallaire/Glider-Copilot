@@ -2,8 +2,8 @@
  "format": 1,
  "id": "toulouse-pyrenees",
  "name": "Toulouse · Pyrénées",
- "version": "202609162051",
- "created": "2026-09-16T20:51:24Z",
+ "version": "202609162100",
+ "created": "2026-09-16T21:00:29Z",
  "bbox": [
   0.35,
   42.35,
@@ -11,11 +11,11 @@
   44.55
  ],
  "basemapMaxZoom": 12,
- "demMaxZoom": 11,
+ "demMaxZoom": 10,
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-14T20:51:24Z",
+ "aeroValidUntil": "2026-10-14T21:00:29Z",
  "aeroCounts": {
   "airspace": 166,
   "airport": 174,
@@ -25,7 +25,7 @@
  "sources": {
   "protomaps": "20260916.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-09-16T20:51:24Z"
+  "openaip": "2026-09-16T21:00:29Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
@@ -40,8 +40,8 @@
    "role": "relief",
    "name": "toulouse-pyrenees-relief.pmtiles",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-relief.pmtiles",
-   "size": 175759678,
-   "sha256": "9f414117730ffb944b43c4d3142ba8ed7a7b605367cc5f1ec3f67dfe36b0a7af"
+   "size": 19505024,
+   "sha256": "1dd2bea015805bfacace6280dbb409af5c14f1c0c9f6d7906a03fdebba6dc3e2"
   },
   {
    "role": "courbes",
@@ -55,7 +55,7 @@
    "name": "toulouse-pyrenees-aero.geojson",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-aero.geojson",
    "size": 328924,
-   "sha256": "7df60273857dff2de710a9eee08b008986105e664c08708d13054ae76c33f679"
+   "sha256": "ecf741e7abb264c3d4c2fa94fe1a2b9c9b33bb258a1327bed618962e8d03a9ac"
   }
  ]
 }
