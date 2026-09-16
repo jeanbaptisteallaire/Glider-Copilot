@@ -1,19 +1,19 @@
 {
  "format": 1,
- "generated": "2026-09-16T21:01:08Z",
+ "generated": "2026-09-16T21:34:36Z",
  "packs": [
   {
    "id": "aquitaine-bearn",
    "name": "Aquitaine · Béarn",
-   "version": "202609162100",
-   "created": "2026-09-16T21:00:48Z",
+   "version": "202609162130",
+   "created": "2026-09-16T21:34:12Z",
    "bbox": [
     -1.75,
     42.85,
     0.75,
     45.1
    ],
-   "aeroValidUntil": "2026-10-14T21:00:48Z",
+   "aeroValidUntil": "2026-10-14T21:34:12Z",
    "aeroCounts": {
     "airspace": 202,
     "airport": 142,
@@ -24,46 +24,46 @@
    "files": [
     {
      "role": "fond",
-     "name": "aquitaine-bearn-fond.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-fond.pmtiles",
+     "name": "aquitaine-bearn-202609162130-fond.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-fond.pmtiles",
      "size": 53095429,
      "sha256": "d4a9a3d82c83003d5a855f898686d107833bbe15bfc46fe27895554cf33e0314"
     },
     {
      "role": "relief",
-     "name": "aquitaine-bearn-relief.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-relief.pmtiles",
+     "name": "aquitaine-bearn-202609162130-relief.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-relief.pmtiles",
      "size": 13907828,
      "sha256": "c93e71506564eaa55a4a9ce74384e41595c76b161ec5f6457bd8fd7d59c33ba6"
     },
     {
      "role": "courbes",
-     "name": "aquitaine-bearn-courbes.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-courbes.pmtiles",
-     "size": 2867063,
-     "sha256": "0530684adc313a162b8c72d71286c4a29b6bcc0ec48a49ced9951bd1bd5f573d"
+     "name": "aquitaine-bearn-202609162130-courbes.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-courbes.pmtiles",
+     "size": 2867073,
+     "sha256": "3ba4a541de2f6dc2ecd9b99a1a85ade9ecd015486ebf9e494477ae9db2d6446d"
     },
     {
      "role": "aero",
-     "name": "aquitaine-bearn-aero.geojson",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-aero.geojson",
+     "name": "aquitaine-bearn-202609162130-aero.geojson",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-aero.geojson",
      "size": 378875,
-     "sha256": "48ccdc44e1d1109235c19aee99f488692cf7ff90b0683b2b9cf4b6bc84ba058f"
+     "sha256": "86a569f84783b854d3e29e1215152cea72d1434707f1eb97019cdfcdc4000d84"
     }
    ]
   },
   {
    "id": "occitanie-est",
    "name": "Occitanie est · Cévennes",
-   "version": "202609162056",
-   "created": "2026-09-16T20:56:23Z",
+   "version": "202609162126",
+   "created": "2026-09-16T21:29:47Z",
    "bbox": [
     2.55,
     42.95,
     5.25,
     44.75
    ],
-   "aeroValidUntil": "2026-10-14T20:56:23Z",
+   "aeroValidUntil": "2026-10-14T21:29:47Z",
    "aeroCounts": {
     "airspace": 215,
     "airport": 88,
@@ -74,46 +74,46 @@
    "files": [
     {
      "role": "fond",
-     "name": "occitanie-est-fond.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-fond.pmtiles",
+     "name": "occitanie-est-202609162126-fond.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-fond.pmtiles",
      "size": 40884559,
      "sha256": "9e9d22e22f3e227b8ab60da06d9ed03d34b7187ecc2a3c35cbf572206a34d4cf"
     },
     {
      "role": "relief",
-     "name": "occitanie-est-relief.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-relief.pmtiles",
+     "name": "occitanie-est-202609162126-relief.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-relief.pmtiles",
      "size": 22974281,
      "sha256": "c69302d20b077a9468b4011d1c58cbfbccd6bf938a03c8a4a9b2c061974db732"
     },
     {
      "role": "courbes",
-     "name": "occitanie-est-courbes.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-courbes.pmtiles",
-     "size": 3440490,
-     "sha256": "e1f5fae1d37695f911b89ba6dedf816c2baefddcf1f145c1e62ec3d5e09a2caa"
+     "name": "occitanie-est-202609162126-courbes.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-courbes.pmtiles",
+     "size": 3440500,
+     "sha256": "70299b8745fff0a7fa5b4e7e08523e3a5d12326773bd2090a339a015548da4d9"
     },
     {
      "role": "aero",
-     "name": "occitanie-est-aero.geojson",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-aero.geojson",
+     "name": "occitanie-est-202609162126-aero.geojson",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-aero.geojson",
      "size": 468101,
-     "sha256": "ef1024c31f5b285f06c54b402ef7c6f9e9aac15fe98a326a598c15f64233d5b6"
+     "sha256": "ee2b58839dfcad0897c11a32f74d0eb1c7893a00a2c6f86297e7853fd2485cb3"
     }
    ]
   },
   {
    "id": "provence-alpes-sud",
    "name": "Provence · Alpes du Sud",
-   "version": "202609162056",
-   "created": "2026-09-16T20:56:56Z",
+   "version": "202609162126",
+   "created": "2026-09-16T21:29:58Z",
    "bbox": [
     4.55,
     43.35,
     7.15,
     45.15
    ],
-   "aeroValidUntil": "2026-10-14T20:56:56Z",
+   "aeroValidUntil": "2026-10-14T21:29:58Z",
    "aeroCounts": {
     "airspace": 253,
     "airport": 115,
@@ -124,46 +124,46 @@
    "files": [
     {
      "role": "fond",
-     "name": "provence-alpes-sud-fond.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-fond.pmtiles",
+     "name": "provence-alpes-sud-202609162126-fond.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202609162126-fond.pmtiles",
      "size": 51435561,
      "sha256": "b94dfde429255499cf5d6cba8e42cbaa22a1c7f0a7b0836fe0aec9d6f371519e"
     },
     {
      "role": "relief",
-     "name": "provence-alpes-sud-relief.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-relief.pmtiles",
+     "name": "provence-alpes-sud-202609162126-relief.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202609162126-relief.pmtiles",
      "size": 17225494,
      "sha256": "a5b214cb4a44287a20994eeb9c0c7668efd43a018bc42ad354e08e63358dd3bc"
     },
     {
      "role": "courbes",
-     "name": "provence-alpes-sud-courbes.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-courbes.pmtiles",
-     "size": 6273304,
-     "sha256": "3505eb19fd5e3871b62ac78c1f268c5b90ccafa7db428f8ae74427b94455bd6a"
+     "name": "provence-alpes-sud-202609162126-courbes.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202609162126-courbes.pmtiles",
+     "size": 6273313,
+     "sha256": "e42aacdc0968ecd87d03142a411233f9acc6ad30fcc2cf4fb1b18295f01e127e"
     },
     {
      "role": "aero",
-     "name": "provence-alpes-sud-aero.geojson",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-aero.geojson",
+     "name": "provence-alpes-sud-202609162126-aero.geojson",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202609162126-aero.geojson",
      "size": 515713,
-     "sha256": "21518f3993578c2f349c5eb9424891c6baea8f2425190316c8a79552fd32cfe6"
+     "sha256": "f416987c734fcc8117ba862fd7ba00e684464228777a0f62c23de16fc0f0a991"
     }
    ]
   },
   {
    "id": "toulouse-pyrenees",
    "name": "Toulouse · Pyrénées",
-   "version": "202609162100",
-   "created": "2026-09-16T21:00:29Z",
+   "version": "202609162130",
+   "created": "2026-09-16T21:33:33Z",
    "bbox": [
     0.35,
     42.35,
     2.95,
     44.55
    ],
-   "aeroValidUntil": "2026-10-14T21:00:29Z",
+   "aeroValidUntil": "2026-10-14T21:33:32Z",
    "aeroCounts": {
     "airspace": 166,
     "airport": 174,
@@ -174,31 +174,31 @@
    "files": [
     {
      "role": "fond",
-     "name": "toulouse-pyrenees-fond.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-fond.pmtiles",
+     "name": "toulouse-pyrenees-202609162130-fond.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202609162130-fond.pmtiles",
      "size": 62409010,
      "sha256": "0846e4ddb35d64c9fbd399da84ec8abf58b574e4c9ec16c573272f95008d65a0"
     },
     {
      "role": "relief",
-     "name": "toulouse-pyrenees-relief.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-relief.pmtiles",
+     "name": "toulouse-pyrenees-202609162130-relief.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202609162130-relief.pmtiles",
      "size": 19505024,
      "sha256": "1dd2bea015805bfacace6280dbb409af5c14f1c0c9f6d7906a03fdebba6dc3e2"
     },
     {
      "role": "courbes",
-     "name": "toulouse-pyrenees-courbes.pmtiles",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-courbes.pmtiles",
-     "size": 5698694,
-     "sha256": "89b944b2c380c6c462ce27503af48708fba98d3245877d030b4aa772a1144718"
+     "name": "toulouse-pyrenees-202609162130-courbes.pmtiles",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202609162130-courbes.pmtiles",
+     "size": 5698703,
+     "sha256": "dc2dd3b6e41f2b9adc2b3bfc699758dd91d739e422317021189260c142914030"
     },
     {
      "role": "aero",
-     "name": "toulouse-pyrenees-aero.geojson",
-     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-aero.geojson",
+     "name": "toulouse-pyrenees-202609162130-aero.geojson",
+     "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202609162130-aero.geojson",
      "size": 328924,
-     "sha256": "ecf741e7abb264c3d4c2fa94fe1a2b9c9b33bb258a1327bed618962e8d03a9ac"
+     "sha256": "c687b66baff90bd45b0cebac2bde1cb9b2c7495e754580c26491bbc891881302"
     }
    ]
   }
