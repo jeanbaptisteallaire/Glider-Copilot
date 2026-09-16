@@ -1,0 +1,121 @@
+name: region-packs
+# Fabrique les packs de carte hors ligne (fond OSM, relief, courbes, données openAIP) et les publie
+# sur la release « cartes ». Données aéro rafraîchies deux fois par mois (cycle AIRAC de 28 jours).
+on:
+  workflow_dispatch:
+    inputs:
+      regions:
+        description: "Régions à reconstruire (ids séparés par des virgules, vide = toutes)"
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths: ['packs/**', 'tools/pack/**', '.github/workflows/region-packs.yml']
+  schedule:
+    - cron: '17 3 1,15 * *'
+permissions:
+  contents: write
+concurrency:
+  group: region-packs
+  cancel-in-progress: false
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          ids = [r["id"] for r in json.load(open("packs/regions.json"))["regions"]]
+          want = [x.strip() for x in os.environ.get("WANT", "").split(",") if x.strip()]
+          sel = [i for i in ids if not want or i in want]
+          print("matrix=" + json.dumps({"region": sel}))
+          PY
+        env:
+          WANT: ${{ github.event.inputs.regions }}
+  build:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Outils (GDAL, tippecanoe, pmtiles)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gdal-bin python3-gdal python3-numpy build-essential libsqlite3-dev zlib1g-dev >/dev/null
+          if ! sudo apt-get install -y -qq tippecanoe >/dev/null 2>&1; then
+            git clone -q --depth 1 https://github.com/felt/tippecanoe.git /tmp/tippecanoe
+            make -s -C /tmp/tippecanoe -j4 && sudo make -s -C /tmp/tippecanoe install
+          fi
+          gh release download -R protomaps/go-pmtiles -p '*Linux_x86_64.tar.gz' -D /tmp/pm
+          tar -xzf /tmp/pm/*.tar.gz -C /tmp/pm && sudo install /tmp/pm/pmtiles /usr/local/bin/pmtiles
+          tippecanoe --version; pmtiles version || true; gdalinfo --version
+      - name: Construire ${{ matrix.region }}
+        env:
+          OPENAIP_KEY: ${{ secrets.OPENAIP_KEY }}
+        run: |
+          set -o pipefail
+          python3 tools/pack/build_region.py --region "${{ matrix.region }}" --out out --work /tmp/work \
+            --base-url "https://github.com/${{ github.repository }}/releases/download/cartes" 2>&1 | tee "build-${{ matrix.region }}.log"
+          ls -la out/${{ matrix.region }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pack-${{ matrix.region }}
+          path: out/${{ matrix.region }}
+          retention-days: 7
+      - name: Journal (ci-data)
+        if: always()
+        run: |
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-data "$R" . || { git init -q -b ci-data . && git remote add origin "$R"; }
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          mkdir -p packs && cp "$GITHUB_WORKSPACE/build-${{ matrix.region }}.log" packs/ 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/out/${{ matrix.region }}/${{ matrix.region }}-manifest.json" packs/ 2>/dev/null || true
+          git add -A && git commit -qm "pack ${{ matrix.region }} ${{ job.status }}" || true
+          for i in 1 2 3 4 5; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 5; done
+  publish:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: pack-*
+          path: out
+      - name: Publier sur la release « cartes »
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OPENAIP_KEY: ${{ secrets.OPENAIP_KEY }}
+        run: |
+          set -e
+          for d in out/pack-*; do [ -d "$d" ] && mv "$d" "out/${d#out/pack-}"; done
+          ls -R out | head -50
+          gh release view cartes >/dev/null 2>&1 || gh release create cartes --title "Cartes hors ligne GLIDY" \
+            --notes "Packs régionaux : fond OpenStreetMap (Protomaps, ODbL), relief et courbes Copernicus GLO-30, données openAIP (CC BY-NC 4.0). Fichiers lus par l'app via catalog.json."
+          gh release download cartes -p catalog.json -D /tmp/prev 2>/dev/null || true
+          python3 tools/pack/catalog.py out /tmp/prev/catalog.json
+          if [ -n "$OPENAIP_KEY" ] && grep -rlF "$OPENAIP_KEY" out; then echo "clé trouvée"; exit 1; fi
+          FILES=$(find out -mindepth 2 -type f \( -name '*.pmtiles' -o -name '*.geojson' -o -name '*-manifest.json' \))
+          [ -n "$FILES" ] && gh release upload cartes $FILES --clobber
+          gh release upload cartes out/catalog.json --clobber
+      - name: Catalogue et échantillon aéro (ci-data)
+        run: |
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-data "$R" . || { git init -q -b ci-data . && git remote add origin "$R"; }
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          mkdir -p packs && cp "$GITHUB_WORKSPACE/out/catalog.json" packs/ 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE"/out/occitanie-est/occitanie-est-aero.geojson packs/ 2>/dev/null || true
+          git add -A && git commit -qm "catalogue cartes" || true
+          for i in 1 2 3 4 5; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 5; done

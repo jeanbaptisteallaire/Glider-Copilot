@@ -1,0 +1,9 @@
+{
+  "comment": "Packs de carte hors ligne GLIDY. bbox = [ouest, sud, est, nord] en degrés. Chaque club géolocalisé doit tomber dans au moins une région.",
+  "regions": [
+    { "id": "occitanie-est", "name": "Occitanie est · Cévennes", "bbox": [2.55, 42.95, 5.25, 44.75] },
+    { "id": "provence-alpes-sud", "name": "Provence · Alpes du Sud", "bbox": [4.55, 43.35, 7.15, 45.15] },
+    { "id": "toulouse-pyrenees", "name": "Toulouse · Pyrénées", "bbox": [0.35, 42.35, 2.95, 44.55] },
+    { "id": "aquitaine-bearn", "name": "Aquitaine · Béarn", "bbox": [-1.75, 42.85, 0.75, 45.1] }
+  ]
+}
