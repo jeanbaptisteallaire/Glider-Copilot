@@ -2,10 +2,10 @@ HTTP/2 200
 alt-svc: h3=":443"; ma=2592000
 cache-control: no-cache
 content-type: application/json
-date: Wed, 16 Sep 2026 14:29:54 GMT
-etag: "5c171dc48304a82a71e09d2395a78cedfd8d2d611dee9e727861a1463f4b03cf"
+date: Wed, 16 Sep 2026 16:02:31 GMT
+etag: "9fe9093d9d149b7775de8acbf02716299f626afc2b10e48e3a6077e79a7c9d65"
 server: uvicorn
 vary: Accept-Encoding
 via: 1.1 Caddy
-content-length: 78965
+content-length: 78887
 
