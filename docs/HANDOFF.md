@@ -19,6 +19,12 @@
 - **Prévol** : carte « Carte hors ligne » (région, taille, validité aéro, téléchargement avec progression/annulation, mise à jour) et carte « Espaces aériens · 15 km autour du terrain » (type, classe, plancher → plafond, distance).
 - Altitude du terrain de référence lue dans openAIP (LFNL 183 m) pour la coupe démo.
 
+### Vérifié
+- Tests JVM locaux : 53 OK, dont 3 sur le **pack réel occitanie-est** (215 espaces, 88 terrains ; LFNL 183 m, 122.505) et la reprise de téléchargement (416).
+- CI verte sur 108e662 : build, lint, APK, 10 captures émulateur. Pack occitanie-est (67 Mo) téléchargé et vérifié en 24 s dans l'émulateur ;
+  carte MapLibre rendue hors ligne (fond, ombrage, espaces, terrains, libellés) ; 12 espaces listés à 15 km de LFNL.
+- Livrables : `Planneur APP/Session 3/glidy-v0.3-debug.apk` et `Session 3/captures/` (Sessions 1 et 2 intactes).
+
 ### Limites / à faire
 - openAIP est sous licence **CC BY-NC** : à revoir avant toute monétisation (plan, risque S3).
 - Niveaux de vol affichés en atmosphère standard (QNH inconnu) : affichage, pas alerte.
