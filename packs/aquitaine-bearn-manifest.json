@@ -2,8 +2,8 @@
  "format": 1,
  "id": "aquitaine-bearn",
  "name": "Aquitaine · Béarn",
- "version": "202609162100",
- "created": "2026-09-16T21:00:48Z",
+ "version": "202609162130",
+ "created": "2026-09-16T21:34:12Z",
  "bbox": [
   -1.75,
   42.85,
@@ -15,7 +15,7 @@
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-14T21:00:48Z",
+ "aeroValidUntil": "2026-10-14T21:34:12Z",
  "aeroCounts": {
   "airspace": 202,
   "airport": 142,
@@ -25,37 +25,37 @@
  "sources": {
   "protomaps": "20260916.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-09-16T21:00:48Z"
+  "openaip": "2026-09-16T21:34:12Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
   {
    "role": "fond",
-   "name": "aquitaine-bearn-fond.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-fond.pmtiles",
+   "name": "aquitaine-bearn-202609162130-fond.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-fond.pmtiles",
    "size": 53095429,
    "sha256": "d4a9a3d82c83003d5a855f898686d107833bbe15bfc46fe27895554cf33e0314"
   },
   {
    "role": "relief",
-   "name": "aquitaine-bearn-relief.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-relief.pmtiles",
+   "name": "aquitaine-bearn-202609162130-relief.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-relief.pmtiles",
    "size": 13907828,
    "sha256": "c93e71506564eaa55a4a9ce74384e41595c76b161ec5f6457bd8fd7d59c33ba6"
   },
   {
    "role": "courbes",
-   "name": "aquitaine-bearn-courbes.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-courbes.pmtiles",
-   "size": 2867063,
-   "sha256": "0530684adc313a162b8c72d71286c4a29b6bcc0ec48a49ced9951bd1bd5f573d"
+   "name": "aquitaine-bearn-202609162130-courbes.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-courbes.pmtiles",
+   "size": 2867073,
+   "sha256": "3ba4a541de2f6dc2ecd9b99a1a85ade9ecd015486ebf9e494477ae9db2d6446d"
   },
   {
    "role": "aero",
-   "name": "aquitaine-bearn-aero.geojson",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-aero.geojson",
+   "name": "aquitaine-bearn-202609162130-aero.geojson",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/aquitaine-bearn-202609162130-aero.geojson",
    "size": 378875,
-   "sha256": "48ccdc44e1d1109235c19aee99f488692cf7ff90b0683b2b9cf4b6bc84ba058f"
+   "sha256": "86a569f84783b854d3e29e1215152cea72d1434707f1eb97019cdfcdc4000d84"
   }
  ]
 }
