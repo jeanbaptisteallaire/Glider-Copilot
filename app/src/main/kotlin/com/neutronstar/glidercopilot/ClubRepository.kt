@@ -2,14 +2,18 @@ package com.neutronstar.glidercopilot
 
 import android.content.Context
 import com.neutronstar.glidercopilot.domain.Club
+import com.neutronstar.glidercopilot.domain.ClubLocator
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.feature.prevol.ClubSource
 import com.neutronstar.glidercopilot.precog.Json
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 
-/** Annuaire FFVP embarqué (assets/clubs_fr.json) et club choisi. Club par défaut : CVV Montpellier Pic Saint-Loup. */
-class ClubRepository(context: Context, private val prefs: UserPreferences) : ClubSource {
+/**
+ * Annuaire FFVP embarqué (assets/clubs_fr.json) et club du jour : le club choisi à la main,
+ * sinon le club géolocalisé le plus proche du téléphone, sinon CVV Montpellier Pic Saint-Loup.
+ */
+class ClubRepository(context: Context, private val prefs: UserPreferences, private val location: LocationSource) : ClubSource {
     override val clubs: List<Club> by lazy {
         val text = context.assets.open("clubs_fr.json").bufferedReader(Charsets.UTF_8).use { it.readText() }
         Json.parse(text)["clubs"]?.arr.orEmpty().mapNotNull { j ->
@@ -31,8 +35,10 @@ class ClubRepository(context: Context, private val prefs: UserPreferences) : Clu
         }
     }
 
-    override val selectedClub: Flow<Club?> = prefs.selectedClubId.map { id ->
-        clubs.firstOrNull { it.id == (id ?: DEFAULT_CLUB_ID) }
+    override val selectedClub: Flow<Club?> = combine(prefs.selectedClubId, location.position) { id, pos ->
+        id?.let { chosen -> clubs.firstOrNull { it.id == chosen } }
+            ?: pos?.let { ClubLocator.nearest(clubs, it) }
+            ?: clubs.firstOrNull { it.id == DEFAULT_CLUB_ID }
     }
 
     override suspend fun select(clubId: String) = prefs.setSelectedClub(clubId)

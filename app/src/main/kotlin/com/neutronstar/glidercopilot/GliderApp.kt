@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.neutronstar.glidercopilot.ogn.OgnDeviceDatabase
 import com.neutronstar.glidercopilot.precog.FileResponseCache
 import com.neutronstar.glidercopilot.precog.PrecogApi
 import com.neutronstar.glidercopilot.precog.UrlConnectionHttpClient
@@ -15,14 +16,21 @@ val Context.userPrefs: DataStore<Preferences> by preferencesDataStore(name = "us
 
 /** Conteneur de dépendances manuel : pas de framework d'injection tant que l'app reste petite. */
 class AppContainer(app: Application) {
+    private val userAgent = "GLIDY/${BuildConfig.VERSION_NAME} (Android)"
     val prefs: UserPreferences = LocalUserPreferences(app.userPrefs)
-    val clubs: ClubRepository = ClubRepository(app, prefs)
+    val location = LocationSource(app)
+    val clubs: ClubRepository = ClubRepository(app, prefs, location)
     val weather: WeatherRepository = WeatherRepository(
         PrecogApi(
-            UrlConnectionHttpClient(userAgent = "GliderCopilot/${BuildConfig.VERSION_NAME} (Android)"),
+            UrlConnectionHttpClient(userAgent = userAgent),
             FileResponseCache(File(app.cacheDir, "precog")),
         ),
     )
+    val glider = GliderRepository(
+        prefs,
+        OgnDeviceDatabase(UrlConnectionHttpClient(userAgent = userAgent, timeoutMs = 30_000), FileResponseCache(File(app.cacheDir, "ogn"))),
+    )
+    val checklist = ChecklistRepository(prefs)
 }
 
 class GliderApp : Application() {
@@ -32,5 +40,6 @@ class GliderApp : Application() {
     override fun onCreate() {
         super.onCreate()
         container = AppContainer(this)
+        container.location.refresh()
     }
 }

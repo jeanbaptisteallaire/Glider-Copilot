@@ -1,10 +1,11 @@
 <resources>
-    <style name="Theme.GliderCopilot" parent="android:Theme.Material.NoActionBar">
+    <style name="Theme.Glidy" parent="android:Theme.Material.NoActionBar">
         <item name="android:windowBackground">@color/gc_background</item>
         <item name="android:statusBarColor">@color/gc_background</item>
         <item name="android:navigationBarColor">@color/gc_panel</item>
     </style>
-    <color name="gc_background">#0B1117</color>
-    <color name="gc_panel">#111922</color>
-    <color name="gc_green">#6FE08A</color>
+    <!-- Charte GLIDY (maquette v8) -->
+    <color name="gc_background">#000000</color>
+    <color name="gc_panel">#000000</color>
+    <color name="gc_green">#B7F7A5</color>
 </resources>

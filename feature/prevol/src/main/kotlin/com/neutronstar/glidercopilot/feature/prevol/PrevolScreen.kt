@@ -13,15 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,9 +42,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcCard
+import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.domain.DayQuality
@@ -58,16 +62,39 @@ fun PrevolScreen(viewModel: PrevolViewModel, modifier: Modifier = Modifier) {
 
     Column(modifier.fillMaxSize().background(c.background)) {
         Header(state, onPickClub = { picking = true }, onRefresh = viewModel::refresh)
-        when {
-            state.day != null -> DayContent(state.day!!, state, viewModel::selectHour)
-            state.loading -> Centered { CircularProgressIndicator(color = c.ok) ; Spacer(Modifier.size(12.dp)); Text("Chargement de la météo…", style = Gc.type.bodySmall) }
-            state.error != null -> Centered {
-                Text(state.error!!, style = Gc.type.body.copy(color = c.warn))
-                TextButton(onClick = viewModel::refresh) { Text("Réessayer") }
+        LazyColumn(
+            Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 28.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            item {
+                PairingCard(
+                    ui = state.pairing,
+                    onInput = viewModel::onRegistrationInput,
+                    onValidate = viewModel::validateRegistration,
+                    onCancel = viewModel::cancelRegistration,
+                    onPickRecent = viewModel::pickRecent,
+                    onAutoTakeoff = viewModel::setAutoTakeoff,
+                )
             }
-            state.club == null -> Centered {
-                Text("Choisissez votre club pour obtenir la météo du terrain.", style = Gc.type.body)
-                TextButton(onClick = { picking = true }) { Text("Choisir un club") }
+            val day = state.day
+            when {
+                day != null -> dayItems(day, state, viewModel::selectHour)
+                state.loading -> item {
+                    Centered { CircularProgressIndicator(color = c.ok); Spacer(Modifier.size(12.dp)); Text("Chargement de la météo…", style = Gc.type.bodySmall) }
+                }
+                state.error != null -> item {
+                    Centered {
+                        Text(state.error!!, style = Gc.type.body.copy(color = c.warn))
+                        TextButton(onClick = viewModel::refresh) { Text("Réessayer", color = c.ok) }
+                    }
+                }
+                state.club == null -> item {
+                    Centered {
+                        Text("Choisissez votre club pour obtenir la météo du terrain.", style = Gc.type.body)
+                        TextButton(onClick = { picking = true }) { Text("Choisir un club", color = c.ok) }
+                    }
+                }
             }
         }
     }
@@ -78,29 +105,31 @@ fun PrevolScreen(viewModel: PrevolViewModel, modifier: Modifier = Modifier) {
 
 @Composable
 private fun Centered(content: @Composable () -> Unit) {
-    Column(Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(Modifier.fillMaxWidth().padding(24.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         content()
     }
 }
 
+/** En-tête v8 : titre à gauche, date et terrain à droite (le terrain ouvre le choix du club). */
 @Composable
 private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -> Unit) {
     val c = Gc.colors
     Row(
-        Modifier.fillMaxWidth().background(c.panel).padding(start = 16.dp, end = 6.dp, top = 10.dp, bottom = 10.dp),
+        Modifier.fillMaxWidth().background(c.background).padding(start = 16.dp, end = 4.dp, top = 10.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(Modifier.weight(1f)) {
-            Text("PRÉVOL", style = Gc.type.title)
-            Row(Modifier.clickable(onClick = onPickClub), verticalAlignment = Alignment.CenterVertically) {
+        Text("PRÉVOL", style = Gc.type.title, modifier = Modifier.weight(1f))
+        Column(horizontalAlignment = Alignment.End) {
+            Text(state.day?.let { Fmt.day.format(it.date) } ?: " ", style = Gc.type.bodySmall.copy(fontSize = 10.sp), maxLines = 1)
+            Row(Modifier.clickable(onClickLabel = "Changer de club", onClick = onPickClub), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     state.club?.let { cl -> listOfNotNull(cl.airfieldIcao, cl.shortName ?: cl.name).joinToString(" · ") } ?: "Choisir un club",
-                    style = Gc.type.mono.copy(color = c.route), maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    style = Gc.type.bodySmall.copy(fontSize = 11.sp, color = c.route, fontWeight = FontWeight.SemiBold), maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.widthIn(max = 200.dp),
                 )
-                Icon(Icons.Filled.KeyboardArrowDown, contentDescription = "Changer de club", tint = c.route)
+                Icon(GcIcons.ChevronDown, contentDescription = "Changer de club", tint = c.route, modifier = Modifier.padding(start = 3.dp).size(12.dp))
             }
         }
-        state.day?.let { Text(Fmt.day.format(it.date), style = Gc.type.bodySmall) }
         IconButton(onClick = onRefresh, enabled = !state.loading) {
             if (state.loading) CircularProgressIndicator(Modifier.size(18.dp), color = c.ok, strokeWidth = 2.dp)
             else Icon(Icons.Filled.Refresh, contentDescription = "Actualiser", tint = c.ink)
@@ -108,28 +137,20 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
     }
 }
 
-@Composable
-private fun DayContent(day: DayWeather, state: PrevolUiState, onSelectHour: (Int) -> Unit) {
-    val c = Gc.colors
+private fun LazyListScope.dayItems(day: DayWeather, state: PrevolUiState, onSelectHour: (Int) -> Unit) {
     val hour = day.hours.getOrNull(state.selectedHour) ?: day.hours.first()
-    LazyColumn(
-        Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(14.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        item { DaySummaryCard(day, state.selectedHour, onSelectHour) }
-        item { HourCard(day, hour, state.selectedHour, onSelectHour) }
-        item { WindCard(hour) }
-        item { VigilanceCard(day) }
-        item { SourcesCard(day, state) }
-        item {
-            Text(
-                "Estimations calculées dans l'app à partir du profil ARPEGE (maille ~10 km) : plafond par parcelle " +
-                    "adiabatique, base des cumulus par la formule d'Espy, force par la vitesse convective w*. " +
-                    "Aide à la décision secondaire, à confronter au ciel et aux consignes du club.",
-                style = Gc.type.bodySmall.copy(color = c.faint),
-            )
-        }
+    item { DaySummaryCard(day, state.selectedHour, onSelectHour) }
+    item { HourCard(day, hour, state.selectedHour, onSelectHour) }
+    item { WindCard(hour) }
+    item { VigilanceCard(day) }
+    item { SourcesCard(day, state) }
+    item {
+        Text(
+            "Estimations calculées dans l'app à partir du profil ARPEGE (maille ~10 km) : plafond par parcelle " +
+                "adiabatique, base des cumulus par la formule d'Espy, force par la vitesse convective w*. " +
+                "Aide à la décision secondaire, à confronter au ciel et aux consignes du club.",
+            style = Gc.type.bodySmall.copy(color = Gc.colors.faint),
+        )
     }
 }
 
@@ -140,7 +161,7 @@ private fun DaySummaryCard(day: DayWeather, selected: Int, onSelectHour: (Int) -
     val qColor = when (s.quality) {
         DayQuality.NONE -> c.faint
         DayQuality.WEAK -> c.warn
-        DayQuality.AVERAGE -> Color(0xFFF2D24B)
+        DayQuality.AVERAGE -> c.ink
         DayQuality.GOOD, DayQuality.EXCELLENT -> c.ok
     }
     GcCard(title = "La journée en bref", trailing = { GcPill("Thermique · ${s.quality.label}", qColor) }) {
@@ -151,9 +172,9 @@ private fun DaySummaryCard(day: DayWeather, selected: Int, onSelectHour: (Int) -
         }
         CeilingChart(day.hours, selected, onSelectHour)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Legend(climbColor(0.4), "faible")
-            Legend(climbColor(1.2), "moyen")
-            Legend(climbColor(2.4), "fort")
+            Legend(climbColor(c, 0.4), "faible")
+            Legend(climbColor(c, 1.2), "moyen")
+            Legend(climbColor(c, 2.4), "fort")
             Box(Modifier.size(7.dp).background(c.ink, CircleShape))
             Text("base Cu", style = Gc.type.monoSmall)
         }
@@ -180,9 +201,10 @@ private fun HourCard(day: DayWeather, hour: HourWeather, selected: Int, onSelect
                 val on = i == selected
                 Text(
                     Fmt.hour(h.analysis.validTime),
-                    style = Gc.type.mono.copy(color = if (on) c.background else c.dim),
+                    style = Gc.type.mono.copy(color = if (on) c.ok else c.dim),
                     modifier = Modifier
-                        .background(if (on) c.ink else c.chip, RoundedCornerShape(8.dp))
+                        .background(if (on) c.controlOn else c.background, RoundedCornerShape(8.dp))
+                        .border(1.dp, if (on) c.ok else c.line, RoundedCornerShape(8.dp))
                         .clickable { onSelectHour(i) }
                         .padding(horizontal = 10.dp, vertical = 6.dp),
                 )
@@ -196,7 +218,7 @@ private fun HourCard(day: DayWeather, hour: HourWeather, selected: Int, onSelect
         StatRow("Plafond", "${Fmt.m(a.ceilingMslM)}  ·  ${Fmt.m(a.ceilingAglM)} sol" + if (a.dryTopCapped && a.liftType == LiftType.BLUE) " (≥ sommet du profil)" else "")
         StatRow("Nature", nature)
         StatRow("Base des cumulus", a.cloudBaseMslM?.let { Fmt.m(it) } ?: "—")
-        StatRow("Force estimée", "w* ${Fmt.ms(a.wStarMs)}  ·  montée ~${Fmt.ms(a.climbMs)}", valueColor = climbColor(a.climbMs))
+        StatRow("Force estimée", "w* ${Fmt.ms(a.wStarMs)}  ·  montée ~${Fmt.ms(a.climbMs)}", valueColor = climbColor(c, a.climbMs))
         StatRow("Nébulosité", a.totalCloudPct?.let { "${it.toInt()} %" + (hour.surface.lowCloudPct?.let { l -> " (basse ${l.toInt()} %)" } ?: "") } ?: "—")
         if ((hour.surface.lowCloudPct ?: 0.0) >= 85.0) {
             Text("⚠ Couche nuageuse basse prévue presque couverte : ascendances probablement étouffées, base réelle à vérifier au ciel.", style = Gc.type.bodySmall.copy(color = c.warn))
@@ -224,7 +246,7 @@ private fun WindCard(hour: HourWeather) {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 hour.winds.forEachIndexed { i, w ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(Modifier.size(width = 10.dp, height = 4.dp).background(windPalette[i % windPalette.size]))
+                        Box(Modifier.size(width = 10.dp, height = 4.dp).background(windLayerColor(Gc.colors, i)))
                         Spacer(Modifier.width(6.dp))
                         Text(w.label, style = Gc.type.monoSmall, modifier = Modifier.width(56.dp))
                         Text("${Fmt.deg(w.fromDeg)} / ${Fmt.kmh(w.speedKmh)}", style = Gc.type.mono)
@@ -240,7 +262,7 @@ private fun WindCard(hour: HourWeather) {
 private fun VigilanceCard(day: DayWeather) {
     val c = Gc.colors
     val v = day.vigilance
-    val color = when (v?.colorId) { 1 -> c.ok; 2 -> Color(0xFFF2D24B); 3 -> c.warn; 4 -> c.bad; else -> c.faint }
+    val color = when (v?.colorId) { 1 -> c.ok; 2 -> c.warn; 3 -> c.warn; 4 -> c.danger; else -> c.faint }
     GcCard(title = "Vigilance Météo-France", trailing = { GcPill(v?.let { "${it.colorLabel} · dépt ${it.departement}" } ?: "indisponible", color) }) {
         if (v == null) Text("Bulletin non disponible pour le moment.", style = Gc.type.bodySmall)
         else if (v.phenomena.isEmpty()) Text("Aucun phénomène au-dessus du vert.", style = Gc.type.bodySmall)
@@ -281,7 +303,7 @@ private fun ClubPicker(state: PrevolUiState, onDismiss: () -> Unit, onPick: (Str
     val c = Gc.colors
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = c.panel,
+        containerColor = c.control,
         title = { Text("Club", style = Gc.type.title) },
         text = {
             LazyColumn(Modifier.heightIn(max = 420.dp)) {

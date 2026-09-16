@@ -11,7 +11,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.1.0"
+        versionName = "0.2.0"
     }
     buildTypes {
         release {
@@ -40,6 +40,8 @@ dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:domain"))
     implementation(project(":data:precog"))
+    implementation(project(":data:ogn"))
+    implementation(project(":feature:checklist"))
     implementation(project(":feature:prevol"))
     implementation(project(":feature:flight"))
     implementation(libs.androidx.core.ktx)

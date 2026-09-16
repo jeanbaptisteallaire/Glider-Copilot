@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.neutronstar.glidercopilot.designsystem.GliderCopilotTheme
+import com.neutronstar.glidercopilot.designsystem.GlidyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +12,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val container = (application as GliderApp).container
         setContent {
-            GliderCopilotTheme {
+            GlidyTheme {
                 AppRoot(container)
             }
         }

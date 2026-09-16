@@ -1,7 +1,8 @@
 package com.neutronstar.glidercopilot.feature.prevol
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
+import com.neutronstar.glidercopilot.designsystem.GcColors
+import com.neutronstar.glidercopilot.designsystem.vario
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -23,19 +24,5 @@ internal object Fmt {
     fun kmh(v: Double) = "${v.roundToInt()} km/h"
 }
 
-/** Échelle de couleur de la montée, identique à la trace vario de la maquette. */
-internal fun climbColor(ms: Double): Color {
-    val stops = listOf(
-        0.0 to Color(0xFF96A3AC),
-        0.6 to Color(0xFFF2D24B),
-        1.8 to Color(0xFFFF8A2A),
-        3.5 to Color(0xFFFF2D3F),
-    )
-    if (ms <= stops.first().first) return stops.first().second
-    for (k in 1 until stops.size) {
-        val (v1, c1) = stops[k]
-        val (v0, c0) = stops[k - 1]
-        if (ms <= v1) return lerp(c0, c1, ((ms - v0) / (v1 - v0)).toFloat())
-    }
-    return stops.last().second
-}
+/** Échelle de couleur de la montée : échelle vario de la charte v8. */
+internal fun climbColor(c: GcColors, ms: Double): Color = c.vario(ms)

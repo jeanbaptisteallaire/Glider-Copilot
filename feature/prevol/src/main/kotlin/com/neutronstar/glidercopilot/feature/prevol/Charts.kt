@@ -21,6 +21,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcColors
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.domain.LiftType
 import com.neutronstar.glidercopilot.domain.WindLayer
@@ -65,8 +66,8 @@ internal fun CeilingChart(hours: List<HourWeather>, selected: Int, onSelect: (In
         hours.forEachIndexed { i, h ->
             val a = h.analysis
             val x = left + i * w
-            if (i == selected) drawRect(c.magenta.copy(alpha = 0.16f), Offset(x, 0f), Size(w, bottom))
-            val color = if (a.liftType == LiftType.NONE) c.faint else climbColor(a.climbMs)
+            if (i == selected) drawRect(c.route.copy(alpha = 0.16f), Offset(x, 0f), Size(w, bottom))
+            val color = if (a.liftType == LiftType.NONE) c.faint else climbColor(c, a.climbMs)
             val barTop = y(a.ceilingMslM)
             drawRoundRect(color, Offset(x + w * 0.22f, barTop), Size(w * 0.56f, bottom - barTop), CornerRadius(3.dp.toPx()))
             a.cloudBaseMslM?.takeIf { a.liftType == LiftType.CUMULUS }?.let {
@@ -74,7 +75,7 @@ internal fun CeilingChart(hours: List<HourWeather>, selected: Int, onSelect: (In
             }
             if (i % 2 == 0 || hours.size <= 6) drawText(tm, Fmt.hour(a.validTime), Offset(x + w * 0.2f, bottom + 3.dp.toPx()), label)
         }
-        drawRect(c.terrain.copy(alpha = 0.6f), Offset(left, y(ground)), Size(size.width - left, bottom - y(ground) + 1f))
+        drawRect(c.terrainBottom.copy(alpha = 0.8f), Offset(left, y(ground)), Size(size.width - left, bottom - y(ground) + 1f))
     }
 }
 
@@ -84,7 +85,6 @@ internal fun WindRose(layers: List<WindLayer>) {
     val c = Gc.colors
     val tm = rememberTextMeasurer()
     val label = TextStyle(fontFamily = GcFonts.ui, fontSize = 9.sp, color = c.faint)
-    val palette = listOf(Color(0xFFB5E3F7), Color(0xFF7CCBF0), Color(0xFF48ADE3), Color(0xFF2F8AD6), Color(0xFF2F5FE8), Color(0xFF6A4CE0))
     Canvas(Modifier.size(140.dp)) {
         val cx = size.width / 2
         val cy = size.height / 2
@@ -101,7 +101,7 @@ internal fun WindRose(layers: List<WindLayer>) {
             val p = Offset(cx + (r * sin(a)).toFloat(), cy - (r * cos(a)).toFloat())
             val len = (6.dp.toPx() + l.speedKmh.toFloat() * 0.35f.dp.toPx()).coerceAtMost(r)
             val e = Offset(p.x - (len * sin(a)).toFloat(), p.y + (len * cos(a)).toFloat())
-            val col = palette[i % palette.size]
+            val col = windLayerColor(c, i)
             drawLine(col, p, e, 3.dp.toPx(), StrokeCap.Round)
             drawCircle(col, 3.5.dp.toPx(), p)
         }
@@ -109,7 +109,8 @@ internal fun WindRose(layers: List<WindLayer>) {
     }
 }
 
-internal val windPalette = listOf(Color(0xFFB5E3F7), Color(0xFF7CCBF0), Color(0xFF48ADE3), Color(0xFF2F8AD6), Color(0xFF2F5FE8), Color(0xFF6A4CE0))
+/** Tranches de vent : vert de la charte, du plus soutenu (sol) au plus léger (altitude). */
+internal fun windLayerColor(c: GcColors, i: Int): Color = c.windLayer.copy(alpha = (1f - i * 0.14f).coerceAtLeast(0.4f))
 
 @Suppress("unused")
 private val dashed = PathEffect.dashPathEffect(floatArrayOf(6f, 6f))

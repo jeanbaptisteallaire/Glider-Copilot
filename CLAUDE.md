@@ -1,7 +1,8 @@
-# Glider Copilot — consignes pour les sessions Claude
+# GLIDY (ex-Glider Copilot) — consignes pour les sessions Claude
 
 - Lire d'abord `docs/HANDOFF.md` (état, décisions, prochaine session) et le plan dans le projet claude.ai « Planneur App ».
-- MVP : deux écrans, **Prévol** (météo + planeur + club) et **Vol**. Pas d'Annexes ni de Debrief.
+- MVP : trois onglets, **Prévol** (météo + planeur FLARM + club), **Check-lists** et **Pilotage**. Pas d’Annexes ni de Debrief.
+- Charte de référence : maquette `planeur-pilotage-prevol-v8` (noir, vert #b7f7a5, orange #ff9f43, police système).
 - Sécurité : aucune fonction de sécurité ne dépend du réseau ; toute valeur affichée porte sa source et son hypothèse.
 - Charte : tout est dans `core/designsystem/Theme.kt` (jetons). Ne jamais coder une couleur ou une police dans un écran.
 - Données precog : ne jamais coder une unité en dur, lire `units`/`semantics` (voir `data/precog/Envelope.kt`).

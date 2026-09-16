@@ -1,0 +1,7 @@
+{"devices":[
+{"device_type":"F","device_id":"DD1234","aircraft_model":"LS-4","registration":"F-CJAB","cn":"AB","tracked":"Y","identified":"Y","aircraft_type":"1"},
+{"device_type":"O","device_id":"07ABCD","aircraft_model":"LS-4","registration":"F-CJAB","cn":"AB","tracked":"Y","identified":"Y","aircraft_type":"1"},
+{"device_type":"F","device_id":"DDA5B6","aircraft_model":"ASK-21","registration":"F-CHID","cn":"","tracked":"N","identified":"Y","aircraft_type":"1"},
+{"device_type":"F","device_id":"DD9999","aircraft_model":"Duo Discus","registration":"F-CPSL","cn":"PS","tracked":"Y","identified":"N","aircraft_type":"1"},
+{"device_type":"F","device_id":"DD0000","aircraft_model":"","registration":"","cn":"","tracked":"Y","identified":"Y","aircraft_type":"1"}
+]}
