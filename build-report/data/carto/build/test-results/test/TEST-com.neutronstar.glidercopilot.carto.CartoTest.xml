@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.carto.CartoTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-16T20:54:21" hostname="runnervmlun5p" time="2.439">
+<testsuite name="com.neutronstar.glidercopilot.carto.CartoTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-16T21:16:38" hostname="runnervmlun5p" time="8.458">
   <properties/>
-  <testcase name="catalogPicksPackForClub" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.056"/>
-  <testcase name="downloaderRejectsCorruptFile" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.069"/>
-  <testcase name="styleIsValidJsonWithAeroInlined" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.045"/>
-  <testcase name="altitudeLabelsAndConversion" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.042"/>
-  <testcase name="pointInPolygonHonoursHoles" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.023"/>
-  <testcase name="downloaderVerifiesResumesAndInstallsManifestLast" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="2.147"/>
-  <testcase name="airspacesAroundLfnlSorted" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.035"/>
-  <testcase name="parsesAeroGeoJson" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.015"/>
+  <testcase name="catalogPicksPackForClub" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.057"/>
+  <testcase name="downloaderRejectsCorruptFile" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="6.071"/>
+  <testcase name="styleIsValidJsonWithAeroInlined" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.06"/>
+  <testcase name="altitudeLabelsAndConversion" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.056"/>
+  <testcase name="pointInPolygonHonoursHoles" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.02"/>
+  <testcase name="downloaderVerifiesResumesAndInstallsManifestLast" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="2.116"/>
+  <testcase name="airspacesAroundLfnlSorted" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.047"/>
+  <testcase name="parsesAeroGeoJson" classname="com.neutronstar.glidercopilot.carto.CartoTest" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

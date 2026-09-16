@@ -13,7 +13,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt"
-            line="169"
+            line="171"
             column="15"/>
     </issue>
 
