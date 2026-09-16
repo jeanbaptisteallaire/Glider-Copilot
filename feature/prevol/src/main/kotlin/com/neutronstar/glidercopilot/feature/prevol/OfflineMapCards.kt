@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -119,8 +120,8 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
                         style = TextStyle(fontSize = 11.sp, color = c.dim),
                     )
                 }
-                Column(horizontalAlignment = Alignment.End, modifier = Modifier.width(128.dp)) {
-                    Text(a.verticalLabel, style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = color, fontFeatureSettings = "tnum"), maxLines = 1)
+                Column(horizontalAlignment = Alignment.End, modifier = Modifier.widthIn(max = 170.dp)) {
+                    Text(a.verticalLabel, style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = color, fontFeatureSettings = "tnum", textAlign = androidx.compose.ui.text.style.TextAlign.End), maxLines = 2)
                     Text(if (d == 0.0) "terrain dedans" else String.format(Locale.FRANCE, "à %.1f km", d), style = TextStyle(fontSize = 11.sp, color = c.dim))
                 }
             }

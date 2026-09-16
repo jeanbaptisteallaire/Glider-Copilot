@@ -99,10 +99,16 @@ object MapStyle {
         val isAirspace = listOf("==", listOf("get", "layer"), "airspace")
         layers += mapOf("id" to "airspace-fill", "type" to "fill", "source" to "aero", "filter" to listOf("all", isAirspace, listOf("!=", listOf("get", "type"), 33)),
             "paint" to mapOf("fill-color" to familyColor, "fill-opacity" to 0.05))
-        layers += mapOf("id" to "airspace-line", "type" to "line", "source" to "aero", "filter" to isAirspace,
-            "paint" to mapOf("line-color" to familyColor, "line-width" to zoomInterp(7, 0.8, 13, 1.8),
-                "line-opacity" to listOf("match", listOf("get", "type"), 33, 0.35, 0.85),
-                "line-dasharray" to listOf("literal", listOf(3, 1.5))))
+        // traits pleins pour les espaces contrôlés et d'information, tiretés pour les zones réglementées
+        // (line-dasharray n'accepte pas d'expression par entité : deux couches)
+        val restrictedTypes = listOf(1, 2, 3, 8, 9, 12, 16, 17, 18, 19, 25, 29, 30, 31)
+        val isRestricted = listOf("in", listOf("get", "type"), listOf("literal", restrictedTypes))
+        layers += mapOf("id" to "airspace-line", "type" to "line", "source" to "aero", "filter" to listOf("all", isAirspace, listOf("!", isRestricted)),
+            "paint" to mapOf("line-color" to familyColor, "line-width" to listOf("match", listOf("get", "type"), 33, 1.0, 1.6),
+                "line-opacity" to listOf("match", listOf("get", "type"), 33, 0.3, 0.85)))
+        layers += mapOf("id" to "airspace-line-restricted", "type" to "line", "source" to "aero", "filter" to listOf("all", isAirspace, isRestricted),
+            "paint" to mapOf("line-color" to familyColor, "line-width" to 1.6, "line-opacity" to 0.9,
+                "line-dasharray" to listOf("literal", listOf(4, 2))))
         layers += mapOf("id" to "airspace-label", "type" to "symbol", "source" to "aero", "minzoom" to 9.5, "filter" to listOf("all", isAirspace, listOf("!=", listOf("get", "type"), 33)),
             "layout" to mapOf("symbol-placement" to "line", "symbol-spacing" to 420, "text-field" to listOf("get", "name"),
                 "text-font" to listOf("Noto Sans Medium"), "text-size" to 10, "text-offset" to listOf("literal", listOf(0, 0.9))),
@@ -138,7 +144,7 @@ object MapStyle {
             "paint" to mapOf("text-color" to p.airport, "text-halo-color" to p.halo, "text-halo-width" to 1.2))
         // couches dynamiques : route vers le terrain, trace colorée par le vario, planeur
         layers += mapOf("id" to "route", "type" to "line", "source" to SRC_ROUTE,
-            "paint" to mapOf("line-color" to p.route, "line-width" to 2, "line-dasharray" to listOf("literal", listOf(3, 2))))
+            "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))
         layers += mapOf("id" to "trace", "type" to "line", "source" to SRC_TRACE, "layout" to mapOf("line-cap" to "round"),
             "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 3.5))
         layers += mapOf("id" to "glider", "type" to "symbol", "source" to SRC_GLIDER,

@@ -79,7 +79,7 @@ class MapController {
         return label to (nice / metersPerDp).toFloat()
     }
 
-    companion object { const val DEFAULT_ZOOM = 11.4 }
+    companion object { const val DEFAULT_ZOOM = 10.4 }
 }
 
 @Composable

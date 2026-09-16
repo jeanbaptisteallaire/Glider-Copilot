@@ -1,5 +1,31 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 3 — Cartographie et aéro, hors ligne (16/09/2026)
+
+### Livré
+- **Packs régionaux fabriqués par la CI** (`.github/workflows/region-packs.yml`, `tools/pack/`), publiés sur la release GitHub **`cartes`** avec `catalog.json` :
+  - fond OpenStreetMap vectoriel : extrait du build quotidien Protomaps (`pmtiles extract`, niveau ≤ 12) ;
+  - relief : Copernicus GLO-30 (AWS Open Data) → Web Mercator → Terrarium PNG 512 px, niveau ≤ 10 (≈ 76 m), altitude au mètre ;
+  - courbes de niveau tous les 100 m (gdal_contour + tippecanoe, couche `contours`, attribut `ele`) ;
+  - données openAIP aplaties en GeoJSON (espaces, terrains, balises, points de report), appels espacés et relancés sur 429 ;
+  - manifeste par région : version, emprise, validité aéro (28 jours), tailles, SHA-256 ; noms de fichiers versionnés, anciennes versions purgées après 2 jours.
+  - 4 régions couvrant les 50 clubs géolocalisés : `occitanie-est`, `provence-alpes-sud`, `toulouse-pyrenees`, `aquitaine-bearn` (≈ 65–90 Mo chacune).
+  - Rafraîchissement automatique les 1er et 15 du mois.
+- **`data:carto`** (JVM pur, testé) : catalogue et choix du pack du club, téléchargement vérifié (fichier `.part`, reprise, 416 → redémarrage, SHA-256, manifeste écrit en dernier), lecture du GeoJSON openAIP, style MapLibre GLIDY.
+- **Domaine aéro** (`core:domain/aero`) : énumérations openAIP confirmées sur la spécification officielle, limites verticales (SFC, ft AMSL/ASFC, FL), familles d'espaces, point dans polygone (trous gérés), distance au bord.
+- **Pilotage** : vraie carte **MapLibre Native** (`android-sdk-opengl` 13.0.2, dernière série compilée en Kotlin 2.0) lue depuis les PMTiles locaux :
+  fond sombre, ombrage, courbes, espaces aériens colorés (contrôlés bleu `#69c8ff`, réglementés orange, information vert), terrains et balises openAIP, planeur démo géolocalisé près du terrain du club avec trace colorée par le vario, route vers le terrain.
+  AUTO/LIBRE (suivi du planeur), zoom +/−, échelle graphique réelle, attribution. Sans pack : carte démo et invitation à télécharger.
+- **Prévol** : carte « Carte hors ligne » (région, taille, validité aéro, téléchargement avec progression/annulation, mise à jour) et carte « Espaces aériens · 15 km autour du terrain » (type, classe, plancher → plafond, distance).
+- Altitude du terrain de référence lue dans openAIP (LFNL 183 m) pour la coupe démo.
+
+### Limites / à faire
+- openAIP est sous licence **CC BY-NC** : à revoir avant toute monétisation (plan, risque S3).
+- Niveaux de vol affichés en atmosphère standard (QNH inconnu) : affichage, pas alerte.
+- openAIP ne décrit pas les activations du jour (SUP AIP, NOTAM) : rappel affiché.
+- ABI embarquées : arm64-v8a et x86_64 (MapLibre natif).
+
+
 ## Session 2 — GLIDY, charte v8, Check-lists, Pilotage v8, appairage FLARM (16/09/2026)
 
 ### Livré
