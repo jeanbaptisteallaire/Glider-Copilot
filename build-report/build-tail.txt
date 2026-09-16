@@ -1,134 +1,142 @@
-> Task :feature:checklist:javaPreCompileDebug FROM-CACHE
-> Task :feature:flight:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:prevol:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :app:generateDebugResources FROM-CACHE
-> Task :feature:prevol:javaPreCompileDebug FROM-CACHE
-> Task :feature:checklist:preReleaseBuild UP-TO-DATE
-> Task :feature:flight:javaPreCompileDebug FROM-CACHE
 > Task :feature:flight:preReleaseBuild UP-TO-DATE
-> Task :feature:checklist:writeReleaseAarMetadata
-> Task :feature:prevol:preReleaseBuild UP-TO-DATE
 > Task :feature:flight:writeReleaseAarMetadata
-> Task :feature:checklist:generateReleaseResValues FROM-CACHE
+> Task :feature:prevol:preReleaseBuild UP-TO-DATE
+> Task :feature:checklist:writeReleaseAarMetadata
+> Task :core:designsystem:parseDebugLocalResources FROM-CACHE
 > Task :feature:prevol:writeReleaseAarMetadata
+> Task :feature:checklist:generateReleaseResValues FROM-CACHE
 > Task :feature:flight:generateReleaseResValues FROM-CACHE
+> Task :app:generateDebugResValues FROM-CACHE
+> Task :app:checkDebugAarMetadata
 > Task :feature:checklist:generateReleaseResources FROM-CACHE
+> Task :core:designsystem:generateDebugRFile FROM-CACHE
 > Task :feature:flight:generateReleaseResources FROM-CACHE
-> Task :feature:checklist:packageReleaseResources FROM-CACHE
+> Task :core:designsystem:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :feature:flight:packageReleaseResources FROM-CACHE
+> Task :feature:checklist:packageReleaseResources FROM-CACHE
 > Task :feature:prevol:generateReleaseResValues FROM-CACHE
 > Task :feature:checklist:extractDeepLinksRelease FROM-CACHE
 > Task :feature:prevol:generateReleaseResources FROM-CACHE
+> Task :feature:prevol:packageReleaseResources FROM-CACHE
 > Task :feature:checklist:processReleaseManifest FROM-CACHE
 > Task :feature:flight:extractDeepLinksRelease FROM-CACHE
-> Task :feature:prevol:packageReleaseResources FROM-CACHE
-> Task :feature:flight:processReleaseManifest FROM-CACHE
 > Task :feature:prevol:extractDeepLinksRelease FROM-CACHE
-> Task :feature:checklist:compileReleaseLibraryResources FROM-CACHE
+> Task :feature:flight:processReleaseManifest FROM-CACHE
 > Task :feature:prevol:processReleaseManifest FROM-CACHE
-> Task :feature:checklist:parseReleaseLocalResources FROM-CACHE
+> Task :feature:checklist:compileReleaseLibraryResources FROM-CACHE
 > Task :feature:flight:compileReleaseLibraryResources FROM-CACHE
-> Task :app:mergeDebugResources FROM-CACHE
+> Task :app:mapDebugSourceSetPaths
+> Task :feature:checklist:parseReleaseLocalResources FROM-CACHE
 > Task :feature:flight:parseReleaseLocalResources FROM-CACHE
-> Task :feature:checklist:generateReleaseRFile FROM-CACHE
-> Task :app:packageDebugResources FROM-CACHE
-> Task :feature:prevol:compileReleaseLibraryResources FROM-CACHE
+> Task :app:generateDebugResources FROM-CACHE
 > Task :feature:flight:generateReleaseRFile FROM-CACHE
-> Task :app:parseDebugLocalResources FROM-CACHE
-> Task :feature:prevol:parseReleaseLocalResources FROM-CACHE
+> Task :feature:checklist:generateReleaseRFile FROM-CACHE
+> Task :feature:prevol:compileReleaseLibraryResources FROM-CACHE
 > Task :feature:checklist:javaPreCompileRelease FROM-CACHE
-> Task :feature:prevol:generateReleaseRFile FROM-CACHE
 > Task :feature:flight:javaPreCompileRelease FROM-CACHE
-> Task :app:createDebugCompatibleScreenManifests
+> Task :feature:prevol:parseReleaseLocalResources FROM-CACHE
+> Task :feature:prevol:generateReleaseRFile FROM-CACHE
 > Task :feature:prevol:javaPreCompileRelease FROM-CACHE
-> Task :app:extractDeepLinksDebug FROM-CACHE
-> Task :data:ogn:compileTestKotlin FROM-CACHE
 > Task :core:domain:compileTestKotlin FROM-CACHE
-> Task :data:ogn:compileTestJava NO-SOURCE
+> Task :data:ogn:compileTestKotlin FROM-CACHE
 > Task :core:domain:compileTestJava NO-SOURCE
+> Task :data:ogn:compileTestJava NO-SOURCE
 > Task :core:domain:processTestResources NO-SOURCE
 > Task :core:domain:testClasses UP-TO-DATE
 > Task :data:ogn:processTestResources
 > Task :data:ogn:testClasses
-> Task :core:designsystem:compileDebugKotlin FROM-CACHE
-> Task :data:ogn:test FROM-CACHE
-> Task :core:designsystem:javaPreCompileDebug FROM-CACHE
-> Task :core:designsystem:compileDebugJavaWithJavac NO-SOURCE
 > Task :core:domain:test FROM-CACHE
+> Task :app:mergeDebugResources FROM-CACHE
+> Task :data:ogn:test FROM-CACHE
 > Task :feature:checklist:preDebugUnitTestBuild UP-TO-DATE
+> Task :app:packageDebugResources FROM-CACHE
+> Task :app:parseDebugLocalResources FROM-CACHE
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug FROM-CACHE
 > Task :data:precog:compileTestKotlin FROM-CACHE
-> Task :core:designsystem:bundleLibRuntimeToJarDebug
-> Task :core:designsystem:processDebugJavaRes
-> Task :core:designsystem:preReleaseBuild UP-TO-DATE
-> Task :core:designsystem:bundleLibCompileToJarDebug
-> Task :core:designsystem:writeReleaseAarMetadata
-> Task :feature:checklist:generateDebugUnitTestStubRFile FROM-CACHE
-> Task :feature:checklist:compileDebugKotlin FROM-CACHE
-> Task :feature:checklist:compileDebugJavaWithJavac NO-SOURCE
-> Task :feature:prevol:compileDebugKotlin FROM-CACHE
-> Task :feature:prevol:compileDebugJavaWithJavac NO-SOURCE
-> Task :feature:checklist:bundleLibCompileToJarDebug
-> Task :feature:checklist:bundleLibRuntimeToJarDebug
-> Task :feature:prevol:bundleLibCompileToJarDebug
-> Task :feature:checklist:processDebugJavaRes
-> Task :feature:prevol:bundleLibRuntimeToJarDebug
-> Task :feature:prevol:processDebugJavaRes
-> Task :core:designsystem:generateReleaseResValues FROM-CACHE
 > Task :data:precog:compileTestJava NO-SOURCE
-> Task :core:designsystem:generateReleaseResources FROM-CACHE
-> Task :core:designsystem:packageReleaseResources FROM-CACHE
 > Task :data:precog:processTestResources
 > Task :data:precog:testClasses
+> Task :data:precog:test FROM-CACHE
+> Task :feature:flight:preDebugUnitTestBuild UP-TO-DATE
+> Task :core:designsystem:compileDebugKotlin FROM-CACHE
+> Task :core:designsystem:javaPreCompileDebug FROM-CACHE
+> Task :core:designsystem:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature:flight:generateDebugUnitTestStubRFile FROM-CACHE
+> Task :feature:checklist:generateDebugUnitTestStubRFile FROM-CACHE
+> Task :feature:checklist:javaPreCompileDebugUnitTest FROM-CACHE
+> Task :core:designsystem:processDebugJavaRes
+> Task :core:designsystem:bundleLibRuntimeToJarDebug
+> Task :core:designsystem:preReleaseBuild UP-TO-DATE
+> Task :feature:checklist:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:designsystem:bundleLibCompileToJarDebug
+> Task :feature:checklist:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :core:designsystem:writeReleaseAarMetadata
+> Task :feature:checklist:compileDebugKotlin FROM-CACHE
+> Task :feature:checklist:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature:checklist:bundleLibCompileToJarDebug
+> Task :feature:checklist:bundleLibRuntimeToJarDebug
+> Task :feature:prevol:compileDebugKotlin FROM-CACHE
+> Task :feature:prevol:compileDebugJavaWithJavac NO-SOURCE
+> Task :feature:checklist:processDebugJavaRes
+> Task :core:designsystem:generateReleaseResValues FROM-CACHE
+> Task :feature:prevol:bundleLibCompileToJarDebug
+> Task :feature:prevol:bundleLibRuntimeToJarDebug
+> Task :core:designsystem:generateReleaseResources FROM-CACHE
+> Task :feature:prevol:processDebugJavaRes
+> Task :core:designsystem:packageReleaseResources FROM-CACHE
+> Task :feature:checklist:compileDebugUnitTestKotlin NO-SOURCE
+> Task :feature:checklist:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :core:designsystem:extractDeepLinksRelease FROM-CACHE
+> Task :feature:checklist:processDebugUnitTestJavaRes NO-SOURCE
+> Task :feature:checklist:testDebugUnitTest NO-SOURCE
+> Task :feature:prevol:preDebugUnitTestBuild UP-TO-DATE
 > Task :core:designsystem:processReleaseManifest FROM-CACHE
 > Task :core:designsystem:compileReleaseLibraryResources FROM-CACHE
 > Task :core:designsystem:parseReleaseLocalResources FROM-CACHE
-> Task :data:precog:test FROM-CACHE
-> Task :feature:checklist:compileDebugUnitTestKotlin NO-SOURCE
 > Task :core:designsystem:generateReleaseRFile FROM-CACHE
 > Task :app:processDebugMainManifest
-> Task :feature:checklist:javaPreCompileDebugUnitTest FROM-CACHE
-> Task :feature:checklist:compileDebugUnitTestJavaWithJavac NO-SOURCE
-> Task :feature:checklist:processDebugUnitTestJavaRes NO-SOURCE
-> Task :feature:checklist:testDebugUnitTest NO-SOURCE
-> Task :feature:checklist:preReleaseUnitTestBuild UP-TO-DATE
-> Task :feature:checklist:generateReleaseUnitTestStubRFile FROM-CACHE
-> Task :feature:checklist:javaPreCompileReleaseUnitTest FROM-CACHE
-> Task :feature:prevol:preDebugUnitTestBuild UP-TO-DATE
 > Task :feature:prevol:generateDebugUnitTestStubRFile FROM-CACHE
+> Task :feature:checklist:generateReleaseUnitTestStubRFile FROM-CACHE
 > Task :feature:prevol:compileDebugUnitTestKotlin NO-SOURCE
 > Task :feature:prevol:javaPreCompileDebugUnitTest FROM-CACHE
-> Task :core:designsystem:compileReleaseKotlin FROM-CACHE
 > Task :feature:prevol:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :feature:prevol:processDebugUnitTestJavaRes NO-SOURCE
-> Task :core:designsystem:javaPreCompileRelease FROM-CACHE
-> Task :core:designsystem:compileReleaseJavaWithJavac NO-SOURCE
 > Task :feature:prevol:testDebugUnitTest NO-SOURCE
 > Task :feature:prevol:preReleaseUnitTestBuild UP-TO-DATE
+> Task :core:designsystem:compileReleaseKotlin FROM-CACHE
+> Task :core:designsystem:javaPreCompileRelease FROM-CACHE
+> Task :core:designsystem:compileReleaseJavaWithJavac NO-SOURCE
 > Task :core:designsystem:bundleLibCompileToJarRelease
-> Task :core:designsystem:bundleLibRuntimeToJarRelease
 > Task :feature:prevol:generateReleaseUnitTestStubRFile FROM-CACHE
 > Task :feature:checklist:compileReleaseKotlin FROM-CACHE
 > Task :feature:checklist:compileReleaseJavaWithJavac NO-SOURCE
 > Task :feature:checklist:bundleLibCompileToJarRelease
+> Task :core:designsystem:bundleLibRuntimeToJarRelease
+> Task :feature:prevol:compileReleaseKotlin FROM-CACHE
+> Task :feature:prevol:compileReleaseJavaWithJavac NO-SOURCE
 > Task :core:designsystem:processReleaseJavaRes
 > Task :feature:checklist:bundleLibRuntimeToJarRelease
 > Task :feature:checklist:processReleaseJavaRes
-> Task :core:designsystem:preDebugUnitTestBuild UP-TO-DATE
-> Task :app:processDebugManifest
-> Task :feature:prevol:compileReleaseKotlin FROM-CACHE
-> Task :feature:prevol:compileReleaseJavaWithJavac NO-SOURCE
 > Task :feature:prevol:bundleLibCompileToJarRelease
-> Task :core:designsystem:generateDebugUnitTestStubRFile FROM-CACHE
-> Task :app:processDebugManifestForPackage
+> Task :core:designsystem:preDebugUnitTestBuild UP-TO-DATE
 > Task :feature:prevol:bundleLibRuntimeToJarRelease
 > Task :feature:prevol:processReleaseJavaRes
+> Task :feature:checklist:compileReleaseUnitTestKotlin NO-SOURCE
+> Task :feature:checklist:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :feature:checklist:processReleaseUnitTestJavaRes NO-SOURCE
+> Task :feature:checklist:testReleaseUnitTest NO-SOURCE
+> Task :feature:checklist:test UP-TO-DATE
+> Task :feature:prevol:compileReleaseUnitTestKotlin NO-SOURCE
+> Task :core:designsystem:generateDebugUnitTestStubRFile FROM-CACHE
 > Task :core:designsystem:compileDebugUnitTestKotlin NO-SOURCE
 > Task :core:designsystem:javaPreCompileDebugUnitTest FROM-CACHE
 > Task :core:designsystem:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :core:designsystem:processDebugUnitTestJavaRes NO-SOURCE
 > Task :core:designsystem:testDebugUnitTest NO-SOURCE
 > Task :core:designsystem:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
 > Task :core:designsystem:generateReleaseUnitTestStubRFile FROM-CACHE
 > Task :core:designsystem:compileReleaseUnitTestKotlin NO-SOURCE
 > Task :core:designsystem:javaPreCompileReleaseUnitTest FROM-CACHE
@@ -136,12 +144,16 @@
 > Task :core:designsystem:processReleaseUnitTestJavaRes NO-SOURCE
 > Task :core:designsystem:testReleaseUnitTest NO-SOURCE
 > Task :core:designsystem:test UP-TO-DATE
-> Task :feature:checklist:compileReleaseUnitTestKotlin NO-SOURCE
-> Task :feature:checklist:compileReleaseUnitTestJavaWithJavac NO-SOURCE
-> Task :feature:checklist:processReleaseUnitTestJavaRes NO-SOURCE
-> Task :feature:checklist:testReleaseUnitTest NO-SOURCE
-> Task :feature:checklist:test UP-TO-DATE
-> Task :feature:prevol:compileReleaseUnitTestKotlin NO-SOURCE
+> Task :feature:prevol:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :feature:prevol:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :feature:prevol:processReleaseUnitTestJavaRes NO-SOURCE
+> Task :feature:prevol:testReleaseUnitTest NO-SOURCE
+> Task :feature:prevol:test UP-TO-DATE
+> Task :core:designsystem:mergeDebugJniLibFolders
+> Task :core:designsystem:mergeDebugNativeLibs NO-SOURCE
+> Task :core:designsystem:stripDebugDebugSymbols NO-SOURCE
+> Task :core:designsystem:copyDebugJniLibsProjectAndLocalJars
+> Task :app:processDebugResources
 > Task :app:javaPreCompileDebug FROM-CACHE
 > Task :app:preDebugUnitTestBuild UP-TO-DATE
 > Task :app:javaPreCompileDebugUnitTest FROM-CACHE
@@ -152,50 +164,40 @@
 > Task :app:generateReleaseResValues FROM-CACHE
 > Task :app:mapReleaseSourceSetPaths
 > Task :app:generateReleaseResources FROM-CACHE
-> Task :app:mergeReleaseResources FROM-CACHE
-> Task :app:packageReleaseResources FROM-CACHE
-> Task :app:parseReleaseLocalResources FROM-CACHE
-> Task :app:createReleaseCompatibleScreenManifests
-> Task :app:extractDeepLinksRelease FROM-CACHE
-> Task :app:processDebugResources
-> Task :feature:prevol:javaPreCompileReleaseUnitTest FROM-CACHE
-> Task :feature:prevol:compileReleaseUnitTestJavaWithJavac NO-SOURCE
-> Task :feature:prevol:processReleaseUnitTestJavaRes NO-SOURCE
-> Task :feature:prevol:testReleaseUnitTest NO-SOURCE
-> Task :feature:prevol:test UP-TO-DATE
-> Task :app:processReleaseMainManifest
-> Task :app:processReleaseManifest
-> Task :core:designsystem:mergeDebugJniLibFolders
-> Task :app:javaPreCompileRelease FROM-CACHE
-> Task :core:designsystem:mergeDebugNativeLibs NO-SOURCE
-> Task :app:processReleaseManifestForPackage
-> Task :core:designsystem:stripDebugDebugSymbols NO-SOURCE
-> Task :core:designsystem:copyDebugJniLibsProjectAndLocalJars
-> Task :app:processReleaseResources
-> Task :app:preReleaseUnitTestBuild UP-TO-DATE
-> Task :app:javaPreCompileReleaseUnitTest FROM-CACHE
-> Task :feature:checklist:mergeDebugJniLibFolders
-> Task :feature:checklist:mergeDebugNativeLibs NO-SOURCE
-> Task :feature:checklist:stripDebugDebugSymbols NO-SOURCE
-> Task :feature:checklist:copyDebugJniLibsProjectAndLocalJars
 > Task :core:designsystem:extractDebugAnnotations FROM-CACHE
-> Task :feature:flight:preDebugUnitTestBuild UP-TO-DATE
-> Task :feature:checklist:extractDebugAnnotations FROM-CACHE
-> Task :feature:flight:generateDebugUnitTestStubRFile FROM-CACHE
-> Task :core:designsystem:extractDeepLinksForAarDebug FROM-CACHE
 > Task :feature:flight:javaPreCompileDebugUnitTest FROM-CACHE
 > Task :feature:flight:preReleaseUnitTestBuild UP-TO-DATE
+> Task :feature:flight:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :feature:flight:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :core:designsystem:extractDeepLinksForAarDebug FROM-CACHE
 > Task :core:designsystem:mergeDebugShaders
 > Task :core:designsystem:compileDebugShaders NO-SOURCE
 > Task :core:designsystem:generateDebugAssets UP-TO-DATE
 > Task :core:designsystem:mergeDebugAssets
 > Task :core:designsystem:mergeDebugGeneratedProguardFiles
 > Task :core:designsystem:mergeDebugConsumerProguardFiles
-> Task :feature:flight:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :app:mergeReleaseResources FROM-CACHE
 > Task :core:designsystem:prepareDebugArtProfile
-> Task :feature:flight:javaPreCompileReleaseUnitTest FROM-CACHE
-> Task :feature:checklist:extractDeepLinksForAarDebug FROM-CACHE
+> Task :app:packageReleaseResources FROM-CACHE
 > Task :core:designsystem:prepareLintJarForPublish
+> Task :app:parseReleaseLocalResources FROM-CACHE
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease FROM-CACHE
+> Task :app:processReleaseMainManifest
+> Task :app:processReleaseManifest
+> Task :app:processReleaseManifestForPackage
+> Task :core:designsystem:mergeDebugJavaResource
+> Task :core:designsystem:syncDebugLibJars FROM-CACHE
+> Task :core:designsystem:bundleDebugLocalLintAar
+> Task :app:javaPreCompileRelease FROM-CACHE
+> Task :app:preReleaseUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :feature:checklist:mergeDebugJniLibFolders
+> Task :feature:checklist:mergeDebugNativeLibs NO-SOURCE
+> Task :feature:checklist:stripDebugDebugSymbols NO-SOURCE
+> Task :feature:checklist:copyDebugJniLibsProjectAndLocalJars
+> Task :feature:checklist:extractDebugAnnotations FROM-CACHE
+> Task :feature:checklist:extractDeepLinksForAarDebug FROM-CACHE
 > Task :feature:checklist:mergeDebugShaders
 > Task :feature:checklist:compileDebugShaders NO-SOURCE
 > Task :feature:checklist:generateDebugAssets UP-TO-DATE
@@ -205,50 +207,48 @@
 > Task :feature:checklist:prepareDebugArtProfile
 > Task :feature:checklist:prepareLintJarForPublish
 > Task :feature:checklist:mergeDebugJavaResource
-> Task :core:designsystem:mergeDebugJavaResource
-> Task :core:designsystem:syncDebugLibJars FROM-CACHE
 > Task :feature:checklist:syncDebugLibJars FROM-CACHE
 > Task :feature:checklist:bundleDebugLocalLintAar
-> Task :core:designsystem:bundleDebugLocalLintAar
-> Task :feature:flight:mergeDebugJniLibFolders
 > Task :feature:prevol:mergeDebugJniLibFolders
 > Task :feature:prevol:mergeDebugNativeLibs NO-SOURCE
-> Task :feature:flight:mergeDebugNativeLibs NO-SOURCE
 > Task :feature:prevol:stripDebugDebugSymbols NO-SOURCE
-> Task :feature:flight:stripDebugDebugSymbols NO-SOURCE
 > Task :feature:prevol:copyDebugJniLibsProjectAndLocalJars
+> Task :app:processReleaseResources
+> Task :feature:flight:mergeDebugJniLibFolders
+> Task :feature:prevol:extractDebugAnnotations FROM-CACHE
+> Task :feature:flight:mergeDebugNativeLibs NO-SOURCE
+> Task :feature:prevol:extractDeepLinksForAarDebug FROM-CACHE
+> Task :feature:flight:stripDebugDebugSymbols NO-SOURCE
+> Task :feature:prevol:mergeDebugShaders
 > Task :feature:flight:copyDebugJniLibsProjectAndLocalJars
+> Task :feature:prevol:compileDebugShaders NO-SOURCE
+> Task :feature:prevol:generateDebugAssets UP-TO-DATE
 > Task :feature:flight:extractDeepLinksForAarDebug FROM-CACHE
+> Task :feature:prevol:mergeDebugAssets
 > Task :feature:flight:mergeDebugShaders
 > Task :feature:flight:compileDebugShaders NO-SOURCE
 > Task :feature:flight:generateDebugAssets UP-TO-DATE
-> Task :feature:flight:mergeDebugAssets
-> Task :feature:flight:prepareDebugArtProfile
-> Task :feature:prevol:extractDebugAnnotations FROM-CACHE
-> Task :feature:flight:prepareLintJarForPublish
-> Task :app:preDebugAndroidTestBuild SKIPPED
-> Task :feature:prevol:extractDeepLinksForAarDebug FROM-CACHE
-> Task :app:generateDebugAndroidTestResValues FROM-CACHE
-> Task :feature:prevol:mergeDebugShaders
-> Task :feature:prevol:compileDebugShaders NO-SOURCE
-> Task :feature:prevol:generateDebugAssets UP-TO-DATE
-> Task :feature:prevol:mergeDebugAssets
 > Task :feature:prevol:mergeDebugGeneratedProguardFiles
 > Task :feature:prevol:mergeDebugConsumerProguardFiles
-> Task :core:designsystem:createFullJarDebug
+> Task :feature:flight:mergeDebugAssets
+> Task :feature:flight:prepareDebugArtProfile
 > Task :feature:prevol:prepareDebugArtProfile
+> Task :feature:flight:prepareLintJarForPublish
+> Task :app:preDebugAndroidTestBuild SKIPPED
+> Task :app:generateDebugAndroidTestResValues FROM-CACHE
 > Task :feature:prevol:prepareLintJarForPublish
+> Task :core:designsystem:createFullJarDebug
 > Task :core:designsystem:writeDebugLintModelMetadata
 > Task :feature:prevol:mergeDebugJavaResource
-> Task :feature:prevol:syncDebugLibJars FROM-CACHE
 > Task :feature:checklist:createFullJarDebug
-> Task :feature:prevol:bundleDebugLocalLintAar
 > Task :feature:checklist:writeDebugLintModelMetadata
 > Task :feature:flight:writeDebugLintModelMetadata
-> Task :feature:prevol:createFullJarDebug
-> Task :feature:prevol:writeDebugLintModelMetadata
+> Task :feature:prevol:syncDebugLibJars FROM-CACHE
 > Task :app:extractProguardFiles
 > Task :core:designsystem:extractProguardFiles
+> Task :feature:prevol:bundleDebugLocalLintAar
+> Task :feature:prevol:createFullJarDebug
+> Task :feature:prevol:writeDebugLintModelMetadata
 > Task :feature:checklist:extractProguardFiles
 > Task :feature:flight:extractProguardFiles
 > Task :feature:prevol:extractProguardFiles
@@ -257,34 +257,34 @@
 > Task :core:designsystem:generateDebugLintModel
 > Task :feature:checklist:generateDebugAndroidTestLintModel
 > Task :feature:checklist:generateDebugLintModel
-> Task :core:designsystem:lintAnalyzeDebug FROM-CACHE
 > Task :feature:prevol:generateDebugLintModel
-> Task :feature:checklist:lintAnalyzeDebug FROM-CACHE
+> Task :core:designsystem:lintAnalyzeDebug FROM-CACHE
+> Task :feature:prevol:lintAnalyzeDebug FROM-CACHE
 > Task :core:designsystem:preDebugAndroidTestBuild UP-TO-DATE
 > Task :core:designsystem:generateDebugAndroidTestResValues FROM-CACHE
-> Task :feature:prevol:lintAnalyzeDebug FROM-CACHE
-> Task :core:designsystem:generateDebugAndroidTestLintModel
 > Task :feature:checklist:generateDebugUnitTestLintModel
-> Task :core:designsystem:generateDebugUnitTestLintModel
+> Task :feature:checklist:lintAnalyzeDebug FROM-CACHE
 > Task :feature:checklist:lintAnalyzeDebugAndroidTest FROM-CACHE
-> Task :core:designsystem:lintAnalyzeDebugAndroidTest FROM-CACHE
 > Task :feature:checklist:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :feature:flight:preDebugAndroidTestBuild UP-TO-DATE
 > Task :feature:flight:generateDebugAndroidTestResValues FROM-CACHE
 > Task :feature:prevol:preDebugAndroidTestBuild UP-TO-DATE
 > Task :feature:prevol:generateDebugAndroidTestResValues FROM-CACHE
-> Task :core:designsystem:lintAnalyzeDebugUnitTest FROM-CACHE
-> Task :core:designsystem:generateDebugLintReportModel
+> Task :core:designsystem:generateDebugAndroidTestLintModel
 > Task :feature:prevol:generateDebugAndroidTestLintModel
+> Task :core:designsystem:generateDebugUnitTestLintModel
 > Task :feature:prevol:generateDebugUnitTestLintModel
 > Task :feature:prevol:lintAnalyzeDebugAndroidTest FROM-CACHE
+> Task :core:designsystem:lintAnalyzeDebugAndroidTest FROM-CACHE
 > Task :feature:prevol:lintAnalyzeDebugUnitTest FROM-CACHE
+> Task :core:designsystem:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :feature:checklist:generateDebugLintReportModel
-> Task :core:designsystem:lintReportDebug
-> Task :core:designsystem:lintDebug
-> Task :feature:prevol:generateDebugLintReportModel
+> Task :core:designsystem:generateDebugLintReportModel
 > Task :feature:checklist:lintReportDebug
 > Task :feature:checklist:lintDebug
+> Task :feature:prevol:generateDebugLintReportModel
+> Task :core:designsystem:lintReportDebug
+> Task :core:designsystem:lintDebug
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:mergeDebugShaders
 > Task :app:compileDebugShaders NO-SOURCE
@@ -319,13 +319,13 @@
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so.
 
 > Task :feature:flight:compileReleaseKotlin
-> Task :feature:flight:compileDebugKotlin
 > Task :feature:flight:compileReleaseJavaWithJavac NO-SOURCE
+> Task :feature:flight:compileDebugKotlin
 > Task :feature:flight:compileDebugJavaWithJavac NO-SOURCE
-> Task :feature:flight:bundleLibCompileToJarDebug
-> Task :feature:flight:bundleLibRuntimeToJarDebug
-> Task :feature:flight:processDebugJavaRes
 > Task :feature:flight:bundleLibCompileToJarRelease
+> Task :feature:flight:bundleLibRuntimeToJarDebug
+> Task :feature:flight:bundleLibCompileToJarDebug
+> Task :feature:flight:processDebugJavaRes
 > Task :feature:flight:bundleLibRuntimeToJarRelease
 > Task :feature:flight:processReleaseJavaRes
 > Task :feature:flight:compileDebugUnitTestKotlin NO-SOURCE
@@ -348,24 +348,24 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :feature:flight:generateDebugAndroidTestLintModel
 > Task :feature:flight:generateDebugUnitTestLintModel
 > Task :feature:flight:lintAnalyzeDebugAndroidTest
-> Task :feature:flight:lintAnalyzeDebugUnitTest
+> Task :app:compileReleaseKotlin
+> Task :app:compileDebugKotlin
 > Task :feature:flight:generateDebugLintReportModel
 > Task :feature:flight:bundleLibRuntimeToDirDebug
-> Task :app:compileDebugKotlin
+> Task :feature:flight:lintAnalyzeDebugUnitTest
 > Task :feature:flight:bundleDebugAar
 > Task :feature:flight:assembleDebug
-> Task :app:compileReleaseKotlin
+> Task :app:compileReleaseJavaWithJavac
 > Task :app:compileDebugJavaWithJavac
-> Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:bundleDebugClassesToCompileJar
-> Task :app:compileReleaseJavaWithJavac
+> Task :app:processDebugJavaRes
 > Task :app:compileDebugUnitTestKotlin NO-SOURCE
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes NO-SOURCE
 > Task :app:testDebugUnitTest NO-SOURCE
-> Task :app:processReleaseJavaRes
 > Task :app:bundleReleaseClassesToRuntimeJar
+> Task :app:processReleaseJavaRes
 > Task :app:bundleReleaseClassesToCompileJar
 > Task :app:generateDebugAndroidTestLintModel
 > Task :app:compileReleaseUnitTestKotlin NO-SOURCE
@@ -380,11 +380,11 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:mergeDebugJavaResource
 > Task :app:mergeLibDexDebug
 > Task :app:mergeProjectDexDebug
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
-> Task :app:lintAnalyzeDebugAndroidTest
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :feature:flight:lintAnalyzeDebug
 > Task :feature:flight:lintReportDebug
 > Task :feature:flight:lintDebug
@@ -394,7 +394,7 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1789588554028.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1789589254090.json
 
-BUILD SUCCESSFUL in 1m 7s
+BUILD SUCCESSFUL in 1m 17s
 330 actionable tasks: 182 executed, 148 from cache
