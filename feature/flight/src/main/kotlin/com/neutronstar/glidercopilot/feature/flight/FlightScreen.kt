@@ -202,10 +202,10 @@ fun FlightScreen(modifier: Modifier = Modifier) {
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                     VarioBar(vario)
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Avg("SPIRALE", "+1,4")
-                        Avg("POMPE", "+1,2")
-                        Avg("JOUR", "+1,0")
+                    Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Avg("SPIR.", "+1,4", Modifier.weight(1f))
+                        Avg("POMPE", "+1,2", Modifier.weight(1f))
+                        Avg("JOUR", "+1,0", Modifier.weight(1f))
                     }
                 }
                 IconButton(onClick = { varioVisible = false }, modifier = Modifier.semantics { contentDescription = "Fermer le vario et couper le son" }) {
@@ -226,12 +226,15 @@ private fun Chip(label: String, value: String, color: Color, bg: Color) {
 }
 
 @Composable
-private fun Avg(label: String, value: String) {
+private fun Avg(label: String, value: String, modifier: Modifier = Modifier) {
     val c = Gc.colors
-    Row(Modifier.background(c.chip, RoundedCornerShape(7.dp)).padding(horizontal = 6.dp, vertical = 3.dp), verticalAlignment = Alignment.CenterVertically) {
-        Text(label, style = Gc.type.eyebrow.copy(fontSize = 8.sp))
-        Spacer(Modifier.width(4.dp))
-        Text(value, style = Gc.type.mono.copy(fontSize = 13.sp))
+    Row(
+        modifier.background(c.chip, RoundedCornerShape(7.dp)).padding(horizontal = 5.dp, vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(label, style = Gc.type.eyebrow.copy(fontSize = 8.sp, letterSpacing = 0.4.sp), maxLines = 1, softWrap = false)
+        Text(value, style = Gc.type.mono.copy(fontSize = 12.sp), maxLines = 1, softWrap = false)
     }
 }
 

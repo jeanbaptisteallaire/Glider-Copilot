@@ -198,6 +198,9 @@ private fun HourCard(day: DayWeather, hour: HourWeather, selected: Int, onSelect
         StatRow("Base des cumulus", a.cloudBaseMslM?.let { Fmt.m(it) } ?: "—")
         StatRow("Force estimée", "w* ${Fmt.ms(a.wStarMs)}  ·  montée ~${Fmt.ms(a.climbMs)}", valueColor = climbColor(a.climbMs))
         StatRow("Nébulosité", a.totalCloudPct?.let { "${it.toInt()} %" + (hour.surface.lowCloudPct?.let { l -> " (basse ${l.toInt()} %)" } ?: "") } ?: "—")
+        if ((hour.surface.lowCloudPct ?: 0.0) >= 85.0) {
+            Text("⚠ Couche nuageuse basse prévue presque couverte : ascendances probablement étouffées, base réelle à vérifier au ciel.", style = Gc.type.bodySmall.copy(color = c.warn))
+        }
         StatRow("CAPE", a.capeJkg?.let { "${it.toInt()} J/kg" } ?: "—")
         StatRow("Sol du modèle", Fmt.m(a.groundAltitudeM) + (day.gridDistanceKm?.let { " · maille à ${"%.1f".format(it)} km" } ?: ""))
     }
