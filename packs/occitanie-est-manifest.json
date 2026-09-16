@@ -2,8 +2,8 @@
  "format": 1,
  "id": "occitanie-est",
  "name": "Occitanie est · Cévennes",
- "version": "202609162047",
- "created": "2026-09-16T20:47:04Z",
+ "version": "202609162056",
+ "created": "2026-09-16T20:56:23Z",
  "bbox": [
   2.55,
   42.95,
@@ -11,11 +11,11 @@
   44.75
  ],
  "basemapMaxZoom": 12,
- "demMaxZoom": 11,
+ "demMaxZoom": 10,
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-14T20:47:04Z",
+ "aeroValidUntil": "2026-10-14T20:56:23Z",
  "aeroCounts": {
   "airspace": 215,
   "airport": 88,
@@ -25,7 +25,7 @@
  "sources": {
   "protomaps": "20260916.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-09-16T20:47:04Z"
+  "openaip": "2026-09-16T20:56:23Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
@@ -40,8 +40,8 @@
    "role": "relief",
    "name": "occitanie-est-relief.pmtiles",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-relief.pmtiles",
-   "size": 222910823,
-   "sha256": "f20e5d4ff157ae76a3001040258cf2beaad7ecea4e4a4b31fd3a0ff737f1f7e7"
+   "size": 22974281,
+   "sha256": "c69302d20b077a9468b4011d1c58cbfbccd6bf938a03c8a4a9b2c061974db732"
   },
   {
    "role": "courbes",
@@ -55,7 +55,7 @@
    "name": "occitanie-est-aero.geojson",
    "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-aero.geojson",
    "size": 468101,
-   "sha256": "f7e70e6b057c6f4f3afb03260cef11eda9a2e2e616cb3c26227d132219e5b124"
+   "sha256": "ef1024c31f5b285f06c54b402ef7c6f9e9aac15fe98a326a598c15f64233d5b6"
   }
  ]
 }
