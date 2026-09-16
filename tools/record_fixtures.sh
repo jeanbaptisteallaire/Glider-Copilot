@@ -47,4 +47,17 @@ if [ -n "${OPENAIP_KEY:-}" ]; then
 else
   echo "openaip SKIP (pas de secret OPENAIP_KEY)" | tee -a "$OUT/index.txt"
 fi
+# OGN Device Database : échantillon des planeurs français (F-C…) pour les tests d'appairage.
+mkdir -p "$OUT/ogn"
+get ogn/ddb_full "https://ddb.glidernet.org/download/?j=1&t=1"
+python3 - "$OUT/ogn/ddb_full.json" "$OUT/ogn/ddb_fc_sample.json" <<'PY2' | tee -a "$OUT/index.txt"
+import json,sys
+d=json.load(open(sys.argv[1],encoding='utf-8'))
+dev=d.get('devices',[])
+fc=[x for x in dev if str(x.get('registration','')).upper().startswith('F-C')]
+json.dump({'devices':fc[:400]},open(sys.argv[2],'w',encoding='utf-8'),ensure_ascii=False,indent=0)
+keys=sorted({k for x in dev[:50] for k in x})
+print('ogn ddb total',len(dev),'F-C',len(fc),'keys',keys,'tracked N',sum(1 for x in dev if x.get('tracked')=='N'))
+PY2
+rm -f "$OUT/ogn/ddb_full.json"
 exit 0
