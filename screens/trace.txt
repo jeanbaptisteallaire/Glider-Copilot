@@ -1,5 +1,5 @@
 + date -u
-Wed Sep 16 19:48:49 UTC 2026
+Wed Sep 16 19:59:03 UTC 2026
 ++ ls apk/app-debug.apk
 ++ head -1
 + APK=apk/app-debug.apk
@@ -8,7 +8,9 @@ Performing Streamed Install
 Success
 + adb shell pm clear com.neutronstar.glidercopilot
 Success
++ adb logcat -c
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
++ adb logcat -v time
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
@@ -128,18 +130,19 @@ error: device 'emulator-5554' not found
 - waiting for device -
 + true
 + ls -la screens
-total 1548
-drwxr-xr-x  2 runner runner   4096 Sep 16 19:51 .
-drwxr-xr-x 13 runner runner   4096 Sep 16 19:48 ..
--rw-r--r--  1 runner runner 100664 Sep 16 19:49 01-avertissement.png
--rw-r--r--  1 runner runner 205312 Sep 16 19:49 02-prevol.png
--rw-r--r--  1 runner runner 204179 Sep 16 19:50 03-prevol-appairage.png
--rw-r--r--  1 runner runner 235201 Sep 16 19:50 04-prevol-meteo.png
--rw-r--r--  1 runner runner 263288 Sep 16 19:50 05-checklists.png
--rw-r--r--  1 runner runner 265116 Sep 16 19:50 06-checklists-cases.png
--rw-r--r--  1 runner runner 280485 Sep 16 19:50 07-checklists-suite.png
--rw-r--r--  1 runner runner      0 Sep 16 19:51 08-pilotage.png
--rw-r--r--  1 runner runner      0 Sep 16 19:51 09-pilotage-profil-reduit.png
--rw-r--r--  1 runner runner      0 Sep 16 19:51 10-pilotage-vario-replie.png
--rw-r--r--  1 runner runner      0 Sep 16 19:51 logcat.txt
--rw-r--r--  1 runner runner   4145 Sep 16 19:52 trace.txt
+total 7528
+drwxr-xr-x  2 runner runner    4096 Sep 16 20:02 .
+drwxr-xr-x 13 runner runner    4096 Sep 16 19:59 ..
+-rw-r--r--  1 runner runner  100664 Sep 16 19:59 01-avertissement.png
+-rw-r--r--  1 runner runner  205312 Sep 16 19:59 02-prevol.png
+-rw-r--r--  1 runner runner  203218 Sep 16 20:00 03-prevol-appairage.png
+-rw-r--r--  1 runner runner  234844 Sep 16 20:00 04-prevol-meteo.png
+-rw-r--r--  1 runner runner  263288 Sep 16 20:01 05-checklists.png
+-rw-r--r--  1 runner runner  265116 Sep 16 20:01 06-checklists-cases.png
+-rw-r--r--  1 runner runner  282690 Sep 16 20:01 07-checklists-suite.png
+-rw-r--r--  1 runner runner       0 Sep 16 20:01 08-pilotage.png
+-rw-r--r--  1 runner runner       0 Sep 16 20:02 09-pilotage-profil-reduit.png
+-rw-r--r--  1 runner runner       0 Sep 16 20:02 10-pilotage-vario-replie.png
+-rw-r--r--  1 runner runner 6117858 Sep 16 20:01 logcat-live.txt
+-rw-r--r--  1 runner runner       0 Sep 16 20:02 logcat.txt
+-rw-r--r--  1 runner runner    4182 Sep 16 20:02 trace.txt
