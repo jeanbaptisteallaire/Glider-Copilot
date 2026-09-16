@@ -1,0 +1,35 @@
+name: record-fixtures
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['tools/record_fixtures.sh', '.github/workflows/record-fixtures.yml']
+permissions:
+  contents: write
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enregistrer les réponses
+        env:
+          OPENAIP_KEY: ${{ secrets.OPENAIP_KEY }}
+        run: tools/record_fixtures.sh out
+      - name: Publier sur la branche ci-data
+        env:
+          OPENAIP_KEY: ${{ secrets.OPENAIP_KEY }}
+        run: |
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          git fetch origin ci-data || true
+          mkdir -p /tmp/cidata && cd /tmp/cidata
+          if git ls-remote --exit-code --heads "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-data >/dev/null; then
+            git clone -q --depth 1 -b ci-data "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" .
+          else
+            git init -q -b ci-data . && git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          fi
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          rm -rf fixtures && mkdir -p fixtures && cp -r "$GITHUB_WORKSPACE/out/." fixtures/
+          # jamais de clé dans les fichiers
+          if [ -n "$OPENAIP_KEY" ] && grep -rlF "$OPENAIP_KEY" fixtures; then echo "clé trouvée dans les fixtures"; exit 1; fi
+          git add -A && git commit -qm "fixtures $(date -u +%FT%TZ)" || true
+          for i in 1 2 3 4; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 3; done

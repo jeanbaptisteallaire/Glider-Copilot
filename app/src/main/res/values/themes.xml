@@ -1,0 +1,10 @@
+<resources>
+    <style name="Theme.GliderCopilot" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/gc_background</item>
+        <item name="android:statusBarColor">@color/gc_background</item>
+        <item name="android:navigationBarColor">@color/gc_panel</item>
+    </style>
+    <color name="gc_background">#0B1117</color>
+    <color name="gc_panel">#111922</color>
+    <color name="gc_green">#6FE08A</color>
+</resources>

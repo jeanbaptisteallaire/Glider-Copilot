@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Planeur vu de dessus, aile longue, sur fond cockpit -->
+    <path android:fillColor="#E6EDF2" android:pathData="M16,50 L92,50 L92,55 L16,55 Z" />
+    <path android:fillColor="#E6EDF2" android:pathData="M52,34 L56,34 L56,78 L52,78 Z" />
+    <path android:fillColor="#E6EDF2" android:pathData="M44,74 L64,74 L64,78 L44,78 Z" />
+    <path android:fillColor="#6FE08A" android:pathData="M30,86 Q54,64 78,86 L78,89 Q54,68 30,89 Z" />
+</vector>

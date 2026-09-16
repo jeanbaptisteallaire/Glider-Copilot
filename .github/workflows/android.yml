@@ -1,0 +1,87 @@
+name: android
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**.md']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Tests unitaires, lint, APK
+        id: gradle
+        run: |
+          set -o pipefail
+          ./gradlew --no-daemon --stacktrace test lintDebug assembleDebug 2>&1 | tee build.log
+      - name: Rapport (ci-data)
+        if: always()
+        run: |
+          mkdir -p report
+          tail -n 400 build.log > report/build-tail.txt 2>/dev/null || echo "pas de journal" > report/build-tail.txt
+          grep -E "^e: |error:|FAILED|BUILD (SUCCESSFUL|FAILED)|What went wrong" -A3 build.log | head -n 300 > report/errors.txt || true
+          find . -path '*/build/test-results/*' -name '*.xml' -exec cp --parents {} report/ \; 2>/dev/null || true
+          find . -path '*/build/reports/lint-results-debug.xml' -exec cp --parents {} report/ \; 2>/dev/null || true
+          APK=$(ls app/build/outputs/apk/debug/*.apk 2>/dev/null | head -1)
+          if [ -n "$APK" ]; then mkdir -p report/apk && cp "$APK" report/apk/glider-copilot-debug.apk; fi
+          echo "${{ github.sha }} ${{ job.status }} $(date -u +%FT%TZ)" > report/STATUS.txt
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          if git ls-remote --exit-code --heads "$R" ci-data >/dev/null; then git clone -q --depth 1 -b ci-data "$R" .; else git init -q -b ci-data . && git remote add origin "$R"; fi
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          rm -rf build-report && mkdir build-report && cp -r "$GITHUB_WORKSPACE/report/." build-report/
+          git add -A && git commit -qm "build ${{ github.run_number }} ${{ job.status }}" || true
+          for i in 1 2 3 4; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 3; done
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: glider-copilot-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+
+  screens:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: glider-copilot-debug-apk
+          path: apk
+      - name: Activer KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Captures sur émulateur
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: bash tools/screens.sh screens
+      - name: Publier les captures (ci-data)
+        if: always()
+        run: |
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-data "$R" . || { git init -q -b ci-data . && git remote add origin "$R"; }
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          rm -rf screens && mkdir -p screens && cp -r "$GITHUB_WORKSPACE/screens/." screens/ 2>/dev/null || true
+          git add -A && git commit -qm "captures ${{ github.run_number }}" || true
+          for i in 1 2 3 4; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 3; done
