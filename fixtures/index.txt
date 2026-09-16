@@ -1,0 +1,16 @@
+precog/health 200 15 https://precog-api.com/v1/health
+precog/arpege_runs_latest 200 6251 https://precog-api.com/v1/arpege/runs/latest
+precog/arpege_forecast 200 78965 https://precog-api.com/v1/arpege/forecast?lat=43.80028&lon=3.78167
+precog/arome_forecast 200 39102 https://precog-api.com/v1/arome/forecast?lat=43.80028&lon=3.78167
+precog/aromepi_forecast 200 15246 https://precog-api.com/v1/aromepi/forecast?lat=43.80028&lon=3.78167
+precog/arpege_fields 200 7218 https://precog-api.com/v1/arpege/fields
+precog/vigilance 200 376816 https://precog-api.com/v1/vigilance
+precog/stations 200 1135 https://precog-api.com/v1/observations/stations?lat=43.80028&lon=3.78167&limit=5
+precog/phealth 200 682 https://precog-api.com/v1/phealth/forecast?lat=43.80028&lon=3.78167
+precog/mtg_flashes 200 3898 https://precog-api.com/v1/mtg-li/flashes?limit=5
+precog/arpege_profile_09Z 200 12678 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T09%3A00%3A00Z
+precog/arpege_profile_12Z 200 12769 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T12%3A00%3A00Z
+precog/arpege_profile_15Z 200 12695 https://precog-api.com/v1/arpege/profile?lat=43.80028&lon=3.78167&at=2026-09-16T15%3A00%3A00Z
+precog/station_series 200 20289 https://precog-api.com/v1/observations/stations/34274001/series?frequency=6m&hours=3
+precog/arpege_runs_latest_304 304  https://precog-api.com/v1/arpege/runs/latest
+openaip SKIP (pas de secret OPENAIP_KEY)

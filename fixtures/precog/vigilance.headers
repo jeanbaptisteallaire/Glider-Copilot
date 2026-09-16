@@ -1,0 +1,11 @@
+HTTP/2 200 
+alt-svc: h3=":443"; ma=2592000
+cache-control: no-cache
+content-type: application/json
+date: Wed, 16 Sep 2026 14:24:19 GMT
+etag: "e63b94fd43bffff827fa773d3dc4feb2bd43e72bdb53f54652b313e913136b59"
+server: uvicorn
+vary: Accept-Encoding
+via: 1.1 Caddy
+content-length: 376816
+

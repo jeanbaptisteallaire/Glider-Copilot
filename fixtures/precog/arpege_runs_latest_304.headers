@@ -1,0 +1,9 @@
+HTTP/2 304 
+alt-svc: h3=":443"; ma=2592000
+cache-control: no-cache
+date: Wed, 16 Sep 2026 14:24:25 GMT
+etag: "7f1bd9b68a3afa03789d8e0442ca5b0866d27195bddf0abded00447dbeaa64e0"
+server: uvicorn
+vary: Accept-Encoding
+via: 1.1 Caddy
+
