@@ -1,5 +1,27 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 4 — OGN en direct (17/09/2026)
+
+### Livré
+- **Mesure du flux réel** (`.github/workflows/record-ogn.yml`, `tools/ogn/record.py`) : enregistrement APRS-IS, statistiques publiées dans `ci-data/ogn-live/`,
+  flux brut en artefact 1 jour seulement (règle OGN des 24 h), extrait **anonymisé** (identifiants, récepteurs, heures, lieux déplacés autour de LFNL).
+  Enregistrement quotidien à 12 h 20 UTC (14 h 20 en France, rayon 450 km autour de 44,2 N 4,5 E).
+- **Mesure du 16/09 22 h 16 UTC** (flux mondial, 10 min) : 759 aéronefs, 168 299 trames, **cadence médiane 2 s** (p90 5 s), **retard médian 0,4 s** (p90 3,2 s),
+  champ montée présent sur 96 % des trames, taux de virage sur 17 %. La cadence de 30 s évoquée au départ n'est pas confirmée : c'est bien plus fréquent.
+- **`data:ogn`** : client APRS-IS en lecture (`pass -1`, filtre `r/lat/lon/100` + `b/FLRxxxxxx` pour mon planeur, keepalive 180 s, reconnexion 5 → 120 s),
+  parseur OGN (adresse, type, furtif, no-tracking, `!Wxy!`, fpm, rot = 3 °/s, passage de minuit), trafic en mémoire (30 min, pompes 45 min),
+  choix DDB respectés (`tracked=N` ignoré, `identified=N` anonyme), détection de spirales (virage cumulé ≥ 540° en ≥ 30 s, montée par altitude GPS) regroupées en pompes (1,2 km, 15 min).
+- **Mon planeur** : adresses DDB de l'immatriculation appairée ; position, altitude, vario OGN, cadence et retard mesurés. En Pilotage, le vario OGN remplace la démo s'il a moins de 60 s (libellé « Vario OGN · n s »).
+- **Pilotage** : flèches de trafic (libellé CN/immatriculation si autorisé, écart d'altitude), pompes du réseau colorées par la montée (×n planeurs), légende OGN.
+- **Prévol** : carte « Réseau OGN · 100 km » (état de connexion, aéronefs, pompes, cadence, retard, mon planeur).
+- **Rejeu** : extrait réel anonymisé embarqué (`assets/ogn/replay.aprs`, ×4), activé par `--ez glidy.ogn.replay true` (captures CI, démo hors saison), signalé « REJEU OGN ».
+
+### Limites / à faire
+- Réseau OGN actif seulement app au premier plan (service de vol en S5).
+- Pompes dérivées d'OGN non conservées (serveur et carte historique : v1.1, règles ODbL à vérifier).
+- Extrait réel de planeurs en spirale issu d'un vol nocturne européen (vols américains) ; l'enregistrement quotidien français permettra d'affiner les seuils.
+
+
 ## Session 3 — Cartographie et aéro, hors ligne (16/09/2026)
 
 ### Livré

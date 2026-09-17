@@ -124,11 +124,21 @@ class OgnDeviceDatabase(
      * null si la base n'a pas encore été téléchargée ou si l'appareil n'y est pas déclaré.
      */
     fun cachedDevice(address: String): DdbDevice? {
-        val cached = cache.read(url) ?: return null
-        val idx = index?.takeIf { it.first == cached.fetchedAt }?.second
-            ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
+        // appelé pour chaque trame : la copie disque (plusieurs Mo) n'est relue qu'au plus toutes les 10 min
+        val nowMs = clock().toEpochMilli()
+        var idx = index?.second
+        if (idx == null || nowMs - indexCheckedAt > 600_000) {
+            indexCheckedAt = nowMs
+            val cached = cache.read(url)
+            idx = if (cached == null) emptyMap()
+            else index?.takeIf { it.first == cached.fetchedAt }?.second
+                ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
+            if (cached == null) index = Instant.EPOCH to idx
+        }
         return idx[address.uppercase()]
     }
+
+    @Volatile private var indexCheckedAt = 0L
 
     private fun devicesOf(c: CachedResponse): List<DdbDevice> {
         parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }

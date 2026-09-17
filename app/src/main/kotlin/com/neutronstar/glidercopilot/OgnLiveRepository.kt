@@ -188,7 +188,7 @@ class OgnLiveRepository(
             statusLabel = when (state) {
                 AprsState.Idle -> "Réseau OGN à l'arrêt (app en arrière-plan)"
                 is AprsState.Connecting -> "Connexion à aprs.glidernet.org…" + if (state.attempt > 1) " (essai ${state.attempt})" else ""
-                is AprsState.Connected -> if (replay) "Rejeu local ×$REPLAY_SPEED" else "Connecté · ${state.server?.substringAfter("GMT ")?.substringBefore(' ') ?: "OGN"} · ${store.framesAccepted} trames"
+                is AprsState.Connected -> if (replay) "Rejeu local ×$REPLAY_SPEED" else "Connecté · ${state.server?.takeIf { !it.startsWith("aprsc") } ?: "aprs.glidernet.org"} · ${store.framesAccepted} trames reçues"
                 is AprsState.Waiting -> "Hors réseau (${state.reason}) · nouvel essai dans ${state.retryInSeconds} s"
             },
             connected = state is AprsState.Connected,

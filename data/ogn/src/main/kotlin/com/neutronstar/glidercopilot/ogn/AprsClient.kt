@@ -86,6 +86,8 @@ class AprsClient(
                                     state.value = AprsState.Connected(server, clock.instant(), f)
                                 }
                             } else if (line.startsWith("# logresp")) {
+                                // « # logresp GLIDY12345 unverified, server GLIDERN3 »
+                                server = line.substringAfter("server ", "").trim().ifEmpty { server }
                                 state.value = AprsState.Connected(server, clock.instant(), f)
                             }
                             emit(AprsLine(line, clock.instant()))

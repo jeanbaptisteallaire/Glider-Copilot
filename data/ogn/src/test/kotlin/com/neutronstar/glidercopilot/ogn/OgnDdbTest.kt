@@ -81,3 +81,25 @@ class RealDdbTest {
         assertEquals("FLARM", hit.deviceTypeLabel)
     }
 }
+
+class DdbIndexTest {
+    @org.junit.Test fun cachedDeviceReadsDiskRarely() {
+        val text = javaClass.classLoader!!.getResource("ddb_synth.json")!!.readText()
+        var reads = 0
+        val inner = com.neutronstar.glidercopilot.precog.MemoryResponseCache()
+        val cache = object : com.neutronstar.glidercopilot.precog.ResponseCache {
+            override fun read(key: String) = inner.read(key).also { reads++ }
+            override fun write(key: String, value: com.neutronstar.glidercopilot.precog.CachedResponse) = inner.write(key, value)
+        }
+        var now = java.time.Instant.parse("2026-09-17T12:00:00Z")
+        val db = OgnDeviceDatabase({ _, _ -> com.neutronstar.glidercopilot.precog.HttpResult(200, text, null) }, cache, { now })
+        org.junit.Assert.assertNull(db.cachedDevice("DD1234"))   // pas encore téléchargée
+        now = now.plusSeconds(700)
+        db.lookup("F-CJAB")
+        now = now.plusSeconds(700)
+        val before = reads
+        repeat(1000) { db.cachedDevice("DD1234") }
+        org.junit.Assert.assertEquals("F-CJAB", db.cachedDevice("dd1234")!!.registration)
+        org.junit.Assert.assertTrue(reads - before <= 1)
+    }
+}
