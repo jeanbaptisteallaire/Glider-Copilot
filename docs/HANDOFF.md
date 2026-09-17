@@ -16,6 +16,14 @@
 - **Prévol** : carte « Réseau OGN · 100 km » (état de connexion, aéronefs, pompes, cadence, retard, mon planeur).
 - **Rejeu** : extrait réel anonymisé embarqué (`assets/ogn/replay.aprs`, ×4), activé par `--ez glidy.ogn.replay true` (captures CI, démo hors saison), signalé « REJEU OGN ».
 
+### Vérifié
+- Tests JVM locaux : 57 OK, dont 3 sur l'extrait réel anonymisé (4 planeurs, 1 292 trames : 2 pompes à +2,5 et +2,2 m/s détectées, spirales sans montée écartées)
+  et un test du client APRS-IS contre un serveur local (ligne de connexion, filtre, lecture).
+- CI verte sur 15d5ed0 : build, lint, APK, 11 captures. Dans l'émulateur : connexion réelle à aprs.glidernet.org établie depuis Prévol (0 aéronef à 100 km de LFNL à 2 h 50 UTC),
+  puis rejeu : 4 aéronefs et une pompe +2,5 m/s sur la carte hors ligne.
+- Correction trouvée grâce aux captures : la DDB (5,5 Mo) était relue sur disque à chaque trame ; index en mémoire relu au plus toutes les 10 min.
+- Livrables : `Planneur APP/Session 4/glidy-v0.4-debug.apk` et `Session 4/captures/` (Sessions 1–3 intactes).
+
 ### Limites / à faire
 - Réseau OGN actif seulement app au premier plan (service de vol en S5).
 - Pompes dérivées d'OGN non conservées (serveur et carte historique : v1.1, règles ODbL à vérifier).
