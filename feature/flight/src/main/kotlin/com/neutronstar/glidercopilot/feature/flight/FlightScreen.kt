@@ -119,6 +119,7 @@ fun FlightScreen(
     val real = live.hasData
     /** Signal simulé seulement dans les aperçus sans moteur de vol ; dans l'app, le mode démo est une bascule explicite. */
     val showDemo = !real && controls == null
+    val waiting = !real && !showDemo
     val soundOn = if (controls != null) live.soundOn else localSound
 
     LaunchedEffect(showDemo) {
@@ -203,9 +204,9 @@ fun FlightScreen(
     androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides fieldLabel, LocalFieldElev provides fieldElevShown) {
     Column(modifier.fillMaxSize().background(c.background)) {
         SafetyZone(
-            marge, alt, need, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg,
+            marge, alt, need.takeIf { !waiting }, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg,
             auto = safety?.choice?.auto ?: true,
-            windLabel = safety?.wind?.let { w -> "vent ${((w.fromDeg / 10).roundToInt() * 10) % 360}°/${w.speedKmh.roundToInt()}" } ?: if (real) "vent —" else "vent ✓",
+            windLabel = safety?.wind?.let { w -> "vent ${((w.fromDeg / 10).roundToInt() * 10) % 360}°/${w.speedKmh.roundToInt()}" } ?: if (showDemo) "vent ✓" else "vent —",
             onPickField = if (safety != null && controls != null) ({ picking = true }) else null,
             picker = {
                 androidx.compose.material3.DropdownMenu(expanded = picking, onDismissRequest = { picking = false }, containerColor = c.panel) {
@@ -234,7 +235,7 @@ fun FlightScreen(
                 else -> pendingRaise = f
             }
         }
-        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (showDemo) CEILING else null)
+        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (showDemo) CEILING else null, waiting = waiting)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
             if (map != null) {
                 val frame = when {
@@ -315,7 +316,7 @@ private data class Sample(val t: Double, val alt: Double, val need: Double, val 
 // ---------------------------------------------------------------- zone sécurité
 
 @Composable
-private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double?, trendNote: String, finesse: Int, pending: Int?, distKm: Double?, brg: Double,
+private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Double?, trendNote: String, finesse: Int, pending: Int?, distKm: Double?, brg: Double,
     auto: Boolean = true,
     windLabel: String = "vent ✓",
     onPickField: (() -> Unit)? = null,
@@ -342,7 +343,7 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double
             }
             Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.padding(top = 6.dp)) {
                 AltValue("ALT", alt?.let { grouped(it.roundToInt()) } ?: "—")
-                AltValue("SÉCU", grouped(need.roundToInt()))
+                AltValue("SÉCU", need?.let { grouped(it.roundToInt()) } ?: "—")
             }
             Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
         }
@@ -414,6 +415,7 @@ private fun ReturnProfile(
     open: Boolean, onToggle: () -> Unit, alt: Double?, need: Double, finesse: Double, marge: Double?, distKm: Double, brg: Double,
     result: com.neutronstar.glidercopilot.domain.safety.GlideResult? = null,
     ceiling: Double? = CEILING,
+    waiting: Boolean = false,
 ) {
     val c = Gc.colors
     Column(Modifier.fillMaxWidth().background(c.background)) {
@@ -433,7 +435,13 @@ private fun ReturnProfile(
                 Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
             }
         }
-        if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
+        if (open && waiting) {
+            Text(
+                "Coupe du terrain dès la première position (GPS ou OGN)",
+                style = TextStyle(fontSize = 11.sp, color = c.dim),
+                modifier = Modifier.fillMaxWidth().height(88.dp).padding(start = 24.dp, top = 30.dp),
+            )
+        } else if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
     }
 }
