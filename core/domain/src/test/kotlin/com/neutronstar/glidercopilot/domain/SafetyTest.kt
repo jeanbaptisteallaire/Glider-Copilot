@@ -170,3 +170,29 @@ class SafetyTest {
     @Suppress("FunctionName")
     private fun Duration(now: Instant, start: Instant) = java.time.Duration.between(start, now).seconds
 }
+
+class DemoFlightTest {
+    @Test fun demoLoopIsClosedAndNearTheField() {
+        val field = LatLon(43.80028, 3.78167)
+        val f = com.neutronstar.glidercopilot.domain.flight.DemoFlight.generate(field)
+        assertTrue("durée ${f.size} s", f.size in 600..2400)
+        val alts = f.map { it.gnssAltM!! }
+        assertTrue("altitudes ${alts.min()}–${alts.max()}", alts.min() > 1350 && alts.max() < 1700)
+        assertTrue("éloignement max ${f.maxOf { Geo.distanceKm(field, it.position) }}", f.all { Geo.distanceKm(field, it.position) < 10.0 })
+        assertTrue("fermeture ${Geo.distanceKm(f.first().position, f.last().position)}", Geo.distanceKm(f.first().position, f.last().position) < 0.2)
+        assertEquals(f.first().gnssAltM!!.toDouble(), f.last().gnssAltM!!.toDouble(), 3.0)
+        // le banc de rejeu en tire des vitesses sol de planeur et des spirales visibles par le moteur de vol
+        val replay = com.neutronstar.glidercopilot.domain.flight.SensorReplay(f)
+        val gps = replay.samples().filterIsInstance<com.neutronstar.glidercopilot.domain.flight.SensorSample.Gps>().toList()
+        val slow = gps.drop(5).count { (it.fix.groundSpeedKmh ?: 0.0) < 50 }
+        assertTrue("sous 50 km/h : $slow", slow <= 8)   // sorties de spirale : demi-tour vers la pompe suivante
+        val core = com.neutronstar.glidercopilot.domain.flight.FlightEngineCore(igc = { null })
+        var circling = 0
+        for (s in replay.samples()) when (s) {
+            is com.neutronstar.glidercopilot.domain.flight.SensorSample.Baro -> core.onBaro(s.hPa, s.timeNs)
+            is com.neutronstar.glidercopilot.domain.flight.SensorSample.Accel -> core.onAcceleration(s.upMs2, s.timeNs)
+            is com.neutronstar.glidercopilot.domain.flight.SensorSample.Gps -> { core.onGps(s.fix, s.timeNs); if (core.snapshot(s.timeNs, s.fix.time).circling) circling++ }
+        }
+        assertTrue("spirales $circling s", circling > f.size / 5)
+    }
+}
