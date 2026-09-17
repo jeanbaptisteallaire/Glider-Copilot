@@ -2,22 +2,6 @@
 <issues format="6" by="lint 8.9.1">
 
     <issue
-        id="MissingPermission"
-        severity="Error"
-        message="Missing permissions required by Vibrator.vibrate: android.permission.VIBRATE"
-        category="Correctness"
-        priority="9"
-        summary="Missing Permissions"
-        explanation="This check scans through your code and libraries and looks at the APIs being used, and checks this against the set of permissions required to access those APIs. If the code using those APIs is called at runtime, then the program will crash.&#xA;&#xA;Furthermore, for permissions that are revocable (with `targetSdkVersion` 23), client code must also be prepared to handle the calls throwing an exception if the user rejects the request for permission at runtime."
-        errorLine1="            v?.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1))"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="394"
-            column="13"/>
-    </issue>
-
-    <issue
         id="ImplicitSamInstance"
         severity="Warning"
         message="This argument is a new instance so `stopService` will not remove anything"
@@ -451,7 +435,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="35"
+            line="37"
             column="13"/>
     </issue>
 
@@ -467,7 +451,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="35"
+            line="37"
             column="13"/>
     </issue>
 
@@ -615,7 +599,7 @@
         errorLine2="                             ~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="25"
+            line="27"
             column="30"/>
     </issue>
 
