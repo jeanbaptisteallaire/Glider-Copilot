@@ -225,3 +225,40 @@ class RealOgnTest {
         assertEquals(2, th.count { it.climbMs > 1.8 })
     }
 }
+
+/** Suivi & debug : la trace OGN réelle d'un planeur en vol alimente le moteur de vol et la sécurité comme le téléphone. */
+class FollowPipelineTest {
+    @Test fun realOgnTrackDrivesFlightAndSafety() {
+        val lines = javaClass.classLoader!!.getResource("real_ogn_gliders_anon_20260916.aprs")!!.readText().lines()
+        val recv = Instant.parse("2026-09-17T12:30:00Z")
+        val track = lines.filter { it.isNotBlank() && !it.startsWith("#") }
+            .mapNotNull { (OgnParser.parse(it, recv) as? OgnLine.Aircraft)?.fix }
+            .filter { it.address == "179719" }.sortedBy { it.time }
+        val core = com.neutronstar.glidercopilot.domain.flight.FlightEngineCore(igc = { null })
+        val lfnl = com.neutronstar.glidercopilot.domain.safety.FieldOption("LFNL", "Saint-Martin-de-Londres", com.neutronstar.glidercopilot.domain.LatLon(43.80028, 3.78167), 183.0, isClub = true)
+        val safety = com.neutronstar.glidercopilot.domain.safety.SafetyEngine(terrain = { com.neutronstar.glidercopilot.domain.Terrain { 250.0 } }, fields = { listOf(lfnl) }, alert = {})
+        val t0 = track.first().time
+        var circling = 0
+        var last: com.neutronstar.glidercopilot.domain.safety.SafetyState? = null
+        for (f in track) {
+            val ns = java.time.Duration.between(t0, f.time).toNanos() + 1
+            core.onOgn(f.climbMs, f.altitudeM, 1)
+            val fix = com.neutronstar.glidercopilot.domain.flight.GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0)
+            core.onGps(fix, ns)
+            safety.onFix(fix)
+            val snap = core.snapshot(ns, f.time)
+            if (snap.circling) circling++
+            last = safety.update(fix, snap.altitudeM!!, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), f.time, armed = true)
+            assertEquals(com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN, snap.source)
+        }
+        val end = core.snapshot(java.time.Duration.between(t0, track.last().time).toNanos() + 1, track.last().time)
+        assertTrue("spirales vues sur $circling trames", circling > 30)
+        assertTrue("pompe ${end.avgThermalMs}", (end.avgThermalMs ?: 0.0) > 1.0)
+        assertEquals(com.neutronstar.glidercopilot.domain.flight.FlightPhase.FLYING, end.phase)
+        assertTrue("vent estimé", safety.wind.wind(track.last().time) != null)
+        val r = last!!.choice.result
+        assertEquals("LFNL", r.field.id)
+        assertTrue("distance ${r.distanceKm}", r.distanceKm in 5.0..25.0)
+        assertTrue("marge ${r.marginM}", r.marginM > 0)
+    }
+}

@@ -218,7 +218,7 @@ class FlightEngineCore(
             turn += d
         }
         val alt = altitude(ns).first ?: return
-        val nowCircling = abs(turn) > 150 && tracks.size >= 15   // ≥ 7,5°/s soutenu sur 20 s
+        val nowCircling = abs(turn) > 150 && tracks.size >= 6 && s - tracks.first().first >= 15   // ≥ 7,5°/s soutenu sur 20 s (aussi à la cadence OGN, 2 à 4 s)
         if (nowCircling && !circling) { thermalStartS = s; thermalStartAlt = alt }
         if (!nowCircling && circling) {
             val dur = s - thermalStartS
