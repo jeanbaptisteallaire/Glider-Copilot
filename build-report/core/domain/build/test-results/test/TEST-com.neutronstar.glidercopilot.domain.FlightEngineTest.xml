@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.FlightEngineTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-17T09:15:01" hostname="runnervmlun5p" time="1.014">
+<testsuite name="com.neutronstar.glidercopilot.domain.FlightEngineTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-17T09:20:19" hostname="runnervmlun5p" time="1.042">
   <properties/>
-  <testcase name="ognFallbackWithoutBarometer" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.022"/>
-  <testcase name="demoFlightEndToEnd" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.982"/>
-  <testcase name="manualChronoWhenAutoDisabled" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.01"/>
+  <testcase name="ognFallbackWithoutBarometer" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.011"/>
+  <testcase name="demoFlightEndToEnd" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="1.024"/>
+  <testcase name="manualChronoWhenAutoDisabled" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
