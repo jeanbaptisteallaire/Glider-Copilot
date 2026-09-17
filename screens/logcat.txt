@@ -1,653 +1,683 @@
 --------- beginning of main
-09-17 07:59:27.736  6427  6500 D EGL_emulation: app_time_stats: avg=249.64ms min=248.88ms max=250.27ms count=5
-09-17 07:59:28.986  6427  6500 D EGL_emulation: app_time_stats: avg=249.98ms min=247.36ms max=252.65ms count=5
---------- beginning of system
-09-17 07:59:29.420   521  1839 D OomAdjuster: Not killing cached processes
-09-17 07:59:30.236  6427  6500 D EGL_emulation: app_time_stats: avg=249.39ms min=247.01ms max=250.03ms count=5
-09-17 07:59:31.486  6427  6500 D EGL_emulation: app_time_stats: avg=249.99ms min=249.64ms max=250.24ms count=5
-09-17 07:59:32.216   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 07:59:32.502  6427  6500 D EGL_emulation: app_time_stats: avg=254.03ms min=246.66ms max=266.65ms count=4
-09-17 07:59:33.753  6427  6500 D EGL_emulation: app_time_stats: avg=250.01ms min=249.12ms max=250.59ms count=5
-09-17 07:59:34.753  6427  6500 D EGL_emulation: app_time_stats: avg=250.03ms min=249.67ms max=250.29ms count=4
-09-17 07:59:35.753  6427  6500 D EGL_emulation: app_time_stats: avg=250.08ms min=249.86ms max=250.24ms count=4
-09-17 07:59:36.614   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 07:59:36.615   840   903 D EGL_emulation: app_time_stats: avg=36578.74ms min=36578.74ms max=36578.74ms count=1
-09-17 07:59:37.003  6427  6500 D EGL_emulation: app_time_stats: avg=249.89ms min=249.37ms max=250.23ms count=5
-09-17 07:59:38.003  6427  6500 D EGL_emulation: app_time_stats: avg=249.89ms min=249.55ms max=250.52ms count=4
-09-17 07:59:39.252  6427  6500 D EGL_emulation: app_time_stats: avg=171.72ms min=38.98ms max=251.21ms count=7
-09-17 07:59:40.152   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 07:59:40.269  6427  6500 D EGL_emulation: app_time_stats: avg=254.09ms min=249.65ms max=266.77ms count=4
-09-17 07:59:41.269  6427  6500 D EGL_emulation: app_time_stats: avg=249.95ms min=249.28ms max=250.80ms count=4
-09-17 07:59:42.269  6427  6500 D EGL_emulation: app_time_stats: avg=249.44ms min=247.71ms max=250.40ms count=4
-09-17 07:59:43.270  6427  6500 D EGL_emulation: app_time_stats: avg=250.11ms min=249.61ms max=250.82ms count=4
-09-17 07:59:44.519  6427  6500 D EGL_emulation: app_time_stats: avg=249.71ms min=249.11ms max=250.74ms count=5
-09-17 07:59:45.519  6427  6500 D EGL_emulation: app_time_stats: avg=250.05ms min=249.06ms max=250.66ms count=4
-09-17 07:59:46.536  6427  6500 D EGL_emulation: app_time_stats: avg=254.27ms min=250.12ms max=266.24ms count=4
-09-17 07:59:46.594   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 07:59:47.786  6427  6500 D EGL_emulation: app_time_stats: avg=249.99ms min=249.17ms max=250.59ms count=5
-09-17 07:59:48.088   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 07:59:49.036  6427  6500 D EGL_emulation: app_time_stats: avg=201.93ms min=40.71ms max=250.55ms count=6
-09-17 07:59:50.285  6427  6500 D EGL_emulation: app_time_stats: avg=249.82ms min=248.77ms max=250.84ms count=5
+09-17 08:19:07.626  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:07.626  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:07.626  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:07.630  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:07.630  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:07.632  1738  4129 I PBSessionCacheImpl: Deleted sessionId[7645594469020632] from persistence.
+09-17 08:19:07.870   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:08.107  6579  6618 D EGL_emulation: app_time_stats: avg=258.20ms min=180.84ms max=352.72ms count=4
+09-17 08:19:08.488  1103  1103 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1500.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=465509, downTime=465509, deviceId=-1, source=0x1002, displayId=0, eventId=-145156216 }
+09-17 08:19:08.939  1103  1103 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1150.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=465960, downTime=465509, deviceId=-1, source=0x1002, displayId=0, eventId=-527334838 }
+09-17 08:19:08.944   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:09.163  6579  6618 D EGL_emulation: app_time_stats: avg=113.99ms min=37.07ms max=251.84ms count=8
+09-17 08:19:10.389  6579  6618 D EGL_emulation: app_time_stats: avg=245.27ms min=228.64ms max=250.27ms count=5
+09-17 08:19:11.055  6965  6965 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-17 08:19:11.055  6965  6965 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-17 08:19:11.090   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-17 08:19:11.090  6965  6966 I Gralloc4: mapper 4.x is not supported
 --------- beginning of kernel
-09-17 07:59:50.731     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
-09-17 07:59:51.286  6427  6500 D EGL_emulation: app_time_stats: avg=250.27ms min=249.19ms max=251.32ms count=4
-09-17 07:59:52.553  6427  6500 D EGL_emulation: app_time_stats: avg=253.21ms min=247.59ms max=266.90ms count=5
-09-17 07:59:53.803  6427  6500 D EGL_emulation: app_time_stats: avg=250.01ms min=249.47ms max=250.64ms count=5
-09-17 07:59:54.803  6427  6500 D EGL_emulation: app_time_stats: avg=250.02ms min=249.73ms max=250.26ms count=4
-09-17 07:59:56.024   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 07:59:56.053  6427  6500 D EGL_emulation: app_time_stats: avg=249.72ms min=248.30ms max=250.87ms count=5
-09-17 07:59:56.593   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 07:59:57.302  6427  6500 D EGL_emulation: app_time_stats: avg=249.08ms min=245.67ms max=250.76ms count=5
-09-17 07:59:58.320  6427  6500 D EGL_emulation: app_time_stats: avg=254.34ms min=249.44ms max=267.05ms count=4
-09-17 07:59:59.569  6427  6500 D EGL_emulation: app_time_stats: avg=249.49ms min=248.02ms max=250.11ms count=5
-09-17 08:00:00.001   521   552 D ActivityManager: sync unfroze 6453 com.android.settings for 3
-09-17 08:00:00.001   521   552 D OomAdjuster: Not killing cached processes
-09-17 08:00:00.001   521   552 D ActivityManager: sync unfroze 3660 com.android.dynsystem:dynsystem for 10
-09-17 08:00:00.004   521   552 D ActivityManager: sync unfroze 3611 com.android.dynsystem for 10
-09-17 08:00:00.004   521   552 D ActivityManager: sync unfroze 2361 com.android.localtransport for 10
-09-17 08:00:00.004   521   552 D ActivityManager: sync unfroze 1847 com.android.keychain for 10
-09-17 08:00:00.007  6453  6453 D PeriodicJobReceiver: refresh periodic job from action=com.android.settings.battery.action.PERIODIC_JOB_UPDATE
-09-17 08:00:00.008  6453  6453 D CompatibilityChangeReporter: Compat change id reported: 160794467; UID 1000; state: ENABLED
-09-17 08:00:00.009   521   912 D CompatibilityChangeReporter: Compat change id reported: 171306433; UID 1000; state: ENABLED
-09-17 08:00:00.009   521   912 D CompatibilityChangeReporter: Compat change id reported: 218533173; UID 1000; state: ENABLED
-09-17 08:00:00.011  6453  6996 D BatteryUsageDataLoader: loadUsageDataSafely() in the AsyncTask
-09-17 08:00:00.013  4331  4454 W Bugle   : TextClassifierLibManagerImpl: Reclaiming memory at level: 40
-09-17 08:00:00.017  6453  6453 D CompatibilityChangeReporter: Compat change id reported: 170233598; UID 1000; state: ENABLED
-09-17 08:00:00.018  6453  6453 D PeriodicJobManager: schedule next alarm job at Sep 17, 2026, 09:00:00
-09-17 08:00:00.025   521  2044 D TelephonyManager: requestModemActivityInfo: Sending result to app: ModemActivityInfo{ mTimestamp=499865 mSleepTimeMs=0 mIdleTimeMs=499862 mActivityStatsTechSpecificInfo=[{mRat=UNKNOWN,mFrequencyRange=UNKNOWN,mTxTimeMs[]=[0, 0, 0, 0, 0],mRxTimeMs=0}]}
-09-17 08:00:00.028   521  1839 W BatteryExternalStatsWorker: error reading Bluetooth stats: 11
-09-17 08:00:00.029   521   559 W KernelCpuProcStringReader: File not found. It's normal if not implemented: /proc/uid_concurrent_policy_time
-09-17 08:00:00.037   840   903 D EGL_emulation: app_time_stats: avg=23422.21ms min=23422.21ms max=23422.21ms count=1
-09-17 08:00:00.041  1673  1794 I AiAiEcho: Predicting[0]: 
-09-17 08:00:00.041  1673  1794 I AiAiEcho: EchoTargets: 
-09-17 08:00:00.041  1673  1794 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 08:00:00.041  1673  1794 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 08:00:00.042  1673  1794 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 08:00:00.068   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 08:00:00.093   335   369 I netd    : tetherGetStats() -> {[]} <0.35ms>
-09-17 08:00:00.133  6453  6996 W PowerProfile: ambient.on is deprecated! Use ambient.on.display0 instead.
-09-17 08:00:00.133  6453  6996 W PowerProfile: screen.on is deprecated! Use screen.on.display0 instead.
-09-17 08:00:00.133  6453  6996 W PowerProfile: screen.full is deprecated! Use screen.full.display0 instead.
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x0, drain:SLEEP,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x10000000, drain:IDLE,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x20000000, drain:RX,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x30000000, drain:TX,level:0,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x31000000, drain:TX,level:1,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x32000000, drain:TX,level:2,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x33000000, drain:TX,level:3,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W ModemPowerProfile: getAverageBatteryDrainMaH called with unexpected key: 0x34000000, drain:TX,level:4,RAT:DEFAULT
-09-17 08:00:00.133  6453  6996 W DataProcessor: shouldShowBatteryAttributionList(): 0.1
-09-17 08:00:00.133  6453  6996 W BatteryUsageDataLoader: getBatteryEntryList() returns null or empty content
-09-17 08:00:00.133  6453  6996 D BatteryUsageDataLoader: getBatteryUsageStats() in 122/ms
-09-17 08:00:00.135   521   912 D CompatibilityChangeReporter: Compat change id reported: 161145287; UID 1000; state: ENABLED
-09-17 08:00:00.169  6453  6996 D DatabaseUtils: insert() data into database with isFullChargeStart:false
-09-17 08:00:00.170  6453  6996 D DatabaseUtils: sendBatteryEntryData() size=1 in 37/ms
-09-17 08:00:00.171  6453  6998 D AppUsageDataLoader: loadAppUsageDataSafely() in the AsyncTask
-09-17 08:00:00.172  6453  6998 D BatteryUsageContentProvider: getQueryUserId from uri: content://com.android.settings.battery.usage.provider/appUsageLatestTimestamp?userid=0
-09-17 08:00:00.173  6453  6998 D BatteryUsageContentProvider: query app usage latest timestamp 1789632000172 for user 0 in 1/ms
-09-17 08:00:00.173  6453  6998 D DatabaseUtils: getAppUsageStartTimestampOfUser() userId=0 latestTimestamp=Dec 07, 1969, 03:28:36 in 1/ms
-09-17 08:00:00.175  6453  6998 D DataProcessor: getAppUsageEventsForUser(): 0 from 1789084800000 to 1789632000172 in 2/ms
-09-17 08:00:00.175  6453  6998 D DataProcessor: getAppUsageEvents() for all unlocked users in 4/ms
-09-17 08:00:00.177  6453  6998 W DataProcessor: Read 12 relevant events (256 total) from UsageStatsManager
-09-17 08:00:00.177  6453  6998 D AppUsageDataLoader: loadAppUsageData() size=12 in 6/ms
-09-17 08:00:00.181  6453  6998 D DatabaseUtils: insert() app usage events data into database
-09-17 08:00:00.181  6453  6998 D DatabaseUtils: sendAppUsageEventData() size=12 in 4/ms
-09-17 08:00:00.819  6427  6500 D EGL_emulation: app_time_stats: avg=249.88ms min=185.21ms max=314.06ms count=5
-09-17 08:00:01.819  6427  6500 D EGL_emulation: app_time_stats: avg=250.01ms min=249.62ms max=250.52ms count=4
-09-17 08:00:02.819  6427  6500 D EGL_emulation: app_time_stats: avg=192.00ms min=38.29ms max=250.30ms count=5
-09-17 08:00:03.835  6427  6500 D EGL_emulation: app_time_stats: avg=254.09ms min=249.43ms max=266.62ms count=4
-09-17 08:00:04.216   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:04.836  6427  6500 D EGL_emulation: app_time_stats: avg=250.11ms min=246.63ms max=253.66ms count=4
-09-17 08:00:06.086  6427  6500 D EGL_emulation: app_time_stats: avg=208.22ms min=116.30ms max=250.72ms count=6
-09-17 08:00:06.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:06.624   840   903 D EGL_emulation: app_time_stats: avg=6586.40ms min=6586.40ms max=6586.40ms count=1
-09-17 08:00:07.086  6427  6500 D EGL_emulation: app_time_stats: avg=249.27ms min=245.99ms max=250.81ms count=4
-09-17 08:00:08.087  6427  6500 D EGL_emulation: app_time_stats: avg=191.88ms min=37.85ms max=251.32ms count=5
-09-17 08:00:08.928   521   606 D OomAdjuster: Not killing cached processes
-09-17 08:00:08.929   521   606 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 ImpBg #13466} whose proc state 6 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (5 skipped)
-09-17 08:00:08.960   521   606 D ActivityManager: sync unfroze 3106 com.google.android.dialer for 6
-09-17 08:00:08.964   521  1839 D ConnectivityService: requestNetwork for uid/pid:10130/3106 activeRequest: null callbackRequest: 160 [NetworkRequest [ REQUEST id=161, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10130 RequestorUid: 10130 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
-09-17 08:00:08.965  1862  1862 I BgTaskExecutorImpl: Starting EXCLUSIVE background task INTERNAL_PERIODIC_TASK_SYNC.
-09-17 08:00:08.968   521   773 D ConnectivityService: NetReassign [161 : null → 100] [c 2] [a 0] [i 1]
-09-17 08:00:08.968   521   766 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=161, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10130 RequestorUid: 10130 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
-09-17 08:00:08.968   521   766 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=161, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10130 RequestorUid: 10130 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
-09-17 08:00:08.968   521   766 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=161, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10130 RequestorUid: 10130 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
-09-17 08:00:08.968   521   766 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=161, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10130 RequestorUid: 10130 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
-09-17 08:00:08.975  3106  3106 I DialerConstellationSyncWorker: com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker.startWork:66 starting work
-09-17 08:00:08.977  3106  3227 I DialerCountryCodeProvider: com.android.dialer.businessvoice.verifiedcall.impl.i18n.CountryCodeProvider.getSimCountryCodeInternal:85 returning Redacted-2-chars
-09-17 08:00:08.977  3106  3227 I DialerCachedVerifiedNumberProvider: com.android.dialer.businessvoice.verifiedcall.impl.constellation.CachedVerifiedNumberProvider.refreshConstellationInfo:190 Retrieving constellation info and refreshing the cache.
-09-17 08:00:08.980  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.981  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.981  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.981  1862  2746 I A       : Merging legacy hotword config map with new proto.
-09-17 08:00:08.981  1862  2746 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
-09-17 08:00:08.981  1862  2746 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
-09-17 08:00:08.981  1862  2746 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
-09-17 08:00:08.981  1862  2746 I A       : Skipping. Expected model: 2 Found: 1
-09-17 08:00:08.981  1862  2746 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
-09-17 08:00:08.982  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.982  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.982  1862  2746 I A       : Using proto config with mendel
-09-17 08:00:08.985  1862  2746 I MicroDetectionState: Should stop hotword detection immediately - true
-09-17 08:00:08.990  1862  1862 I BgTaskExecutorImpl: Starting PERIODIC background task OPA_ASSISTANT_LANGUAGE_TRANSITION_TASK.
-09-17 08:00:08.993  1862  2746 W SearchServiceCore: Abort, client detached.
-09-17 08:00:09.000   521  2044 W JobScheduler: Job didn't exist in JobStore: 8034137 #u0a132/-49 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
-09-17 08:00:09.002  5420  5420 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
-09-17 08:00:09.002  5420  5420 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
-09-17 08:00:09.003  5420  5420 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
-09-17 08:00:09.004  5420  5483 E constellation: [api_verify_phone_operation] Failed to generate Client Signature
-09-17 08:00:09.004  5420  5483 E constellation: acwp: Stored private key deleted
-09-17 08:00:09.004  5420  5483 E constellation: 	at acos.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
-09-17 08:00:09.004  5420  5483 E constellation: 	at acos.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
-09-17 08:00:09.004  5420  5483 E constellation: 	at acoa.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):22)
-09-17 08:00:09.004  5420  5483 E constellation: 	at acoa.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):12)
-09-17 08:00:09.004  5420  5483 E constellation: 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
-09-17 08:00:09.004  5420  5483 E constellation: 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
-09-17 08:00:09.004  5420  5483 E constellation: 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
-09-17 08:00:09.004  5420  5483 E constellation: 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
-09-17 08:00:09.004  5420  5483 E constellation: 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
-09-17 08:00:09.004  5420  5483 E constellation: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
-09-17 08:00:09.004  5420  5483 E constellation: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
-09-17 08:00:09.004  5420  5483 E constellation: 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
-09-17 08:00:09.004  5420  5483 E constellation: 	at java.lang.Thread.run(Thread.java:1012)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: com.android.dialer.businessvoice.verifiedcall.impl.constellation.VerifiedNumberProvider.lambda$getConstellationResponse$1:155 Failed to get constellation token.
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: nkq: 5004: 
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at nov.au(PG:1)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at nnf.g(PG:2)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at npo.a(Unknown Source:2)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at npy.dm(PG:9)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at ncz.onTransact(PG:4)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1344)
-09-17 08:00:09.005  3106  3204 W DialerVerifiedNumberProvider: 	at android.os.Binder.execTransact(Binder.java:1275)
-09-17 08:00:09.008  3106  3204 W DialerConstellationSyncWorker: com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker.lambda$syncConstellation$2:110 Constellation api request failed, status code: 5004
-09-17 08:00:09.009  3106  3205 I WM-WorkerWrapper: Worker result RETRY for Work [ id=5d85bfbc-4004-40bd-a83a-aa9cd0016b11, tags={ com.google.apps.tiktok.contrib.work.TikTokListenableWorker, TikTokWorker#com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker } ]
-09-17 08:00:09.152   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:09.336  6427  6500 D EGL_emulation: app_time_stats: avg=249.76ms min=248.73ms max=250.40ms count=5
-09-17 08:00:10.007   521   613 D ActivityManager: freezing 1789 android.process.acore
-09-17 08:00:10.007   521   613 D ActivityManager: freezing 4331 com.google.android.apps.messaging
-09-17 08:00:10.007   521   613 D ActivityManager: freezing 1514 com.google.android.apps.wellbeing
-09-17 08:00:10.586  6427  6500 D EGL_emulation: app_time_stats: avg=249.93ms min=249.25ms max=250.37ms count=5
-09-17 08:00:11.666  6427  6500 D EGL_emulation: app_time_stats: avg=216.07ms min=115.61ms max=266.81ms count=5
-09-17 08:00:12.155   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:12.160   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:12.688   521  1824 D WifiNl80211Manager: Scan result ready event
-09-17 08:00:12.688   521  1824 D WifiNative: Scan result ready event
-09-17 08:00:12.852  6427  6500 D EGL_emulation: app_time_stats: avg=237.06ms min=185.42ms max=250.54ms count=5
-09-17 08:00:13.853  6427  6500 D EGL_emulation: app_time_stats: avg=249.95ms min=249.73ms max=250.53ms count=4
-09-17 08:00:13.965   521  1824 D OomAdjuster: Not killing cached processes
-09-17 08:00:15.102  6427  6500 D EGL_emulation: app_time_stats: avg=249.83ms min=249.62ms max=250.18ms count=5
-09-17 08:00:16.103  6427  6500 D EGL_emulation: app_time_stats: avg=250.12ms min=249.69ms max=250.64ms count=4
-09-17 08:00:16.599   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:17.119  6427  6500 D EGL_emulation: app_time_stats: avg=203.25ms min=110.99ms max=250.19ms count=5
-09-17 08:00:18.119  6427  6500 D EGL_emulation: app_time_stats: avg=191.85ms min=38.49ms max=250.36ms count=5
-09-17 08:00:19.047   521   613 D ActivityManager: freezing 3106 com.google.android.dialer
-09-17 08:00:19.370  6427  6500 D EGL_emulation: app_time_stats: avg=250.19ms min=249.30ms max=251.78ms count=5
-09-17 08:00:20.020   521   613 D ActivityManager: freezing 6453 com.android.settings
-09-17 08:00:20.020   521   613 D ActivityManager: freezing 3660 com.android.dynsystem:dynsystem
-09-17 08:00:20.021   521   613 D ActivityManager: freezing 3611 com.android.dynsystem
-09-17 08:00:20.021   521   613 D ActivityManager: freezing 2361 com.android.localtransport
-09-17 08:00:20.021   521   613 D ActivityManager: freezing 1847 com.android.keychain
-09-17 08:00:20.088   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:20.619  6427  6500 D EGL_emulation: app_time_stats: avg=249.76ms min=248.43ms max=250.69ms count=5
-09-17 08:00:21.869  6427  6500 D EGL_emulation: app_time_stats: avg=166.00ms min=38.80ms max=250.97ms count=7
-09-17 08:00:22.885  6427  6500 D EGL_emulation: app_time_stats: avg=253.98ms min=248.96ms max=266.48ms count=4
-09-17 08:00:23.886  6427  6500 D EGL_emulation: app_time_stats: avg=250.03ms min=249.19ms max=250.54ms count=4
-09-17 08:00:24.053   521  1839 D OomAdjuster: Not killing cached processes
-09-17 08:00:24.053   521  1839 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 Service #13494} whose proc state 8 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (24 skipped)
-09-17 08:00:24.173   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:25.136  6427  6500 D EGL_emulation: app_time_stats: avg=249.54ms min=246.98ms max=250.65ms count=5
-09-17 08:00:26.071   521   552 D ActivityManager: sync unfroze 5522 com.google.android.gms.ui for 3
-09-17 08:00:26.098  5522  7010 I GMS_MM_Logger: Memory Metric Logging not allowed. Stopping.
-09-17 08:00:26.385  6427  6500 D EGL_emulation: app_time_stats: avg=249.77ms min=249.32ms max=250.71ms count=5
-09-17 08:00:26.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:27.177   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:27.386  6427  6500 D EGL_emulation: app_time_stats: avg=250.00ms min=249.82ms max=250.18ms count=4
-09-17 08:00:28.024   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:28.386  6427  6500 D EGL_emulation: app_time_stats: avg=190.23ms min=38.65ms max=250.34ms count=5
-09-17 08:00:29.386  6427  6500 D EGL_emulation: app_time_stats: avg=249.32ms min=247.15ms max=250.29ms count=4
-09-17 08:00:30.182   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:30.386  6427  6500 D EGL_emulation: app_time_stats: avg=249.44ms min=247.73ms max=250.56ms count=4
-09-17 08:00:31.403  6427  6500 D EGL_emulation: app_time_stats: avg=254.06ms min=249.51ms max=266.51ms count=4
-09-17 08:00:32.653  6427  6500 D EGL_emulation: app_time_stats: avg=249.39ms min=246.61ms max=250.65ms count=5
-09-17 08:00:33.187   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:33.903  6427  6500 D EGL_emulation: app_time_stats: avg=250.00ms min=249.71ms max=250.33ms count=5
-09-17 08:00:34.903  6427  6500 D EGL_emulation: app_time_stats: avg=249.94ms min=249.68ms max=250.16ms count=4
-09-17 08:00:34.913   521  1757 D ActivityManager: sync unfroze 1665 com.google.process.gservices for 7
-09-17 08:00:36.077   521   613 D ActivityManager: freezing 5522 com.google.android.gms.ui
-09-17 08:00:36.153  6427  6500 D EGL_emulation: app_time_stats: avg=249.96ms min=249.53ms max=250.38ms count=5
-09-17 08:00:36.216   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:36.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:37.169  6427  6500 D EGL_emulation: app_time_stats: avg=253.31ms min=246.54ms max=266.93ms count=4
-09-17 08:00:38.169  6427  6500 D EGL_emulation: app_time_stats: avg=249.34ms min=247.48ms max=250.61ms count=4
-09-17 08:00:39.169  6427  6500 D EGL_emulation: app_time_stats: avg=249.99ms min=249.74ms max=250.26ms count=4
-09-17 08:00:40.169  6427  6500 D EGL_emulation: app_time_stats: avg=250.00ms min=249.11ms max=250.40ms count=4
-09-17 08:00:40.605   521  1839 D OomAdjuster: Not killing cached processes
-09-17 08:00:40.605   521  1839 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 Service #13499} whose proc state 8 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (1 skipped)
-09-17 08:00:41.419  6427  6500 D EGL_emulation: app_time_stats: avg=249.80ms min=249.24ms max=250.59ms count=5
-09-17 08:00:42.200   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:42.419  6427  6500 D EGL_emulation: app_time_stats: avg=250.15ms min=249.77ms max=250.40ms count=4
-09-17 08:00:43.686  6427  6500 D EGL_emulation: app_time_stats: avg=203.92ms min=38.41ms max=265.33ms count=6
-09-17 08:00:44.152   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:44.939  6427  6500 D EGL_emulation: app_time_stats: avg=250.18ms min=248.29ms max=253.34ms count=5
-09-17 08:00:45.204   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:46.186  6427  6500 D EGL_emulation: app_time_stats: avg=249.40ms min=246.45ms max=250.58ms count=5
-09-17 08:00:46.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:47.436  6427  6500 D EGL_emulation: app_time_stats: avg=249.39ms min=247.09ms max=250.27ms count=5
-09-17 08:00:48.214   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:48.436  6427  6500 D EGL_emulation: app_time_stats: avg=249.26ms min=246.84ms max=250.50ms count=4
-09-17 08:00:49.686  6427  6500 D EGL_emulation: app_time_stats: avg=250.15ms min=249.79ms max=250.90ms count=5
-09-17 08:00:50.731     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
-09-17 08:00:50.702  6427  6500 D EGL_emulation: app_time_stats: avg=253.84ms min=249.13ms max=266.76ms count=4
-09-17 08:00:51.217   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:00:51.953  6427  6500 D EGL_emulation: app_time_stats: avg=250.10ms min=249.43ms max=250.91ms count=5
-09-17 08:00:52.088   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:00:53.203  6427  6500 D EGL_emulation: app_time_stats: avg=249.42ms min=246.42ms max=251.71ms count=5
-09-17 08:00:54.453  6427  6500 D EGL_emulation: app_time_stats: avg=201.11ms min=39.46ms max=250.52ms count=6
-09-17 08:00:55.703  6427  6500 D EGL_emulation: app_time_stats: avg=250.11ms min=249.17ms max=250.97ms count=5
-09-17 08:00:56.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:00:56.703  6427  6500 D EGL_emulation: app_time_stats: avg=249.99ms min=249.18ms max=251.52ms count=4
-09-17 08:00:57.952  6427  6500 D EGL_emulation: app_time_stats: avg=249.29ms min=247.19ms max=250.03ms count=5
-09-17 08:00:58.969  6427  6500 D EGL_emulation: app_time_stats: avg=154.03ms min=37.66ms max=266.57ms count=6
-09-17 08:01:00.020  1673  1794 I AiAiEcho: Predicting[0]: 
-09-17 08:01:00.022  1673  1794 I AiAiEcho: EchoTargets: 
-09-17 08:01:00.022  1673  1794 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 08:01:00.022  1673  1794 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 08:01:00.023  1673  1794 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 08:01:00.027   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:00.077   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 08:01:00.085   840   903 D EGL_emulation: app_time_stats: avg=53460.45ms min=53460.45ms max=53460.45ms count=1
-09-17 08:01:00.218  6427  6500 D EGL_emulation: app_time_stats: avg=249.89ms min=249.62ms max=250.26ms count=5
-09-17 08:01:01.468  6427  6500 D EGL_emulation: app_time_stats: avg=249.87ms min=248.75ms max=250.90ms count=5
-09-17 08:01:02.468  6427  6500 D EGL_emulation: app_time_stats: avg=250.02ms min=249.50ms max=250.72ms count=4
-09-17 08:01:03.468  6427  6500 D EGL_emulation: app_time_stats: avg=249.98ms min=247.28ms max=251.90ms count=4
-09-17 08:01:04.718  6427  6500 D EGL_emulation: app_time_stats: avg=249.98ms min=248.89ms max=251.04ms count=5
-09-17 08:01:05.614  6427  6486 I GlidyFlight: annonce : Atterrissage. Vol de 31 minutes enregistré
-09-17 08:01:05.615  2996  6520 I GoogleTTSServiceImpl: Synthesis request for locale fra-FRA and name fr-FR-language
-09-17 08:01:05.616  2996  6520 I GoogleTTSServiceImpl: TTS dispatch: fr-fr-x-vlf-lstm-embedded
-09-17 08:01:05.619   521  1757 D OomAdjuster: Not killing cached processes
-09-17 08:01:05.619   521  1757 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 Service #13501} whose proc state 8 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (0 skipped)
-09-17 08:01:05.648   396   396 D AudioFlinger: Client defaulted notificationFrames to 2048 for frameCount 4096
-09-17 08:01:05.648   396   396 D AF::TrackHandle: OpPlayAudio: track:57 usage:12 not muted
-09-17 08:01:05.652  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-17 08:01:05.652  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=565492, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:05.652  1028  1028 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=565492, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:05.652  1028  1028 D MediaControlGattService: updatePlayerState: playbackState= PLAYING
-09-17 08:01:05.652  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:05.652  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:05.652  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:05.652  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:05.653  1028  1028 D MediaControlGattService: updateMediaStateChar
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:05.653  1028  1028 D MediaControlGattService: updateMediaStateChar setting to state= 1
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:05.653  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:05.654   396   396 D audioserver: FGS Logger Transaction failed
-09-17 08:01:05.655   396   396 D audioserver: -129
-09-17 08:01:05.660  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-17 08:01:05.660  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=565500, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:05.660  1028  1028 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=565500, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:05.660  1028  1028 D AvrcpTargetJni: sendMediaUpdateNative
-09-17 08:01:05.660  1028  1028 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
-09-17 08:01:05.723   396   499 D AudioFlinger: mixer(0x7d20d7001930) throttle end: throttle time(33)
-09-17 08:01:05.737  6427  6500 D EGL_emulation: app_time_stats: avg=254.57ms min=249.58ms max=266.54ms count=4
-09-17 08:01:05.749   521   912 W BatteryExternalStatsWorker: error reading Bluetooth stats: 11
-09-17 08:01:05.753   521  2044 D TelephonyManager: requestModemActivityInfo: Sending result to app: ModemActivityInfo{ mTimestamp=565591 mSleepTimeMs=0 mIdleTimeMs=565586 mActivityStatsTechSpecificInfo=[{mRat=UNKNOWN,mFrequencyRange=UNKNOWN,mTxTimeMs[]=[0, 0, 0, 0, 0],mRxTimeMs=0}]}
-09-17 08:01:05.755   521   559 W KernelCpuProcStringReader: File not found. It's normal if not implemented: /proc/uid_concurrent_policy_time
-09-17 08:01:05.777   335   369 I netd    : tetherGetStats() -> {[]} <0.38ms>
-09-17 08:01:05.882   396   499 D AudioFlinger: mixer(0x7d20d7001930) throttle end: throttle time(12)
-09-17 08:01:06.041   396   499 D AudioFlinger: mixer(0x7d20d7001930) throttle end: throttle time(45)
-09-17 08:01:06.247   396   499 D AudioFlinger: mixer(0x7d20d7001930) throttle end: throttle time(41)
-09-17 08:01:06.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:01:07.485  6427  6500 D EGL_emulation: app_time_stats: avg=221.81ms min=46.99ms max=1079.03ms count=7
-09-17 08:01:08.216   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:08.984  6427  6500 D EGL_emulation: app_time_stats: avg=749.82ms min=499.71ms max=999.93ms count=2
-09-17 08:01:09.263  2996  6521 D AudioTrack: stop(17): called with 87240 frames delivered
-09-17 08:01:09.264  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-17 08:01:09.264  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=569104, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:09.264  1028  1028 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=569104, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:09.264  1028  1028 D MediaControlGattService: updatePlayerState: playbackState= PAUSED
-09-17 08:01:09.264  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:09.264  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:09.264  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-17 08:01:09.264  1028  1028 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:09.265  1028  1028 D MediaControlGattService: updateMediaStateChar
-09-17 08:01:09.265  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:09.265  1028  1028 D MediaControlGattService: updateMediaStateChar setting to state= 2
-09-17 08:01:09.266  1028  1028 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-17 08:01:09.266  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:09.266  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:09.266  1028  1028 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-17 08:01:09.266  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-17 08:01:09.266  1028  1028 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=569106, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:09.266  1028  1028 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=569106, actions=0, custom actions=[], active item id=-1, error=null}
-09-17 08:01:09.266  1028  1028 D AvrcpTargetJni: sendMediaUpdateNative
-09-17 08:01:09.266  1028  1028 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
-09-17 08:01:09.373   396   499 D audioserver: FGS Logger Transaction failed
-09-17 08:01:09.373   396   499 D audioserver: -129
-09-17 08:01:09.385   396   499 D audioserver: FGS Logger Transaction failed
-09-17 08:01:09.385   396   499 D audioserver: -129
-09-17 08:01:09.985  6427  6500 D EGL_emulation: app_time_stats: avg=499.96ms min=499.90ms max=500.02ms count=2
-09-17 08:01:11.235  6427  6500 D EGL_emulation: app_time_stats: avg=625.07ms min=503.31ms max=746.84ms count=2
-09-17 08:01:11.258   521   552 D OomAdjuster: Not killing cached processes
-09-17 08:01:11.269  1862  1862 I BgTaskExecutorImpl: Starting EXCLUSIVE background task UPLOAD_ASSISTANT_DEVICE_SETTINGS.
-09-17 08:01:11.275  1862  7021 I NetworkRecognitionRnr: Using pair HTTP connection
-09-17 08:01:11.276  1862  2712 I A       : [Upload] Connected
-09-17 08:01:11.280  1862  2712 I NetworkRecognitionRnr: Using pair HTTP connection
-09-17 08:01:11.281  1862  2671 W CronetNetworkRqstWrppr: Upload request without a content type.
-09-17 08:01:11.287  1862  1862 E A       : onError
-09-17 08:01:11.287  1862  1862 E A       : com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.cd.g.a.f.e(PG:2)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.s3.o.e(PG:14)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.s3.p.run(PG:1)
-09-17 08:01:11.287  1862  1862 E A       : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
-09-17 08:01:11.287  1862  1862 E A       : 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
-09-17 08:01:11.287  1862  1862 E A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
-09-17 08:01:11.287  1862  1862 E A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
-09-17 08:01:11.287  1862  1862 E A       : 	at java.lang.Thread.run(Thread.java:1012)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
-09-17 08:01:11.287  1862  1862 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
-09-17 08:01:11.287  1862  1862 E A       : 	... 15 more
-09-17 08:01:11.287  1862  1862 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
-09-17 08:01:11.287  1862  1862 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
-09-17 08:01:11.287  1862  1862 E A       : 	... 12 more
-09-17 08:01:11.289  1862  4106 I A       : [Upload] Connected
-09-17 08:01:11.294  1862  2671 W A       : Failed to get connectivityLock in 4000 ms
-09-17 08:01:11.295  1862  2671 W CronetNetworkRqstWrppr: Upload request without a content type.
-09-17 08:01:11.296  5420  7020 I ChimeraConfigurator: Starting update, reason: 4 urgentFeatures: vision.ocr:-1
-09-17 08:01:11.304  1862  1862 W A       : Failed to sync device settings.
-09-17 08:01:11.304  1862  1862 I A       : Retrying to sync device settings.
-09-17 08:01:11.308   521   912 W JobScheduler: Job didn't exist in JobStore: 667b030 #u0a132/-353 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
-09-17 08:01:11.355  5420  7020 I ChimeraConfigurator: Detected pending changes for urgent request: [vision.ocr]. Pending module sets: container:2318189190800+mlkit.ocr.common,tflite_dynamite:2627305025100800+tflite_dynamite,vision_ocr:2316024025100000+vision.ocr
-09-17 08:01:11.361  5420  7020 I GmsDebugLogger: [73] 1801
-09-17 08:01:11.364  5420  7020 W ZappDownloader: No successful module downloads for requested features [vision.ocr].
-09-17 08:01:11.365  5420  7020 I GmsDebugLogger: [30] [VisionOcrDynamite.integ:231602402100000],[TfliteDynamiteDynamite.integ:262730502100800],[MlkitOcrCommon.optional:231818100800]
-09-17 08:01:11.368  5420  7020 W ChimeraConfigService: Retry attempt was throttled. [CONTEXT service_id=264 ]
-09-17 08:01:11.368  5420  7020 I GmsDebugLogger: [83] 1 [vision.ocr]
-09-17 08:01:11.369  5420  7019 W Vision  : Request for optional module download of ocr failed. Request again.
-09-17 08:01:11.369  5420  7019 W Vision  : Would have logged:
-09-17 08:01:11.369  5420  7019 W Vision  : # dsae@37884fe7
-09-17 08:01:11.369  5420  7019 I Vision  : Schedule retrying download ocr at 571209 with backoff 320 seconds
-09-17 08:01:12.252   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:01:12.263   341  1597 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 745280
-09-17 08:01:13.001  6427  6500 D EGL_emulation: app_time_stats: avg=883.33ms min=515.86ms max=1250.80ms count=2
-09-17 08:01:13.295   521   912 D ConnectivityService: requestNetwork for uid/pid:10132/1862 activeRequest: null callbackRequest: 162 [NetworkRequest [ REQUEST id=162, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
-09-17 08:01:13.304   335   369 I netd    : networkSetPermissionForNetwork(101, 0) <8.11ms>
-09-17 08:01:13.322   521   773 D ConnectivityService: NetReassign [162 : null → 101] [c 0] [a 25] [i 1]
-09-17 08:01:13.324   521   773 D ConnectivityService: reportNetworkConnectivity(100, false) by 10132
-09-17 08:01:13.324  1005  2190 D NetworkMonitor/100: Forcing reevaluation for UID 10132. Dns signal count: 0
-09-17 08:01:13.353  1005  7031 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.354  1005  7031 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.358  1005  7030 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.359   335  7032 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
-09-17 08:01:13.359   335  7032 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79a0036d0850
-09-17 08:01:13.363   335  7033 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
-09-17 08:01:13.364   335  7033 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79a0036cf430
-09-17 08:01:13.365  1005  7030 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.366   335  7034 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
-09-17 08:01:13.367  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.367  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.368  1005  7031 D NetworkMonitor/100: PROBE_DNS connectivitycheck.gstatic.com 15ms OK 172.253.63.94,2607:f8b0:4004:c21::5e
-09-17 08:01:13.369   335  7035 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
-09-17 08:01:13.370   335  7036 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
-09-17 08:01:13.370   335  7037 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-09-17 08:01:13.370   335  7037 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79a0036d0850
-09-17 08:01:13.370   335  7037 I resolv  : doQuery: rcode=0, ancount=1, return value=75
-09-17 08:01:13.371   335  7038 I resolv  : res_nmkquery: (QUERY, IN, A)
-09-17 08:01:13.371   335  7038 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x79a0036cf430
-09-17 08:01:13.371   335  7038 I resolv  : doQuery: rcode=0, ancount=1, return value=63
-09-17 08:01:13.371  1005  7031 D TrafficStats: tagSocket(108) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.385   335  7034 I resolv  : res_nsend: used send_dg 256 terrno: 0
-09-17 08:01:13.386   335  7035 I resolv  : res_nsend: used send_dg 160 terrno: 0
-09-17 08:01:13.386  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.387  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.388  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.388  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.389  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.389  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.390  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.390  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.391  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.391  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.392  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.393  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.393  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.394  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.394  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.395  1005  1005 D TrafficStats: tagSocket(6) with statsTag=0xffffffff, statsUid=-1
-09-17 08:01:13.396  1005  7030 D NetworkMonitor/100: PROBE_DNS www.google.com 37ms OK 142.251.152.119,142.251.150.119,142.251.153.119,142.251.156.119,142.251.151.119,142.251.155.119,142.251.154.119,142.251.157.119,2001:4860:482a:7700::,2001:4860:482d:7700::,2001:4860:482c:7700::,2001:4860:4827:7700::,2001:4860:4826:7700::,2001:4860:4829:7700::,2001:4860:482b:7700::,2001:4860:4828:7700::
-09-17 08:01:13.397   335  7039 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
-09-17 08:01:13.397   335  7040 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-09-17 08:01:13.397   335  7040 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x799f736d5d50
-09-17 08:01:13.397   335  7040 I resolv  : doQuery: rcode=0, ancount=8, return value=256
-09-17 08:01:13.397   335  7041 I resolv  : res_nmkquery: (QUERY, IN, A)
-09-17 08:01:13.397   335  7041 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x799f136cdb10
-09-17 08:01:13.397   335  7041 I resolv  : doQuery: rcode=0, ancount=8, return value=160
-09-17 08:01:13.398  1005  7030 D TrafficStats: tagSocket(6) with statsTag=0xffffff81, statsUid=-1
-09-17 08:01:13.619  1005  7031 D NetworkMonitor/100: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=250ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Thu, 17 Sep 2026 08:01:13 GMT], X-Android-Received-Millis=[1789632073619], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789632073385]}
-09-17 08:01:13.892  1005  7030 D NetworkMonitor/100: PROBE_HTTPS https://www.google.com/generate_204 time=496ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Thu, 17 Sep 2026 08:01:14 GMT], X-Android-Received-Millis=[1789632073891], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789632073884]}
-09-17 08:01:13.893  1005  7029 D NetworkMonitor/100: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=541ms
-09-17 08:01:13.893   521   773 D ConnectivityService: [100 WIFI] validation passed
-09-17 08:01:14.251  6427  6500 D EGL_emulation: app_time_stats: avg=416.59ms min=249.47ms max=516.70ms count=3
-09-17 08:01:15.551  1862  4115 W A       : [Download] response code: 400
-09-17 08:01:15.754  6427  6500 D EGL_emulation: app_time_stats: avg=500.74ms min=249.93ms max=752.50ms count=3
-09-17 08:01:16.152   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:16.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:01:17.004  6427  6500 D EGL_emulation: app_time_stats: avg=624.85ms min=500.34ms max=749.36ms count=2
-09-17 08:01:18.380   521  2044 D OomAdjuster: Not killing cached processes
-09-17 08:01:18.380   521  2044 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 Service #13541} whose proc state 8 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (18 skipped)
-09-17 08:01:21.261   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:01:21.784  6427  6500 D EGL_emulation: app_time_stats: avg=4778.74ms min=4778.74ms max=4778.74ms count=1
-09-17 08:01:22.801  6427  6500 D EGL_emulation: app_time_stats: avg=1016.52ms min=1016.52ms max=1016.52ms count=1
-09-17 08:01:23.634   521  2044 D OomAdjuster: Not killing cached processes
-09-17 08:01:23.801  6427  6500 D EGL_emulation: app_time_stats: avg=1000.30ms min=1000.30ms max=1000.30ms count=1
-09-17 08:01:24.088   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:26.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:01:30.272   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:01:30.817  6427  6500 D EGL_emulation: app_time_stats: avg=3508.05ms min=999.41ms max=6016.69ms count=2
-09-17 08:01:32.024   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:32.628  4945  4974 W TimedProcessReaper: Memory state is: 125
-09-17 08:01:36.281   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:01:36.595   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:01:40.216   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:46.598   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:01:46.598   840   903 D EGL_emulation: app_time_stats: avg=46513.32ms min=46513.32ms max=46513.32ms count=1
-09-17 08:01:48.152   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:50.729     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
-09-17 08:01:53.297   521   773 D ConnectivityService: releasing NetworkRequest [ REQUEST id=162, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ] (release request)
-09-17 08:01:53.297   521   773 I ConnectivityService: Update capabilities for net 101 : -FOREGROUND
-09-17 08:01:53.299   335   369 I netd    : networkSetPermissionForNetwork(101, 1) <2.31ms>
-09-17 08:01:56.088   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:01:56.596   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:02:00.034  1673  1794 I AiAiEcho: Predicting[0]: 
-09-17 08:02:00.034  1673  1794 I AiAiEcho: EchoTargets: 
-09-17 08:02:00.034  1673  1794 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 08:02:00.034  1673  1794 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 08:02:00.035  1673  1794 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 08:02:00.036   840   903 D EGL_emulation: app_time_stats: avg=13437.55ms min=13437.55ms max=13437.55ms count=1
-09-17 08:02:00.047   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 08:02:03.384  1095  1095 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1150.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=623223, downTime=623223, deviceId=-1, source=0x1002, displayId=0, eventId=-927943277 }
-09-17 08:02:03.435  6427  6500 D EGL_emulation: app_time_stats: avg=16308.73ms min=999.83ms max=31617.63ms count=2
-09-17 08:02:03.694  1095  1095 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1400.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=623534, downTime=623223, deviceId=-1, source=0x1002, displayId=0, eventId=-134317306 }
-09-17 08:02:03.789   521   606 D ActivityManager: sync unfroze 4331 com.google.android.apps.messaging for 6
-09-17 08:02:03.790   521   606 D OomAdjuster: Not killing cached processes
-09-17 08:02:03.836   521   606 W ProcessStats: Tracking association SourceState{a4b2bcb com.google.android.googlequicksearchbox:search/10132 Service #13546} whose proc state 8 is better than process ProcessState{8780f1d com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (2 skipped)
-09-17 08:02:03.842  4331  4467 W TimedProcessReaper: Memory state is: 230
-09-17 08:02:03.908   521   912 D ConnectivityService: requestNetwork for uid/pid:10131/4331 activeRequest: null callbackRequest: 163 [NetworkRequest [ REQUEST id=164, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
-09-17 08:02:03.911   521   773 D ConnectivityService: NetReassign [164 : null → 100] [c 0] [a 0] [i 1]
-09-17 08:02:03.912   521   766 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=164, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
-09-17 08:02:03.912   521   766 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=164, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
-09-17 08:02:03.912   521   766 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=164, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
-09-17 08:02:03.912   521   766 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=164, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
-09-17 08:02:03.915  4331  6664 D MddListenableWorkerFactory: createWorker for class: com.google.android.apps.messaging.rcsprovisioning.RcsProvisioningListenableWorker
-09-17 08:02:03.925  4331  4331 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] RCS provisioning task has started
-09-17 08:02:03.934  4331  7049 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] Starting StateMachine, trigger is STATE_MACHINE_RETRY
-09-17 08:02:03.934  4331  7049 I BugleRcsEngine: [139] brfq.d: (PEv2-SM-Bugle-203269757): start PEv2, trigger is STATE_MACHINE_RETRY, workerId is 4c32e958-0efc-4423-b877-c3ba4da20fe4 [null]
-09-17 08:02:03.936  4331  7049 I BugleRcsEngine: [139] broo.g: Created new RcsProvisioningProtoDataStorage for sim redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.937  4331  7049 I BugleRcsEngine: [139] brnl.h: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.937  4331  7049 I BugleRcsEngine: [139] brfq.d: (PEv2-SM-Bugle-203269757): start [null]
-09-17 08:02:03.938  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter EnabledState [null]
-09-17 08:02:03.940  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:03.943  4331  7050 I BugleRcsEngine: [140] brds.c: Sending ProvisioningEvent to Bugle [Send Provisioning Session ID (18)], redacted-pii:[chars:65]
-09-17 08:02:03.943  4331  7050 I BugleRcsEngine: [140] bsgz.b: EngineBroadcaster: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:223] from source PROVISIONING_EVENT
-09-17 08:02:03.946  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Start a new provisioning session [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.948  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.948  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
-09-17 08:02:03.952  4331  7050 I BugleRcsEngine: [140] brnl.C: Bugle is default SMS app: true
-09-17 08:02:03.953  4331  7050 I BugleRcsEngine: [140] brjv.b: Bugle has minimum required RCS permissions: true
-09-17 08:02:03.953  4331  7050 I BugleRcsEngine: [140] brnl.B: Rcs is enabled from user settings: true
-09-17 08:02:03.953  4331  7050 I BugleRcsEngine: [140] brox.b: Using config server URL from bqas
-09-17 08:02:03.953  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.954  4331  7050 I BugleRcsEngine: [140] brnl.h: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.955  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.959  4331  7050 I BugleRcsEngine: [140] brjv.b: Config state is not ACCEPTED, provisioning still in progress
-09-17 08:02:03.959  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
-09-17 08:02:03.960  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.960  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionViaMessage, srcState=EnabledState, destState = CheckPreconditionsState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.960  4331  7050 I BugleRcsEngine: [140] brds.c: Sending ProvisioningEvent to Bugle [Update provisioning status (11)], redacted-pii:[chars:85]
-09-17 08:02:03.960  4331  7050 I BugleRcsEngine: [140] bsgz.b: EngineBroadcaster: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:243] from source PROVISIONING_EVENT
-09-17 08:02:03.962  4331  7048 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Send Provisioning Session ID
-09-17 08:02:03.968  4331  4490 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@d5f71b3
-09-17 08:02:03.969  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): EnabledState: Transition to check preconditions [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.969  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionTo: destState=CheckPreconditionsState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.969  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): onTransitionRequested EnabledState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.969  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter CheckPreconditionsState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.973  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:03.973  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Battery optimization is not required. [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.973  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:03.973  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionViaMessage, srcState=CheckPreconditionsState, destState = ReadyState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.973  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): CheckPreconditionsState: Transition to ready [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.973  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionTo: destState=ReadyState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.974  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): onTransitionRequested CheckPreconditionsState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.974  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit CheckPreconditionsState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.974  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit EnabledState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.974  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:03.974  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter InProgressState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.979  4331  7048 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Update provisioning status
-09-17 08:02:03.979  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:03.980  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter ReadyState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:03.982  4331  4490 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@eba8e46
-09-17 08:02:04.024   827   827 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 08:02:04.052  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.053  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:04.054  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionViaMessage, srcState=ReadyState, destState = RequestWithImsiState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.054  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): ReadyState: Transition to request with imsi [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.054  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionTo: destState=RequestWithImsiState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.055  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): onTransitionRequested ReadyState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.055  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit ReadyState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.055  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.055  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter RequestWithImsiState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.056  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.057  4331  7050 I BugleRcsEngine: [140] brnl.A: ProvisioningConsent from user settings: false
-09-17 08:02:04.058  4331  7050 I BugleRcsEngine: [140] brox.b: Using config server URL from bqas
-09-17 08:02:04.058  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:04.058  4331  7050 I BugleRcsEngine: [140] brnl.A: ProvisioningConsent from user settings: false
-09-17 08:02:04.060  4331  7050 I BugleRcsEngine: [140] brnl.A: ProvisioningConsent from user settings: false
-09-17 08:02:04.061  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:04.061  4331  7050 W BugleRcsEngine: [140] brfq.e: (PEv2-SM-Bugle-203269757): Could not retrieve MSISDN from configuration. Configuration is empty. [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.061  4331  7050 W BugleRcsEngine: [140] brfq.e: (PEv2-SM-Bugle-203269757): Skipping adding Tachyon identity key to request. Null/empty RCS msisdn from configuration for sim ID: 89860318640220133897. [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.062  4331  7050 I BugleRcsEngine: [140] brnl.A: ProvisioningConsent from user settings: false
-09-17 08:02:04.063   521   912 D ActivityManager: sync unfroze 2854 com.google.android.gms.unstable for 6
-09-17 08:02:04.066  4331  4467 W BugleRcsEngine: [50] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.085  4331  4467 W BugleRcsEngine: [50] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.090  4331  4467 W BugleRcsEngine: [50] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.097   335  7053 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10128 0}
-09-17 08:02:04.098  2854  7051 D TrafficStats: tagSocket(112) with statsTag=0x1809, statsUid=-1
-09-17 08:02:04.103  2854  7051 W libc    : Access denied finding property "persist.adb.tls_server.enable"
-09-17 08:02:04.103  2854  7051 W libc    : Access denied finding property "service.adb.tls.port"
-09-17 08:02:04.099  2854  2854 W binder:2854_F: type=1400 audit(0.0:117): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=292 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
-09-17 08:02:04.099  2854  2854 W binder:2854_F: type=1400 audit(0.0:118): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=60 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
-09-17 08:02:04.113  4331  7050 E BugleRcsEngine: [140] brfg.a: DroidGuardLogger: Could not create DroidGuard token creation event
-09-17 08:02:04.113  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): RequestWithImsiState: event Send config request [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.113  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): InProgressState: event Send config request [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:04.114  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.115  4331  7054 W BugleRcsEngine: [141] bpxc.w: Unable to send diagnostic log
-09-17 08:02:04.116   335  7055 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10131 0}
-09-17 08:02:04.116   335  7056 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-09-17 08:02:04.117   335  7057 I resolv  : res_nmkquery: (QUERY, IN, A)
-09-17 08:02:04.509   335  7056 I resolv  : res_nsend: used send_dg 76 terrno: 0
-09-17 08:02:04.509   335  7057 I resolv  : res_nsend: used send_dg 64 terrno: 0
-09-17 08:02:04.509   335  7057 I resolv  : doQuery: rcode=0, ancount=1, return value=64
-09-17 08:02:04.509   335  7056 I resolv  : doQuery: rcode=0, ancount=1, return value=76
-09-17 08:02:04.510  4331  7054 D TrafficStats: tagSocket(98) with statsTag=0x10eb, statsUid=-1
-09-17 08:02:05.576  4331  7054 W BugleRcsEngine: [141] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.576  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): RequestWithImsiState: event HTTP Response [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.576  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): InProgressState: event HTTP Response [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.576  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.576  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): RequestWithImsiState: event HTTP 400 (Bad request) [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.576  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): InProgressState: event HTTP 400 (Bad request) [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.577  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.577  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionTo: destState=RetryState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.577  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): onTransitionRequested RequestWithImsiState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.577  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit RequestWithImsiState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.577  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.577  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit InProgressState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.577  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.577  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Enter RetryState [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.579  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.579  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): nextRetry = 0 [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.579  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): scheduleRetry, currentRetry = 0, retryMillis = 28800000 [f26888d8-db1e-4b2f-8987-de64cfb64f52]
-09-17 08:02:05.580  4331  4455 W BugleRcsEngine: [42] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.583  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
-09-17 08:02:05.583  4331  7050 I BugleRcsEngine: [140] brnl.C: Bugle is default SMS app: true
-09-17 08:02:05.584  4331  7050 I BugleRcsEngine: [140] brjv.b: Bugle has minimum required RCS permissions: true
-09-17 08:02:05.584  4331  7050 I BugleRcsEngine: [140] brnl.B: Rcs is enabled from user settings: true
-09-17 08:02:05.584  4331  7050 I BugleRcsEngine: [140] brox.b: Using config server URL from bqas
-09-17 08:02:05.585  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:05.586  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:05.587  4331  7050 I BugleRcsEngine: [140] brjv.b: Config state is not ACCEPTED, provisioning still in progress
-09-17 08:02:05.587  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
-09-17 08:02:05.588  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.588  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.590  4331  7050 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] Received a provisioning state changed event from the provisioning engine RETRY
-09-17 08:02:05.590  4331  7050 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] Provisioning Engine entered RetryState, provisioning task will be rescheduled with exponential backoff
-09-17 08:02:05.590  4331  7050 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] finish provisioning task with result Success {mOutputData=Data {}}
-09-17 08:02:05.590  4331  7050 I BugleRcsWorker: [seqId=5][workId=4c32e958-0efc-4423-b877-c3ba4da20fe4] RCS provisioning task has finished with result Success {mOutputData=Data {}}
-09-17 08:02:05.592  4331  6664 I WM-WorkerWrapper: Worker result SUCCESS for Work [ id=dc59f6a2-2a43-4ad5-bf1e-2ba845415650, tags={ com.google.android.apps.messaging.rcsprovisioning.RcsProvisioningListenableWorker, provisioning } ]
-09-17 08:02:05.593  4331  7049 I BugleRcsEngine: [139] brfq.d: (PEv2-SM-Bugle-203269757): quit [null]
-09-17 08:02:05.593  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): transitionTo: destState=bqjk [null]
-09-17 08:02:05.593  4331  7050 I BugleRcsEngine: [140] brfq.d: (PEv2-SM-Bugle-203269757): Exit RetryState [null]
-09-17 08:02:05.593  4331  7050 W BugleRcsEngine: [140] bpxc.w: Unable to send diagnostic log
-09-17 08:02:05.593  4331  7050 W BugleRcsEngine: [140] brfq.e: (PEv2-SM-Bugle-203269757): onQuitting [null]
-09-17 08:02:05.593  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
-09-17 08:02:05.594  4331  7050 I BugleRcsEngine: [140] brnl.C: Bugle is default SMS app: true
-09-17 08:02:05.595  4331  7050 I BugleRcsEngine: [140] brjv.b: Bugle has minimum required RCS permissions: true
-09-17 08:02:05.595  4331  7050 I BugleRcsEngine: [140] brnl.B: Rcs is enabled from user settings: true
-09-17 08:02:05.595  4331  7050 I BugleRcsEngine: [140] brox.b: Using config server URL from bqas
-09-17 08:02:05.595  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:05.598  4331  7050 I BugleRcsEngine: [140] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:05.598  4331  7050 I BugleRcsEngine: [140] brjv.b: Config state is not ACCEPTED, provisioning still in progress
-09-17 08:02:05.598  4331  7050 I BugleRcsEngine: [140] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
-09-17 08:02:05.601  4331  4467 W Bugle   : TextClassifierLibManagerImpl: Reclaiming memory at level: 40
-09-17 08:02:05.612  4331  4462 I Bugle   : Scheduling custom retry
-09-17 08:02:05.612  4331  7058 W BugleRcsEngine: [142] brcu.d: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[true], enableSingleRegistrationProvisioning:[false]
-09-17 08:02:05.614  4331  7058 I BugleRcsEngine: [142] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
-09-17 08:02:05.614  4331  7058 I BugleRcsEngine: [142] zzo.l: Scheduled provisioning task with 480 seconds delay, APPEND policy, trigger is STATE_MACHINE_RETRY, workerId is 16a6f36d-f24e-4cee-90ec-dea51520b2b1
-09-17 08:02:06.315   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 08:02:06.597   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 08:02:06.870  7062  7062 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
-09-17 08:02:06.870  7062  7062 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
-09-17 08:02:06.906   134   134 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
-09-17 08:02:06.906  7062  7063 I Gralloc4: mapper 4.x is not supported
-09-17 08:02:07.086     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-17 08:19:11.298     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-17 08:19:11.390  6579  6618 D EGL_emulation: app_time_stats: avg=249.85ms min=243.18ms max=256.38ms count=4
+09-17 08:19:12.407  6579  6618 D EGL_emulation: app_time_stats: avg=254.26ms min=249.05ms max=267.23ms count=4
+09-17 08:19:12.614   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:13.656  6579  6618 D EGL_emulation: app_time_stats: avg=249.88ms min=249.28ms max=250.69ms count=5
+09-17 08:19:14.657  6579  6618 D EGL_emulation: app_time_stats: avg=249.97ms min=249.15ms max=250.85ms count=4
+09-17 08:19:15.619   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:15.907  6579  6618 D EGL_emulation: app_time_stats: avg=249.98ms min=249.29ms max=250.73ms count=5
+09-17 08:19:16.065   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:17.173  6579  6618 D EGL_emulation: app_time_stats: avg=253.25ms min=249.65ms max=266.55ms count=5
+09-17 08:19:18.173  6579  6618 D EGL_emulation: app_time_stats: avg=250.09ms min=249.54ms max=250.47ms count=4
+09-17 08:19:18.623   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:18.867   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:18.869   841   910 D EGL_emulation: app_time_stats: avg=18583.14ms min=18583.14ms max=18583.14ms count=1
+09-17 08:19:19.174  6579  6618 D EGL_emulation: app_time_stats: avg=250.01ms min=221.05ms max=279.20ms count=4
+09-17 08:19:20.424  6579  6618 D EGL_emulation: app_time_stats: avg=249.97ms min=249.32ms max=250.93ms count=5
+09-17 08:19:21.424  6579  6618 D EGL_emulation: app_time_stats: avg=249.93ms min=249.32ms max=250.79ms count=4
+09-17 08:19:21.625   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:22.440  6579  6618 D EGL_emulation: app_time_stats: avg=254.14ms min=248.74ms max=267.33ms count=4
+--------- beginning of system
+09-17 08:19:22.624   518   598 D OomAdjuster: Not killing cached processes
+09-17 08:19:23.690  6579  6618 D EGL_emulation: app_time_stats: avg=249.92ms min=249.47ms max=250.62ms count=5
+09-17 08:19:24.001   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:24.940  6579  6618 D EGL_emulation: app_time_stats: avg=249.89ms min=249.25ms max=250.16ms count=5
+09-17 08:19:25.940  6579  6618 D EGL_emulation: app_time_stats: avg=250.02ms min=249.72ms max=250.44ms count=4
+09-17 08:19:26.942  6579  6618 D EGL_emulation: app_time_stats: avg=250.43ms min=249.80ms max=251.95ms count=4
+09-17 08:19:27.956  6579  6618 D EGL_emulation: app_time_stats: avg=253.64ms min=248.01ms max=266.78ms count=4
+09-17 08:19:28.850   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:28.958  6579  6618 D EGL_emulation: app_time_stats: avg=250.50ms min=249.98ms max=251.41ms count=4
+09-17 08:19:30.207  6579  6618 D EGL_emulation: app_time_stats: avg=249.53ms min=247.71ms max=250.43ms count=5
+09-17 08:19:31.207  6579  6618 D EGL_emulation: app_time_stats: avg=250.15ms min=249.88ms max=250.56ms count=4
+09-17 08:19:31.280  1738  2416 W NamedFutures: Timeout future task has been cancelled: 60000 milliseconds
+09-17 08:19:31.280  1738  1738 E A       : Task 255 failed or timed out. Client 7645594469020609 disconnecting from SearchService!
+09-17 08:19:31.280  1738  1738 E A       : java.util.concurrent.CancellationException: Task was cancelled.
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.common.util.concurrent.d.s(PG:3)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.common.util.concurrent.d.get(PG:4)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.common.util.concurrent.eb.a(PG:1)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.common.util.concurrent.ci.r(PG:2)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.common.util.concurrent.cb.run(PG:4)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.ba.run(PG:1)
+09-17 08:19:31.280  1738  1738 E A       : 	at android.os.Handler.handleCallback(Handler.java:958)
+09-17 08:19:31.280  1738  1738 E A       : 	at android.os.Handler.dispatchMessage(Handler.java:99)
+09-17 08:19:31.280  1738  1738 E A       : 	at android.os.Looper.loopOnce(Looper.java:205)
+09-17 08:19:31.280  1738  1738 E A       : 	at android.os.Looper.loop(Looper.java:294)
+09-17 08:19:31.280  1738  1738 E A       : 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+09-17 08:19:31.280  1738  1738 E A       : 	at java.lang.reflect.Method.invoke(Native Method)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+09-17 08:19:31.280  1738  1738 E A       : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+09-17 08:19:31.283  1738  2472 W SearchServiceCore: Abort, client detached.
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: EXCLUSIVE background task SEND_GSA_HOME_REQUEST was cancelled.
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: java.util.concurrent.CancellationException: Task was cancelled.
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.s(PG:3)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.d.get(PG:4)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.eb.a(PG:1)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.ci.r(PG:2)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.common.util.concurrent.cb.run(PG:4)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.cf.b(PG:1)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.android.apps.gsa.shared.util.c.a.ci.run(PG:1)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.ae.run(PG:1)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.i.run(PG:2)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at com.google.android.libraries.i.p.run(PG:4)
+09-17 08:19:31.289  1738  6805 E BgTaskExecutorImpl: 	at java.lang.Thread.run(Thread.java:1012)
+09-17 08:19:31.296   518  1680 D OomAdjuster: Not killing cached processes
+09-17 08:19:31.299   518  1680 W JobScheduler: Job didn't exist in JobStore: b60ab71 #u0a132/-151 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+09-17 08:19:31.690  1738  6802 W A       : Calling registerSyncInternal api failed.
+09-17 08:19:31.933   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:32.457  6579  6618 D EGL_emulation: app_time_stats: avg=249.78ms min=249.15ms max=250.50ms count=5
+09-17 08:19:33.487     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+09-17 08:19:33.707  6579  6618 D EGL_emulation: app_time_stats: avg=250.03ms min=249.37ms max=250.96ms count=5
+09-17 08:19:34.957  6579  6618 D EGL_emulation: app_time_stats: avg=249.49ms min=246.94ms max=250.96ms count=5
+09-17 08:19:35.973  6579  6618 D EGL_emulation: app_time_stats: avg=254.03ms min=249.58ms max=266.21ms count=4
+09-17 08:19:36.640   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:37.223  6579  6618 D EGL_emulation: app_time_stats: avg=249.87ms min=249.80ms max=249.93ms count=5
+09-17 08:19:37.601  1738  1738 E A       : disposing SearchServiceClient after timeout []
+09-17 08:19:38.473  6579  6618 D EGL_emulation: app_time_stats: avg=249.88ms min=249.81ms max=250.12ms count=5
+09-17 08:19:38.851   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:39.473  6579  6618 D EGL_emulation: app_time_stats: avg=250.03ms min=249.30ms max=251.12ms count=4
+09-17 08:19:39.644   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:39.869   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:40.473  6579  6618 D EGL_emulation: app_time_stats: avg=250.00ms min=249.45ms max=250.61ms count=4
+09-17 08:19:41.490  6579  6618 D EGL_emulation: app_time_stats: avg=254.19ms min=249.52ms max=266.36ms count=4
+09-17 08:19:41.696  1738  2472 I WorkerManager: dispose()
+09-17 08:19:41.696  1738  2472 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+09-17 08:19:42.647   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:42.740  6579  6618 D EGL_emulation: app_time_stats: avg=249.93ms min=249.34ms max=250.44ms count=5
+09-17 08:19:43.990  6579  6618 D EGL_emulation: app_time_stats: avg=250.07ms min=249.60ms max=250.99ms count=5
+09-17 08:19:45.240  6579  6618 D EGL_emulation: app_time_stats: avg=249.78ms min=249.36ms max=250.50ms count=5
+09-17 08:19:45.651   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:19:46.490  6579  6618 D EGL_emulation: app_time_stats: avg=250.04ms min=248.84ms max=251.25ms count=5
+09-17 08:19:47.506  6579  6618 D EGL_emulation: app_time_stats: avg=194.53ms min=35.88ms max=267.22ms count=5
+09-17 08:19:48.061   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:48.507  6579  6618 D EGL_emulation: app_time_stats: avg=250.08ms min=249.88ms max=250.49ms count=4
+09-17 08:19:48.867   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:48.869   841   910 D EGL_emulation: app_time_stats: avg=30000.26ms min=30000.26ms max=30000.26ms count=1
+09-17 08:19:49.757  6579  6618 D EGL_emulation: app_time_stats: avg=249.92ms min=249.07ms max=250.43ms count=5
+09-17 08:19:51.006  6579  6618 D EGL_emulation: app_time_stats: avg=249.91ms min=249.47ms max=250.66ms count=5
+09-17 08:19:52.007  6579  6618 D EGL_emulation: app_time_stats: avg=250.07ms min=249.77ms max=250.70ms count=4
+09-17 08:19:53.257  6579  6618 D EGL_emulation: app_time_stats: avg=249.99ms min=249.14ms max=250.71ms count=5
+09-17 08:19:54.523  6579  6618 D EGL_emulation: app_time_stats: avg=253.21ms min=249.22ms max=266.34ms count=5
+09-17 08:19:55.523  6579  6618 D EGL_emulation: app_time_stats: avg=250.04ms min=248.67ms max=251.07ms count=4
+09-17 08:19:55.997   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:19:56.342   518   598 D WifiNl80211Manager: Scan result ready event
+09-17 08:19:56.342   518   598 D WifiNative: Scan result ready event
+09-17 08:19:56.524  6579  6618 D EGL_emulation: app_time_stats: avg=250.22ms min=249.41ms max=250.71ms count=4
+09-17 08:19:57.773  6579  6618 D EGL_emulation: app_time_stats: avg=249.71ms min=249.05ms max=250.47ms count=5
+09-17 08:19:58.774  6579  6618 D EGL_emulation: app_time_stats: avg=250.18ms min=249.25ms max=250.69ms count=4
+09-17 08:19:58.859   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:19:59.819  6579  6618 D EGL_emulation: app_time_stats: avg=209.01ms min=111.84ms max=252.71ms count=5
+09-17 08:20:00.020  1587  1841 I AiAiEcho: Predicting[0]: 
+09-17 08:20:00.020  1587  1841 I AiAiEcho: EchoTargets: 
+09-17 08:20:00.020  1587  1841 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 08:20:00.020  1587  1841 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 08:20:00.021  1587  1841 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 08:20:00.039   841   910 D EGL_emulation: app_time_stats: avg=11169.98ms min=11169.98ms max=11169.98ms count=1
+09-17 08:20:00.040   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 08:20:00.040  1587  1841 I AiAiEcho: Predicting[0]: 
+09-17 08:20:00.040  1587  1841 I AiAiEcho: EchoTargets: 
+09-17 08:20:00.040  1587  1841 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 08:20:00.040  1587  1841 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 08:20:00.041  1587  1841 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 08:20:00.051   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 08:20:01.039  6579  6618 D EGL_emulation: app_time_stats: avg=244.09ms min=227.29ms max=251.36ms count=5
+09-17 08:20:02.040  6579  6618 D EGL_emulation: app_time_stats: avg=200.19ms min=95.23ms max=250.36ms count=5
+09-17 08:20:03.290  6579  6618 D EGL_emulation: app_time_stats: avg=249.86ms min=249.46ms max=250.46ms count=5
+09-17 08:20:03.827   518  1680 D OomAdjuster: Not killing cached processes
+09-17 08:20:03.934   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:04.291  6579  6618 D EGL_emulation: app_time_stats: avg=200.18ms min=122.66ms max=249.89ms count=5
+09-17 08:20:05.540  6579  6618 D EGL_emulation: app_time_stats: avg=208.22ms min=113.40ms max=251.08ms count=6
+09-17 08:20:06.807  6579  6618 D EGL_emulation: app_time_stats: avg=253.35ms min=249.37ms max=267.34ms count=5
+09-17 08:20:08.056  6579  6618 D EGL_emulation: app_time_stats: avg=249.81ms min=249.39ms max=250.57ms count=5
+09-17 08:20:08.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:09.306  6579  6618 D EGL_emulation: app_time_stats: avg=249.98ms min=249.39ms max=250.48ms count=5
+09-17 08:20:10.307  6579  6618 D EGL_emulation: app_time_stats: avg=200.08ms min=118.91ms max=250.55ms count=5
+09-17 08:20:11.556  6579  6618 D EGL_emulation: app_time_stats: avg=249.83ms min=249.16ms max=250.69ms count=5
+09-17 08:20:11.872   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:12.573  6579  6618 D EGL_emulation: app_time_stats: avg=254.28ms min=249.41ms max=266.83ms count=4
+09-17 08:20:13.573  6579  6618 D EGL_emulation: app_time_stats: avg=250.01ms min=249.33ms max=250.42ms count=4
+09-17 08:20:14.574  6579  6618 D EGL_emulation: app_time_stats: avg=250.12ms min=249.52ms max=250.74ms count=4
+09-17 08:20:15.755  6579  6618 D EGL_emulation: app_time_stats: avg=236.05ms min=181.50ms max=250.39ms count=5
+09-17 08:20:16.772  6579  6618 D EGL_emulation: app_time_stats: avg=203.24ms min=116.65ms max=251.56ms count=5
+09-17 08:20:17.840  6579  6618 D EGL_emulation: app_time_stats: avg=213.62ms min=118.03ms max=250.42ms count=5
+09-17 08:20:18.840  6579  6618 D EGL_emulation: app_time_stats: avg=249.49ms min=248.29ms max=250.94ms count=4
+09-17 08:20:18.858   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:18.893   518  1680 D OomAdjuster: Not killing cached processes
+09-17 08:20:20.061   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:20.090  6579  6618 D EGL_emulation: app_time_stats: avg=249.83ms min=248.89ms max=250.54ms count=5
+09-17 08:20:21.107  6579  6618 D EGL_emulation: app_time_stats: avg=254.36ms min=249.65ms max=267.11ms count=4
+09-17 08:20:22.356  6579  6618 D EGL_emulation: app_time_stats: avg=249.83ms min=249.42ms max=250.12ms count=5
+09-17 08:20:23.356  6579  6618 D EGL_emulation: app_time_stats: avg=249.99ms min=249.29ms max=250.69ms count=4
+09-17 08:20:24.357  6579  6618 D EGL_emulation: app_time_stats: avg=250.02ms min=249.45ms max=250.39ms count=4
+09-17 08:20:25.607  6579  6618 D EGL_emulation: app_time_stats: avg=250.08ms min=249.16ms max=250.81ms count=5
+09-17 08:20:26.607  6579  6618 D EGL_emulation: app_time_stats: avg=250.00ms min=249.02ms max=250.40ms count=4
+09-17 08:20:27.623  6579  6618 D EGL_emulation: app_time_stats: avg=253.92ms min=249.62ms max=265.34ms count=4
+09-17 08:20:27.997   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:28.624  6579  6618 D EGL_emulation: app_time_stats: avg=250.08ms min=249.67ms max=250.68ms count=4
+09-17 08:20:28.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:29.821  6579  6618 D EGL_emulation: app_time_stats: avg=239.53ms min=197.85ms max=250.31ms count=5
+09-17 08:20:30.873  6579  6618 D EGL_emulation: app_time_stats: avg=209.75ms min=123.54ms max=250.48ms count=5
+09-17 08:20:32.123  6579  6618 D EGL_emulation: app_time_stats: avg=249.89ms min=249.44ms max=250.36ms count=5
+09-17 08:20:33.123  6579  6618 D EGL_emulation: app_time_stats: avg=250.02ms min=249.38ms max=250.24ms count=4
+09-17 08:20:33.487     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+09-17 08:20:33.706   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:20:34.140  6579  6618 D EGL_emulation: app_time_stats: avg=254.27ms min=250.13ms max=266.38ms count=4
+09-17 08:20:35.393  6579  6618 D EGL_emulation: app_time_stats: avg=250.58ms min=249.48ms max=253.60ms count=5
+09-17 08:20:35.933   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:36.640  6579  6618 D EGL_emulation: app_time_stats: avg=249.21ms min=246.31ms max=250.09ms count=5
+09-17 08:20:36.710   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:20:37.640  6579  6618 D EGL_emulation: app_time_stats: avg=250.10ms min=249.50ms max=250.59ms count=4
+09-17 08:20:38.234   518  2061 D OomAdjuster: Not killing cached processes
+09-17 08:20:38.381  5336  6728 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1115402]
+09-17 08:20:38.382  5336  6728 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1115404]
+09-17 08:20:38.640  6579  6618 D EGL_emulation: app_time_stats: avg=249.98ms min=249.33ms max=250.25ms count=4
+09-17 08:20:38.856   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:39.712   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:20:39.890  6579  6618 D EGL_emulation: app_time_stats: avg=249.90ms min=249.36ms max=250.31ms count=5
+09-17 08:20:40.906  6579  6618 D EGL_emulation: app_time_stats: avg=253.97ms min=249.06ms max=267.30ms count=4
+09-17 08:20:41.906  6579  6618 D EGL_emulation: app_time_stats: avg=250.12ms min=249.27ms max=251.01ms count=4
+09-17 08:20:42.907  6579  6618 D EGL_emulation: app_time_stats: avg=250.06ms min=249.65ms max=250.38ms count=4
+09-17 08:20:43.869   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:44.157  6579  6618 D EGL_emulation: app_time_stats: avg=249.99ms min=249.28ms max=250.38ms count=5
+09-17 08:20:45.406  6579  6618 D EGL_emulation: app_time_stats: avg=202.30ms min=35.64ms max=250.21ms count=6
+09-17 08:20:46.138   518   604 D ActivityManager: sync unfroze 2962 com.google.android.dialer for 6
+09-17 08:20:46.141   518   604 D OomAdjuster: Not killing cached processes
+09-17 08:20:46.143  2962  3017 W TimedProcessReaper: Memory state is: 230
+09-17 08:20:46.145  1738  1738 I BgTaskExecutorImpl: Starting EXCLUSIVE background task UPLOAD_ASSISTANT_DEVICE_SETTINGS.
+09-17 08:20:46.147   518  1642 D ConnectivityService: requestNetwork for uid/pid:10128/2962 activeRequest: null callbackRequest: 158 [NetworkRequest [ REQUEST id=159, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10128 RequestorUid: 10128 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+09-17 08:20:46.149   518   770 D ConnectivityService: NetReassign [159 : null → 100] [c 0] [a 1] [i 0]
+09-17 08:20:46.149   518   763 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=159, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10128 RequestorUid: 10128 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+09-17 08:20:46.149   518   763 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=159, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10128 RequestorUid: 10128 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+09-17 08:20:46.149   518   763 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=159, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10128 RequestorUid: 10128 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+09-17 08:20:46.149   518   763 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=159, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10128 RequestorUid: 10128 RequestorPkg: com.google.android.dialer UnderlyingNetworks: Null] ]
+09-17 08:20:46.153  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.154  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.154  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.154  1738  2472 I A       : Merging legacy hotword config map with new proto.
+09-17 08:20:46.154  1738  2472 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+09-17 08:20:46.154  1738  2472 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
+09-17 08:20:46.154  1738  2472 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
+09-17 08:20:46.154  1738  2472 I A       : Skipping. Expected model: 2 Found: 1
+09-17 08:20:46.154  1738  2472 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+09-17 08:20:46.155  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.155  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.155  1738  2472 I A       : Using proto config with mendel
+09-17 08:20:46.157  1738  2472 I MicroDetectionState: Should stop hotword detection immediately - true
+09-17 08:20:46.159  2962  2962 I DialerConstellationSyncWorker: com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker.startWork:66 starting work
+09-17 08:20:46.160  2962  3034 I DialerCountryCodeProvider: com.android.dialer.businessvoice.verifiedcall.impl.i18n.CountryCodeProvider.getSimCountryCodeInternal:85 returning Redacted-2-chars
+09-17 08:20:46.160  2962  3034 I DialerCachedVerifiedNumberProvider: com.android.dialer.businessvoice.verifiedcall.impl.constellation.CachedVerifiedNumberProvider.refreshConstellationInfo:190 Retrieving constellation info and refreshing the cache.
+09-17 08:20:46.166  1738  6969 I NetworkRecognitionRnr: Using pair HTTP connection
+09-17 08:20:46.171  5402  5402 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.constellation.service.START pkg=com.google.android.gms }
+09-17 08:20:46.171  5402  5402 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.constellation.service.START pkg=com.google.android.gms }
+09-17 08:20:46.178  1738  4131 I A       : [Upload] Connected
+09-17 08:20:46.188  1738  4131 I NetworkRecognitionRnr: Using pair HTTP connection
+09-17 08:20:46.191  1738  1738 E A       : onError
+09-17 08:20:46.191  1738  1738 E A       : com.google.android.apps.gsa.shared.speech.a.m: errorCode: 65561, engine: 2
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.staticplugins.dc.a.e.a(PG:3)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.s3.n.hh(PG:1)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.cd.g.a.f.e(PG:2)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:22)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.ks(PG:6)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.s3.o.e(PG:14)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.s3.p.run(PG:1)
+09-17 08:20:46.191  1738  1738 E A       : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+09-17 08:20:46.191  1738  1738 E A       : 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.e.run(PG:2)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.bi.run(PG:1)
+09-17 08:20:46.191  1738  1738 E A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-17 08:20:46.191  1738  1738 E A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-17 08:20:46.191  1738  1738 E A       : 	at java.lang.Thread.run(Thread.java:1012)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.shared.util.c.a.l.run(PG:5)
+09-17 08:20:46.191  1738  1738 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.o: errorCode: 65586, engine: 2
+09-17 08:20:46.191  1738  1738 E A       : 	... 15 more
+09-17 08:20:46.191  1738  1738 E A       : Caused by: com.google.android.apps.gsa.shared.speech.a.k: errorCode: 401, engine: 2
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.assistant.shared.n.h.a(PG:5)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.s3.producers.j.hE(PG:2)
+09-17 08:20:46.191  1738  1738 E A       : 	at com.google.android.apps.gsa.speech.k.a.g.d(PG:16)
+09-17 08:20:46.191  1738  1738 E A       : 	... 12 more
+09-17 08:20:46.194  1738  2334 W CronetNetworkRqstWrppr: Upload request without a content type.
+09-17 08:20:46.194  1738  4130 I A       : [Upload] Connected
+09-17 08:20:46.197  1738  1738 W A       : Failed to sync device settings.
+09-17 08:20:46.197  1738  1738 I A       : Retrying to sync device settings.
+09-17 08:20:46.200  5402  5402 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-17 08:20:46.200  5402  5402 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-17 08:20:46.211   518  2061 W JobScheduler: Job didn't exist in JobStore: d35b2ff #u0a132/-353 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
+09-17 08:20:46.214  5402  5402 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-17 08:20:46.218  5402  5440 E constellation: [api_verify_phone_operation] Failed to generate Client Signature
+09-17 08:20:46.218  5402  5440 E constellation: acwp: Stored private key deleted
+09-17 08:20:46.218  5402  5440 E constellation: 	at acos.e(:com.google.android.gms@231818047@23.18.18 (190800-535401451):4)
+09-17 08:20:46.218  5402  5440 E constellation: 	at acos.d(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+09-17 08:20:46.218  5402  5440 E constellation: 	at acoa.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):22)
+09-17 08:20:46.218  5402  5440 E constellation: 	at acoa.f(:com.google.android.gms@231818047@23.18.18 (190800-535401451):12)
+09-17 08:20:46.218  5402  5440 E constellation: 	at avsy.eo(:com.google.android.gms@231818047@23.18.18 (190800-535401451):1)
+09-17 08:20:46.218  5402  5440 E constellation: 	at avtf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):14)
+09-17 08:20:46.218  5402  5440 E constellation: 	at dfhf.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):2)
+09-17 08:20:46.218  5402  5440 E constellation: 	at aced.c(:com.google.android.gms@231818047@23.18.18 (190800-535401451):6)
+09-17 08:20:46.218  5402  5440 E constellation: 	at aced.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):7)
+09-17 08:20:46.218  5402  5440 E constellation: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-17 08:20:46.218  5402  5440 E constellation: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-17 08:20:46.218  5402  5440 E constellation: 	at acjn.run(:com.google.android.gms@231818047@23.18.18 (190800-535401451):0)
+09-17 08:20:46.218  5402  5440 E constellation: 	at java.lang.Thread.run(Thread.java:1012)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: com.android.dialer.businessvoice.verifiedcall.impl.constellation.VerifiedNumberProvider.lambda$getConstellationResponse$1:155 Failed to get constellation token.
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: nkq: 5004: 
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at nov.au(PG:1)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at nnf.g(PG:2)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at npo.a(Unknown Source:2)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at npy.dm(PG:9)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at ncz.onTransact(PG:4)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at android.os.Binder.execTransactInternal(Binder.java:1344)
+09-17 08:20:46.226  2962  3034 W DialerVerifiedNumberProvider: 	at android.os.Binder.execTransact(Binder.java:1275)
+09-17 08:20:46.232  2962  3034 W DialerConstellationSyncWorker: com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker.lambda$syncConstellation$2:110 Constellation api request failed, status code: 5004
+09-17 08:20:46.242  2962  3013 I WM-WorkerWrapper: Worker result RETRY for Work [ id=b928d901-b61b-4873-9c7b-86b63b9dfc9a, tags={ com.google.apps.tiktok.contrib.work.TikTokListenableWorker, TikTokWorker#com.android.dialer.businessvoice.control.worker.ConstellationSyncWorker } ]
+09-17 08:20:46.407  6579  6618 D EGL_emulation: app_time_stats: avg=250.18ms min=248.32ms max=252.76ms count=4
+09-17 08:20:47.423  6579  6618 D EGL_emulation: app_time_stats: avg=253.91ms min=249.29ms max=266.59ms count=4
+09-17 08:20:48.207   518  2139 D ConnectivityService: requestNetwork for uid/pid:10132/1738 activeRequest: null callbackRequest: 160 [NetworkRequest [ REQUEST id=160, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+09-17 08:20:48.209   335   366 I netd    : networkSetPermissionForNetwork(101, 0) <0.90ms>
+09-17 08:20:48.210   518   770 D ConnectivityService: NetReassign [160 : null → 101] [c 0] [a 2] [i 1]
+09-17 08:20:48.212   518   770 D ConnectivityService: reportNetworkConnectivity(100, false) by 10132
+09-17 08:20:48.213  1006  1999 D NetworkMonitor/100: Forcing reevaluation for UID 10132. Dns signal count: 0
+09-17 08:20:48.214  1006  6974 D TrafficStats: tagSocket(107) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.214  1006  6975 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.215  1006  6974 D TrafficStats: tagSocket(107) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.216  1006  6975 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.216   335  6976 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+09-17 08:20:48.218   335  6977 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+09-17 08:20:48.222   335  6978 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+09-17 08:20:48.224   335  6979 I resolv  : ResNSendHandler::run: 0 / {100 983140 100 983140 1073 1}
+09-17 08:20:48.224   335  6979 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7896ecb1d1d0
+09-17 08:20:48.282   335  6976 I resolv  : res_nsend: used send_dg 256 terrno: 0
+09-17 08:20:48.283   335  6978 I resolv  : res_nsend: used send_dg 75 terrno: 0
+09-17 08:20:48.283   335  6977 I resolv  : res_nsend: used send_dg 160 terrno: 0
+09-17 08:20:48.284  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.286  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.287  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.288  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.288  1006  6975 D NetworkMonitor/100: PROBE_DNS connectivitycheck.gstatic.com 73ms OK 142.250.69.163,2607:f8b0:400a:80c::2003
+09-17 08:20:48.288  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.289  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.289  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.290  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.291  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.291  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.292  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.292  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.293  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.293   335  6980 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+09-17 08:20:48.294  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.294  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.295  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.295   335  6982 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-17 08:20:48.295   335  6982 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7896ecb1d1d0
+09-17 08:20:48.295   335  6982 I resolv  : doQuery: rcode=0, ancount=1, return value=63
+09-17 08:20:48.296  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.296  1006  1006 D TrafficStats: tagSocket(68) with statsTag=0xffffffff, statsUid=-1
+09-17 08:20:48.297   335  6981 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-17 08:20:48.297   335  6981 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7896ecb1e5f0
+09-17 08:20:48.297   335  6981 I resolv  : doQuery: rcode=0, ancount=1, return value=75
+09-17 08:20:48.297  1006  6974 D NetworkMonitor/100: PROBE_DNS www.google.com 83ms OK 142.251.150.119,142.251.155.119,142.251.151.119,142.251.153.119,142.251.152.119,142.251.157.119,142.251.154.119,142.251.156.119,2001:4860:482b:7700::,2001:4860:4828:7700::,2001:4860:4829:7700::,2001:4860:4826:7700::,2001:4860:482d:7700::,2001:4860:482a:7700::,2001:4860:4827:7700::,2001:4860:482c:7700::
+09-17 08:20:48.298   335  6983 I resolv  : GetAddrInfoHandler::run: {100 983140 100 983140 1073 1}
+09-17 08:20:48.298   335  6984 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-17 08:20:48.298   335  6984 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7896acb27f50
+09-17 08:20:48.298   335  6984 I resolv  : doQuery: rcode=0, ancount=8, return value=256
+09-17 08:20:48.299  1006  6975 D TrafficStats: tagSocket(107) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.301   335  6985 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-17 08:20:48.301   335  6985 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7895fcb25e70
+09-17 08:20:48.301   335  6985 I resolv  : doQuery: rcode=0, ancount=8, return value=160
+09-17 08:20:48.302  1006  6974 D TrafficStats: tagSocket(68) with statsTag=0xffffff81, statsUid=-1
+09-17 08:20:48.423  6579  6618 D EGL_emulation: app_time_stats: avg=250.11ms min=249.62ms max=250.69ms count=4
+09-17 08:20:48.782  1006  6975 D NetworkMonitor/100: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=492ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Thu, 17 Sep 2026 08:20:48 GMT], X-Android-Received-Millis=[1789633248782], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789633248532]}
+09-17 08:20:48.791  1006  6974 D NetworkMonitor/100: PROBE_HTTPS https://www.google.com/generate_204 time=494ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Thu, 17 Sep 2026 08:20:48 GMT], X-Android-Received-Millis=[1789633248791], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789633248785]}
+09-17 08:20:48.792  1006  6973 D NetworkMonitor/100: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=578ms
+09-17 08:20:48.793   518   770 D ConnectivityService: [100 WIFI] validation passed
+09-17 08:20:48.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:49.673  6579  6618 D EGL_emulation: app_time_stats: avg=249.88ms min=249.24ms max=250.40ms count=5
+09-17 08:20:50.313  1738  4129 W A       : [Download] response code: 400
+09-17 08:20:50.673  6579  6618 D EGL_emulation: app_time_stats: avg=250.00ms min=249.51ms max=250.99ms count=4
+09-17 08:20:51.922  6579  6618 D EGL_emulation: app_time_stats: avg=249.81ms min=249.27ms max=250.97ms count=5
+09-17 08:20:52.061   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:20:52.924  6579  6618 D EGL_emulation: app_time_stats: avg=200.20ms min=35.44ms max=250.64ms count=5
+09-17 08:20:53.441   518  2061 D OomAdjuster: Not killing cached processes
+09-17 08:20:54.172  6579  6618 D EGL_emulation: app_time_stats: avg=242.54ms min=213.02ms max=250.45ms count=5
+09-17 08:20:54.730   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:20:55.190  6579  6618 D EGL_emulation: app_time_stats: avg=254.25ms min=249.85ms max=266.88ms count=4
+09-17 08:20:56.190  6579  6618 D EGL_emulation: app_time_stats: avg=192.36ms min=35.29ms max=250.13ms count=5
+09-17 08:20:56.290   518   611 D ActivityManager: freezing 2962 com.google.android.dialer
+09-17 08:20:57.439  6579  6618 D EGL_emulation: app_time_stats: avg=249.72ms min=249.17ms max=250.38ms count=5
+09-17 08:20:58.439  6579  6618 D EGL_emulation: app_time_stats: avg=250.00ms min=249.03ms max=250.51ms count=4
+09-17 08:20:58.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:20:59.688  6579  6618 D EGL_emulation: app_time_stats: avg=249.69ms min=248.94ms max=250.27ms count=5
+09-17 08:21:00.003   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:00.055   841   910 D EGL_emulation: app_time_stats: avg=60015.20ms min=60015.20ms max=60015.20ms count=1
+09-17 08:21:00.056  1587  1841 I AiAiEcho: Predicting[0]: 
+09-17 08:21:00.057  1587  1841 I AiAiEcho: EchoTargets: 
+09-17 08:21:00.057  1587  1841 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 08:21:00.058  1587  1841 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 08:21:00.059  1587  1841 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 08:21:00.059   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 08:21:00.706  6579  6618 D EGL_emulation: app_time_stats: avg=254.38ms min=249.88ms max=266.95ms count=4
+09-17 08:21:01.220   518  1642 D OomAdjuster: Not killing cached processes
+09-17 08:21:01.706  6579  6618 D EGL_emulation: app_time_stats: avg=193.38ms min=34.21ms max=250.59ms count=5
+09-17 08:21:02.922  6579  6618 D EGL_emulation: app_time_stats: avg=196.04ms min=35.07ms max=250.49ms count=6
+09-17 08:21:03.955  6579  6618 D EGL_emulation: app_time_stats: avg=200.03ms min=34.29ms max=250.61ms count=5
+09-17 08:21:04.492  6579  6617 I GlidyFlight: annonce : Atterrissage. Vol de 31 minutes enregistré
+09-17 08:21:04.493  2779  6633 I GoogleTTSServiceImpl: Synthesis request for locale fra-FRA and name fr-FR-language
+09-17 08:21:04.494  2779  6633 I GoogleTTSServiceImpl: TTS dispatch: fr-fr-x-vlf-lstm-embedded
+09-17 08:21:04.588   396  3277 D AudioFlinger: Client defaulted notificationFrames to 2048 for frameCount 4096
+09-17 08:21:04.589   396  3277 D AF::TrackHandle: OpPlayAudio: track:56 usage:12 not muted
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: no active player
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=581613, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=581613, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:04.592  1033  1033 D AvrcpTargetJni: sendMediaUpdateNative
+09-17 08:21:04.592  1033  1033 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: no active player
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=581613, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:04.592  1033  1033 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=581613, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:04.592  1033  1033 D MediaControlGattService: updatePlayerState: playbackState= PLAYING
+09-17 08:21:04.592  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:04.592  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:04.592  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:04.592  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
+09-17 08:21:04.593   396  3277 D audioserver: FGS Logger Transaction failed
+09-17 08:21:04.593   396  3277 D audioserver: -129
+09-17 08:21:04.595  1033  1033 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
+09-17 08:21:04.595  1033  1033 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
+09-17 08:21:04.595  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:04.597  1033  1033 D MediaControlGattService: updateMediaStateChar
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:04.597  1033  1033 D MediaControlGattService: updateMediaStateChar setting to state= 1
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:04.597  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:04.662   396   499 D AudioFlinger: mixer(0x775d965f8930) throttle end: throttle time(33)
+09-17 08:21:04.713   518  1642 W BatteryExternalStatsWorker: error reading Bluetooth stats: 11
+09-17 08:21:04.720   518   598 D TelephonyManager: requestModemActivityInfo: Sending result to app: ModemActivityInfo{ mTimestamp=581741 mSleepTimeMs=0 mIdleTimeMs=581736 mActivityStatsTechSpecificInfo=[{mRat=UNKNOWN,mFrequencyRange=UNKNOWN,mTxTimeMs[]=[0, 0, 0, 0, 0],mRxTimeMs=0}]}
+09-17 08:21:04.738   518   555 W KernelCpuProcStringReader: File not found. It's normal if not implemented: /proc/uid_concurrent_policy_time
+09-17 08:21:04.778   335   366 I netd    : tetherGetStats() -> {[]} <0.29ms>
+09-17 08:21:04.824   396   499 D AudioFlinger: mixer(0x775d965f8930) throttle end: throttle time(18)
+09-17 08:21:04.859  6579  6587 I r.glidercopilot: Background young concurrent copying GC freed 777335(20MB) AllocSpace objects, 5(276KB) LOS objects, 46% free, 24MB/45MB, paused 21us,27us total 104.549ms
+09-17 08:21:05.015  6579  6618 D EGL_emulation: app_time_stats: avg=211.88ms min=127.10ms max=250.74ms count=5
+09-17 08:21:06.255  6579  6618 D EGL_emulation: app_time_stats: avg=166.83ms min=35.89ms max=250.90ms count=7
+09-17 08:21:07.505  6579  6618 D EGL_emulation: app_time_stats: avg=312.45ms min=249.96ms max=499.47ms count=4
+09-17 08:21:07.933   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:08.202  2779  6634 D AudioTrack: stop(16): called with 87240 frames delivered
+09-17 08:21:08.202  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: no active player
+09-17 08:21:08.202  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=585224, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:08.202  1033  1033 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=585224, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:08.202  1033  1033 D AvrcpTargetJni: sendMediaUpdateNative
+09-17 08:21:08.202  1033  1033 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
+09-17 08:21:08.203  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: no active player
+09-17 08:21:08.203  1033  1033 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=585224, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:08.203  1033  1033 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=585224, actions=0, custom actions=[], active item id=-1, error=null}
+09-17 08:21:08.203  1033  1033 D MediaControlGattService: updatePlayerState: playbackState= PAUSED
+09-17 08:21:08.203  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:08.203  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:08.203  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-17 08:21:08.203  1033  1033 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
+09-17 08:21:08.204  1033  1033 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
+09-17 08:21:08.204  1033  1033 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
+09-17 08:21:08.204  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:08.204  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:08.205  1033  1033 D MediaControlGattService: updateMediaStateChar
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:08.205  1033  1033 D MediaControlGattService: updateMediaStateChar setting to state= 2
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:08.205  1033  1033 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-17 08:21:08.312   396   499 D audioserver: FGS Logger Transaction failed
+09-17 08:21:08.312   396   499 D audioserver: -129
+09-17 08:21:08.324   396   499 D audioserver: FGS Logger Transaction failed
+09-17 08:21:08.325   396   499 D audioserver: -129
+09-17 08:21:08.522  6579  6618 D EGL_emulation: app_time_stats: avg=508.53ms min=250.13ms max=766.93ms count=2
+09-17 08:21:08.860   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:09.772  6579  6618 D EGL_emulation: app_time_stats: avg=312.41ms min=249.64ms max=500.09ms count=4
+09-17 08:21:10.772  6579  6618 D EGL_emulation: app_time_stats: avg=333.40ms min=249.95ms max=499.74ms count=3
+09-17 08:21:11.202   341  6715 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 595136
+09-17 08:21:11.988  6579  6618 D EGL_emulation: app_time_stats: avg=242.50ms min=212.55ms max=283.54ms count=5
+09-17 08:21:12.762   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:13.022  6579  6618 D EGL_emulation: app_time_stats: avg=516.85ms min=283.97ms max=749.73ms count=2
+09-17 08:21:14.022  6579  6618 D EGL_emulation: app_time_stats: avg=250.02ms min=249.45ms max=250.42ms count=4
+09-17 08:21:15.042  6579  6618 D EGL_emulation: app_time_stats: avg=509.64ms min=253.43ms max=765.84ms count=2
+09-17 08:21:15.766   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:15.873   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:18.771   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:18.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:21.021  6579  6618 D EGL_emulation: app_time_stats: avg=2989.83ms min=749.57ms max=5230.09ms count=2
+09-17 08:21:21.775   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:22.572   518  2139 D OomAdjuster: Not killing cached processes
+09-17 08:21:23.021  6579  6618 D EGL_emulation: app_time_stats: avg=1000.00ms min=999.83ms max=1000.16ms count=2
+09-17 08:21:23.556  4940  4971 W TimedProcessReaper: Memory state is: 125
+09-17 08:21:24.022  6579  6618 D EGL_emulation: app_time_stats: avg=999.71ms min=999.71ms max=999.71ms count=1
+09-17 08:21:24.061   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:25.038  6579  6618 D EGL_emulation: app_time_stats: avg=1016.02ms min=1016.02ms max=1016.02ms count=1
+09-17 08:21:28.038  6579  6618 D EGL_emulation: app_time_stats: avg=3000.28ms min=3000.28ms max=3000.28ms count=1
+09-17 08:21:28.209   518   770 D ConnectivityService: releasing NetworkRequest [ REQUEST id=160, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED Uid: 10132 RequestorUid: 10132 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ] (release request)
+09-17 08:21:28.209   518   770 I ConnectivityService: Update capabilities for net 101 : -FOREGROUND
+09-17 08:21:28.211   335   366 I netd    : networkSetPermissionForNetwork(101, 1) <2.04ms>
+09-17 08:21:28.867   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:28.869   841   910 D EGL_emulation: app_time_stats: avg=28814.22ms min=28814.22ms max=28814.22ms count=1
+09-17 08:21:29.055  6579  6618 D EGL_emulation: app_time_stats: avg=1016.44ms min=1016.44ms max=1016.44ms count=1
+09-17 08:21:30.055  6579  6618 D EGL_emulation: app_time_stats: avg=1000.33ms min=1000.33ms max=1000.33ms count=1
+09-17 08:21:31.997   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:33.488     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+09-17 08:21:38.599   518   548 D OomAdjuster: Not killing cached processes
+09-17 08:21:38.641   518   604 D ActivityManager: sync unfroze 4443 com.google.android.apps.messaging for 6
+09-17 08:21:38.652  4443  4472 W TimedProcessReaper: Memory state is: 230
+09-17 08:21:38.657  4443  6994 D MddListenableWorkerFactory: createWorker for class: com.google.android.apps.messaging.rcsprovisioning.RcsProvisioningListenableWorker
+09-17 08:21:38.660  5402  6995 I ChimeraConfigurator: Starting update, reason: 4 urgentFeatures: vision.ocr:-1
+09-17 08:21:38.660  4443  4443 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] RCS provisioning task has started
+09-17 08:21:38.663   518  2061 D ConnectivityService: requestNetwork for uid/pid:10131/4443 activeRequest: null callbackRequest: 161 [NetworkRequest [ REQUEST id=162, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647
+09-17 08:21:38.664   518   770 D ConnectivityService: NetReassign [162 : null → 100] [c 0] [a 1] [i 0]
+09-17 08:21:38.664  4443  6999 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] Starting StateMachine, trigger is STATE_MACHINE_RETRY
+09-17 08:21:38.664   518   763 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=162, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
+09-17 08:21:38.664   518   763 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=162, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
+09-17 08:21:38.664  4443  6999 I BugleRcsEngine: [131] brfq.d: (PEv2-SM-Bugle-97981995): start PEv2, trigger is STATE_MACHINE_RETRY, workerId is 59039894-3d5b-466a-8c20-90e8ee46294e [null]
+09-17 08:21:38.664   518   763 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=162, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
+09-17 08:21:38.664   518   763 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=162, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED Uid: 10131 RequestorUid: 10131 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]
+09-17 08:21:38.665  4443  6999 I BugleRcsEngine: [131] broo.g: Created new RcsProvisioningProtoDataStorage for sim redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.665  4443  6999 I BugleRcsEngine: [131] brnl.h: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.665  4443  6999 I BugleRcsEngine: [131] brfq.d: (PEv2-SM-Bugle-97981995): start [null]
+09-17 08:21:38.665  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter EnabledState [null]
+09-17 08:21:38.667  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.668  4443  7000 I BugleRcsEngine: [132] brds.c: Sending ProvisioningEvent to Bugle [Send Provisioning Session ID (18)], redacted-pii:[chars:65]
+09-17 08:21:38.669  4443  7000 I BugleRcsEngine: [132] bsgz.b: EngineBroadcaster: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:223] from source PROVISIONING_EVENT
+09-17 08:21:38.672  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Start a new provisioning session [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.672  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.673  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
+09-17 08:21:38.673  4443  7000 I BugleRcsEngine: [132] brnl.C: Bugle is default SMS app: true
+09-17 08:21:38.673  4443  7000 I BugleRcsEngine: [132] brjv.b: Bugle has minimum required RCS permissions: true
+09-17 08:21:38.673  4443  7000 I BugleRcsEngine: [132] brnl.B: Rcs is enabled from user settings: true
+09-17 08:21:38.673  4443  7000 I BugleRcsEngine: [132] brox.b: Using config server URL from bqas
+09-17 08:21:38.674  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.674  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.675  4443  6999 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Send Provisioning Session ID
+09-17 08:21:38.676  4443  7000 I BugleRcsEngine: [132] brjv.b: Config state is not ACCEPTED, provisioning still in progress
+09-17 08:21:38.676  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
+09-17 08:21:38.676  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.677  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionViaMessage, srcState=EnabledState, destState = CheckPreconditionsState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.677  4443  7000 I BugleRcsEngine: [132] brds.c: Sending ProvisioningEvent to Bugle [Update provisioning status (11)], redacted-pii:[chars:85]
+09-17 08:21:38.677  4443  7000 I BugleRcsEngine: [132] bsgz.b: EngineBroadcaster: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:243] from source PROVISIONING_EVENT
+09-17 08:21:38.679  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): EnabledState: Transition to check preconditions [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.679  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionTo: destState=CheckPreconditionsState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.679  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): onTransitionRequested EnabledState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.679  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter CheckPreconditionsState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.681  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.681  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Battery optimization is not required. [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.682  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.682  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionViaMessage, srcState=CheckPreconditionsState, destState = ReadyState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.682  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): CheckPreconditionsState: Transition to ready [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.682  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionTo: destState=ReadyState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.682  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): onTransitionRequested CheckPreconditionsState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.683  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit CheckPreconditionsState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.683  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit EnabledState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.683  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.683  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter InProgressState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.685  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.686  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter ReadyState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.687  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.688  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.688  4443  4549 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@de22cfc
+09-17 08:21:38.698  4443  4472 W BugleRcsEngine: [41] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.699  5402  6995 I ChimeraConfigurator: Detected pending changes for urgent request: [vision.ocr]. Pending module sets: container:2318189190800+mlkit.ocr.common,tflite_dynamite:2627305025100800+tflite_dynamite,vision_ocr:2316024025100000+vision.ocr
+09-17 08:21:38.703  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionViaMessage, srcState=ReadyState, destState = RequestWithImsiState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.704  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): ReadyState: Transition to request with imsi [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.704  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionTo: destState=RequestWithImsiState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.705  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): onTransitionRequested ReadyState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.705  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit ReadyState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.705  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.705  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter RequestWithImsiState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.707  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.708  4443  7000 I BugleRcsEngine: [132] brnl.A: ProvisioningConsent from user settings: false
+09-17 08:21:38.709  4443  7000 I BugleRcsEngine: [132] brox.b: Using config server URL from bqas
+09-17 08:21:38.710  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.710  4443  7000 I BugleRcsEngine: [132] brnl.A: ProvisioningConsent from user settings: false
+09-17 08:21:38.711  5402  6995 I GmsDebugLogger: [73] 1801
+09-17 08:21:38.713  4443  4472 W BugleRcsEngine: [41] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.716  4443  7000 I BugleRcsEngine: [132] brnl.A: ProvisioningConsent from user settings: false
+09-17 08:21:38.717  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:38.717  4443  7000 W BugleRcsEngine: [132] brfq.e: (PEv2-SM-Bugle-97981995): Could not retrieve MSISDN from configuration. Configuration is empty. [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.717  4443  7000 W BugleRcsEngine: [132] brfq.e: (PEv2-SM-Bugle-97981995): Skipping adding Tachyon identity key to request. Null/empty RCS msisdn from configuration for sim ID: 89860318640220133897. [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.718  4443  7000 I BugleRcsEngine: [132] brnl.A: ProvisioningConsent from user settings: false
+09-17 08:21:38.719  4443  4472 W BugleRcsEngine: [41] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.720  5402  6995 W ZappDownloader: No successful module downloads for requested features [vision.ocr].
+09-17 08:21:38.720  5402  6995 I GmsDebugLogger: [30] [VisionOcrDynamite.integ:231602402100000],[TfliteDynamiteDynamite.integ:262730502100800],[MlkitOcrCommon.optional:231818100800]
+09-17 08:21:38.728  5402  6995 W ChimeraConfigService: Retry attempt was throttled. [CONTEXT service_id=264 ]
+09-17 08:21:38.728  5402  6995 I GmsDebugLogger: [83] 1 [vision.ocr]
+09-17 08:21:38.729  4443  7001 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Update provisioning status
+09-17 08:21:38.730  4443  4583 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@235953a
+09-17 08:21:38.765   518  1642 D ActivityManager: sync unfroze 3363 com.google.android.gms.unstable for 6
+09-17 08:21:38.779  5402  6992 W Vision  : Request for optional module download of ocr failed. Request again.
+09-17 08:21:38.780  5402  6992 W Vision  : Would have logged:
+09-17 08:21:38.780  5402  6992 W Vision  : # dsae@37884fe7
+09-17 08:21:38.780  5402  6992 I Vision  : Schedule retrying download ocr at 615801 with backoff 320 seconds
+09-17 08:21:38.790   335  7004 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10129 0}
+09-17 08:21:38.790  3363  7002 D TrafficStats: tagSocket(103) with statsTag=0x1809, statsUid=-1
+09-17 08:21:38.795  3363  7002 W libc    : Access denied finding property "persist.adb.tls_server.enable"
+09-17 08:21:38.795  3363  7002 W libc    : Access denied finding property "service.adb.tls.port"
+09-17 08:21:38.801  4443  7000 E BugleRcsEngine: [132] brfg.a: DroidGuardLogger: Could not create DroidGuard token creation event
+09-17 08:21:38.801  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): RequestWithImsiState: event Send config request [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.801  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): InProgressState: event Send config request [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:38.801  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.793  3363  3363 W binder:3363_10: type=1400 audit(0.0:117): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=292 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+09-17 08:21:38.803  4443  7005 W BugleRcsEngine: [134] bpxc.w: Unable to send diagnostic log
+09-17 08:21:38.807   335  7006 I resolv  : GetAddrInfoHandler::run: {100 786532 100 983140 10131 0}
+09-17 08:21:38.793  3363  3363 W binder:3363_10: type=1400 audit(0.0:118): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=60 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
+09-17 08:21:38.809   335  7007 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-17 08:21:38.809   335  7008 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-17 08:21:38.857   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:39.301   335  7007 I resolv  : res_nsend: used send_dg 76 terrno: 0
+09-17 08:21:39.301   335  7008 I resolv  : res_nsend: used send_dg 64 terrno: 0
+09-17 08:21:39.302   335  7008 I resolv  : doQuery: rcode=0, ancount=1, return value=64
+09-17 08:21:39.302   335  7007 I resolv  : doQuery: rcode=0, ancount=1, return value=76
+09-17 08:21:39.302  4443  7005 D TrafficStats: tagSocket(97) with statsTag=0x115b, statsUid=-1
+09-17 08:21:39.798   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:39.933   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:40.401  4443  7005 W BugleRcsEngine: [134] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.401  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): RequestWithImsiState: event HTTP Response [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): InProgressState: event HTTP Response [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): RequestWithImsiState: event HTTP 400 (Bad request) [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): InProgressState: event HTTP 400 (Bad request) [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionTo: destState=RetryState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): onTransitionRequested RequestWithImsiState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit RequestWithImsiState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit InProgressState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.402  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.402  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Enter RetryState [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.404  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.404  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): nextRetry = 0 [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.404  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): scheduleRetry, currentRetry = 0, retryMillis = 28800000 [6b4c1b34-1666-4bb4-9c4c-3adc5d3751fb]
+09-17 08:21:40.405  4443  4473 W BugleRcsEngine: [42] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.408  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
+09-17 08:21:40.408  4443  7000 I BugleRcsEngine: [132] brnl.C: Bugle is default SMS app: true
+09-17 08:21:40.409  4443  7000 I BugleRcsEngine: [132] brjv.b: Bugle has minimum required RCS permissions: true
+09-17 08:21:40.409  4443  7000 I BugleRcsEngine: [132] brnl.B: Rcs is enabled from user settings: true
+09-17 08:21:40.409  4443  7000 I BugleRcsEngine: [132] brox.b: Using config server URL from bqas
+09-17 08:21:40.410  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:40.410  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:40.411  4443  7000 I BugleRcsEngine: [132] brjv.b: Config state is not ACCEPTED, provisioning still in progress
+09-17 08:21:40.411  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
+09-17 08:21:40.414  4443  4472 W BugleRcsEngine: [41] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.414  4443  4472 W BugleRcsEngine: [41] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.415  4443  7000 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] Received a provisioning state changed event from the provisioning engine RETRY
+09-17 08:21:40.416  4443  7000 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] Provisioning Engine entered RetryState, provisioning task will be rescheduled with exponential backoff
+09-17 08:21:40.416  4443  7000 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] finish provisioning task with result Success {mOutputData=Data {}}
+09-17 08:21:40.416  4443  7000 I BugleRcsWorker: [seqId=5][workId=59039894-3d5b-466a-8c20-90e8ee46294e] RCS provisioning task has finished with result Success {mOutputData=Data {}}
+09-17 08:21:40.418  4443  6999 I BugleRcsEngine: [131] brfq.d: (PEv2-SM-Bugle-97981995): quit [null]
+09-17 08:21:40.418  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): transitionTo: destState=bqjk [null]
+09-17 08:21:40.418  4443  7000 I BugleRcsEngine: [132] brfq.d: (PEv2-SM-Bugle-97981995): Exit RetryState [null]
+09-17 08:21:40.418  4443  7000 W BugleRcsEngine: [132] bpxc.w: Unable to send diagnostic log
+09-17 08:21:40.418  4443  7000 W BugleRcsEngine: [132] brfq.e: (PEv2-SM-Bugle-97981995): onQuitting [null]
+09-17 08:21:40.418  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Calculating Rcs Availability
+09-17 08:21:40.418  4443  6994 I WM-WorkerWrapper: Worker result SUCCESS for Work [ id=d1142ece-3a35-482f-b84f-184ced34fcc5, tags={ com.google.android.apps.messaging.rcsprovisioning.RcsProvisioningListenableWorker, provisioning } ]
+09-17 08:21:40.418  4443  7000 I BugleRcsEngine: [132] brnl.C: Bugle is default SMS app: true
+09-17 08:21:40.419  4443  7000 I BugleRcsEngine: [132] brjv.b: Bugle has minimum required RCS permissions: true
+09-17 08:21:40.419  4443  7000 I BugleRcsEngine: [132] brnl.B: Rcs is enabled from user settings: true
+09-17 08:21:40.419  4443  7000 I BugleRcsEngine: [132] brox.b: Using config server URL from bqas
+09-17 08:21:40.419  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:40.420  4443  7000 I BugleRcsEngine: [132] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:40.422  4443  7000 I BugleRcsEngine: [132] brjv.b: Config state is not ACCEPTED, provisioning still in progress
+09-17 08:21:40.422  4443  7000 I BugleRcsEngine: [132] brjv.b: RcsAvailabilityManager: Rcs Availability still CARRIER_SETUP_PENDING (Carrier RCS is not set up)
+09-17 08:21:40.430  4443  4474 W Bugle   : TextClassifierLibManagerImpl: Reclaiming memory at level: 40
+09-17 08:21:40.435  4443  4541 I Bugle   : Scheduling custom retry
+09-17 08:21:40.438  4443  7001 W BugleRcsEngine: [133] brcu.d: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[true], enableSingleRegistrationProvisioning:[false]
+09-17 08:21:40.439  4443  7001 I BugleRcsEngine: [133] brnl.e: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897]
+09-17 08:21:40.440  4443  7001 I BugleRcsEngine: [133] zzo.l: Scheduled provisioning task with 480 seconds delay, APPEND policy, trigger is STATE_MACHINE_RETRY, workerId is 84131f7f-ebdb-4083-862c-55a1d1d95da9
+09-17 08:21:43.801   518   598 D OomAdjuster: Not killing cached processes
+09-17 08:21:47.869   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:48.810   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:48.858   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:50.459   518   611 D ActivityManager: freezing 4443 com.google.android.apps.messaging
+09-17 08:21:53.690   518   598 D OomAdjuster: Not killing cached processes
+09-17 08:21:53.814   518   611 D ActivityManager: freezing 3363 com.google.android.gms.unstable
+09-17 08:21:56.061   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:21:57.821   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:21:58.858   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:21:58.869   841   910 D EGL_emulation: app_time_stats: avg=29999.51ms min=29999.51ms max=29999.51ms count=1
+09-17 08:22:00.038  1587  1841 I AiAiEcho: Predicting[0]: 
+09-17 08:22:00.038  1587  1841 I AiAiEcho: EchoTargets: 
+09-17 08:22:00.038  1587  1841 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 08:22:00.038  1587  1841 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 08:22:00.039  1587  1841 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 08:22:00.039   841   910 D EGL_emulation: app_time_stats: avg=1170.19ms min=1170.19ms max=1170.19ms count=1
+09-17 08:22:00.051   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 08:22:00.825   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 08:22:03.997   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 08:22:05.925  1501  2697 I PhenotypeProcessReaper: Memory state is: 200
+09-17 08:22:06.541  1103  1103 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1150.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=643562, downTime=643562, deviceId=-1, source=0x1002, displayId=0, eventId=-259323502 }
+09-17 08:22:06.590  6579  6618 D EGL_emulation: app_time_stats: avg=36534.44ms min=36534.44ms max=36534.44ms count=1
+09-17 08:22:06.905  1103  1103 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=540.0, y[0]=1400.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=643926, downTime=643562, deviceId=-1, source=0x1002, displayId=0, eventId=-89625397 }
+09-17 08:22:08.858   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 08:22:10.151  7016  7016 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-17 08:22:10.151  7016  7016 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-17 08:22:10.393     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-17 08:22:10.185   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-17 08:22:10.186  7016  7017 I Gralloc4: mapper 4.x is not supported
