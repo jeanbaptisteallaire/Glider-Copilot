@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icône de notification : silhouette de planeur, blanche (Android la teinte). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M1,9.2h10.2V4.5c0,-0.6 0.4,-1 0.8,-1s0.8,0.4 0.8,1v4.7H23v1.6H12.8v7.4h2.9v1.5H8.3v-1.5h2.9v-7.4H1z" />
+</vector>

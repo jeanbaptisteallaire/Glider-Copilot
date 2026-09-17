@@ -65,6 +65,7 @@ import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcColors
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.vario
+import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import kotlinx.coroutines.delay
 import java.util.Locale
@@ -92,7 +93,8 @@ private const val CEILING = 1880.0
 /**
  * Écran Pilotage — mise en page v8 : marge de sécurité, profil de retour rétractable, carte avec états
  * GPS/BARO/DATA et chrono, vario simplifié sans conseil (valeur, barre, moyennes) avec son et repli.
- * Signal de démonstration tant que capteurs (S5), carte (S3) et sécurité réelle (S6) ne sont pas branchés.
+ * Dès qu'une source réelle existe (baro, GPS, OGN), plus aucune valeur de démonstration n'est affichée ;
+ * le signal simulé ne sert qu'aux aperçus sans capteur. Relief du profil et vent : session 6.
  */
 @Composable
 fun FlightScreen(
@@ -100,7 +102,8 @@ fun FlightScreen(
     modifier: Modifier = Modifier,
     map: FlightMapConfig? = null,
     traffic: FlightTraffic = FlightTraffic(),
-    flightSeconds: Long = 0,
+    live: FlightLive = FlightLive(),
+    controls: FlightControls? = null,
 ) {
     val c = Gc.colors
     var t by remember { mutableDoubleStateOf(0.0) }
@@ -108,12 +111,16 @@ fun FlightScreen(
     var pendingRaise by remember { mutableStateOf<Int?>(null) }
     var profileOpen by rememberSaveable { mutableStateOf(true) }
     var varioOpen by rememberSaveable { mutableStateOf(true) }
-    var soundOn by rememberSaveable { mutableStateOf(false) }
+    var localSound by rememberSaveable { mutableStateOf(false) }
     val history = remember { mutableStateListOf<Sample>() }
     val tone = remember { VarioTone() }
     val controller = remember { MapController() }
+    val snap = live.snapshot
+    val real = live.hasData
+    val soundOn = if (controls != null) live.soundOn else localSound
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(real) {
+        if (real) return@LaunchedEffect
         while (true) {
             delay(250)   // 4 Hz : suffisant pour l'affichage, sobre en batterie
             t += 0.25
@@ -126,31 +133,53 @@ fun FlightScreen(
         }
     }
 
-    // Signal de démonstration : spirale dans une pompe de ~1,5 m/s.
+    // Signal de démonstration (aperçu sans capteur) : spirale dans une pompe de ~1,5 m/s.
     val demoV = 1.4 + 1.3 * sin(t * 2 * Math.PI / 26) + 0.3 * sin(t * 1.7)
-    // secours OGN : mon planeur reçu il y a moins de 60 s → sa montée remplace le signal de démonstration
-    val ownOgn = traffic.own?.takeIf { it.ageS <= 60 && it.climbMs != null }
-    val v = ownOgn?.climbMs ?: demoV
-    val varioLabel = ownOgn?.let { o -> "Vario OGN" + (o.latencyS?.let { String.format(Locale.FRANCE, " · %.0f s", it + o.ageS) } ?: "") } ?: "Vario m/s"
-    val alt = 1250.0 + 40 * sin(t / 30)
-    val fieldElev = map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV
-    val need = fieldElev + ARRIVAL_MARGIN + FIELD_DIST_KM * 1000 / finesse
-    val marge = alt - need
-    val trend = 40 / 30.0 * cos(t / 30)
-
-    LaunchedEffect(t.toInt()) {
-        history.add(Sample(t, alt, need, v))
-        while (history.isNotEmpty() && t - history.first().t > 300) history.removeAt(0)
+    val ownOgn = traffic.own?.takeIf { it.ageS <= 60 }
+    val v: Double? = when {
+        real -> snap!!.climbMs
+        ownOgn?.climbMs != null -> ownOgn.climbMs
+        else -> demoV
     }
-    tone.vario = v
-    DisposableEffect(soundOn, varioOpen) {
-        if (soundOn && varioOpen) tone.start() else tone.stop()
+    val ognDelay = ownOgn?.let { o -> (o.latencyS ?: 0.0) + o.ageS }
+    val varioLabel = when {
+        real -> varioSourceLabel(snap, ognDelay)
+        ownOgn?.climbMs != null -> varioSourceLabel(FlightSnapshotOgn, ognDelay)
+        else -> "Vario m/s (démo)"
+    }
+    val alt: Double? = if (real) snap!!.altitudeM else 1250.0 + 40 * sin(t / 30)
+    val fieldElev = map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV
+    val gliderPos = when {
+        real && live.gpsFresh -> snap?.gps?.position
+        ownOgn != null -> ownOgn.position
+        else -> null
+    }
+    val field = map?.field
+    val distKm = if (gliderPos != null && field != null) Geo.distanceKm(gliderPos, field) else FIELD_DIST_KM
+    val brg = if (gliderPos != null && field != null) Geo.bearingDeg(gliderPos, field) else FIELD_BRG
+    val distKnown = (gliderPos != null && field != null) || !real
+    val need = fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0)
+    val marge = alt?.takeIf { distKnown }?.let { it - need }
+    val trend: Double? = if (real) snap!!.avgSpiralMs else 40 / 30.0 * cos(t / 30)
+    val trendNote = if (real) altitudeRefLabel(snap!!.altitudeRef) else "démo"
+    val clock = if (real) snap!!.now.epochSecond.toDouble() else t
+
+    LaunchedEffect(clock.toLong()) {
+        val a = alt ?: return@LaunchedEffect
+        history.add(Sample(clock, a, need, v ?: 0.0))
+        while (history.isNotEmpty() && clock - history.first().t > 300) history.removeAt(0)
+        while (history.isNotEmpty() && history.first().t > clock) history.removeAt(0)
+    }
+    // son : porté par le moteur de vol (actif aussi écran éteint) ; localement seulement en aperçu
+    tone.vario = v ?: 0.0
+    DisposableEffect(soundOn, varioOpen, controls) {
+        if (controls == null && soundOn && varioOpen) tone.start() else tone.stop()
         onDispose { tone.stop() }
     }
 
-    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL"), LocalFieldElev provides (map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV)) {
+    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL"), LocalFieldElev provides fieldElev) {
     Column(modifier.fillMaxSize().background(c.background)) {
-        SafetyZone(marge, alt, need, trend, finesse, pendingRaise) { f ->
+        SafetyZone(marge, alt, need, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg) { f ->
             when {
                 f == finesse -> Unit
                 f < finesse -> { finesse = f; pendingRaise = null }
@@ -158,30 +187,64 @@ fun FlightScreen(
                 else -> pendingRaise = f
             }
         }
-        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, finesse.toDouble(), marge)
+        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, finesse.toDouble(), marge, distKm, brg)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
             if (map != null) {
-                val demo = demoFrame(map.field, t)
-                val frame = traffic.own?.takeIf { it.ageS <= 60 }?.let { o -> demo.copy(glider = o.position, headingDeg = o.trackDeg ?: demo.headingDeg, trace = emptyList()) } ?: demo
+                val frame = when {
+                    real && live.gpsFresh -> liveFrame(snap!!, map.field)
+                    ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
+                    real -> GeoFrame(map.field, 0.0, emptyList(), map.field)
+                    else -> demoFrame(map.field, t)
+                }
                 LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
             } else {
-                DemoMap(t, v)
+                DemoMap(t, v ?: 0.0)
             }
-            MapOverlays(status, flightSeconds, map, controller, traffic)
+            val tag = when {
+                map == null -> "Carte hors ligne à télécharger dans Prévol"
+                live.replay -> "REJEU VOL · capteurs simulés" + if (traffic.replay) " · OGN rejoué" else ""
+                real && live.gpsFresh -> null
+                ownOgn != null -> "Position OGN de mon planeur"
+                real -> "Position GPS indisponible"
+                traffic.replay -> "REJEU OGN · planeur simulé"
+                else -> "DÉMO · planeur simulé"
+            }
+            val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
+            MapOverlays(shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls))
         }
         VarioPanel(
             open = varioOpen,
             soundOn = soundOn,
             v = v,
             label = varioLabel,
+            averages = if (real) Triple(snap!!.avgSpiralMs, snap.avgThermalMs, snap.avgDayMs) else Triple(1.4, 1.2, 1.0),
             history = history,
             alt = alt,
             need = need,
-            onSound = { soundOn = !soundOn },
+            onSound = { if (controls != null) controls.setSound(!soundOn) else localSound = !localSound },
             onToggle = { varioOpen = !varioOpen },
         )
     }
     }
+}
+
+private val FlightSnapshotOgn = com.neutronstar.glidercopilot.domain.flight.FlightSnapshot(java.time.Instant.EPOCH, source = com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN)
+
+/** Chrono manuel quand la détection automatique est coupée : un appui lance, un autre arrête. */
+private fun chronoAction(live: FlightLive, controls: FlightControls?): (() -> Unit)? {
+    if (controls == null || live.autoTakeoff || live.snapshot == null) return null
+    val s = live.snapshot
+    return if (s.recording) controls::stopChrono else controls::startChrono
+}
+
+/** Planeur réel : position GPS, route, trace des 4 dernières minutes colorée par le vario. */
+@Composable
+private fun liveFrame(s: com.neutronstar.glidercopilot.domain.flight.FlightSnapshot, field: LatLon): GeoFrame {
+    val c = Gc.colors
+    val pts = s.trace.takeLast(240)
+    val trace = pts.zipWithNext().map { (a, b) -> Triple(a.position, b.position, c.vario(b.climbMs)) }
+    val g = s.gps!!
+    return GeoFrame(g.position, g.trackDeg ?: 0.0, trace, field)
 }
 
 private data class Sample(val t: Double, val alt: Double, val need: Double, val v: Double)
@@ -189,10 +252,10 @@ private data class Sample(val t: Double, val alt: Double, val need: Double, val 
 // ---------------------------------------------------------------- zone sécurité
 
 @Composable
-private fun SafetyZone(marge: Double, alt: Double, need: Double, trend: Double, finesse: Int, pending: Int?, onFinesse: (Int) -> Unit) {
+private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double?, trendNote: String, finesse: Int, pending: Int?, distKm: Double?, brg: Double, onFinesse: (Int) -> Unit) {
     val c = Gc.colors
-    val below = marge < 0
-    val col = if (below) c.bad else c.ok
+    val below = (marge ?: 0.0) < 0
+    val col = when { marge == null -> c.dim; below -> c.bad; else -> c.ok }
     Row(
         Modifier.fillMaxWidth().background(c.background).padding(start = 24.dp, end = 24.dp, top = 5.dp, bottom = 9.dp),
         horizontalArrangement = Arrangement.spacedBy(13.dp),
@@ -201,18 +264,18 @@ private fun SafetyZone(marge: Double, alt: Double, need: Double, trend: Double, 
             Text("Marge de sécurité", style = eyebrow(c).copy(color = col))
             Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(top = 2.dp)) {
                 Text(
-                    signed(marge),
+                    marge?.let { signed(it) } ?: "—",
                     style = Gc.type.giant.copy(color = col, fontSize = 50.4.sp, lineHeight = 56.sp),
                     maxLines = 1, softWrap = false,
-                    modifier = Modifier.semantics { contentDescription = "Marge de sécurité ${signed(marge)} mètres" },
+                    modifier = Modifier.semantics { contentDescription = marge?.let { "Marge de sécurité ${signed(it)} mètres" } ?: "Marge de sécurité indisponible, altitude inconnue" },
                 )
                 Text("m", style = Gc.type.body.copy(color = col, fontSize = 19.sp), modifier = Modifier.padding(start = 3.dp, bottom = 8.dp))
             }
             Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.padding(top = 6.dp)) {
-                AltValue("ALT", grouped(alt.roundToInt()))
+                AltValue("ALT", alt?.let { grouped(it.roundToInt()) } ?: "—")
                 AltValue("SÉCU", grouped(need.roundToInt()))
             }
-            Text("tendance ${signed1(trend)} m/s", style = TextStyle(fontSize = 10.sp, color = c.dim), modifier = Modifier.padding(top = 9.dp))
+            Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
         }
         Column(Modifier.width(155.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
@@ -249,7 +312,7 @@ private fun SafetyZone(marge: Double, alt: Double, need: Double, trend: Double, 
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
                 }
                 Text(
-                    "${km(FIELD_DIST_KM)} · ${FIELD_BRG.toInt()}°",
+                    distKm?.let { "${km(it)} · ${brg.roundToInt()}°" } ?: "position ?",
                     style = TextStyle(fontSize = 16.8.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp, lineHeight = 21.sp),
                     maxLines = 1, softWrap = false,
                 )
@@ -272,7 +335,7 @@ private fun eyebrow(c: GcColors) = TextStyle(fontSize = 10.sp, fontWeight = Font
 // ---------------------------------------------------------------- profil de retour
 
 @Composable
-private fun ReturnProfile(open: Boolean, onToggle: () -> Unit, alt: Double, need: Double, finesse: Double, marge: Double) {
+private fun ReturnProfile(open: Boolean, onToggle: () -> Unit, alt: Double?, need: Double, finesse: Double, marge: Double?, distKm: Double, brg: Double) {
     val c = Gc.colors
     Column(Modifier.fillMaxWidth().background(c.background)) {
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
@@ -291,7 +354,7 @@ private fun ReturnProfile(open: Boolean, onToggle: () -> Unit, alt: Double, need
                 Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
             }
         }
-        if (open) ProfileCanvas(alt, need, finesse, marge)
+        if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg)
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
     }
 }
@@ -303,7 +366,8 @@ private fun demoElevation(s: Double): Double =
     330 + 260 * exp(-((s - 2.6) * (s - 2.6)) / 0.9) + 90 * sin(s * 3.1) * exp(-s / 5) - 12 * s + 25 * sin(s * 11.0)
 
 @Composable
-private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Double) {
+private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, marge: Double, distKm: Double, brg: Double) {
+    val alt = altOrNull ?: need
     val c = Gc.colors
     val tm = rememberTextMeasurer()
     val FIELD_ID = LocalFieldId.current
@@ -311,7 +375,7 @@ private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Dou
     Canvas(Modifier.fillMaxWidth().height(88.dp).semantics { contentDescription = "Coupe du terrain vers $FIELD_ID" }) {
         val w = size.width
         val h = size.height
-        val d = FIELD_DIST_KM
+        val d = distKm.coerceAtLeast(0.3)
         val dx = d * 1.06 + 0.4
         val n = 110
         val prof = DoubleArray(n + 1) { i -> if (dx * i / n >= d) FIELD_ELEV + (dx * i / n - d) * 20 else max(FIELD_ELEV, demoElevation(dx * i / n)) }
@@ -352,8 +416,9 @@ private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Dou
         val dash = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()))
         drawLine(c.warn, Offset(x(0.0), y(need)), Offset(x(d), y(arr)), 2.dp.toPx(), pathEffect = dash)
         drawLine(c.warn, Offset(x(d), y(arr)), Offset(x(d), y(FIELD_ELEV)), 1.5.dp.toPx())
-        // plané en finesse de sécurité
+        // plané en finesse de sécurité (rien si l'altitude est inconnue)
         fun gl(s: Double) = alt - s * 1000 / finesse
+        val known = altOrNull != null
         var hit = -1.0
         for (i in 0..n) {
             val s = dx * i / n
@@ -361,8 +426,8 @@ private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Dou
             if (gl(s) < prof[i] + 40) { hit = s; break }
         }
         val end = if (hit >= 0) hit else d
-        drawLine(c.ink, Offset(x(0.0), y(alt)), Offset(x(end), y(gl(end))), 2.dp.toPx())
-        if (hit >= 0) {
+        if (known) drawLine(c.ink, Offset(x(0.0), y(alt)), Offset(x(end), y(gl(end))), 2.dp.toPx())
+        if (known && hit >= 0) {
             drawLine(c.bad, Offset(x(hit), y(gl(hit))), Offset(x(d), y(gl(d))), 2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx())))
             label(tm, "RELIEF", x(hit), y(gl(hit)) - 8.dp.toPx(), TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.bad), TextAlign.Center)
         }
@@ -371,16 +436,16 @@ private fun ProfileCanvas(alt: Double, need: Double, finesse: Double, marge: Dou
         drawPath(Path().apply { moveTo(fx, fy); lineTo(fx, fy - 14.dp.toPx()); lineTo(fx - 8.dp.toPx(), fy - 10.dp.toPx()); lineTo(fx, fy - 7.dp.toPx()); close() }, c.route)
         val arrH = gl(d) - FIELD_ELEV
         val arrY = (y(gl(d)) - 8.dp.toPx()).coerceIn(pT + 2, h - pB - 14.dp.toPx())
-        label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - ARRIVAL_MARGIN >= 0) c.ok else c.bad), TextAlign.End)
+        if (known) label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - ARRIVAL_MARGIN >= 0) c.ok else c.bad), TextAlign.End)
         label(tm, "+${ARRIVAL_MARGIN.toInt()}", fx - 4.dp.toPx(), y(arr) + 9.dp.toPx(), TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.warn), TextAlign.End)
         // planeur de profil
         val gx = x(0.0); val gy = y(alt)
-        drawLine(c.ink, Offset(gx - 8.dp.toPx(), gy), Offset(gx + 10.dp.toPx(), gy + 1.dp.toPx()), 2.dp.toPx())
-        drawPath(Path().apply { moveTo(gx - 8.dp.toPx(), gy); lineTo(gx - 10.dp.toPx(), gy - 6.dp.toPx()); lineTo(gx - 6.dp.toPx(), gy); close() }, c.ink)
+        if (known) drawLine(c.ink, Offset(gx - 8.dp.toPx(), gy), Offset(gx + 10.dp.toPx(), gy + 1.dp.toPx()), 2.dp.toPx())
+        if (known) drawPath(Path().apply { moveTo(gx - 8.dp.toPx(), gy); lineTo(gx - 10.dp.toPx(), gy - 6.dp.toPx()); lineTo(gx - 6.dp.toPx(), gy); close() }, c.ink)
         // accolade de marge
-        drawLine(if (marge < 0) c.bad else c.ok, Offset(gx + 2.dp.toPx(), gy), Offset(gx + 2.dp.toPx(), y(need)), 3.dp.toPx())
+        if (known) drawLine(if (marge < 0) c.bad else c.ok, Offset(gx + 2.dp.toPx(), gy), Offset(gx + 2.dp.toPx(), y(need)), 3.dp.toPx())
         // légendes
-        label(tm, "COUPE → $FIELD_ID · ${FIELD_BRG.toInt()}° · F${oneDecimal(finesse)} eff.", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
+        label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
         val bottomY = h - 8.dp.toPx()
         label(tm, "0", x(0.0), bottomY, small, TextAlign.Start)
         label(tm, km(d / 2), x(d / 2), bottomY, small, TextAlign.Center)
@@ -451,16 +516,19 @@ private fun DrawScope.drawGlider(x: Float, y: Float, headingDeg: Float, color: C
 }
 
 @Composable
-private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long, map: FlightMapConfig?, controller: MapController, traffic: FlightTraffic) {
+private fun BoxScope.MapOverlays(
+    status: FlightStatus,
+    flightSeconds: Long,
+    tag: String?,
+    map: FlightMapConfig?,
+    controller: MapController,
+    traffic: FlightTraffic,
+    onChrono: (() -> Unit)?,
+) {
     val c = Gc.colors
-    // démonstration
-    Text(
-        when {
-            map == null -> "Carte hors ligne à télécharger dans Prévol"
-            traffic.replay -> "REJEU OGN · planeur simulé"
-            traffic.own?.let { it.ageS <= 60 } == true -> "Position OGN de mon planeur"
-            else -> "DÉMO · planeur simulé"
-        },
+    // origine de la position affichée (démonstration, rejeu, secours)
+    if (tag != null) Text(
+        tag,
         style = TextStyle(fontSize = 9.sp, color = c.faint),
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 14.dp).background(c.overlay, RoundedCornerShape(7.dp)).padding(horizontal = 8.dp, vertical = 4.dp),
     )
@@ -541,10 +609,12 @@ private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long, map:
     // chrono de vol
     Box(
         Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp).height(21.dp).widthIn(min = 50.dp)
-            .background(c.overlay, RoundedCornerShape(7.dp)).padding(horizontal = 8.dp)
+            .background(c.overlay, RoundedCornerShape(7.dp))
+            .then(if (onChrono != null) Modifier.clickable(role = Role.Button, onClickLabel = "Lancer ou arrêter le chrono", onClick = onChrono) else Modifier)
+            .padding(horizontal = 8.dp)
             .semantics { contentDescription = "Chronomètre de vol ${chrono(flightSeconds)}" },
         contentAlignment = Alignment.Center,
-    ) { Text(chrono(flightSeconds), style = TextStyle(fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
+    ) { Text(chrono(flightSeconds) + if (onChrono != null) " ⏯" else "", style = TextStyle(fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
 }
 
 private fun onOff(b: Boolean) = if (b) "actif" else "inactif"
@@ -606,10 +676,11 @@ private fun demoFrame(field: LatLon, t: Double): GeoFrame {
 private fun VarioPanel(
     open: Boolean,
     soundOn: Boolean,
-    v: Double,
+    v: Double?,
     label: String,
+    averages: Triple<Double?, Double?, Double?>,
     history: List<Sample>,
-    alt: Double,
+    alt: Double?,
     need: Double,
     onSound: () -> Unit,
     onToggle: () -> Unit,
@@ -625,18 +696,18 @@ private fun VarioPanel(
                 Column(Modifier.width(92.dp)) {
                     Text(label, style = eyebrow(c), modifier = Modifier.padding(bottom = 4.dp), maxLines = 1)
                     Text(
-                        signed1(v),
-                        style = TextStyle(fontSize = 40.sp, lineHeight = 44.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1.5).sp, color = c.vario(v), fontFeatureSettings = "tnum"),
+                        v?.let { signed1(it) } ?: "—",
+                        style = TextStyle(fontSize = 40.sp, lineHeight = 44.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1.5).sp, color = v?.let { c.vario(it) } ?: c.dim, fontFeatureSettings = "tnum"),
                         maxLines = 1, softWrap = false,
-                        modifier = Modifier.semantics { contentDescription = "Vario ${signed1(v)} mètres par seconde" },
+                        modifier = Modifier.semantics { contentDescription = v?.let { "Vario ${signed1(it)} mètres par seconde" } ?: "Vario indisponible" },
                     )
                 }
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(13.dp)) {
                     VarioBar(v)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Avg("Spirale", "+1,4", Modifier.weight(1f))
-                        Avg("Pompe", "+1,2", Modifier.weight(1f))
-                        Avg("Jour", "+1,0", Modifier.weight(1f))
+                        Avg("Spirale", averages.first?.let { signed1(it) } ?: "—", Modifier.weight(1f))
+                        Avg("Pompe", averages.second?.let { signed1(it) } ?: "—", Modifier.weight(1f))
+                        Avg("Jour", averages.third?.let { signed1(it) } ?: "—", Modifier.weight(1f))
                     }
                 }
             } else Spacer(Modifier.weight(1f))
@@ -644,7 +715,7 @@ private fun VarioPanel(
         }
         if (open) {
             HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.047f))
-            AltitudeStrip(history, alt, need)
+            AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need)
         }
     }
 }
@@ -687,7 +758,7 @@ private fun Avg(label: String, value: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun VarioBar(v: Double) {
+private fun VarioBar(v: Double?) {
     val c = Gc.colors
     Canvas(Modifier.fillMaxWidth().height(15.dp)) {
         val barH = 6.dp.toPx()
@@ -699,6 +770,7 @@ private fun VarioBar(v: Double) {
             topLeft = Offset(0f, top), size = Size(size.width, barH), cornerRadius = androidx.compose.ui.geometry.CornerRadius(barH / 2),
         )
         drawLine(c.dim, Offset(size.width / 2, top - 3.dp.toPx()), Offset(size.width / 2, top + barH + 3.dp.toPx()), 1f)
+        if (v == null) return@Canvas
         val x = ((v.coerceIn(-5.0, 5.0) + 5) / 10 * size.width).toFloat()
         drawRoundRect(c.background, Offset(x - 4.dp.toPx(), 0f), Size(8.dp.toPx(), size.height), androidx.compose.ui.geometry.CornerRadius(3.dp.toPx()))
         drawRoundRect(c.ink, Offset(x - 2.dp.toPx(), 0f), Size(4.dp.toPx(), size.height), androidx.compose.ui.geometry.CornerRadius(2.dp.toPx()))
@@ -742,4 +814,4 @@ private fun signed1(v: Double): String = (if (v >= 0) "+" else "−") + String.f
 private fun oneDecimal(v: Double): String = String.format(Locale.FRANCE, "%.1f", v)
 private fun km(v: Double): String = String.format(Locale.FRANCE, "%.1f km", v)
 private fun grouped(n: Int): String = "%,d".format(Locale.ROOT, n).replace(',', ' ')
-internal fun chrono(seconds: Long): String = "${seconds / 3600} h ${"%02d".format((seconds / 60) % 60)}"
+fun chrono(seconds: Long): String = "${seconds / 3600} h ${"%02d".format((seconds / 60) % 60)}"

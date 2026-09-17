@@ -13,6 +13,12 @@ class MainActivity : ComponentActivity() {
         val container = (application as GliderApp).container
         // rejeu OGN anonymisé pour la démonstration et les captures CI : adb shell am start … --ez glidy.ogn.replay true
         if (intent?.getBooleanExtra("glidy.ogn.replay", false) == true) container.ogn.replay = true
+        // rejeu du vol de démonstration (capteurs simulés, OGN rejoué en même temps) : --ez glidy.flight.replay true [--ef glidy.flight.speed 4]
+        if (intent?.getBooleanExtra("glidy.flight.replay", false) == true) {
+            container.flight.replay = true
+            container.flight.replaySpeed = intent.getFloatExtra("glidy.flight.speed", 1f).toDouble().coerceIn(0.5, 20.0)
+            container.ogn.replay = true
+        }
         setContent {
             GlidyTheme {
                 AppRoot(container)

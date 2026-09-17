@@ -65,19 +65,43 @@ P=$(tap_text "Visite prévol ou tour complet du planeur effectué"); [ -n "$P" ]
 sleep 1
 adb shell input swipe 540 1700 540 400 400; sleep 2
 timeout 20 adb exec-out screencap -p > "$OUT/07b-checklists-suite.png"
-# Pilotage avec le rejeu OGN anonymisé (trafic et pompes réels déplacés autour de LFNL)
+# Pilotage : vol de démonstration rejoué ×6 (capteurs simulés depuis l'IGC) + rejeu OGN anonymisé (trafic réel déplacé autour de LFNL)
 adb shell am force-stop com.neutronstar.glidercopilot
-adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.ogn.replay true
-sleep 10
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
-sleep 50
-timeout 20 adb exec-out screencap -p > "$OUT/08-pilotage-ogn-rejeu.png"
-P=$(tap_text "Zoom arrière"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 1; timeout 10 adb shell input tap $P; }
+T0=$(date +%s)
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
 sleep 8
-timeout 20 adb exec-out screencap -p > "$OUT/09-pilotage-ogn-large.png"
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+# temps réel : décollage ~12 s, largage ~72 s, spirales jusqu'à ~170 s, atterrissage ~330 s
+while [ $(( $(date +%s) - T0 )) -lt 105 ]; do sleep 2; done
+timeout 20 adb exec-out screencap -p > "$OUT/08-pilotage-vol-rejeu.png"
+P=$(tap_text "Zoom arrière"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 1; timeout 10 adb shell input tap $P; }
+sleep 6
+timeout 20 adb exec-out screencap -p > "$OUT/09-pilotage-vol-large.png"
 P=$(tap_text "Réduire"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 P=$(tap_text "Masquer le vario"); [ -n "$P" ] && timeout 10 adb shell input tap $P
-sleep 6
-timeout 20 adb exec-out screencap -p > "$OUT/10-pilotage-ogn-plein.png"
+sleep 5
+timeout 20 adb exec-out screencap -p > "$OUT/10-pilotage-vol-plein.png"
+# carte Capteurs & vols pendant le vol
+P=$(tap_text "Prévol"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 3
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  P=$(tap_text "Essai du son"); [ -n "$P" ] && break
+  adb shell input swipe 540 1600 540 900 300; sleep 1
+done
+adb shell input swipe 540 1500 540 1150 300; sleep 2
+timeout 20 adb exec-out screencap -p > "$OUT/11-prevol-capteurs-en-vol.png"
+while [ $(( $(date +%s) - T0 )) -lt 390 ]; do sleep 5; done
+adb shell input swipe 540 1150 540 1400 300; sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/12-prevol-vol-enregistre.png"
+# trace IGC du rejeu : récupération et contrôle de format
+mkdir -p "$OUT/igc"
+timeout 30 adb pull /sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/. "$OUT/igc/" || true
+if ! ls "$OUT"/igc/*.igc >/dev/null 2>&1; then
+  for f in $(adb shell run-as com.neutronstar.glidercopilot ls files/igc-rejeu 2>/dev/null | tr -d '\r'); do
+    adb shell run-as com.neutronstar.glidercopilot cat "files/igc-rejeu/$f" > "$OUT/igc/$f"
+  done
+fi
+python3 tools/flight/check_igc.py "$OUT"/igc/*.igc > "$OUT/igc-controle.txt" 2>&1 || true
+cat "$OUT/igc-controle.txt"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

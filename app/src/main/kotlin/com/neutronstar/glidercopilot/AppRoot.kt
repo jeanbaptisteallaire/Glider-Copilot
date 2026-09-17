@@ -80,18 +80,27 @@ private fun MainScaffold(container: AppContainer) {
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
     val status = rememberFlightStatus()
     val traffic by container.ogn.traffic.collectAsState()
-    // réseau OGN actif tant que l'app est visible
+    val live by container.flight.live.collectAsState()
+    // réseau OGN et moteur de vol actifs tant que l'app est visible ; en arrière-plan seulement via le service de vol
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     androidx.compose.runtime.DisposableEffect(lifecycle) {
         val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-            when (event) {
-                androidx.lifecycle.Lifecycle.Event.ON_START -> container.ogn.start()
-                androidx.lifecycle.Lifecycle.Event.ON_STOP -> container.ogn.stop()
-                else -> Unit
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) {
+                container.ogn.start()
+                container.flight.start()
+            } else if (event == androidx.lifecycle.Lifecycle.Event.ON_STOP && !FlightService.running) {
+                container.ogn.stop()
+                container.flight.stop()
             }
         }
         lifecycle.addObserver(observer)
         onDispose { lifecycle.removeObserver(observer) }
+    }
+    // service de premier plan : écran Pilotage ouvert ou vol enregistré (lancé app visible, exigence Android 12+)
+    val recording = live.snapshot?.recording == true
+    LaunchedEffect(tab, recording) {
+        if (tab == Tab.PILOTAGE || recording) FlightService.start(context, container.flight.replay)
+        else FlightService.stop(context)
     }
     val activeMap by container.carto.active.collectAsState()
     val club by container.clubs.selectedClub.collectAsState(initial = null)
@@ -113,11 +122,15 @@ private fun MainScaffold(container: AppContainer) {
     val asked by container.prefs.locationAsked.collectAsState(initial = true)
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         container.location.refresh()
+        // GPS accordé après le démarrage du moteur : on relance pour s'abonner
+        container.flight.stop(); container.flight.start()
     }
     LaunchedEffect(asked) {
         if (!asked && !context.hasLocationPermission()) {
             container.prefs.setLocationAsked()
-            launcher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION))
+            val perms = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION) +
+                if (android.os.Build.VERSION.SDK_INT >= 33) listOf(Manifest.permission.POST_NOTIFICATIONS) else emptyList()
+            launcher.launch(perms.toTypedArray())
         } else if (!asked) {
             scope.launch { container.prefs.setLocationAsked() }
         }
@@ -126,9 +139,9 @@ private fun MainScaffold(container: AppContainer) {
     Column(Modifier.fillMaxSize().background(c.background).statusBarsPadding()) {
         Box(Modifier.weight(1f)) {
             when (tab) {
-                Tab.PREVOL -> PrevolScreen(prevolVm, container.carto, container.ogn)
+                Tab.PREVOL -> PrevolScreen(prevolVm, container.carto, container.ogn, container.flight)
                 Tab.CHECKLIST -> ChecklistScreen(container.checklist)
-                Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic)
+                Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
             }
         }
         Row(

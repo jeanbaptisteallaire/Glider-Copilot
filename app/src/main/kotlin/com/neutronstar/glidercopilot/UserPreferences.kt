@@ -25,6 +25,8 @@ interface UserPreferences {
     val checklistChecked: Flow<Set<String>>
     val checklistBrief: Flow<CableBriefInput>
     val locationAsked: Flow<Boolean>
+    val varioSound: Flow<Boolean>
+    val voiceAnnouncements: Flow<Boolean>
     suspend fun acknowledgeDisclaimer(version: Int)
     suspend fun setSelectedClub(id: String)
     suspend fun pushRegistration(registration: String)
@@ -34,6 +36,8 @@ interface UserPreferences {
     suspend fun clearChecklist()
     suspend fun setChecklistBrief(brief: CableBriefInput)
     suspend fun setLocationAsked()
+    suspend fun setVarioSound(on: Boolean)
+    suspend fun setVoiceAnnouncements(on: Boolean)
 }
 
 class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPreferences {
@@ -49,19 +53,23 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kField = stringPreferencesKey("brief_field")
     private val kThreat = stringPreferencesKey("brief_threat")
     private val kLocationAsked = booleanPreferencesKey("location_asked")
+    private val kSound = booleanPreferencesKey("vario_sound")
+    private val kVoice = booleanPreferencesKey("voice_announcements")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
     override val recentRegistrations: Flow<List<String>> =
         store.data.map { p -> p[kRegs]?.split('|')?.filter { it.isNotBlank() } ?: emptyList() }
     override val pairedRegistration: Flow<String?> = store.data.map { it[kPaired] }
-    override val autoTakeoff: Flow<Boolean> = store.data.map { it[kAutoTakeoff] ?: false }
+    override val autoTakeoff: Flow<Boolean> = store.data.map { it[kAutoTakeoff] ?: true }
     override val checklistChecked: Flow<Set<String>> = store.data.map { it[kChecked] ?: emptySet() }
     override val checklistBrief: Flow<CableBriefInput> = store.data.map { p ->
         val d = CableBriefInput()
         CableBriefInput(p[kQfu] ?: d.qfu, p[kTurn] ?: d.turn, p[kAhead] ?: d.ahead, p[kField] ?: d.field, p[kThreat] ?: d.threat)
     }
     override val locationAsked: Flow<Boolean> = store.data.map { it[kLocationAsked] ?: false }
+    override val varioSound: Flow<Boolean> = store.data.map { it[kSound] ?: false }
+    override val voiceAnnouncements: Flow<Boolean> = store.data.map { it[kVoice] ?: true }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }
@@ -95,4 +103,6 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     }
 
     override suspend fun setLocationAsked() { store.edit { it[kLocationAsked] = true } }
+    override suspend fun setVarioSound(on: Boolean) { store.edit { it[kSound] = on } }
+    override suspend fun setVoiceAnnouncements(on: Boolean) { store.edit { it[kVoice] = on } }
 }

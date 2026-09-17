@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Traces IGC partagées depuis Prévol (dossier privé de l'app, aucune permission de stockage). -->
+<paths>
+    <external-files-path name="igc" path="igc/" />
+    <external-files-path name="igc-rejeu" path="igc-rejeu/" />
+    <files-path name="igc-interne" path="igc/" />
+    <files-path name="igc-rejeu-interne" path="igc-rejeu/" />
+</paths>
