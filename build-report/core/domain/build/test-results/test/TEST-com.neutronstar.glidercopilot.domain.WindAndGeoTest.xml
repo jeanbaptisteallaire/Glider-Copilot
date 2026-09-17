@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.WindAndGeoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-17T09:42:53" hostname="runnervmlun5p" time="0.01">
+<testsuite name="com.neutronstar.glidercopilot.domain.WindAndGeoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-17T10:08:43" hostname="runnervmlun5p" time="0.017">
   <properties/>
-  <testcase name="componentsRoundTrip" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.0"/>
-  <testcase name="interpolatesLayers" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.001"/>
-  <testcase name="northWindBlowsSouth" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.001"/>
-  <testcase name="nearestClub" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.008"/>
+  <testcase name="componentsRoundTrip" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.005"/>
+  <testcase name="interpolatesLayers" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.004"/>
+  <testcase name="northWindBlowsSouth" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.0"/>
+  <testcase name="nearestClub" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
