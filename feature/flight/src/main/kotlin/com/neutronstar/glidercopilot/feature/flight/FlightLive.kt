@@ -58,9 +58,9 @@ fun varioSourceLabel(s: FlightSnapshot?, ognLatencyS: Double? = null): String = 
 }
 
 fun altitudeRefLabel(r: AltitudeRef): String = when (r) {
-    AltitudeRef.BARO_FIELD -> "baro calé terrain"
-    AltitudeRef.BARO_GPS -> "baro calé GPS"
-    AltitudeRef.BARO_ISA -> "altitude pression 1013"
+    AltitudeRef.BARO_FIELD -> "calé terrain"
+    AltitudeRef.BARO_GPS -> "calé GPS"
+    AltitudeRef.BARO_ISA -> "alt. pression"
     AltitudeRef.GPS -> "GPS"
     AltitudeRef.OGN -> "OGN"
     AltitudeRef.NONE -> "indisponible"

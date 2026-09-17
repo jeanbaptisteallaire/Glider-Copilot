@@ -43,7 +43,7 @@ object DemoFlight {
         var alt = baseAltM
         var t = 0L
         fun emit() {
-            out += IgcFix(start.plusSeconds(t), pos, true, (alt + 30).roundToInt(), alt.roundToInt())
+            out += IgcFix(start.plusSeconds(t), pos, true, alt.roundToInt(), alt.roundToInt())   // journée standard : QNH 1013
             t++
         }
         fun move(eastMs: Double, northMs: Double) {

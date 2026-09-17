@@ -87,7 +87,21 @@ class WindEstimator(private val smoothing: Double = 0.35, private val maxAge: Du
 }
 
 /** Terrain d'arrivée candidat (openAIP ou terrain du club). */
-data class FieldOption(val id: String, val name: String, val position: LatLon, val elevationM: Double, val isClub: Boolean = false)
+data class FieldOption(val id: String, val name: String, val position: LatLon, val elevationM: Double, val isClub: Boolean = false, val icao: String? = null) {
+    /** Étiquette courte : code OACI, sinon début du nom. */
+    val code: String get() = icao ?: name.split(' ', '-').filter { it.length > 2 }.take(2).joinToString(" ").take(14).ifEmpty { name.take(14) }
+
+    companion object {
+        /** « SAINT MARTIN DE LONDRE » → « Saint-Martin de Londre » lisible à l'écran et à la voix. */
+        fun prettyName(raw: String): String {
+            if (raw.any { it.isLowerCase() }) return raw
+            val small = setOf("DE", "DU", "DES", "LA", "LE", "LES", "SUR", "EN", "D", "L", "ET", "AUX")
+            return raw.lowercase().split(' ').mapIndexed { i, w ->
+                if (i > 0 && w.uppercase() in small) w else w.split('-').joinToString("-") { p -> p.replaceFirstChar { it.titlecase() } }
+            }.joinToString(" ")
+        }
+    }
+}
 
 data class SafetyConfig(
     val finesse: Double,

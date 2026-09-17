@@ -167,6 +167,14 @@ class SafetyTest {
         assertNotNull(engine.state)
     }
 
+    @Test fun fieldLabels() {
+        assertEquals("Saint Martin de Londre", FieldOption.prettyName("SAINT MARTIN DE LONDRE"))
+        assertEquals("Les Baumes Vissec Alzo", FieldOption.prettyName("LES BAUMES VISSEC ALZO"))
+        assertEquals("Saint-Martin-de-Londres", FieldOption.prettyName("Saint-Martin-de-Londres"))
+        assertEquals("LFNL", lfnl.copy(icao = "LFNL").code)
+        assertEquals("Plaine Lacan", FieldOption("x", "Plaine de Lacan", lfnl.position, 0.0).code)
+    }
+
     @Test fun noMarginAlertsInTheCircuit() {
         val heard = ArrayList<SafetyAlert>()
         val engine = SafetyEngine(terrain = { flat }, fields = { listOf(lfnl) }, alert = { heard += it })

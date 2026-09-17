@@ -117,10 +117,12 @@ fun FlightScreen(
     val controller = remember { MapController() }
     val snap = live.snapshot
     val real = live.hasData
+    /** Signal simulé seulement dans les aperçus sans moteur de vol ; dans l'app, le mode démo est une bascule explicite. */
+    val showDemo = !real && controls == null
     val soundOn = if (controls != null) live.soundOn else localSound
 
-    LaunchedEffect(real) {
-        if (real) return@LaunchedEffect
+    LaunchedEffect(showDemo) {
+        if (!showDemo) return@LaunchedEffect
         while (true) {
             delay(250)   // 4 Hz : suffisant pour l'affichage, sobre en batterie
             t += 0.25
@@ -139,15 +141,21 @@ fun FlightScreen(
     val v: Double? = when {
         real -> snap!!.climbMs
         ownOgn?.climbMs != null -> ownOgn.climbMs
-        else -> demoV
+        showDemo -> demoV
+        else -> null
     }
     val ognDelay = ownOgn?.let { o -> (o.latencyS ?: 0.0) + o.ageS }
     val varioLabel = when {
         real -> varioSourceLabel(snap, ognDelay)
         ownOgn?.climbMs != null -> varioSourceLabel(FlightSnapshotOgn, ognDelay)
-        else -> "Vario m/s (démo)"
+        showDemo -> "Vario m/s (démo)"
+        else -> varioSourceLabel(snap, ognDelay)
     }
-    val alt: Double? = if (real) snap!!.altitudeM else 1250.0 + 40 * sin(t / 30)
+    val alt: Double? = when {
+        real -> snap!!.altitudeM
+        showDemo -> 1250.0 + 40 * sin(t / 30)
+        else -> null
+    }
     val fieldElev = map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV
     val gliderPos = when {
         real && live.gpsFresh -> snap?.gps?.position
@@ -160,17 +168,22 @@ fun FlightScreen(
     val field = result?.field?.position ?: map?.field
     val distKm = result?.distanceKm ?: if (gliderPos != null && field != null) Geo.distanceKm(gliderPos, field) else FIELD_DIST_KM
     val brg = result?.bearingDeg ?: if (gliderPos != null && field != null) Geo.bearingDeg(gliderPos, field) else FIELD_BRG
-    val distKnown = result != null || (gliderPos != null && field != null) || !real
+    val distKnown = result != null || (gliderPos != null && field != null) || showDemo
     val fieldElevShown = result?.field?.elevationM ?: fieldElev
     val need = result?.requiredM ?: (fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0))
     val marge = result?.let { r -> alt?.let { it - r.requiredM } } ?: alt?.takeIf { distKnown }?.let { it - need }
-    val trend: Double? = if (real) snap!!.avgSpiralMs else 40 / 30.0 * cos(t / 30)
+    val trend: Double? = when {
+        real -> snap!!.avgSpiralMs
+        showDemo -> 40 / 30.0 * cos(t / 30)
+        else -> null
+    }
     val trendNote = when {
-        !real -> "démo"
+        showDemo -> "démo"
+        !real -> if (live.mode == OwnshipMode.FOLLOW) "en attente d'OGN" else "en attente du GPS"
         safety?.projectedMarginM != null -> "2 min : ${signed(safety.projectedMarginM!!)} m · ${altitudeRefLabel(snap!!.altitudeRef)}"
         else -> altitudeRefLabel(snap!!.altitudeRef)
     }
-    val fieldLabel = result?.field?.id ?: map?.fieldId ?: "LFNL"
+    val fieldLabel = result?.field?.code ?: map?.fieldId ?: "LFNL"
     var picking by remember { mutableStateOf(false) }
     val clock = if (real) snap!!.now.epochSecond.toDouble() else t
 
@@ -204,7 +217,7 @@ fun FlightScreen(
                         androidx.compose.material3.DropdownMenuItem(
                             text = {
                                 Text(
-                                    "${r.field.id} · ${r.field.name.take(22)} · ${km(r.distanceKm)} · ${signed(r.marginM)} m",
+                                    (if (r.field.icao != null) "${r.field.icao} · " else "") + "${r.field.name.take(26)} · ${km(r.distanceKm)} · ${signed(r.marginM)} m",
                                     style = TextStyle(fontSize = 13.sp, color = if (r.marginM >= 0) c.ink else c.bad),
                                 )
                             },
@@ -221,36 +234,37 @@ fun FlightScreen(
                 else -> pendingRaise = f
             }
         }
-        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (real) null else CEILING)
+        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (showDemo) CEILING else null)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
             if (map != null) {
                 val frame = when {
                     real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field)
                     ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
-                    real -> GeoFrame(map.field, 0.0, emptyList(), map.field)
-                    else -> demoFrame(map.field, t)
+                    showDemo -> demoFrame(map.field, t)
+                    else -> GeoFrame(map.field, 0.0, emptyList(), map.field)
                 }
                 LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
             } else {
-                if (real && snap?.gps != null) TraceOnlyMap(snap) else DemoMap(t, v ?: 0.0)
+                if (real && snap?.gps != null) TraceOnlyMap(snap) else if (showDemo) DemoMap(t, v ?: 0.0) else Box(Modifier.fillMaxSize().background(c.mapLow))
             }
             val tag = when {
                 live.mode == OwnshipMode.DEMO -> "DÉMO · planeur simulé · trafic OGN réel"
-                live.mode == OwnshipMode.FOLLOW -> "SUIVI ${live.followLabel ?: ""} · FLARM via OGN" + (snap?.gpsAgeS?.let { " · ${it.roundToInt()} s" } ?: "")
+                live.mode == OwnshipMode.FOLLOW -> "SUIVI ${live.followLabel ?: ""} · " + (snap?.gpsAgeS?.let { "FLARM via OGN · ${it.roundToInt()} s" } ?: "en attente d'une trame OGN")
                 map == null -> "Carte hors ligne à télécharger dans Prévol"
                 live.replay -> "REJEU VOL · capteurs simulés" + if (traffic.replay) " · OGN rejoué" else ""
                 real && live.gpsFresh -> null
                 ownOgn != null -> "Position OGN de mon planeur"
                 real -> "Position GPS indisponible"
-                traffic.replay -> "REJEU OGN · planeur simulé"
-                else -> "DÉMO · planeur simulé"
+                traffic.replay && showDemo -> "REJEU OGN · planeur simulé"
+                showDemo -> "DÉMO · planeur simulé"
+                else -> "Position GPS en attente"
             }
             val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
             val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
             MapOverlays(
                 shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls),
                 wind = safety?.wind?.let { it.fromDeg to it.speedKmh },
-                capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 2.5 && result.arrivalAglM > 50 && result.relief == null)) "CAP TERRAIN · ${result.field.id} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
+                capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 2.5 && result.arrivalAglM > 50 && result.relief == null)) "CAP TERRAIN · ${result.field.code} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
                 demoOn = live.demo,
                 onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
                 nearTraffic = if (live.mode == OwnshipMode.DEMO) nearTraffic else null,
@@ -261,11 +275,15 @@ fun FlightScreen(
             soundOn = soundOn,
             v = v,
             label = varioLabel,
-            averages = if (real) Triple(snap!!.avgSpiralMs, snap.avgThermalMs, snap.avgDayMs) else Triple(1.4, 1.2, 1.0),
+            averages = when {
+                real -> Triple(snap!!.avgSpiralMs, snap.avgThermalMs, snap.avgDayMs)
+                showDemo -> Triple(1.4, 1.2, 1.0)
+                else -> Triple(null, null, null)
+            },
             history = history,
             alt = alt,
             need = need,
-            ceiling = if (real) null else CEILING,
+            ceiling = if (showDemo) CEILING else null,
             onSound = { if (controls != null) controls.setSound(!soundOn) else localSound = !localSound },
             onToggle = { varioOpen = !varioOpen },
         )

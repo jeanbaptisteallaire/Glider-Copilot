@@ -192,10 +192,10 @@ class FlightEngine(
         val clubAirport = icao?.let { i -> airports.firstOrNull { it.icao == i } }
         val list = airports.map { a ->
             val id = a.icao ?: a.id
-            FieldOption(id, a.name, a.position, a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: 0.0, isClub = a === clubAirport)
+            FieldOption(id, FieldOption.prettyName(a.name), a.position, a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: 0.0, isClub = a === clubAirport, icao = a.icao)
         }.toMutableList()
         if (clubAirport == null && clubPos != null) {
-            list += FieldOption(icao ?: "CLUB", club?.airfieldName ?: club?.name ?: "Terrain du club", clubPos, fieldElevation ?: terrain.elevationM(clubPos) ?: 0.0, isClub = true)
+            list += FieldOption(icao ?: "CLUB", FieldOption.prettyName(club?.airfieldName ?: club?.name ?: "Terrain du club"), clubPos, fieldElevation ?: terrain.elevationM(clubPos) ?: 0.0, isClub = true, icao = icao)
         }
         fields = list
     }
