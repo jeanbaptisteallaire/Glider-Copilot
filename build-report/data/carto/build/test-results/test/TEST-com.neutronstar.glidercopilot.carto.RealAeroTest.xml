@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.carto.RealAeroTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-17T07:49:34" hostname="runnervmlun5p" time="0.605">
+<testsuite name="com.neutronstar.glidercopilot.carto.RealAeroTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-17T08:09:03" hostname="runnervmlun5p" time="0.702">
   <properties/>
-  <testcase name="countsAndLfnl" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.321"/>
-  <testcase name="airspacesAroundLfnl" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.157"/>
-  <testcase name="styleWithRealDataStaysValid" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.126"/>
+  <testcase name="countsAndLfnl" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.29"/>
+  <testcase name="airspacesAroundLfnl" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.272"/>
+  <testcase name="styleWithRealDataStaysValid" classname="com.neutronstar.glidercopilot.carto.RealAeroTest" time="0.135"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
