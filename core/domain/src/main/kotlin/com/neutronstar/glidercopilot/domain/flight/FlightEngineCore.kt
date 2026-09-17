@@ -56,7 +56,7 @@ class FlightEngineCore(
     private val filter = VarioFilter()
     private val display = Damper(1.0)
     private val sound = Damper(0.3)
-    private val baroStats = SensorStats(10.0)
+    private val baroStats = SensorStats(4.0)   // fenêtre courte : le bruit, pas les variations de la masse d'air
     private val accelStats = SensorStats(5.0)
     private val detector = TakeoffDetector()
     private val policy = AnnouncementPolicy()

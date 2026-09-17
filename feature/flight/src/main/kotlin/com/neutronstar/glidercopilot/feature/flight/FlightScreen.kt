@@ -198,7 +198,7 @@ fun FlightScreen(
                 }
                 LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
             } else {
-                DemoMap(t, v ?: 0.0)
+                if (real && snap?.gps != null) TraceOnlyMap(snap) else DemoMap(t, v ?: 0.0)
             }
             val tag = when {
                 map == null -> "Carte hors ligne à télécharger dans Prévol"
@@ -461,6 +461,30 @@ private fun DrawScope.label(tm: TextMeasurer, text: String, x: Float, cy: Float,
 }
 
 // ---------------------------------------------------------------- carte
+
+/** Sans carte hors ligne : trace réelle des dernières minutes autour du planeur, sans fond (échelle 500 m). */
+@Composable
+private fun TraceOnlyMap(s: com.neutronstar.glidercopilot.domain.flight.FlightSnapshot) {
+    val c = Gc.colors
+    val g = s.gps ?: return
+    Canvas(Modifier.fillMaxSize().semantics { contentDescription = "Trace du vol sans carte" }) {
+        drawRect(c.mapLow)
+        val step = 40.dp.toPx()
+        var gx = 0f
+        while (gx < size.width) { drawLine(Color.White.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
+        var gy = 0f
+        while (gy < size.height) { drawLine(Color.White.copy(alpha = 0.06f), Offset(0f, gy), Offset(size.width, gy), 1f); gy += step }
+        val cx = size.width / 2; val cy = size.height / 2
+        val pxPerKm = 60.dp.toPx() / 0.5f
+        val cosLat = cos(Math.toRadians(g.position.lat))
+        fun p(ll: LatLon) = Offset(
+            cx + ((ll.lon - g.position.lon) * 111.32 * cosLat * pxPerKm).toFloat(),
+            cy - ((ll.lat - g.position.lat) * 111.32 * pxPerKm).toFloat(),
+        )
+        s.trace.takeLast(300).zipWithNext().forEach { (a, b) -> drawLine(c.vario(b.climbMs), p(a.position), p(b.position), 3.dp.toPx(), StrokeCap.Round) }
+        drawGlider(cx, cy, (g.trackDeg ?: 0.0).toFloat(), c.ink)
+    }
+}
 
 @Composable
 private fun DemoMap(t: Double, v: Double) {

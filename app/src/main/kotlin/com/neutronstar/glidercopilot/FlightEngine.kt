@@ -183,6 +183,7 @@ class FlightEngine(
 
     // ---------------------------------------------------------------- capteurs
 
+    @Volatile private var replayDone = false
     private var gravity = doubleArrayOf(0.0, 0.0, 0.0)
     private var hasGravitySensor = false
     private var lastMsl: Pair<Long, Double>? = null
@@ -275,6 +276,7 @@ class FlightEngine(
 
     private suspend fun runReplay() {
         val text = context.assets.open("flight/demo.igc").bufferedReader().use { it.readText() }
+        replayDone = false
         val bench = SensorReplay(Igc.parse(text))
         for (s in bench.samples()) {
             while (clockNs() < s.timeNs) delay(10)
@@ -284,6 +286,7 @@ class FlightEngine(
                 is SensorSample.Gps -> core.onGps(s.fix.copy(time = replayStartWall.plusNanos(s.timeNs), ellipsoidAltM = s.fix.altitudeM), s.timeNs)
             }
         }
+        replayDone = true
     }
 
     // ---------------------------------------------------------------- IGC
@@ -412,6 +415,7 @@ class FlightEngine(
             replay = replay,
             sourceLabel = when {
                 snap == null -> "Moteur de vol à l'arrêt (app en arrière-plan)"
+                replay && replayDone -> "Rejeu terminé · relancer l'app pour le rejouer"
                 else -> varioSourceLabel(snap, ognDelay) + if (!baroPresent && !replay) " · pas de baromètre sur ce téléphone" else ""
             },
             sourceOk = snap?.source == VarioSource.BARO_ACCEL || snap?.source == VarioSource.BARO,

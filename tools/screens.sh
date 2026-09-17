@@ -12,6 +12,8 @@ adb logcat -c || true
 # localisation accordée d'avance : pas de boîte de dialogue pendant les captures
 adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION || true
 adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION || true
+# position GPS de l'émulateur sur LFNL (sinon Mountain View : club le plus proche faux dès le premier fix)
+adb emu geo fix 3.78167 43.80028 183 || true
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 sleep 12
 timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
