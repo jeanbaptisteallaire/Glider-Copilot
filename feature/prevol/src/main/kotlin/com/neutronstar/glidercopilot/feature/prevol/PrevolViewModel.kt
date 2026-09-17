@@ -36,6 +36,15 @@ interface GliderSource {
     /** Statut de l'appairage courant, sans nouvelle saisie (copie locale de la base si possible). */
     suspend fun currentStatus(registration: String): PairingStatus
     suspend fun setAutoTakeoff(on: Boolean)
+
+    /** Suivi & debug : planeur du club déjà en vol dont la trace OGN remplace les capteurs du téléphone. */
+    val followEnabled: Flow<Boolean>
+    val followRegistration: Flow<String?>
+    /** État en direct du planeur suivi (vu il y a, altitude, distance), null tant que rien n'est reçu. */
+    val followLine: Flow<String?>
+    suspend fun setFollowEnabled(on: Boolean)
+    suspend fun follow(registration: String): PairingStatus
+    suspend fun currentFollowStatus(registration: String): PairingStatus
 }
 
 sealed interface PairingStatus {
@@ -55,6 +64,12 @@ data class PairingUi(
     val status: PairingStatus = PairingStatus.None,
     val autoTakeoff: Boolean = false,
     val message: String? = null,
+    val followOn: Boolean = false,
+    val followReg: String? = null,
+    val followInput: String = "",
+    val followStatus: PairingStatus = PairingStatus.None,
+    val followLine: String? = null,
+    val followMessage: String? = null,
 )
 
 data class PrevolUiState(
@@ -89,6 +104,16 @@ class PrevolViewModel(
         }
         viewModelScope.launch {
             glider.autoTakeoff.collect { on -> _state.update { it.copy(pairing = it.pairing.copy(autoTakeoff = on)) } }
+        }
+        viewModelScope.launch { glider.followEnabled.collect { on -> _state.update { it.copy(pairing = it.pairing.copy(followOn = on)) } } }
+        viewModelScope.launch { glider.followLine.collect { l -> _state.update { it.copy(pairing = it.pairing.copy(followLine = l)) } } }
+        viewModelScope.launch {
+            val reg = glider.followRegistration.first()
+            _state.update { it.copy(pairing = it.pairing.copy(followReg = reg, followInput = reg ?: "", followStatus = if (reg == null) PairingStatus.None else PairingStatus.Checking)) }
+            if (reg != null) {
+                val st = glider.currentFollowStatus(reg)
+                _state.update { s -> if (s.pairing.followReg == reg) s.copy(pairing = s.pairing.copy(followStatus = st)) else s }
+            }
         }
         viewModelScope.launch {
             val reg = glider.pairedRegistration.first()
@@ -150,6 +175,31 @@ class PrevolViewModel(
 
     fun setAutoTakeoff(on: Boolean) {
         viewModelScope.launch { glider.setAutoTakeoff(on) }
+    }
+
+    fun setFollow(on: Boolean) {
+        viewModelScope.launch { glider.setFollowEnabled(on) }
+    }
+
+    fun onFollowInput(text: String) =
+        _state.update { it.copy(pairing = it.pairing.copy(followInput = text.uppercase().take(Registration.MAX_LENGTH), followMessage = null)) }
+
+    fun validateFollow() {
+        val reg = Registration.normalize(_state.value.pairing.followInput)
+        if (!Registration.isValid(reg)) {
+            _state.update { it.copy(pairing = it.pairing.copy(followMessage = "Immatriculation trop courte")) }
+            return
+        }
+        _state.update { it.copy(pairing = it.pairing.copy(followReg = reg, followInput = reg, followStatus = PairingStatus.Checking, followMessage = null)) }
+        viewModelScope.launch {
+            val st = glider.follow(reg)
+            _state.update { s -> if (s.pairing.followReg == reg) s.copy(pairing = s.pairing.copy(followStatus = st)) else s }
+        }
+    }
+
+    fun pickFollow(reg: String) {
+        onFollowInput(reg)
+        validateFollow()
     }
 
     class Factory(private val weather: WeatherRepository, private val clubs: ClubSource, private val glider: GliderSource) : ViewModelProvider.Factory {

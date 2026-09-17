@@ -45,6 +45,10 @@ internal fun PairingCard(
     onCancel: () -> Unit,
     onPickRecent: (String) -> Unit,
     onAutoTakeoff: (Boolean) -> Unit,
+    onFollow: (Boolean) -> Unit = {},
+    onFollowInput: (String) -> Unit = {},
+    onFollowValidate: () -> Unit = {},
+    onFollowPick: (String) -> Unit = {},
 ) {
     val c = Gc.colors
     val pill: Pair<String, androidx.compose.ui.graphics.Color> = when {
@@ -113,6 +117,75 @@ internal fun PairingCard(
             }
             GcSwitch(ui.autoTakeoff, onAutoTakeoff, Modifier.semantics { contentDescription = "Détection automatique du décollage" })
         }
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(Modifier.weight(1f)) {
+                Text("Suivi & debug", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (ui.followOn) c.warn else c.ink))
+                Text("Sécurité et trajectoire calculées sur un planeur du club déjà en vol (FLARM via OGN)", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+            }
+            GcSwitch(ui.followOn, onFollow, Modifier.semantics { contentDescription = "Suivi et debug d'un planeur en vol" })
+        }
+        if (ui.followOn) FollowBlock(ui, onFollowInput, onFollowValidate, onFollowPick)
+    }
+}
+
+/** Planeurs du club LFNL souvent en vol, proposés en raccourci pour le suivi. */
+private val FOLLOW_SUGGESTIONS = listOf("F-CGXB", "F-CEIQ")
+
+@Composable
+private fun FollowBlock(ui: PairingUi, onInput: (String) -> Unit, onValidate: () -> Unit, onPick: (String) -> Unit) {
+    val c = Gc.colors
+    Column(
+        Modifier.fillMaxWidth().border(1.dp, c.warn.copy(alpha = 0.33f), RoundedCornerShape(10.dp)).padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            BasicTextField(
+                value = ui.followInput,
+                onValueChange = onInput,
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.1.sp, color = c.ink),
+                cursorBrush = SolidColor(c.warn),
+                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters, autoCorrectEnabled = false, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { onValidate() }),
+                modifier = Modifier.weight(1f).semantics { contentDescription = "Immatriculation du planeur suivi" },
+                decorationBox = { inner ->
+                    Box(
+                        Modifier.fillMaxWidth().heightIn(min = 40.dp).border(1.dp, c.line, RoundedCornerShape(9.dp)).padding(horizontal = 9.dp, vertical = 7.dp),
+                        contentAlignment = Alignment.CenterStart,
+                    ) {
+                        if (ui.followInput.isEmpty()) Text("Planeur en vol, ex. F-CGXB", style = TextStyle(fontSize = 13.sp, color = c.faint), maxLines = 1)
+                        inner()
+                    }
+                },
+            )
+            GcButton("Suivre", onValidate)
+        }
+        ui.followMessage?.let { Text(it, style = TextStyle(fontSize = 10.5.sp, color = c.warn)) }
+        Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text("Club", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+            FOLLOW_SUGGESTIONS.forEach { r ->
+                Text(
+                    r,
+                    style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp, color = if (r == ui.followReg) c.warn else c.ink),
+                    modifier = Modifier.border(1.dp, if (r == ui.followReg) c.warn else c.line, RoundedCornerShape(50))
+                        .clickable(role = Role.Button, onClickLabel = "Suivre $r") { onPick(r) }
+                        .padding(horizontal = 9.dp, vertical = 5.dp),
+                )
+            }
+        }
+        val status = when (val s = ui.followStatus) {
+            PairingStatus.None -> "Choisissez le planeur à suivre."
+            PairingStatus.Checking -> "Recherche de ${ui.followReg} dans la base OGN…"
+            is PairingStatus.Paired -> "${ui.followReg} · ${s.device} · " + (ui.followLine ?: "pas encore reçu : en attente d'une trame OGN")
+            is PairingStatus.NotFound -> "${ui.followReg} absent de la base OGN : suivi impossible."
+            PairingStatus.NotTracked -> "Le propriétaire de ${ui.followReg} refuse le suivi OGN : choix respecté."
+            PairingStatus.Unverified -> "Base OGN injoignable : nouvel essai au prochain réseau."
+        }
+        Text(status, style = TextStyle(fontSize = 10.5.sp, lineHeight = 14.sp, color = if (ui.followLine != null) c.ok else c.dim))
+        Text(
+            "Pilotage affiche alors ce planeur à la place du téléphone (étiquette SUIVI). Données OGN en retard de quelques secondes : outil de mise au point, pas d'aide au vol.",
+            style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+        )
     }
 }
 

@@ -11,6 +11,7 @@ import com.neutronstar.glidercopilot.precog.PrecogApi
 import com.neutronstar.glidercopilot.precog.UrlConnectionHttpClient
 import com.neutronstar.glidercopilot.precog.WeatherRepository
 import java.io.File
+import kotlinx.coroutines.launch
 
 val Context.userPrefs: DataStore<Preferences> by preferencesDataStore(name = "user_prefs")
 
@@ -45,5 +46,7 @@ class GliderApp : Application() {
         org.maplibre.android.MapLibre.getInstance(this)
         container = AppContainer(this)
         container.location.refresh()
+        val appScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default)
+        appScope.launch { container.glider.restoreFollow(appScope) }
     }
 }

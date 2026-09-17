@@ -62,6 +62,11 @@ class OgnLiveRepository(
     private val _traffic = MutableStateFlow(FlightTraffic())
     val traffic: StateFlow<FlightTraffic> = _traffic.asStateFlow()
 
+    /** Trames du planeur suivi (Suivi & debug), dans l'ordre de réception. */
+    private val _followFixes = kotlinx.coroutines.flow.MutableSharedFlow<com.neutronstar.glidercopilot.ogn.OgnFix>(extraBufferCapacity = 64)
+    val followFixes: kotlinx.coroutines.flow.SharedFlow<com.neutronstar.glidercopilot.ogn.OgnFix> = _followFixes
+    @Volatile private var followSet: Set<String> = emptySet()
+
     /** Rejeu : activé par l'extra d'intention « glidy.ogn.replay » (captures CI, démonstration hors saison). */
     @Volatile var replay: Boolean = false
     private var job: Job? = null
@@ -80,6 +85,9 @@ class OgnLiveRepository(
     init {
         scope.launch { prefs.pairedRegistration.collect { pairedRegistration = it } }
         scope.launch { clubs.selectedClub.collect { clubPosition = it?.position } }
+        scope.launch {
+            combine(glider.followDevices, prefs.followEnabled) { d, on -> if (on) d.map { it.deviceId }.toSet() else emptySet() }.collect { followSet = it }
+        }
     }
 
     fun start() {
@@ -100,7 +108,8 @@ class OgnLiveRepository(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun liveLines(): Flow<AprsLine> = channelFlow {
         val client = AprsClient(AprsClient.userFor(installId()), appVersion = BuildConfig.VERSION_NAME)
-        val params = combine(clubs.selectedClub.map { it?.position }, glider.ownDevices) { pos, own -> pos to own }.distinctUntilChanged()
+        val devices = combine(glider.ownDevices, glider.followDevices, prefs.followEnabled) { own, follow, on -> own + if (on) follow else emptyList() }
+        val params = combine(clubs.selectedClub.map { it?.position }, devices) { pos, own -> pos to own }.distinctUntilChanged()
         params.collectLatest { (pos, own) ->
             if (pos == null) return@collectLatest
             val addresses = own.map { d ->
@@ -138,6 +147,7 @@ class OgnLiveRepository(
         val parsed = OgnParser.parse(line.text, line.received) as? OgnLine.Aircraft ?: return
         val fix = parsed.fix
         if (!store.add(fix)) return
+        if (fix.address in followSet) _followFixes.tryEmit(fix)
         synchronized(intervals) {
             lastTimeByAddress.put(fix.address, fix.time)?.let { prev ->
                 val d = Duration.between(prev, fix.time).toMillis() / 1000.0
@@ -163,8 +173,9 @@ class OgnLiveRepository(
 
     private fun publish() {
         val now = now()
-        val own = glider.ownDevices.value.map { it.deviceId }.toSet()
-        val ownStatus = own.flatMap { store.track(it) }.let { OwnGlider.status(it) }
+        val ownIds = glider.ownDevices.value.map { it.deviceId }.toSet()
+        val own = ownIds + followSet
+        val ownStatus = ownIds.flatMap { store.track(it) }.let { OwnGlider.status(it) }
         val aircraft = store.aircraft(now, exclude = own)
         val thermals = store.thermals(now, exclude = own)
         val (medInt, medLat) = synchronized(intervals) { OwnGlider.median(intervals.toList()) to OwnGlider.median(latencies.toList()) }
@@ -183,6 +194,18 @@ class OgnLiveRepository(
             live = state is AprsState.Connected,
             replay = replay,
         )
+        if (followSet.isNotEmpty()) {
+            val ft = followSet.flatMap { store.track(it) }.maxByOrNull { it.time }
+            glider.publishFollowLine(ft?.let { f ->
+                val ago = Duration.between(f.received, now).seconds
+                listOfNotNull(
+                    if (ago < 90) "vu il y a $ago s" else "vu il y a ${ago / 60} min",
+                    f.altitudeM?.let { "${it.roundToInt()} m" },
+                    f.climbMs?.let { String.format(Locale.FRANCE, "%+.1f m/s", it) },
+                    clubPosition?.let { String.format(Locale.FRANCE, "%.1f km du terrain", Geo.distanceKm(it, f.position)) },
+                ).joinToString(" · ")
+            })
+        } else glider.publishFollowLine(null)
         val clubPos = clubPosition
         _network.value = OgnNetworkUi(
             statusLabel = when (state) {
@@ -199,7 +222,7 @@ class OgnLiveRepository(
             medianIntervalS = medInt,
             medianLatencyS = medLat,
             frames = store.framesAccepted,
-            ownLabel = reg?.takeIf { own.isNotEmpty() },
+            ownLabel = reg?.takeIf { glider.ownDevices.value.isNotEmpty() },
             ownSeen = ownStatus?.isFresh(now) == true,
             ownLine = ownStatus?.let { st ->
                 val ago = Duration.between(st.last.received, now)

@@ -78,6 +78,10 @@ fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSou
                     onCancel = viewModel::cancelRegistration,
                     onPickRecent = viewModel::pickRecent,
                     onAutoTakeoff = viewModel::setAutoTakeoff,
+                    onFollow = viewModel::setFollow,
+                    onFollowInput = viewModel::onFollowInput,
+                    onFollowValidate = viewModel::validateFollow,
+                    onFollowPick = viewModel::pickFollow,
                 )
             }
             item { OfflineMapCard(map, mapSource::download, mapSource::cancel, mapSource::refreshCatalog) }

@@ -27,6 +27,8 @@ interface UserPreferences {
     val locationAsked: Flow<Boolean>
     val varioSound: Flow<Boolean>
     val voiceAnnouncements: Flow<Boolean>
+    val followEnabled: Flow<Boolean>
+    val followRegistration: Flow<String?>
     suspend fun acknowledgeDisclaimer(version: Int)
     suspend fun setSelectedClub(id: String)
     suspend fun pushRegistration(registration: String)
@@ -38,6 +40,8 @@ interface UserPreferences {
     suspend fun setLocationAsked()
     suspend fun setVarioSound(on: Boolean)
     suspend fun setVoiceAnnouncements(on: Boolean)
+    suspend fun setFollowEnabled(on: Boolean)
+    suspend fun setFollowRegistration(registration: String)
 }
 
 class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPreferences {
@@ -55,6 +59,8 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kLocationAsked = booleanPreferencesKey("location_asked")
     private val kSound = booleanPreferencesKey("vario_sound")
     private val kVoice = booleanPreferencesKey("voice_announcements")
+    private val kFollow = booleanPreferencesKey("follow_enabled")
+    private val kFollowReg = stringPreferencesKey("follow_registration")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
@@ -70,6 +76,8 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val locationAsked: Flow<Boolean> = store.data.map { it[kLocationAsked] ?: false }
     override val varioSound: Flow<Boolean> = store.data.map { it[kSound] ?: false }
     override val voiceAnnouncements: Flow<Boolean> = store.data.map { it[kVoice] ?: true }
+    override val followEnabled: Flow<Boolean> = store.data.map { it[kFollow] ?: false }
+    override val followRegistration: Flow<String?> = store.data.map { it[kFollowReg] }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }
@@ -105,4 +113,6 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override suspend fun setLocationAsked() { store.edit { it[kLocationAsked] = true } }
     override suspend fun setVarioSound(on: Boolean) { store.edit { it[kSound] = on } }
     override suspend fun setVoiceAnnouncements(on: Boolean) { store.edit { it[kVoice] = on } }
+    override suspend fun setFollowEnabled(on: Boolean) { store.edit { it[kFollow] = on } }
+    override suspend fun setFollowRegistration(registration: String) { store.edit { it[kFollowReg] = registration } }
 }

@@ -5,13 +5,24 @@ import com.neutronstar.glidercopilot.domain.flight.FlightSnapshot
 import com.neutronstar.glidercopilot.domain.flight.VarioSource
 import java.util.Locale
 
-/** Moteur de vol vu par l'écran Pilotage : image instantanée des capteurs et réglages du son. */
+/** Origine du planeur affiché : téléphone, rejeu du vol de démonstration, mode démo simulé, planeur suivi par OGN. */
+enum class OwnshipMode { PHONE, REPLAY, DEMO, FOLLOW }
+
+/** Moteur de vol vu par l'écran Pilotage : image instantanée des capteurs, sécurité et réglages. */
 data class FlightLive(
     val snapshot: FlightSnapshot? = null,
     /** Rejeu du vol de démonstration (capteurs simulés), signalé à l'écran. */
     val replay: Boolean = false,
     val soundOn: Boolean = false,
     val autoTakeoff: Boolean = true,
+    val mode: OwnshipMode = OwnshipMode.PHONE,
+    val demo: Boolean = false,
+    val safety: com.neutronstar.glidercopilot.domain.safety.SafetyState? = null,
+    val finesse: Int = 20,
+    /** Immatriculation du planeur suivi (Suivi & debug). */
+    val followLabel: String? = null,
+    /** Relief du pack chargé : coupe et marge sur le terrain réel. */
+    val reliefLoaded: Boolean = false,
 ) {
     /** Vrai dès qu'une vraie source (baro, GPS, OGN) alimente l'écran : plus aucune valeur de démonstration. */
     val hasData: Boolean
@@ -33,6 +44,10 @@ interface FlightControls {
     fun setSound(on: Boolean)
     fun startChrono()
     fun stopChrono()
+    fun setFinesse(value: Int)
+    fun setDemo(on: Boolean)
+    /** Terrain choisi à la main, null pour revenir au choix automatique. */
+    fun selectField(id: String?)
 }
 
 fun varioSourceLabel(s: FlightSnapshot?, ognLatencyS: Double? = null): String = when (s?.source) {

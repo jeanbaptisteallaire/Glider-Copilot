@@ -20,7 +20,19 @@ import android.os.SystemClock
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.neutronstar.glidercopilot.carto.PmTiles
+import com.neutronstar.glidercopilot.carto.TerrariumTerrain
 import com.neutronstar.glidercopilot.domain.LatLon
+import com.neutronstar.glidercopilot.domain.Terrain
+import com.neutronstar.glidercopilot.domain.flight.DemoFlight
+import com.neutronstar.glidercopilot.domain.safety.AlertLevel
+import com.neutronstar.glidercopilot.domain.safety.FieldOption
+import com.neutronstar.glidercopilot.domain.safety.SafetyAlert
+import com.neutronstar.glidercopilot.domain.safety.SafetyConfig
+import com.neutronstar.glidercopilot.domain.safety.SafetyEngine
+import com.neutronstar.glidercopilot.domain.safety.SafetyState
+import com.neutronstar.glidercopilot.feature.flight.OwnshipMode
+import com.neutronstar.glidercopilot.ogn.OgnFix
 import com.neutronstar.glidercopilot.domain.flight.FlightEngineCore
 import com.neutronstar.glidercopilot.domain.flight.FlightPhase
 import com.neutronstar.glidercopilot.domain.flight.FlightSnapshot
@@ -105,13 +117,34 @@ class FlightEngine(
     // horloge : monotone réelle, ou virtuelle (accélérée) pendant le rejeu
     private var replayStartElapsed = 0L
     private var replayStartWall: Instant = Instant.EPOCH
-    private fun clockNs(): Long = if (replay) ((SystemClock.elapsedRealtimeNanos() - replayStartElapsed) * replaySpeed).toLong() else SystemClock.elapsedRealtimeNanos()
-    private fun clockNow(): Instant = if (replay) replayStartWall.plusNanos(clockNs()) else Instant.now()
+    private fun clockNs(): Long = if (virtualClock) ((SystemClock.elapsedRealtimeNanos() - replayStartElapsed) * (if (mode == OwnshipMode.REPLAY) replaySpeed else 1.0)).toLong() else SystemClock.elapsedRealtimeNanos()
+    private fun clockNow(): Instant = if (virtualClock) replayStartWall.plusNanos(clockNs()) else Instant.now()
 
-    private val core = FlightEngineCore(
-        igc = IgcSinkFactory { start -> openIgc(start) },
+    // ---------------------------------------------------------------- source du planeur affiché
+    /** Mode démo (bascule de la carte) : vol simulé, trafic OGN réel. */
+    @Volatile private var demo = false
+    /** Suivi & debug (Prévol) : trace OGN d'un planeur du club en vol à la place du téléphone. */
+    @Volatile private var followOn = false
+    @Volatile var mode = OwnshipMode.PHONE
+        private set
+    private fun desiredMode() = when { replay -> OwnshipMode.REPLAY; demo -> OwnshipMode.DEMO; followOn -> OwnshipMode.FOLLOW; else -> OwnshipMode.PHONE }
+    private val virtualClock get() = mode == OwnshipMode.REPLAY || mode == OwnshipMode.DEMO
+
+    // ---------------------------------------------------------------- sécurité
+    @Volatile private var terrain: Terrain = Terrain.NONE
+    private var reliefFile: PmTiles? = null
+    private var reliefPath: String? = null
+    @Volatile private var fields: List<FieldOption> = emptyList()
+    @Volatile private var finesse = 20
+    @Volatile private var safetyState: SafetyState? = null
+    private var safety = newSafety()
+    private fun newSafety() = SafetyEngine(terrain = { terrain }, fields = { fields }, alert = { onAlert(it) })
+
+    private var core = newCore()
+    private fun newCore() = FlightEngineCore(
+        igc = IgcSinkFactory { start -> if (mode == OwnshipMode.DEMO || mode == OwnshipMode.FOLLOW) null else openIgc(start) },
         announce = { speak(it) },
-        autoTakeoff = { autoTakeoff },
+        autoTakeoff = { autoTakeoff || mode == OwnshipMode.DEMO || mode == OwnshipMode.FOLLOW },
         fieldElevationM = { fieldElevation },
         field = { fieldPosition },
         header = { start ->
@@ -135,6 +168,7 @@ class FlightEngine(
         scope.launch { prefs.voiceAnnouncements.collect { voiceOn = it; publish() } }
         scope.launch { clubs.selectedClub.collect { club = it; fieldPosition = it?.position; updateField() } }
         scope.launch { carto.active.collect { updateField() } }
+        scope.launch { prefs.followEnabled.collect { on -> if (on != followOn) { followOn = on; restartForMode() } } }
         scope.launch { refreshFlights() }
     }
 
@@ -142,32 +176,63 @@ class FlightEngine(
 
     private fun updateField() {
         val icao = club?.airfieldIcao
-        fieldElevation = icao?.let { i -> carto.active.value?.aero?.airports?.firstOrNull { it.icao == i }?.elevationM?.toDouble() }
+        val active = carto.active.value
+        fieldElevation = icao?.let { i -> active?.aero?.airports?.firstOrNull { it.icao == i }?.elevationM?.toDouble() }
+        // relief du pack installé (Copernicus GLO-30) : lu localement, aucune dépendance réseau
+        val path = active?.pack?.file("relief")?.let { File(active.dir, it.name) }?.takeIf { it.exists() }?.absolutePath
+        if (path != reliefPath) {
+            runCatching { reliefFile?.close() }
+            reliefFile = path?.let { p -> runCatching { PmTiles(File(p)) }.onFailure { Log.w(TAG, "relief illisible", it) }.getOrNull() }
+            terrain = reliefFile?.let { TerrariumTerrain(it) } ?: Terrain.NONE
+            reliefPath = path
+        }
+        // terrains candidats : openAIP du pack (sans hélistations, hydrobases, terrains fermés) + terrain du club
+        val airports = active?.aero?.airports.orEmpty().filter { it.type !in setOf(4, 7, 8, 10) }
+        val clubPos = club?.position
+        val clubAirport = icao?.let { i -> airports.firstOrNull { it.icao == i } }
+        val list = airports.map { a ->
+            val id = a.icao ?: a.id
+            FieldOption(id, a.name, a.position, a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: 0.0, isClub = a === clubAirport)
+        }.toMutableList()
+        if (clubAirport == null && clubPos != null) {
+            list += FieldOption(icao ?: "CLUB", club?.airfieldName ?: club?.name ?: "Terrain du club", clubPos, fieldElevation ?: terrain.elevationM(clubPos) ?: 0.0, isClub = true)
+        }
+        fields = list
     }
 
     // ---------------------------------------------------------------- cycle de vie
 
     /** Démarre capteurs (ou rejeu), GPS et publication. Sans effet si déjà lancé. */
-    fun start() = handler.post {
-        if (running) return@post
+    fun start() = handler.post { startSources() }
+
+    private fun startSources() {
+        if (running) return
         running = true
-        if (replay) {
-            replayStartElapsed = SystemClock.elapsedRealtimeNanos()
-            replayStartWall = Instant.now()
-            jobs += scope.launch { runReplay() }
-        } else {
-            registerSensors()
-            registerGps()
+        val m = desiredMode()
+        if (m != mode) { mode = m; core = newCore(); safety = newSafety(); safetyState = null }
+        when (mode) {
+            OwnshipMode.REPLAY, OwnshipMode.DEMO -> {
+                replayStartElapsed = SystemClock.elapsedRealtimeNanos()
+                replayStartWall = Instant.now()
+                jobs += scope.launch { if (mode == OwnshipMode.REPLAY) runReplay() else runDemo() }
+            }
+            OwnshipMode.FOLLOW -> jobs += scope.launch { ogn.followFixes.collect { onFollowFix(it) } }
+            OwnshipMode.PHONE -> {
+                registerSensors()
+                registerGps()
+                jobs += scope.launch { ogn.traffic.collect { t -> t.own?.let { core.onOgn(it.climbMs, it.altitudeM, it.ageS + (it.latencyS ?: 0.0).roundToInt()) } ?: core.onOgn(null, null, Long.MAX_VALUE) } }
+            }
         }
         jobs += scope.launch { publishLoop() }
-        jobs += scope.launch { ogn.traffic.collect { t -> t.own?.let { core.onOgn(it.climbMs, it.altitudeM, it.ageS + (it.latencyS ?: 0.0).roundToInt()) } ?: core.onOgn(null, null, Long.MAX_VALUE) } }
         applySound()
         if (tts == null) initTts()
     }
 
     /** Arrête tout sauf pendant un vol enregistré (le service garde alors le moteur). */
-    fun stop() = handler.post {
-        if (!running) return@post
+    fun stop() = handler.post { stopSources() }
+
+    private fun stopSources() {
+        if (!running) return
         running = false
         jobs.forEach { it.cancel() }; jobs.clear()
         sensorManager?.unregisterListener(sensorListener)
@@ -176,6 +241,15 @@ class FlightEngine(
         tone.stop()
         closeIgc()
         publish()
+    }
+
+    /** Changement de source (démo, suivi) : nouveau cœur, nouveaux calculs de vent et de sécurité. */
+    private fun restartForMode() {
+        if (desiredMode() == mode) { publish(); return }
+        val wasRunning = running
+        stopSources()
+        mode = desiredMode(); core = newCore(); safety = newSafety(); safetyState = null
+        if (wasRunning) startSources() else publish()
     }
 
     /** Vrai tant qu'un vol est enregistré : l'app garde capteurs, son et OGN en arrière-plan. */
@@ -270,6 +344,66 @@ class FlightEngine(
             ellipsoidAltM = if (l.hasAltitude()) l.altitude else null,
         )
         core.onGps(fix, ns)
+        afterGps(fix, ns)
+    }
+
+    // ---------------------------------------------------------------- suivi & debug
+
+    private var lastFollow: OgnFix? = null
+
+    private fun onFollowFix(f: OgnFix) {
+        val ns = SystemClock.elapsedRealtimeNanos() - f.latency.toNanos().coerceIn(0L, 60_000_000_000L)
+        lastFollow = f
+        core.onOgn(f.climbMs, f.altitudeM, f.latency.seconds.coerceAtLeast(0))
+        val fix = GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0, f.altitudeM)
+        core.onGps(fix, ns)
+        afterGps(fix, ns)
+    }
+
+    // ---------------------------------------------------------------- sécurité
+
+    private fun afterGps(fix: GpsFix, ns: Long) {
+        safety.onFix(fix)
+        val snap = core.snapshot(ns, fix.time)
+        val alt = snap.altitudeM ?: return
+        val armed = when (mode) {
+            OwnshipMode.PHONE -> snap.recording
+            OwnshipMode.REPLAY -> snap.phase == FlightPhase.FLYING
+            OwnshipMode.DEMO, OwnshipMode.FOLLOW -> true
+        }
+        val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
+        safetyState = runCatching {
+            safety.update(fix, alt, climb, snap.circling, SafetyConfig(finesse.toDouble()), fix.time, armed)
+        }.onFailure { Log.w(TAG, "calcul de sécurité", it) }.getOrNull()
+    }
+
+    private fun onAlert(a: SafetyAlert) {
+        speak(a.text)
+        vibrate(a.level)
+    }
+
+    private fun vibrate(level: AlertLevel) {
+        val pattern = when (level) {
+            AlertLevel.INFO -> longArrayOf(0, 80)
+            AlertLevel.WARNING -> longArrayOf(0, 150, 120, 150)
+            AlertLevel.URGENT -> longArrayOf(0, 400, 150, 400, 150, 400)
+        }
+        runCatching {
+            val v = if (Build.VERSION.SDK_INT >= 31) context.getSystemService(android.os.VibratorManager::class.java)?.defaultVibrator
+            else @Suppress("DEPRECATION") context.getSystemService(android.os.Vibrator::class.java)
+            v?.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1))
+        }
+    }
+
+    override fun setFinesse(value: Int) { finesse = value }
+
+    override fun setDemo(on: Boolean) { handler.post { if (on != demo) { demo = on; restartForMode() } } }
+
+    override fun selectField(id: String?) {
+        handler.post {
+            safety.selector.manual = id?.let { i -> fields.firstOrNull { it.id == i } }
+            publish()
+        }
     }
 
     // ---------------------------------------------------------------- rejeu
@@ -283,10 +417,39 @@ class FlightEngine(
             when (s) {
                 is SensorSample.Baro -> { core.onBaro(s.hPa, s.timeNs); tone.vario = core.fastClimb }
                 is SensorSample.Accel -> core.onAcceleration(s.upMs2, s.timeNs)
-                is SensorSample.Gps -> core.onGps(s.fix.copy(time = replayStartWall.plusNanos(s.timeNs), ellipsoidAltM = s.fix.altitudeM), s.timeNs)
+                is SensorSample.Gps -> {
+                    val fix = s.fix.copy(time = replayStartWall.plusNanos(s.timeNs), ellipsoidAltM = s.fix.altitudeM)
+                    core.onGps(fix, s.timeNs)
+                    afterGps(fix, s.timeNs)
+                }
             }
         }
         replayDone = true
+    }
+
+    /** Mode démo : boucle de pompes et transitions autour du terrain du club, rejouée sans fin en temps réel. */
+    private suspend fun runDemo() {
+        val center = fieldPosition ?: LatLon(43.80028, 3.78167)
+        val loop = DemoFlight.generate(center)
+        val loopNs = (loop.size.toLong()) * 1_000_000_000L
+        var k = 0L
+        while (true) {
+            val offset = k * loopNs
+            for (s in SensorReplay(loop, seed = 7 + k.toInt()).samples()) {
+                val t = s.timeNs + offset
+                while (clockNs() < t) delay(10)
+                when (s) {
+                    is SensorSample.Baro -> { core.onBaro(s.hPa, t); tone.vario = core.fastClimb }
+                    is SensorSample.Accel -> core.onAcceleration(s.upMs2, t)
+                    is SensorSample.Gps -> {
+                        val fix = s.fix.copy(time = replayStartWall.plusNanos(t), ellipsoidAltM = s.fix.altitudeM)
+                        core.onGps(fix, t)
+                        afterGps(fix, t)
+                    }
+                }
+            }
+            k++
+        }
     }
 
     // ---------------------------------------------------------------- IGC
@@ -408,7 +571,21 @@ class FlightEngine(
             lastPhase = snap.phase
             if (snap.phase == FlightPhase.LANDED) closeIgc()
         }
-        _live.value = FlightLive(snapshot = snap, replay = replay, soundOn = soundOn, autoTakeoff = autoTakeoff)
+        if (running && mode == OwnshipMode.FOLLOW) lastFollow?.let { f ->
+            core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time, Instant.now()).seconds.coerceAtLeast(0))
+        }
+        _live.value = FlightLive(
+            snapshot = snap,
+            replay = replay,
+            soundOn = soundOn,
+            autoTakeoff = autoTakeoff || mode == OwnshipMode.DEMO || mode == OwnshipMode.FOLLOW,
+            mode = mode,
+            demo = demo,
+            safety = if (running) safetyState else null,
+            finesse = finesse,
+            followLabel = if (mode == OwnshipMode.FOLLOW) glider.followRegistrationValue else null,
+            reliefLoaded = terrain !== Terrain.NONE,
+        )
         val ognDelay = ogn.traffic.value.own?.let { (it.latencyS ?: 0.0) + it.ageS }
         _sensors.value = SensorsUi(
             running = running,
@@ -416,6 +593,8 @@ class FlightEngine(
             sourceLabel = when {
                 snap == null -> "Moteur de vol à l'arrêt (app en arrière-plan)"
                 replay && replayDone -> "Rejeu terminé · relancer l'app pour le rejouer"
+                mode == OwnshipMode.DEMO -> "Mode démo : capteurs simulés (bascule sur la carte de Pilotage)"
+                mode == OwnshipMode.FOLLOW -> "Suivi & debug : ${glider.followRegistrationValue ?: "planeur"} via OGN, capteurs du téléphone ignorés"
                 else -> varioSourceLabel(snap, ognDelay) + if (!baroPresent && !replay) " · pas de baromètre sur ce téléphone" else ""
             },
             sourceOk = snap?.source == VarioSource.BARO_ACCEL || snap?.source == VarioSource.BARO,

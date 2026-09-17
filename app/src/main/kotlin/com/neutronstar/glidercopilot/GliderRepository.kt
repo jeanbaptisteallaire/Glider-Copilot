@@ -8,10 +8,12 @@ import com.neutronstar.glidercopilot.ogn.DdbDevice
 import com.neutronstar.glidercopilot.ogn.OgnDeviceDatabase
 import com.neutronstar.glidercopilot.ogn.PairingLookup
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
@@ -27,6 +29,48 @@ class GliderRepository(private val prefs: UserPreferences, val ddb: OgnDeviceDat
     override val pairedRegistration: Flow<String?> = prefs.pairedRegistration
     override val recentRegistrations: Flow<List<String>> = prefs.recentRegistrations
     override val autoTakeoff: Flow<Boolean> = prefs.autoTakeoff
+
+    private val _followDevices = MutableStateFlow<List<DdbDevice>>(emptyList())
+    /** Boîtiers du planeur suivi (Suivi & debug), vides si l'option est coupée. */
+    val followDevices: StateFlow<List<DdbDevice>> = _followDevices.asStateFlow()
+    @Volatile var followActive = false
+        private set
+    private val _followLine = MutableStateFlow<String?>(null)
+    override val followLine: Flow<String?> = _followLine
+    override val followEnabled: Flow<Boolean> = prefs.followEnabled
+    override val followRegistration: Flow<String?> = prefs.followRegistration
+    /** Registre courant du suivi, pour l'étiquette de Pilotage. */
+    @Volatile var followRegistrationValue: String? = null
+        private set
+
+    fun publishFollowLine(line: String?) { _followLine.value = line }
+
+    override suspend fun setFollowEnabled(on: Boolean) = prefs.setFollowEnabled(on)
+
+    override suspend fun follow(registration: String): PairingStatus {
+        prefs.setFollowRegistration(registration)
+        return currentFollowStatus(registration)
+    }
+
+    override suspend fun currentFollowStatus(registration: String): PairingStatus = withContext(Dispatchers.IO) {
+        followRegistrationValue = registration
+        when (val r = runCatching { ddb.lookup(registration) }.getOrElse { PairingLookup.Unavailable(it.message ?: "erreur") }) {
+            is PairingLookup.Found -> {
+                _followDevices.value = r.devices
+                val d = r.devices.first()
+                PairingStatus.Paired(listOfNotNull((if (d.deviceType == "F") "ID " else "${d.deviceTypeLabel} ") + d.deviceId, d.aircraftModel).joinToString(" · "), source(r.fetchedAt, r.offline))
+            }
+            is PairingLookup.NotFound -> { _followDevices.value = emptyList(); PairingStatus.NotFound(source(r.fetchedAt, r.offline)) }
+            is PairingLookup.NotTracked -> { _followDevices.value = emptyList(); PairingStatus.NotTracked }
+            is PairingLookup.Unavailable -> PairingStatus.Unverified
+        }
+    }
+
+    /** Au démarrage de l'app : suivi & debug relu depuis les préférences, avant même l'ouverture de Prévol. */
+    suspend fun restoreFollow(scope: kotlinx.coroutines.CoroutineScope) {
+        scope.launch { prefs.followEnabled.collect { followActive = it } }
+        prefs.followRegistration.first()?.let { currentFollowStatus(it) }
+    }
 
     override suspend fun pair(registration: String): PairingStatus {
         prefs.setPairedRegistration(registration)

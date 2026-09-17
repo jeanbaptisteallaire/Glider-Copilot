@@ -154,14 +154,24 @@ fun FlightScreen(
         ownOgn != null -> ownOgn.position
         else -> null
     }
-    val field = map?.field
-    val distKm = if (gliderPos != null && field != null) Geo.distanceKm(gliderPos, field) else FIELD_DIST_KM
-    val brg = if (gliderPos != null && field != null) Geo.bearingDeg(gliderPos, field) else FIELD_BRG
-    val distKnown = (gliderPos != null && field != null) || !real
-    val need = fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0)
-    val marge = alt?.takeIf { distKnown }?.let { it - need }
+    LaunchedEffect(finesse, controls) { controls?.setFinesse(finesse) }
+    val safety = live.safety?.takeIf { real }
+    val result = safety?.choice?.result
+    val field = result?.field?.position ?: map?.field
+    val distKm = result?.distanceKm ?: if (gliderPos != null && field != null) Geo.distanceKm(gliderPos, field) else FIELD_DIST_KM
+    val brg = result?.bearingDeg ?: if (gliderPos != null && field != null) Geo.bearingDeg(gliderPos, field) else FIELD_BRG
+    val distKnown = result != null || (gliderPos != null && field != null) || !real
+    val fieldElevShown = result?.field?.elevationM ?: fieldElev
+    val need = result?.requiredM ?: (fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0))
+    val marge = result?.let { r -> alt?.let { it - r.requiredM } } ?: alt?.takeIf { distKnown }?.let { it - need }
     val trend: Double? = if (real) snap!!.avgSpiralMs else 40 / 30.0 * cos(t / 30)
-    val trendNote = if (real) altitudeRefLabel(snap!!.altitudeRef) else "démo"
+    val trendNote = when {
+        !real -> "démo"
+        safety?.projectedMarginM != null -> "2 min : ${signed(safety.projectedMarginM!!)} m · ${altitudeRefLabel(snap!!.altitudeRef)}"
+        else -> altitudeRefLabel(snap!!.altitudeRef)
+    }
+    val fieldLabel = result?.field?.id ?: map?.fieldId ?: "LFNL"
+    var picking by remember { mutableStateOf(false) }
     val clock = if (real) snap!!.now.epochSecond.toDouble() else t
 
     LaunchedEffect(clock.toLong()) {
@@ -177,9 +187,33 @@ fun FlightScreen(
         onDispose { tone.stop() }
     }
 
-    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides (map?.fieldId ?: "LFNL"), LocalFieldElev provides fieldElev) {
+    androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides fieldLabel, LocalFieldElev provides fieldElevShown) {
     Column(modifier.fillMaxSize().background(c.background)) {
-        SafetyZone(marge, alt, need, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg) { f ->
+        SafetyZone(
+            marge, alt, need, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg,
+            auto = safety?.choice?.auto ?: true,
+            windLabel = safety?.wind?.let { w -> "vent ${((w.fromDeg / 10).roundToInt() * 10) % 360}°/${w.speedKmh.roundToInt()}" } ?: if (real) "vent —" else "vent ✓",
+            onPickField = if (safety != null && controls != null) ({ picking = true }) else null,
+            picker = {
+                androidx.compose.material3.DropdownMenu(expanded = picking, onDismissRequest = { picking = false }, containerColor = c.panel) {
+                    androidx.compose.material3.DropdownMenuItem(
+                        text = { Text("AUTO · terrain du club, sinon le meilleur rejoignable", style = TextStyle(fontSize = 13.sp, color = c.ok)) },
+                        onClick = { controls?.selectField(null); picking = false },
+                    )
+                    safety?.alternatives?.take(8)?.forEach { r ->
+                        androidx.compose.material3.DropdownMenuItem(
+                            text = {
+                                Text(
+                                    "${r.field.id} · ${r.field.name.take(22)} · ${km(r.distanceKm)} · ${signed(r.marginM)} m",
+                                    style = TextStyle(fontSize = 13.sp, color = if (r.marginM >= 0) c.ink else c.bad),
+                                )
+                            },
+                            onClick = { controls?.selectField(r.field.id); picking = false },
+                        )
+                    }
+                }
+            },
+        ) { f ->
             when {
                 f == finesse -> Unit
                 f < finesse -> { finesse = f; pendingRaise = null }
@@ -187,11 +221,11 @@ fun FlightScreen(
                 else -> pendingRaise = f
             }
         }
-        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, finesse.toDouble(), marge, distKm, brg)
+        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (real) null else CEILING)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
             if (map != null) {
                 val frame = when {
-                    real && live.gpsFresh -> liveFrame(snap!!, map.field)
+                    real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field)
                     ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
                     real -> GeoFrame(map.field, 0.0, emptyList(), map.field)
                     else -> demoFrame(map.field, t)
@@ -201,6 +235,8 @@ fun FlightScreen(
                 if (real && snap?.gps != null) TraceOnlyMap(snap) else DemoMap(t, v ?: 0.0)
             }
             val tag = when {
+                live.mode == OwnshipMode.DEMO -> "DÉMO · planeur simulé · trafic OGN réel"
+                live.mode == OwnshipMode.FOLLOW -> "SUIVI ${live.followLabel ?: ""} · FLARM via OGN" + (snap?.gpsAgeS?.let { " · ${it.roundToInt()} s" } ?: "")
                 map == null -> "Carte hors ligne à télécharger dans Prévol"
                 live.replay -> "REJEU VOL · capteurs simulés" + if (traffic.replay) " · OGN rejoué" else ""
                 real && live.gpsFresh -> null
@@ -210,7 +246,15 @@ fun FlightScreen(
                 else -> "DÉMO · planeur simulé"
             }
             val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
-            MapOverlays(shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls))
+            val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
+            MapOverlays(
+                shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls),
+                wind = safety?.wind?.let { it.fromDeg to it.speedKmh },
+                capBanner = if (result != null && marge != null && marge < 0) "CAP TERRAIN · ${result.field.id} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
+                demoOn = live.demo,
+                onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
+                nearTraffic = if (live.mode == OwnshipMode.DEMO) nearTraffic else null,
+            )
         }
         VarioPanel(
             open = varioOpen,
@@ -221,6 +265,7 @@ fun FlightScreen(
             history = history,
             alt = alt,
             need = need,
+            ceiling = if (real) null else CEILING,
             onSound = { if (controls != null) controls.setSound(!soundOn) else localSound = !localSound },
             onToggle = { varioOpen = !varioOpen },
         )
@@ -252,7 +297,13 @@ private data class Sample(val t: Double, val alt: Double, val need: Double, val 
 // ---------------------------------------------------------------- zone sécurité
 
 @Composable
-private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double?, trendNote: String, finesse: Int, pending: Int?, distKm: Double?, brg: Double, onFinesse: (Int) -> Unit) {
+private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double?, trendNote: String, finesse: Int, pending: Int?, distKm: Double?, brg: Double,
+    auto: Boolean = true,
+    windLabel: String = "vent ✓",
+    onPickField: (() -> Unit)? = null,
+    picker: @Composable () -> Unit = {},
+    onFinesse: (Int) -> Unit,
+) {
     val c = Gc.colors
     val below = (marge ?: 0.0) < 0
     val col = when { marge == null -> c.dim; below -> c.bad; else -> c.ok }
@@ -281,7 +332,7 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                 Text("Finesse", style = eyebrow(c))
                 Text(
-                    if (pending != null) "encore : F$pending" else "+${ARRIVAL_MARGIN.toInt()} m · vent ✓",
+                    if (pending != null) "encore : F$pending" else "+${ARRIVAL_MARGIN.toInt()} m · $windLabel",
                     style = TextStyle(fontSize = 9.sp, color = if (pending != null) c.warn else c.dim), maxLines = 1,
                 )
             }
@@ -304,9 +355,15 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double, trend: Double
                     }
                 }
             }
-            Column(Modifier.fillMaxWidth().heightIn(min = 44.dp).padding(horizontal = 2.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(
+                Modifier.fillMaxWidth().heightIn(min = 44.dp)
+                    .then(if (onPickField != null) Modifier.clickable(role = Role.Button, onClickLabel = "Choisir le terrain", onClick = onPickField) else Modifier)
+                    .padding(horizontal = 2.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                picker()
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("AUTO", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
+                    Text(if (auto) "AUTO" else "MANU", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
                     Text(LocalFieldId.current, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink))
                     Spacer(Modifier.weight(1f))
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
@@ -335,7 +392,11 @@ private fun eyebrow(c: GcColors) = TextStyle(fontSize = 10.sp, fontWeight = Font
 // ---------------------------------------------------------------- profil de retour
 
 @Composable
-private fun ReturnProfile(open: Boolean, onToggle: () -> Unit, alt: Double?, need: Double, finesse: Double, marge: Double?, distKm: Double, brg: Double) {
+private fun ReturnProfile(
+    open: Boolean, onToggle: () -> Unit, alt: Double?, need: Double, finesse: Double, marge: Double?, distKm: Double, brg: Double,
+    result: com.neutronstar.glidercopilot.domain.safety.GlideResult? = null,
+    ceiling: Double? = CEILING,
+) {
     val c = Gc.colors
     Column(Modifier.fillMaxWidth().background(c.background)) {
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
@@ -354,7 +415,7 @@ private fun ReturnProfile(open: Boolean, onToggle: () -> Unit, alt: Double?, nee
                 Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
             }
         }
-        if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg)
+        if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
     }
 }
@@ -366,7 +427,12 @@ private fun demoElevation(s: Double): Double =
     330 + 260 * exp(-((s - 2.6) * (s - 2.6)) / 0.9) + 90 * sin(s * 3.1) * exp(-s / 5) - 12 * s + 25 * sin(s * 11.0)
 
 @Composable
-private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, marge: Double, distKm: Double, brg: Double) {
+private fun ProfileCanvas(
+    altOrNull: Double?, need: Double, finesse: Double, marge: Double, distKm: Double, brg: Double,
+    result: com.neutronstar.glidercopilot.domain.safety.GlideResult? = null,
+    CEILING: Double? = null,
+) {
+    val realRelief = result?.takeIf { it.terrainKnown }?.profile
     val alt = altOrNull ?: need
     val c = Gc.colors
     val tm = rememberTextMeasurer()
@@ -378,10 +444,23 @@ private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, mar
         val d = distKm.coerceAtLeast(0.3)
         val dx = d * 1.06 + 0.4
         val n = 110
-        val prof = DoubleArray(n + 1) { i -> if (dx * i / n >= d) FIELD_ELEV + (dx * i / n - d) * 20 else max(FIELD_ELEV, demoElevation(dx * i / n)) }
+        val prof = DoubleArray(n + 1) { i ->
+            val s = dx * i / n
+            when {
+                realRelief != null -> {
+                    if (s >= d) FIELD_ELEV else {
+                        val k = ((s / d) * (realRelief.size - 1)).toInt().coerceIn(0, realRelief.size - 1)
+                        realRelief[k].terrainM ?: FIELD_ELEV
+                    }
+                }
+                s >= d -> FIELD_ELEV + (s - d) * 20
+                else -> max(FIELD_ELEV, demoElevation(s))
+            }
+        }
+        val clearance = if (realRelief != null) 100.0 else 40.0
         val tmax = prof.max()
         val tmin = prof.min()
-        val top = maxOf(alt, need, tmax, min(CEILING, alt + 400)) + 120
+        val top = maxOf(alt, need, tmax, CEILING?.let { min(it, alt + 400) } ?: (alt + 150)) + 120
         val bot = max(0.0, min(tmin, FIELD_ELEV) - 80)
         val pL = 36.dp.toPx(); val pR = 12.dp.toPx(); val pT = 16.dp.toPx(); val pB = 15.dp.toPx()
         fun x(s: Double) = (pL + s / dx * (w - pL - pR)).toFloat()
@@ -400,7 +479,7 @@ private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, mar
             a += step
         }
         // plafond prévu
-        if (CEILING < top && CEILING > bot) {
+        if (CEILING != null && CEILING < top && CEILING > bot) {
             drawLine(c.ok, Offset(pL, y(CEILING)), Offset(w - pR, y(CEILING)), 1.4.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 4.dp.toPx())))
             label(tm, "plafond ${grouped(CEILING.toInt())}", pL + 16.dp.toPx(), y(CEILING) + 9.dp.toPx(), small.copy(color = c.ok), TextAlign.Start)
         }
@@ -423,7 +502,7 @@ private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, mar
         for (i in 0..n) {
             val s = dx * i / n
             if (s > d) break
-            if (gl(s) < prof[i] + 40) { hit = s; break }
+            if (s > 0.2 && s < d - 0.8 && gl(s) < prof[i] + clearance) { hit = s; break }
         }
         val end = if (hit >= 0) hit else d
         if (known) drawLine(c.ink, Offset(x(0.0), y(alt)), Offset(x(end), y(gl(end))), 2.dp.toPx())
@@ -445,7 +524,7 @@ private fun ProfileCanvas(altOrNull: Double?, need: Double, finesse: Double, mar
         // accolade de marge
         if (known) drawLine(if (marge < 0) c.bad else c.ok, Offset(gx + 2.dp.toPx(), gy), Offset(gx + 2.dp.toPx(), y(need)), 3.dp.toPx())
         // légendes
-        label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
+        label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · " + if (realRelief != null) "relief Copernicus" else "relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
         val bottomY = h - 8.dp.toPx()
         label(tm, "0", x(0.0), bottomY, small, TextAlign.Start)
         label(tm, km(d / 2), x(d / 2), bottomY, small, TextAlign.Center)
@@ -548,8 +627,31 @@ private fun BoxScope.MapOverlays(
     controller: MapController,
     traffic: FlightTraffic,
     onChrono: (() -> Unit)?,
+    wind: Pair<Double, Double>? = 300.0 to 18.0,
+    capBanner: String? = null,
+    demoOn: Boolean = false,
+    onDemo: (() -> Unit)? = null,
+    nearTraffic: Int? = null,
 ) {
     val c = Gc.colors
+    // sous la sécurité : cap vers le terrain retenu, bien visible
+    if (capBanner != null) Text(
+        capBanner,
+        style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.onAccent),
+        maxLines = 1,
+        modifier = Modifier.align(Alignment.TopCenter).padding(top = 60.dp).background(c.bad, RoundedCornerShape(9.dp)).padding(horizontal = 12.dp, vertical = 7.dp)
+            .semantics { contentDescription = capBanner },
+    )
+    // bascule discrète du mode démo (coin haut droit)
+    if (onDemo != null) Text(
+        if (demoOn) "DÉMO" else "démo",
+        style = TextStyle(fontSize = 9.sp, fontWeight = if (demoOn) FontWeight.Bold else FontWeight.Medium, color = if (demoOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
+        modifier = Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 12.dp)
+            .background(if (demoOn) c.warn else c.overlay, RoundedCornerShape(50))
+            .clickable(role = Role.Switch, onClickLabel = if (demoOn) "Quitter le mode démo" else "Mode démo") { onDemo() }
+            .padding(horizontal = 9.dp, vertical = 6.dp)
+            .semantics { contentDescription = "Mode démo"; stateDescription = if (demoOn) "activé" else "désactivé" },
+    )
     // origine de la position affichée (démonstration, rejeu, secours)
     if (tag != null) Text(
         tag,
@@ -561,7 +663,7 @@ private fun BoxScope.MapOverlays(
         Text(
             buildAnnotatedString {
                 withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append("OGN ") }
-                append("${traffic.aircraft.size} aéronef" + (if (traffic.aircraft.size > 1) "s" else "") + " · ${traffic.thermals.size} pompe" + (if (traffic.thermals.size > 1) "s" else ""))
+                append("${traffic.aircraft.size} aéronef" + (if (traffic.aircraft.size > 1) "s" else "") + (nearTraffic?.let { " ($it à 15 km)" } ?: "") + " · ${traffic.thermals.size} pompe" + (if (traffic.thermals.size > 1) "s" else ""))
             },
             style = TextStyle(fontSize = 9.sp, color = c.cardTitle),
             modifier = Modifier.align(Alignment.TopStart).padding(start = 14.dp, top = 62.dp)
@@ -581,12 +683,16 @@ private fun BoxScope.MapOverlays(
         Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 45.dp).width(44.dp)
             .background(c.background, RoundedCornerShape(20.dp)).border(1.dp, Color.White.copy(alpha = 0.035f), RoundedCornerShape(20.dp))
             .padding(vertical = 10.dp, horizontal = 4.dp)
-            .semantics { contentDescription = "Vent estimé 300 degrés 18 kilomètres heure" },
+            .semantics { contentDescription = wind?.let { "Vent estimé ${it.first.roundToInt()} degrés ${it.second.roundToInt()} kilomètres heure" } ?: "Vent pas encore estimé : spiralez" },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Icon(GcIcons.WindArrow, contentDescription = null, tint = c.route, modifier = Modifier.size(20.dp).rotate(300f + 180f))
-        Text("300°\n18", style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.ink, textAlign = TextAlign.Center))
+        if (wind != null) {
+            Icon(GcIcons.WindArrow, contentDescription = null, tint = c.route, modifier = Modifier.size(20.dp).rotate(wind.first.toFloat() + 180f))
+            Text("${((wind.first / 10).roundToInt() * 10) % 360}°\n${wind.second.roundToInt()}", style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.ink, textAlign = TextAlign.Center))
+        } else {
+            Text("vent\n—", style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.dim, textAlign = TextAlign.Center))
+        }
     }
     // échelle vario
     Column(Modifier.align(Alignment.TopEnd).padding(end = 17.dp, top = 141.dp).width(36.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(3.dp)) {
@@ -706,6 +812,7 @@ private fun VarioPanel(
     history: List<Sample>,
     alt: Double?,
     need: Double,
+    ceiling: Double? = CEILING,
     onSound: () -> Unit,
     onToggle: () -> Unit,
 ) {
@@ -739,7 +846,7 @@ private fun VarioPanel(
         }
         if (open) {
             HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.047f))
-            AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need)
+            AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need, ceiling)
         }
     }
 }
@@ -802,7 +909,7 @@ private fun VarioBar(v: Double?) {
 }
 
 @Composable
-private fun AltitudeStrip(history: List<Sample>, alt: Double, need: Double) {
+private fun AltitudeStrip(history: List<Sample>, alt: Double, need: Double, CEILING: Double?) {
     val c = Gc.colors
     val tm = rememberTextMeasurer()
     Canvas(Modifier.fillMaxWidth().height(38.dp).semantics { contentDescription = "Altitude sur les 5 dernières minutes" }) {
@@ -811,12 +918,12 @@ private fun AltitudeStrip(history: List<Sample>, alt: Double, need: Double) {
         val win = 300.0
         var lo = history.minOf { min(it.alt, it.need) }
         var hi = history.maxOf { it.alt }
-        hi = max(hi, min(CEILING, hi + 300))
+        hi = max(hi, CEILING?.let { min(it, hi + 300) } ?: hi)
         lo -= 40; hi += 40
         val pL = 4.dp.toPx(); val pR = 78.dp.toPx()
         fun x(tt: Double) = (pL + (1 - (now - tt) / win) * (size.width - pL - pR)).toFloat()
         fun y(a: Double) = (2.dp.toPx() + (hi - a) / (hi - lo) * (size.height - 4.dp.toPx())).toFloat()
-        if (CEILING < hi) drawLine(c.ok, Offset(pL, y(CEILING)), Offset(size.width - pR, y(CEILING)), 1.2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 3.dp.toPx())))
+        if (CEILING != null && CEILING < hi) drawLine(c.ok, Offset(pL, y(CEILING)), Offset(size.width - pR, y(CEILING)), 1.2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(2.dp.toPx(), 3.dp.toPx())))
         for (i in 1 until history.size) {
             drawLine(c.bad, Offset(x(history[i - 1].t), y(history[i - 1].need)), Offset(x(history[i].t), y(history[i].need)), 1.4.dp.toPx())
             drawLine(c.vario(history[i].v), Offset(x(history[i - 1].t), y(history[i - 1].alt)), Offset(x(history[i].t), y(history[i].alt)), 2.4.dp.toPx(), StrokeCap.Round)
@@ -825,7 +932,7 @@ private fun AltitudeStrip(history: List<Sample>, alt: Double, need: Double) {
         drawCircle(c.ink, 2.6.dp.toPx(), Offset(x(le.t), y(le.alt)))
         val lx = size.width - pR + 6.dp.toPx()
         label(tm, "alt ${grouped(alt.roundToInt())} m", lx, size.height * 0.5f, TextStyle(fontSize = 9.sp, color = c.ink), TextAlign.Start)
-        label(tm, "plaf. ${grouped(CEILING.toInt())}", lx, 8.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.ok), TextAlign.Start)
+        if (CEILING != null) label(tm, "plaf. ${grouped(CEILING.toInt())}", lx, 8.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.ok), TextAlign.Start)
         label(tm, "sécu ${grouped(need.roundToInt())}", lx, size.height - 7.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.bad), TextAlign.Start)
         label(tm, "−5 min", pL + 2.dp.toPx(), 8.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.dim), TextAlign.Start)
     }
