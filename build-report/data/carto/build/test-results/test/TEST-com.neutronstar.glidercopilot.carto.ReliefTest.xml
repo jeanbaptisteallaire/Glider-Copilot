@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.carto.ReliefTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-17T09:15:43" hostname="runnervmlun5p" time="0.397">
+  <properties/>
+  <testcase name="pngFiltersAllTypes" classname="com.neutronstar.glidercopilot.carto.ReliefTest" time="0.014"/>
+  <testcase name="hilbertTileIds" classname="com.neutronstar.glidercopilot.carto.ReliefTest" time="0.001"/>
+  <testcase name="realRidgeBetweenGliderAndLfnl" classname="com.neutronstar.glidercopilot.carto.ReliefTest" time="0.248"/>
+  <testcase name="realTerrainAroundLfnl" classname="com.neutronstar.glidercopilot.carto.ReliefTest" time="0.133"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

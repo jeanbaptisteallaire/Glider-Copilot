@@ -2,6 +2,22 @@
 <issues format="6" by="lint 8.9.1">
 
     <issue
+        id="MissingPermission"
+        severity="Error"
+        message="Missing permissions required by Vibrator.vibrate: android.permission.VIBRATE"
+        category="Correctness"
+        priority="9"
+        summary="Missing Permissions"
+        explanation="This check scans through your code and libraries and looks at the APIs being used, and checks this against the set of permissions required to access those APIs. If the code using those APIs is called at runtime, then the program will crash.&#xA;&#xA;Furthermore, for permissions that are revocable (with `targetSdkVersion` 23), client code must also be prepared to handle the calls throwing an exception if the user rejects the request for permission at runtime."
+        errorLine1="            v?.vibrate(android.os.VibrationEffect.createWaveform(pattern, -1))"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="394"
+            column="13"/>
+    </issue>
+
+    <issue
         id="ImplicitSamInstance"
         severity="Warning"
         message="This argument is a new instance so `stopService` will not remove anything"
@@ -463,12 +479,44 @@
         priority="5"
         summary="Logging call to Log instead of Timber"
         explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="            reliefFile = path?.let { p -> runCatching { PmTiles(File(p)) }.onFailure { Log.w(TAG, &quot;relief illisible&quot;, it) }.getOrNull() }"
+        errorLine2="                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="185"
+            column="88"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
         errorLine1="            .onFailure { Log.w(TAG, &quot;GPS indisponible&quot;, it) }"
         errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="253"
+            line="327"
             column="26"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="        }.onFailure { Log.w(TAG, &quot;calcul de sécurité&quot;, it) }.getOrNull()"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="377"
+            column="23"/>
     </issue>
 
     <issue
@@ -483,7 +531,7 @@
         errorLine2="                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="302"
+            line="465"
             column="84"/>
     </issue>
 
@@ -499,7 +547,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="386"
+            line="549"
             column="9"/>
     </issue>
 
@@ -549,7 +597,7 @@
         errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/OgnLiveRepository.kt"
-            line="222"
+            line="245"
             column="10"/>
     </issue>
 
