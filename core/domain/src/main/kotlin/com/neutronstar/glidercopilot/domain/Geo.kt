@@ -40,3 +40,12 @@ object Geo {
         return LatLon(Math.toDegrees(p2), Math.toDegrees(l2))
     }
 }
+
+/** Relief : altitude du sol (m, mer) en un point, null hors couverture. */
+fun interface Terrain {
+    fun elevationM(p: LatLon): Double?
+
+    companion object {
+        val NONE = Terrain { null }
+    }
+}
