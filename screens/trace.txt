@@ -1,5 +1,5 @@
 + date -u
-Thu Sep 17 02:45:55 UTC 2026
+Thu Sep 17 02:57:06 UTC 2026
 ++ ls apk/app-debug.apk
 ++ head -1
 + APK=apk/app-debug.apk
@@ -203,20 +203,20 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 + timeout 20 adb exec-out screencap -p
 + timeout 30 adb logcat -d -t 600
 + ls -la screens
-total 12176
-drwxr-xr-x  2 runner runner    4096 Sep 17 02:51 .
-drwxr-xr-x 14 runner runner    4096 Sep 17 02:45 ..
--rw-r--r--  1 runner runner  100584 Sep 17 02:46 01-avertissement.png
--rw-r--r--  1 runner runner  241618 Sep 17 02:46 02-prevol.png
--rw-r--r--  1 runner runner  248833 Sep 17 02:47 03-prevol-appairage.png
--rw-r--r--  1 runner runner  251688 Sep 17 02:48 04-prevol-carte.png
--rw-r--r--  1 runner runner  217856 Sep 17 02:48 05-prevol-ogn-direct.png
--rw-r--r--  1 runner runner  337645 Sep 17 02:49 06-prevol-espaces.png
--rw-r--r--  1 runner runner  263402 Sep 17 02:49 07-checklists.png
--rw-r--r--  1 runner runner  280290 Sep 17 02:49 07b-checklists-suite.png
--rw-r--r--  1 runner runner 1054091 Sep 17 02:50 08-pilotage-ogn-rejeu.png
--rw-r--r--  1 runner runner 1061015 Sep 17 02:50 09-pilotage-ogn-large.png
--rw-r--r--  1 runner runner 1459552 Sep 17 02:51 10-pilotage-ogn-plein.png
--rw-r--r--  1 runner runner 6824634 Sep 17 02:51 logcat-live.txt
--rw-r--r--  1 runner runner   79146 Sep 17 02:51 logcat.txt
--rw-r--r--  1 runner runner    6216 Sep 17 02:51 trace.txt
+total 12012
+drwxr-xr-x  2 runner runner    4096 Sep 17 03:02 .
+drwxr-xr-x 14 runner runner    4096 Sep 17 02:57 ..
+-rw-r--r--  1 runner runner  100584 Sep 17 02:57 01-avertissement.png
+-rw-r--r--  1 runner runner  241618 Sep 17 02:58 02-prevol.png
+-rw-r--r--  1 runner runner  249341 Sep 17 02:58 03-prevol-appairage.png
+-rw-r--r--  1 runner runner  250909 Sep 17 02:59 04-prevol-carte.png
+-rw-r--r--  1 runner runner  219002 Sep 17 03:00 05-prevol-ogn-direct.png
+-rw-r--r--  1 runner runner  337645 Sep 17 03:00 06-prevol-espaces.png
+-rw-r--r--  1 runner runner  263402 Sep 17 03:00 07-checklists.png
+-rw-r--r--  1 runner runner  287024 Sep 17 03:00 07b-checklists-suite.png
+-rw-r--r--  1 runner runner 1054064 Sep 17 03:01 08-pilotage-ogn-rejeu.png
+-rw-r--r--  1 runner runner 1052588 Sep 17 03:01 09-pilotage-ogn-large.png
+-rw-r--r--  1 runner runner 1455249 Sep 17 03:02 10-pilotage-ogn-plein.png
+-rw-r--r--  1 runner runner 6657645 Sep 17 03:02 logcat-live.txt
+-rw-r--r--  1 runner runner   89521 Sep 17 03:02 logcat.txt
+-rw-r--r--  1 runner runner    6216 Sep 17 03:02 trace.txt

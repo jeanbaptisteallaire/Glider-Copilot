@@ -1,620 +1,618 @@
---------- beginning of main
-09-17 02:50:45.305  6609  6609 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
 --------- beginning of system
-09-17 02:50:45.311   522  1972 I ActivityTaskManager: Activity reported stop, but no longer stopping: ActivityRecord{a60293a u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t7} STOPPED
-09-17 02:50:45.326   522  2543 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
-09-17 02:50:45.327   522  2543 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
-09-17 02:50:45.328   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.328   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.349   522  2543 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:45.351  1847  1847 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=falsecallback=android.view.ViewRootImpl$$ExternalSyntheticLambda17@6016299
-09-17 02:50:45.351   522  2543 D CoreBackPreview: Window{85e2e94 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}: Setting back callback null
-09-17 02:50:45.351   522  2543 W InputManager-JNI: Input channel object '85e2e94 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity (client)' was disposed without first being removed with the input manager!
-09-17 02:50:45.357  6609  6630 V UiAutomation: Init UiAutomation@d50fc3b[id=13, displayId=0, flags=0]
-09-17 02:50:45.358   522   761 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:45.359   522  2543 D CoreBackPreview: Window{2df3760 u0 com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@f8d98ea, mPriority=0, mIsAnimationCallback=false}
-09-17 02:50:45.363   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.363   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.364   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.373  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:45.380  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.381  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.382  1847  2405 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
-09-17 02:50:45.383  1847  2405 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
-09-17 02:50:45.383  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.384   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.385  1772  5241 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-17 02:50:45.387  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.387  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.387   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.388  1772  5241 I A       : [Memory] eligibility: StashEligibility{4}
-09-17 02:50:45.388  1772  2172 I A       : Unsubscribed to apa or classic variant change.
-09-17 02:50:45.392  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.395   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.395  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.395   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.396   522   522 D BatterySaverPolicy: accessibility changed to true, updating policy.
-09-17 02:50:45.397   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.397   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.397   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.397  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.397  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.397  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.397  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:45.399   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.399   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.404   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.405  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:45.406  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:45.406  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:45.407   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:45.408   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:45.416   522   620 I RescueParty: Starting to observe: [android, com.google.android.as, com.android.systemui], updated namespace: systemui
-09-17 02:50:45.418  1101  1115 I s.nexuslauncher: Background young concurrent copying GC freed 77476(3961KB) AllocSpace objects, 16(1480KB) LOS objects, 40% free, 7886KB/12MB, paused 24us,12us total 324.553ms
-09-17 02:50:45.422   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.422   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.as, com.android.systemui]
-09-17 02:50:45.422   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.422   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.422   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.423   522  2057 D CompatibilityChangeReporter: Compat change id reported: 161252188; UID 10131; state: DISABLED
-09-17 02:50:45.423   840   840 D NavigationModeController: getCurrentUserContext: contextUser=0 currentUser=0
-09-17 02:50:45.434   522   620 I RescueParty: Starting to observe: [android], updated namespace: media
-09-17 02:50:45.437   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.437   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.437   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.437   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.437   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.440   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.441   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.443   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.443   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.445  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/show_qr_code_scanner_setting
-09-17 02:50:45.446  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.446  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.446  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.446  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.447  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:45.447  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:45.447  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:45.449  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:45.451  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:45.452   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.452   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.453   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.453  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:45.453   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.453   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.454   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:45.454   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.458   522  2057 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.458   522  2057 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.459   522  2057 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.462   522  2057 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.462   522  2057 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.463   522  2057 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.511  5376  6583 I bwir    : updateFromConfigurations using legacy put method [CONTEXT service_id=204 ]
-09-17 02:50:45.534   522   620 I RescueParty: Starting to observe: [android], updated namespace: alarm_manager
-09-17 02:50:45.538   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.538   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.538   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.539   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.539   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.539   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.549   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.549   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.549   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.549   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.549   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.579   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.579   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.695   522   522 W Looper  : Slow dispatch took 117ms main h=android.app.ActivityThread$H c=android.app.LoadedApk$ServiceDispatcher$RunConnection@3549c66 m=0
-09-17 02:50:45.696  1847  4204 W A       : [Download] response code: 400
-09-17 02:50:45.697   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.698   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.699   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.702   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.702   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.703   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.703   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.705   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.709  6396  6408 I OpenGLRenderer: Davey! duration=886ms; Flags=0, FrameTimelineVsyncId=30313, IntendedVsync=322261746082, Vsync=322661746066, InputEventId=0, HandleInputStart=322670775771, AnimationStart=322670779659, PerformTraversalsStart=322712713396, DrawStart=322713110417, FrameDeadline=323028412718, FrameInterval=322665510872, FrameStartTime=16666666, SyncQueued=322769606843, SyncStart=322950872973, IssueDrawCommandsStart=322960000753, SwapBuffers=323136840706, FrameCompleted=323329409977, DequeueBufferDuration=3136, QueueBufferDuration=1208387, GpuCompleted=323329409977, SwapBuffersCompleted=323147876588, DisplayPresentTime=0, CommandSubmissionCompleted=323136840706, 
-09-17 02:50:45.710  6396  6408 I OpenGLRenderer: Davey! duration=951ms; Flags=0, FrameTimelineVsyncId=30351, IntendedVsync=322695079398, Vsync=322945079388, InputEventId=0, HandleInputStart=322963298670, AnimationStart=322963302086, PerformTraversalsStart=323062277358, DrawStart=323062527925, FrameDeadline=323361746038, FrameInterval=322959966419, FrameStartTime=16666666, SyncQueued=323125470946, SyncStart=323147951257, IssueDrawCommandsStart=323193936476, SwapBuffers=323600655268, FrameCompleted=323669206150, DequeueBufferDuration=2725, QueueBufferDuration=129842, GpuCompleted=323669206150, SwapBuffersCompleted=323601800677, DisplayPresentTime=0, CommandSubmissionCompleted=323600655268, 
-09-17 02:50:45.711  6396  6500 D EGL_emulation: app_time_stats: avg=1217.68ms min=615.63ms max=1819.74ms count=2
-09-17 02:50:45.715   522   620 I RescueParty: Starting to observe: [android, com.android.settings], updated namespace: app_hibernation
-09-17 02:50:45.718  6396  6437 D EGL_emulation: app_time_stats: avg=360.89ms min=197.08ms max=453.91ms count=3
-09-17 02:50:45.718   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.718   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.android.settings]
-09-17 02:50:45.719   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.719   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.719   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.725   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.725   522   522 D AppHibernationService: App hibernation changed to enabled=true
-09-17 02:50:45.725   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.726   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.726   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.726   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.726   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.727   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.728   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.729   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.729   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.729   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.730   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.730   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.731   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.731   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.760   522   620 I RescueParty: Starting to observe: [android, com.android.systemui], updated namespace: window_manager
-09-17 02:50:45.763   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.764   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.android.systemui]
-09-17 02:50:45.764   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.764   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.765   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.769   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.771   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.783   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.784   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.784   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.784   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.784   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.785   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.785   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.785   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.785   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.785   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.785   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.789   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.790   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.828   522   620 I RescueParty: Starting to observe: [android, com.google.android.bluetooth], updated namespace: bluetooth
-09-17 02:50:45.829   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.829   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.bluetooth]
-09-17 02:50:45.829   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.829   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.829   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.830   522   522 D BluetoothDeviceConfigChangeTracker: shouldRestartWhenPropertiesUpdated: INIT_gd_hal_snoop_logger_filtering='true',scan_timeout_millis='300000',location_denylist_name='',audio_policy_hf_enabled='true',INIT_gd_hal_snoop_logger_socket='true',location_denylist_advertising_data='⊈0016AAFE40/00FFFFFFF0,⊆0016AAFE/00FFFFFF,⊆00FF4C0002/00FFFFFFFF',le_audio_enabled_by_default='false',location_denylist_mac='',audio_policy_ag_enabled='true'
-09-17 02:50:45.832   522   522 D BluetoothDeviceConfigListener: All properties unchanged, skipping restart
-09-17 02:50:45.839   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.839   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.842   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.843   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.843   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.843   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.843   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.845   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.845   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.845   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.846   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.848   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.849   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.860   522   620 I RescueParty: Starting to observe: [android, com.google.android.apps.nexuslauncher, com.android.systemui], updated namespace: latency_tracker
-09-17 02:50:45.861   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.861   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.861   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.861   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.861   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.apps.nexuslauncher, com.android.systemui]
-09-17 02:50:45.861   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.861   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.862   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.862   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.862   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.865   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.865   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.875   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.875   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.875   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.875   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.875   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.876   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.876   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.876   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.878   522   620 I RescueParty: Starting to observe: [android], updated namespace: battery_saver
-09-17 02:50:45.879   522   522 E DeviceConfig: Parsing int failed for location_mode
-09-17 02:50:45.881   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.881   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.881   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.881   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.881   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.883   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.883   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.883   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.884   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.884   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.884   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.885   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.885   522   761 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.885   522   761 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.885   522   761 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.885   522   761 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.885   522   761 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.886   522   761 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.894   522   620 I RescueParty: Starting to observe: [android], updated namespace: constrain_display_apis
-09-17 02:50:45.896   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.896   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.896   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.896   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.896   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.896   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.896   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.898   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.898   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.898   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.910   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.911   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.912   522   761 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.912   522   761 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.912   522   761 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.912   522   761 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.912   522   761 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.913   522   761 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.939   522   620 I RescueParty: Starting to observe: [android], updated namespace: backup_and_restore
-09-17 02:50:45.940   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.940   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.940   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.940   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.940   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.947   522   620 I RescueParty: Starting to observe: [android], updated namespace: nnapi_native
-09-17 02:50:45.947   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.948   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.953   522   620 I RescueParty: Starting to observe: [android, com.google.android.networkstack], updated namespace: tethering
-09-17 02:50:45.953   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.953   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.953   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.953   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.953   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.953   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.953   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.networkstack]
-09-17 02:50:45.953   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.953   522   549 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
-09-17 02:50:45.953   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:45.956   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.958  5376  5382 I .gms.persistent: Background young concurrent copying GC freed 245488(9700KB) AllocSpace objects, 6(192KB) LOS objects, 36% free, 16MB/26MB, paused 44us,16us total 122.782ms
-09-17 02:50:45.968   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.968   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.968   522   522 I ExplicitHealthCheckController: Not binding to service, service already connecting
-09-17 02:50:45.968   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.968   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.969   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.969   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.969   522  1972 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.969   522  1972 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.969   522  1972 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.970   522  1972 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.970   522  1972 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.971   522  1972 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.980   522   620 I RescueParty: Starting to observe: [android], updated namespace: location
-09-17 02:50:45.982   522   549 I PackageWatchdog: Syncing state, reason: observing new packages
-09-17 02:50:45.982   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.982   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.984   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:45.985   522   549 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
-09-17 02:50:45.985   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:45.985   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:45.986   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.986   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:45.987   522   761 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.990   522   761 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:45.990   522   761 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:45.994   522   761 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:45.994   522   761 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:45.994   522   761 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:45.995   522   549 I PackageWatchdog: Syncing state, reason: updated observers
-09-17 02:50:45.995   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:45.995   522   522 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
-09-17 02:50:45.999   522   522 I ExplicitHealthCheckController: Explicit health check service is bound
-09-17 02:50:46.000   522   522 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
-09-17 02:50:46.000   522   522 I ExplicitHealthCheckController: Service initialized, syncing requests
-09-17 02:50:46.000   522   522 I PackageWatchdog: Syncing health check requests for packages: {}
-09-17 02:50:46.000   522   522 D ExplicitHealthCheckController: Getting health check supported packages
-09-17 02:50:46.000   522  2543 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:46.002   522  2543 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
-09-17 02:50:46.002   522  2543 D ExplicitHealthCheckController: Getting health check requested packages
-09-17 02:50:46.002   522  2543 I ExplicitHealthCheckController: Explicit health check requested packages []
-09-17 02:50:46.002   522  2543 I ExplicitHealthCheckController: No more health check requests, unbinding...
-09-17 02:50:46.003   522  2543 I ExplicitHealthCheckController: Explicit health check service is unbound
-09-17 02:50:46.004   522   549 I PackageWatchdog: Saving observer state to file
-09-17 02:50:46.237  6396  6408 I OpenGLRenderer: Davey! duration=881ms; Flags=0, FrameTimelineVsyncId=30382, IntendedVsync=323078412716, Vsync=323161746046, InputEventId=0, HandleInputStart=323171339272, AnimationStart=323171342788, PerformTraversalsStart=323176243027, DrawStart=323176526586, FrameDeadline=323695079358, FrameInterval=323171316368, FrameStartTime=16666666, SyncQueued=323177121346, SyncStart=323601872180, IssueDrawCommandsStart=323601918075, SwapBuffers=324025616254, FrameCompleted=324384843872, DequeueBufferDuration=3326, QueueBufferDuration=7303826, GpuCompleted=324384843872, SwapBuffersCompleted=324035307567, DisplayPresentTime=0, CommandSubmissionCompleted=324025616254, 
-09-17 02:50:46.333  6396  6396 I Choreographer: Skipped 33 frames!  The application may be doing too much work on its main thread.
-09-17 02:50:46.361   522  2543 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:46.361   522  2543 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
-09-17 02:50:46.361  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:46.362   522   522 D BatterySaverPolicy: accessibility changed to false, updating policy.
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:46.362  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:46.363  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:46.364   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:46.377  1847  2289 I A       : NGA enabled in interactor.
-09-17 02:50:46.377  1847  2289 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
-09-17 02:50:46.378  6609  6609 D AndroidRuntime: Shutting down VM
-09-17 02:50:46.403  1772  4934 I A       : Initializing all components
-09-17 02:50:46.403  1772  4934 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-17 02:50:46.403  1772  4934 I A       : [Memory] eligibility: StashEligibility{6}
-09-17 02:50:46.434  1772  2172 I A       : onIsEnabledChanged, isEnabled: false
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.434  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 I A       : onOpaVisibilityChanged: false
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 I A       : Setting session to type: NO_SESSION
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:46.435  1772  2172 I A       : onDisabled. Registered: false
-09-17 02:50:46.436  1772  2172 I A       : on opa visibility changed false
-09-17 02:50:46.444  1772  2168 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
-09-17 02:50:46.452  1772  2168 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
-09-17 02:50:46.452  1772  2168 I A       : onActiveStateChangeEvent: IDLE => IDLE
-09-17 02:50:46.453  1772  2168 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
-09-17 02:50:46.453  1772  2168 I NgaEntryPointEventSendr: setupConnection
-09-17 02:50:46.459  1772  2172 I A       : Initialize
-09-17 02:50:46.461  1772  2172 I A       : on opa visibility changed false
-09-17 02:50:46.461  1847  1847 I A       : Creating pss binder().
-09-17 02:50:46.464  1772  2172 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
-09-17 02:50:46.465  1772  2168 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
-09-17 02:50:46.466  1772  2168 I NgaEntryPointEventSendr: onServiceConnected
-09-17 02:50:46.466  1847  1944 I A       : Calling beginBinderSession().
-09-17 02:50:46.466  1847  1944 I A       : beginBinderSession(): calling binder
-09-17 02:50:46.466  1772  2168 I NgaEntryPointEventSendr: State changed: Connecting => Ready
-09-17 02:50:46.474  1772  2168 I A       : Successfully initialized all components
-09-17 02:50:46.484   522   595 D OomAdjuster: Not killing cached processes
-09-17 02:50:46.491   522  1032 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
-09-17 02:50:46.559  5495  5495 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.feedback.internal.IFeedbackService dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
-09-17 02:50:46.595  1847  2594 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-17 02:50:46.600  1847  2594 W SearchServiceCore: Abort, client detached.
-09-17 02:50:46.622  1847  4204 I PBSessionCacheImpl: Deleted sessionId[8124981519170032] from persistence.
-09-17 02:50:46.623  1772  2168 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-09-17 02:50:46.629  6396  6632 I OpenGLRenderer: Davey! duration=709ms; Flags=0, FrameTimelineVsyncId=30530, IntendedVsync=323645079360, Vsync=324028412678, InputEventId=0, HandleInputStart=324042546772, AnimationStart=324042550790, PerformTraversalsStart=324162203013, DrawStart=324162453080, FrameDeadline=324411745996, FrameInterval=324036193852, FrameStartTime=16666666, SyncQueued=324253423584, SyncStart=324648202462, IssueDrawCommandsStart=324670055952, SwapBuffers=324672305852, FrameCompleted=324749154373, DequeueBufferDuration=2254, QueueBufferDuration=234147, GpuCompleted=324749154373, SwapBuffersCompleted=324673383854, DisplayPresentTime=0, CommandSubmissionCompleted=324672305852, 
-09-17 02:50:46.877  6396  6632 I OpenGLRenderer: Davey! duration=917ms; Flags=0, FrameTimelineVsyncId=30592, IntendedVsync=324095079342, Vsync=324645079320, InputEventId=0, HandleInputStart=324649231674, AnimationStart=324649233747, PerformTraversalsStart=324663292124, DrawStart=324663483591, FrameDeadline=324778412648, FrameInterval=324648796862, FrameStartTime=16666666, SyncQueued=324691651292, SyncStart=324691703937, IssueDrawCommandsStart=324691855420, SwapBuffers=324943883461, FrameCompleted=325012473186, DequeueBufferDuration=2995, QueueBufferDuration=267931, GpuCompleted=325012473186, SwapBuffersCompleted=324945595226, DisplayPresentTime=0, CommandSubmissionCompleted=324943883461, 
-09-17 02:50:46.995  6396  6437 D EGL_emulation: app_time_stats: avg=167.61ms min=25.21ms max=355.31ms count=5
-09-17 02:50:47.368  6396  6500 D EGL_emulation: app_time_stats: avg=1657.79ms min=1657.79ms max=1657.79ms count=1
-09-17 02:50:47.550  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=946.0, y[0]=538.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=325803, downTime=325803, deviceId=-1, source=0x1002, displayId=0, eventId=-973669467 }
-09-17 02:50:47.557  6396  6408 I OpenGLRenderer: Davey! duration=760ms; Flags=0, FrameTimelineVsyncId=30649, IntendedVsync=324745079316, Vsync=324945079308, InputEventId=0, HandleInputStart=324949337493, AnimationStart=324949372588, PerformTraversalsStart=324983188180, DrawStart=324983444448, FrameDeadline=325211745964, FrameInterval=324949151626, FrameStartTime=16666666, SyncQueued=325017678842, SyncStart=325193303532, IssueDrawCommandsStart=325193419589, SwapBuffers=325310093456, FrameCompleted=325681427714, DequeueBufferDuration=4779, QueueBufferDuration=158776, GpuCompleted=325681427714, SwapBuffersCompleted=325311853692, DisplayPresentTime=0, CommandSubmissionCompleted=325310093456, 
-09-17 02:50:47.586  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=946.0, y[0]=538.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=325803, downTime=325803, deviceId=-1, source=0x1002, displayId=0, eventId=-66807884 }
-09-17 02:50:47.606  6396  6396 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
-09-17 02:50:47.882  6640  6640 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-09-17 02:50:47.898  6640  6640 I AndroidRuntime: Using default boot image
-09-17 02:50:47.898  6640  6640 I AndroidRuntime: Leaving lock profiling enabled
-09-17 02:50:47.901  6640  6640 I app_process: Core platform API reporting enabled, enforcing=false
-09-17 02:50:47.912  6640  6640 I app_process: Using CollectorTypeCC GC.
-09-17 02:50:48.014  6640  6640 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-09-17 02:50:48.029  6640  6640 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-09-17 02:50:48.029  6640  6640 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
-09-17 02:50:48.037  6640  6640 W app_process: Unexpected CPU variant for x86: x86_64.
-09-17 02:50:48.037  6640  6640 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
-09-17 02:50:48.039  6640  6640 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
-09-17 02:50:48.040  6640  6640 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
-09-17 02:50:48.054  6640  6640 W main    : type=1400 audit(0.0:100): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-17 02:50:48.067  6640  6640 W libc    : Access denied finding property "ro.product.name_for_attestation"
-09-17 02:50:48.073  6640  6640 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-09-17 02:50:48.073  6640  6640 W libc    : Access denied finding property "ro.product.model_for_attestation"
-09-17 02:50:48.074  6640  6640 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-09-17 02:50:48.066  6640  6640 W main    : type=1400 audit(0.0:101): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-17 02:50:48.084  6640  6640 D UiAutomationConnection: Created on user UserHandle{0}
-09-17 02:50:48.084  6640  6640 I UiAutomation: Initialized for user 0 on display 0
-09-17 02:50:48.084  6640  6640 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-09-17 02:50:48.085   522   595 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
-09-17 02:50:48.085   522   595 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
-09-17 02:50:48.091   522   595 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:48.092   522   522 D BatterySaverPolicy: accessibility changed to true, updating policy.
-09-17 02:50:48.095  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:48.070  6640  6640 W main    : type=1400 audit(0.0:102): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-17 02:50:48.103   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 02:50:48.127  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:48.127  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:48.127  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:48.127  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:48.128  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:48.128  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:48.128  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:48.128  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:48.130   840   875 W Looper  : Slow dispatch took 33ms wmshell.main h=android.view.ViewRootImpl$ViewRootHandler c=android.view.accessibility.AccessibilityManager$$ExternalSyntheticLambda1@d04be6a m=0
-09-17 02:50:48.131  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:48.131  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:48.143   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:48.143  1847  2405 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
-09-17 02:50:48.144  1847  2405 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
-09-17 02:50:48.146  1772  2168 I A       : Unsubscribed to apa or classic variant change.
-09-17 02:50:48.159  6640  6653 V UiAutomation: Init UiAutomation@538cb76[id=14, displayId=0, flags=0]
-09-17 02:50:48.160  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:48.161  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:48.161  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:48.161  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:48.161  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:48.162  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:48.162   522  2543 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:48.164  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:48.164  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:48.165  1772  5241 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-17 02:50:48.165  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:48.165  1772  5241 I A       : [Memory] eligibility: StashEligibility{4}
-09-17 02:50:48.166  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:48.179  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:48.179   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:48.318  6396  6500 E EGL_emulation: tid 6500: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
-09-17 02:50:48.318  6396  6500 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
-09-17 02:50:48.319  6396  6500 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-17 02:50:48.412  6396  6500 E Surface : getSlotFromBufferLocked: unknown buffer: 0x41b0000042580000
-09-17 02:50:48.415  6396  6396 I Choreographer: Skipped 44 frames!  The application may be doing too much work on its main thread.
-09-17 02:50:48.533  6396  6437 D EGL_emulation: app_time_stats: avg=422.11ms min=104.73ms max=678.03ms count=3
-09-17 02:50:48.717  6396  6632 I OpenGLRenderer: Davey! duration=1484ms; Flags=0, FrameTimelineVsyncId=30718, IntendedVsync=325411745956, Vsync=325911745936, InputEventId=-66807884, HandleInputStart=325929432262, AnimationStart=325929436270, PerformTraversalsStart=325992161074, DrawStart=325992449934, FrameDeadline=325995079266, FrameInterval=325921851580, FrameStartTime=16666666, SyncQueued=326704228447, SyncStart=326728031078, IssueDrawCommandsStart=326777548334, SwapBuffers=326847616668, FrameCompleted=326920109627, DequeueBufferDuration=5180, QueueBufferDuration=220351, GpuCompleted=326920109627, SwapBuffersCompleted=326851452408, DisplayPresentTime=0, CommandSubmissionCompleted=326847616668, 
-09-17 02:50:48.895  6396  6632 I OpenGLRenderer: Davey! duration=1127ms; Flags=0, FrameTimelineVsyncId=30748, IntendedVsync=325995079266, Vsync=326728412570, InputEventId=0, HandleInputStart=326732732947, AnimationStart=326732736603, PerformTraversalsStart=326779663693, DrawStart=326779945920, FrameDeadline=326945079228, FrameInterval=326731160280, FrameStartTime=16666666, SyncQueued=326832978986, SyncStart=326851514204, IssueDrawCommandsStart=326865061757, SwapBuffers=326921804071, FrameCompleted=327140720651, DequeueBufferDuration=109872295, QueueBufferDuration=282317, GpuCompleted=327140720651, SwapBuffersCompleted=327032824960, DisplayPresentTime=0, CommandSubmissionCompleted=326921804071, 
-09-17 02:50:49.543   522   541 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-09-17 02:50:49.545   522   541 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-09-17 02:50:49.546   522   541 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-09-17 02:50:49.547   522   541 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
-09-17 02:50:49.718  6396  6437 D EGL_emulation: app_time_stats: avg=132.93ms min=71.47ms max=249.81ms count=6
-09-17 02:50:50.479  6396  6632 I OpenGLRenderer: Davey! duration=838ms; Flags=0, FrameTimelineVsyncId=30895, IntendedVsync=327628412534, Vsync=327778412528, InputEventId=0, HandleInputStart=327785573074, AnimationStart=327785577282, PerformTraversalsStart=327809733441, DrawStart=327809957789, FrameDeadline=328128412514, FrameInterval=327785434326, FrameStartTime=16666666, SyncQueued=327822753057, SyncStart=328034800036, IssueDrawCommandsStart=328077055745, SwapBuffers=328104030762, FrameCompleted=328678941609, DequeueBufferDuration=53958421, QueueBufferDuration=251250, GpuCompleted=328678941609, SwapBuffersCompleted=328177747330, DisplayPresentTime=0, CommandSubmissionCompleted=328104030762, 
-09-17 02:50:50.628  6396  6396 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
-09-17 02:50:50.642   828   828 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 02:50:50.745  6396  6632 I OpenGLRenderer: Davey! duration=1095ms; Flags=0, FrameTimelineVsyncId=30917, IntendedVsync=327795079194, Vsync=328028412518, InputEventId=0, HandleInputStart=328036897191, AnimationStart=328036900197, PerformTraversalsStart=328062968805, DrawStart=328063357681, FrameDeadline=328711745824, FrameInterval=328036774292, FrameStartTime=16666666, SyncQueued=328077040516, SyncStart=328177823832, IssueDrawCommandsStart=328177889114, SwapBuffers=328795768567, FrameCompleted=328991197612, DequeueBufferDuration=3527, QueueBufferDuration=222997, GpuCompleted=328991197612, SwapBuffersCompleted=328940036207, DisplayPresentTime=0, CommandSubmissionCompleted=328795768567, 
-09-17 02:50:50.879  6396  6437 D EGL_emulation: app_time_stats: avg=259.96ms min=54.61ms max=762.28ms count=4
-09-17 02:50:51.209  6396  6632 I OpenGLRenderer: Davey! duration=1056ms; Flags=0, FrameTimelineVsyncId=30962, IntendedVsync=328228412510, Vsync=328928412482, InputEventId=0, HandleInputStart=328944879058, AnimationStart=328944882885, PerformTraversalsStart=328965470631, DrawStart=328965672327, FrameDeadline=329211745804, FrameInterval=328944225367, FrameStartTime=16666666, SyncQueued=328975379129, SyncStart=329062310143, IssueDrawCommandsStart=329062419838, SwapBuffers=329194159087, FrameCompleted=329372242529, DequeueBufferDuration=65331139, QueueBufferDuration=172743, GpuCompleted=329372242529, SwapBuffersCompleted=329260392281, DisplayPresentTime=0, CommandSubmissionCompleted=329194159087, 
-09-17 02:50:51.961  6396  6437 D EGL_emulation: app_time_stats: avg=132.57ms min=70.00ms max=183.34ms count=6
-09-17 02:50:52.060   522  2543 D OomAdjuster: Not killing cached processes
-09-17 02:50:52.769  6640  6640 W AccessibilityNodeInfoDumper: Fetch time: 2902ms
-09-17 02:50:52.776  1735  1762 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-17 02:50:52.776  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:52.776  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:52.776  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:52.777  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:52.777  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:50:52.777  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:50:52.777  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:50:52.777  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:50:52.778  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-17 02:50:52.778  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:50:52.779   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:50:52.779   522   595 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-17 02:50:52.779   522   595 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
-09-17 02:50:52.780   522   522 D BatterySaverPolicy: accessibility changed to false, updating policy.
-09-17 02:50:52.793  1847  2405 I A       : NGA enabled in interactor.
-09-17 02:50:52.795  1847  2405 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
-09-17 02:50:52.796  6640  6640 D AndroidRuntime: Shutting down VM
-09-17 02:50:52.805  1772  2168 I A       : on opa visibility changed false
-09-17 02:50:52.807  1772  1845 I A       : Initializing all components
-09-17 02:50:52.811  1772  1845 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-17 02:50:52.812  1772  1845 I A       : [Memory] eligibility: StashEligibility{6}
-09-17 02:50:52.812  1772  2172 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
-09-17 02:50:52.812  1772  2172 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
-09-17 02:50:52.812  1772  2172 I A       : onActiveStateChangeEvent: IDLE => IDLE
-09-17 02:50:52.813  1772  2172 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
-09-17 02:50:52.817  1772  2168 I A       : onIsEnabledChanged, isEnabled: false
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.817  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.818  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.818  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.818  1772  2168 I A       : onOpaVisibilityChanged: false
-09-17 02:50:52.819  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.820  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.821  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.821  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.821  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.821  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.821  1772  2168 I A       : Setting session to type: NO_SESSION
-09-17 02:50:52.822  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.823  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.823  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.823  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.830  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.830  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.830  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.830  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.830  1772  2168 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
-09-17 02:50:52.830  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.832  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.832  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.832  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.832  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.832  1772  2168 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-17 02:50:52.839  1772  2168 I A       : onDisabled. Registered: false
-09-17 02:50:52.840  1772  2168 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
-09-17 02:50:52.845  1772  2172 I A       : Initialize
-09-17 02:50:52.863  1772  2168 I NgaEntryPointEventSendr: setupConnection
-09-17 02:50:52.865  1847  1847 I A       : Creating pss binder().
-09-17 02:50:52.869  1772  2168 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
-09-17 02:50:52.878  1772  2168 I NgaEntryPointEventSendr: onServiceConnected
-09-17 02:50:52.879  1847  2599 I A       : Calling beginBinderSession().
-09-17 02:50:52.879  1847  2599 I A       : beginBinderSession(): calling binder
-09-17 02:50:52.879  1772  2168 I NgaEntryPointEventSendr: State changed: Connecting => Ready
-09-17 02:50:52.901  1772  2172 I A       : Successfully initialized all components
-09-17 02:50:52.932   522   595 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
-09-17 02:50:52.944  1772  2172 I A       : on opa visibility changed false
-09-17 02:50:52.951  1847  2594 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-17 02:50:52.957  1847  4204 I PBSessionCacheImpl: Deleted sessionId[8124981519170035] from persistence.
-09-17 02:50:52.958  1847  2594 W SearchServiceCore: Abort, client detached.
-09-17 02:50:52.966  1772  2172 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-09-17 02:50:52.971  1772  1772 V ClearcutMetricXmitter: Transmission is done.
-09-17 02:50:53.275  6396  6437 D EGL_emulation: app_time_stats: avg=253.64ms min=56.46ms max=719.41ms count=4
-09-17 02:50:53.574  6396  6632 I OpenGLRenderer: Davey! duration=872ms; Flags=0, FrameTimelineVsyncId=31198, IntendedVsync=330778412408, Vsync=330978412400, InputEventId=0, HandleInputStart=330989289223, AnimationStart=330989291597, PerformTraversalsStart=331014491357, DrawStart=331014689998, FrameDeadline=331028412398, FrameInterval=330989046390, FrameStartTime=16666666, SyncQueued=331025451189, SyncStart=331025485833, IssueDrawCommandsStart=331026326843, SwapBuffers=331589866516, FrameCompleted=331650501087, DequeueBufferDuration=3066, QueueBufferDuration=143958, GpuCompleted=331650501087, SwapBuffersCompleted=331590667491, DisplayPresentTime=0, CommandSubmissionCompleted=331589866516, 
-09-17 02:50:53.794  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=986.0, y[0]=1943.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=332108, downTime=332108, deviceId=-1, source=0x1002, displayId=0, eventId=-716628191 }
-09-17 02:50:53.842  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=986.0, y[0]=1943.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=332108, downTime=332108, deviceId=-1, source=0x1002, displayId=0, eventId=-424828246 }
-09-17 02:50:53.967  6396  6632 I OpenGLRenderer: Davey! duration=873ms; Flags=0, FrameTimelineVsyncId=31248, IntendedVsync=331161745726, Vsync=331578412376, InputEventId=0, HandleInputStart=331593841544, AnimationStart=331593849540, PerformTraversalsStart=331622184932, DrawStart=331622456609, FrameDeadline=331978412360, FrameInterval=331593702004, FrameStartTime=16666666, SyncQueued=331647560116, SyncStart=331890416181, IssueDrawCommandsStart=331890485090, SwapBuffers=332075242874, FrameCompleted=332278555987, DequeueBufferDuration=68116309, QueueBufferDuration=224790, GpuCompleted=332278555987, SwapBuffersCompleted=332144512747, DisplayPresentTime=0, CommandSubmissionCompleted=332075242874, 
-09-17 02:50:54.269  6396  6500 D EGL_emulation: app_time_stats: avg=1846.29ms min=1000.15ms max=2692.44ms count=2
-09-17 02:50:54.620  6396  6500 E EGL_emulation: tid 6500: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
-09-17 02:50:54.620  6396  6500 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
-09-17 02:50:54.620  6396  6500 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-17 02:50:54.621  6396  6500 E Surface : getSlotFromBufferLocked: unknown buffer: 0x0
-09-17 02:50:54.756  6396  6396 I Choreographer: Skipped 51 frames!  The application may be doing too much work on its main thread.
-09-17 02:50:54.774  6396  6437 D EGL_emulation: app_time_stats: avg=357.44ms min=137.81ms max=806.23ms count=4
-09-17 02:50:54.855  6396  6408 I OpenGLRenderer: Davey! duration=1177ms; Flags=0, FrameTimelineVsyncId=31313, IntendedVsync=331928412362, Vsync=332161745686, InputEventId=-424828246, HandleInputStart=332170132647, AnimationStart=332170137156, PerformTraversalsStart=332256268928, DrawStart=332256599326, FrameDeadline=332495079006, FrameInterval=332167279902, FrameStartTime=16666666, SyncQueued=333048764367, SyncStart=333068859753, IssueDrawCommandsStart=333072358869, SwapBuffers=333088531401, FrameCompleted=333125987988, DequeueBufferDuration=3967, QueueBufferDuration=137937, GpuCompleted=333125987988, SwapBuffersCompleted=333090447229, DisplayPresentTime=0, CommandSubmissionCompleted=333088531401, 
-09-17 02:50:55.383   522   614 D ActivityManager: freezing 1899 com.google.process.gapps
-09-17 02:50:55.816  6396  6437 D EGL_emulation: app_time_stats: avg=236.83ms min=36.79ms max=767.79ms count=4
-09-17 02:50:56.811  6396  6404 I r.glidercopilot: Background concurrent copying GC freed 558308(21MB) AllocSpace objects, 71(1136KB) LOS objects, 49% free, 22MB/44MB, paused 28us,13us total 380.674ms
-09-17 02:50:57.354  6396  6437 D EGL_emulation: app_time_stats: avg=236.35ms min=111.76ms max=591.97ms count=6
-09-17 02:50:58.127   840   840 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-17 02:50:58.357  6396  6437 D EGL_emulation: app_time_stats: avg=131.86ms min=41.66ms max=241.69ms count=6
-09-17 02:50:58.579   828   828 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-17 02:50:58.797  6396  6500 D EGL_emulation: app_time_stats: avg=1620.22ms min=1401.93ms max=1838.50ms count=2
-09-17 02:50:59.107   522   595 D OomAdjuster: Not killing cached processes
-09-17 02:50:59.304   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 02:50:59.392  6396  6437 D EGL_emulation: app_time_stats: avg=345.02ms min=168.61ms max=594.57ms count=3
-09-17 02:51:00.085  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:51:00.093  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:51:00.093  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:51:00.094  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:51:00.095  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:51:00.111  1735  1801 I AiAiEcho: Predicting[0]: 
-09-17 02:51:00.112  1735  1801 I AiAiEcho: EchoTargets: 
-09-17 02:51:00.112  1735  1801 I AiAiEcho: Filtered by AiAi flag check: 
-09-17 02:51:00.113  1735  1801 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-17 02:51:00.114  1735  1801 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-17 02:51:00.114   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:51:00.122   840   840 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-17 02:51:00.146   840   912 D EGL_emulation: app_time_stats: avg=59870.64ms min=59870.64ms max=59870.64ms count=1
-09-17 02:51:00.331  6669  6669 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
-09-17 02:51:00.332  6669  6669 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
-09-17 02:51:00.442  6396  6437 D EGL_emulation: app_time_stats: avg=121.28ms min=51.09ms max=170.57ms count=6
-09-17 02:51:00.538   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-17 03:01:54.063   519   548 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
+09-17 03:01:54.063   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.208   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.208   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.209   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.209   519   519 W Looper  : Slow dispatch took 144ms main h=android.os.Handler c=com.android.server.PackageWatchdog$$ExternalSyntheticLambda2@57e57a2 m=0
+09-17 03:01:54.295   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.295   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.295   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.295   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.299   519  1397 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.299   519  1397 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.299   519  1397 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.299   519  1397 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.299   519  1397 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.300   519  1397 D OomAdjuster: Not killing cached processes
+09-17 03:01:54.300   519  1397 I ExplicitHealthCheckController: Explicit health check service is unbound
+--------- beginning of main
+09-17 03:01:54.344  6406  6524 D EGL_emulation: app_time_stats: avg=2458.69ms min=2458.69ms max=2458.69ms count=1
+09-17 03:01:54.345   519   615 I RescueParty: Starting to observe: [android, com.google.android.bluetooth], updated namespace: bluetooth
+09-17 03:01:54.346   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.348  6406  6481 I OpenGLRenderer: Davey! duration=700ms; Flags=0, FrameTimelineVsyncId=23046, IntendedVsync=322410984906, Vsync=322627651564, InputEventId=0, HandleInputStart=322649516924, AnimationStart=322649519849, PerformTraversalsStart=322792358425, DrawStart=322795307842, FrameDeadline=322944318218, FrameInterval=322643899516, FrameStartTime=16666666, SyncQueued=322852461401, SyncStart=322852489434, IssueDrawCommandsStart=322852589070, SwapBuffers=322929270536, FrameCompleted=323111126814, DequeueBufferDuration=51830557, QueueBufferDuration=346888, GpuCompleted=323111126814, SwapBuffersCompleted=322982785468, DisplayPresentTime=0, CommandSubmissionCompleted=322929270536, 
+09-17 03:01:54.349   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.bluetooth]
+09-17 03:01:54.349   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.349   519   519 D BluetoothDeviceConfigChangeTracker: shouldRestartWhenPropertiesUpdated: INIT_gd_hal_snoop_logger_filtering='true',scan_timeout_millis='300000',location_denylist_name='',audio_policy_hf_enabled='true',INIT_gd_hal_snoop_logger_socket='true',location_denylist_advertising_data='⊈0016AAFE40/00FFFFFFF0,⊆0016AAFE/00FFFFFF,⊆00FF4C0002/00FFFFFFFF',le_audio_enabled_by_default='false',location_denylist_mac='',audio_policy_ag_enabled='true'
+09-17 03:01:54.350   519   519 D BluetoothDeviceConfigListener: All properties unchanged, skipping restart
+09-17 03:01:54.351   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.351   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.360   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.361   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.361   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.362   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.362   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.363   519  1397 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.364   519  1397 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.366   519  1397 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.366   519  1397 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.366   519  1397 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.369   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.369   519  1397 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.387   519   615 I RescueParty: Starting to observe: [android, com.google.android.apps.nexuslauncher, com.android.systemui], updated namespace: latency_tracker
+09-17 03:01:54.390   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.390   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.391   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.394   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.395   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.apps.nexuslauncher, com.android.systemui]
+09-17 03:01:54.395   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.396   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.396   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.401   519   519 I ExplicitHealthCheckController: Not binding to service, service already connecting
+09-17 03:01:54.401   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.401   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.401   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.401   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.402   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.403   519   921 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.403   519   615 I RescueParty: Starting to observe: [android], updated namespace: battery_saver
+09-17 03:01:54.407   519   519 E DeviceConfig: Parsing int failed for location_mode
+09-17 03:01:54.412   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.413   519   615 I RescueParty: Starting to observe: [android], updated namespace: constrain_display_apis
+09-17 03:01:54.418   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
+09-17 03:01:54.418   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.418   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.419   519  2271 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.419   519  2271 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.419   519  2271 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.419   519   921 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.419   519   921 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.419   519  2271 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.419   519  2271 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.419   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.419   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.419   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.420   519   921 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.421   519  2271 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.424   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.424   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.425   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.429   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.429   519   921 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.430   519   921 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.431   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.431   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.432   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.432   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.432   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.432   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.432   519   519 I ExplicitHealthCheckController: Not binding to service, service already connecting
+09-17 03:01:54.432   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
+09-17 03:01:54.432   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.432   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.432   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.435   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.435   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.436   519   921 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.436   519   921 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.436   519   921 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.436   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.436   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.436   519   921 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.436   519  2271 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.436   519  2271 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.436   519  2271 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.436   519  2271 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.436   519  2271 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.436   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.437   519  2271 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.437   519   921 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.437   519   921 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.448   519   615 I RescueParty: Starting to observe: [android], updated namespace: backup_and_restore
+09-17 03:01:54.448   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.448   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.448   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.448   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.448   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
+09-17 03:01:54.448   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.448   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.448   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.449   519   519 I ExplicitHealthCheckController: Not binding to service, service already connecting
+09-17 03:01:54.449   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.449   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.449   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.464   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.464   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.464   519   921 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.464   519   921 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.464   519   921 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.464   519   921 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.464   519   921 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.465   519   921 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.472   519   615 I RescueParty: Starting to observe: [android], updated namespace: nnapi_native
+09-17 03:01:54.473   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.473   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
+09-17 03:01:54.473   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.473   519   548 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
+09-17 03:01:54.473   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.475   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.476   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.476   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.482   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.482   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.482   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.482   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.483   519   921 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.483   519   921 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.483   519   921 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.484   519   921 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.484   519   921 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.487   519   921 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.489   519   615 I RescueParty: Starting to observe: [android, com.google.android.networkstack], updated namespace: tethering
+09-17 03:01:54.489   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.489   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.489   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.490   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.490   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android, com.google.android.networkstack]
+09-17 03:01:54.490   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.490   519   548 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
+09-17 03:01:54.490   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.490   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.490   519   519 I ExplicitHealthCheckController: Not binding to service, service already connecting
+09-17 03:01:54.490   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.493   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.493   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.494   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.494   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.494   519  2271 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.494   519  2271 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.494   519  2271 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.494   519  2271 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.494   519  2271 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.495   519  2271 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.519   519   615 I RescueParty: Starting to observe: [android], updated namespace: location
+09-17 03:01:54.520   519   548 I PackageWatchdog: Syncing state, reason: observing new packages
+09-17 03:01:54.521   519   548 D PackageWatchdog: rescue-party-observer added the following packages to monitor [android]
+09-17 03:01:54.521   519   548 I PackageWatchdog: Syncing state, reason: updated observers
+09-17 03:01:54.522   519   548 I PackageWatchdog: Not pruning observers, elapsed time: 0ms
+09-17 03:01:54.522   519   548 I PackageWatchdog: Saving observer state to file
+09-17 03:01:54.523   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.523   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.523   519   519 I ExplicitHealthCheckController: Explicit health check service is bound
+09-17 03:01:54.530   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.530   519   519 I ExplicitHealthCheckController: Service not ready to get health check supported packages. Binding...
+09-17 03:01:54.531   519   519 I ExplicitHealthCheckController: Not binding to service, service already connecting
+09-17 03:01:54.535   519   519 I ExplicitHealthCheckController: Explicit health check service is connected ComponentInfo{com.google.android.ext.services/android.ext.services.watchdog.ExplicitHealthCheckServiceImpl}
+09-17 03:01:54.535   519   519 I ExplicitHealthCheckController: Service initialized, syncing requests
+09-17 03:01:54.535   519   519 I PackageWatchdog: Syncing health check requests for packages: {}
+09-17 03:01:54.535   519   519 D ExplicitHealthCheckController: Getting health check supported packages
+09-17 03:01:54.535   519  1397 I ExplicitHealthCheckController: Explicit health check supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.535   519  1397 D PackageWatchdog: Received supported packages [PackageConfig{com.google.android.networkstack, 86400000}]
+09-17 03:01:54.535   519  1397 D ExplicitHealthCheckController: Getting health check requested packages
+09-17 03:01:54.536   519  1397 I ExplicitHealthCheckController: Explicit health check requested packages []
+09-17 03:01:54.536   519  1397 I ExplicitHealthCheckController: No more health check requests, unbinding...
+09-17 03:01:54.537   519  1397 I ExplicitHealthCheckController: Explicit health check service is unbound
+09-17 03:01:54.842  6406  6456 D EGL_emulation: app_time_stats: avg=268.25ms min=79.36ms max=603.41ms count=4
+09-17 03:01:54.922  6406  6481 I OpenGLRenderer: Davey! duration=736ms; Flags=0, FrameTimelineVsyncId=23109, IntendedVsync=322810984890, Vsync=322860984888, InputEventId=0, HandleInputStart=322869316188, AnimationStart=322869319394, PerformTraversalsStart=322872322261, DrawStart=322872511644, FrameDeadline=323144318210, FrameInterval=322869298095, FrameStartTime=16666666, SyncQueued=322872975470, SyncStart=322982868233, IssueDrawCommandsStart=322982924027, SwapBuffers=323265642364, FrameCompleted=323657867856, DequeueBufferDuration=3076, QueueBufferDuration=162203, GpuCompleted=323657867856, SwapBuffersCompleted=323586219175, DisplayPresentTime=0, CommandSubmissionCompleted=323265642364, 
+09-17 03:01:55.016  2995  4285 I DialerTaskExecutor: com.android.voicemail.impl.scheduling.TaskExecutor$WorkerThreadHandler.handleMessage:221 executing task com.android.voicemail.impl.ActivationTask@62fed62 [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.017  2995  2995 I DialerLogcatLoggingBindings: com.android.dialer.logging.logcat.LogcatLoggingBindings.logImpression:41 Impression: VVM_ACTIVATION_STARTED
+09-17 03:01:55.051  6406  6481 I OpenGLRenderer: Davey! duration=778ms; Flags=0, FrameTimelineVsyncId=23119, IntendedVsync=322894318220, Vsync=323060984880, InputEventId=0, HandleInputStart=323069107594, AnimationStart=323069110239, PerformTraversalsStart=323156159247, DrawStart=323156414673, FrameDeadline=323677651522, FrameInterval=323068989674, FrameStartTime=16666666, SyncQueued=323298325883, SyncStart=323586303573, IssueDrawCommandsStart=323587372227, SwapBuffers=323753231196, FrameCompleted=323961109763, DequeueBufferDuration=81209453, QueueBufferDuration=107471, GpuCompleted=323961109763, SwapBuffersCompleted=323835300845, DisplayPresentTime=0, CommandSubmissionCompleted=323753231196, 
+09-17 03:01:55.056  2995  4285 I DialerPreOMigrationHandler: com.android.voicemail.impl.PreOMigrationHandler.migrate:76 ComponentInfo{com.android.phone/com.android.services.telephony.TelephonyConnectionService}, 1, UserHandle{0} already migrated [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.060  2995  4285 I DialerOmtpVvmCarrierConfigHelper: com.android.voicemail.impl.OmtpVvmCarrierConfigHelper.isCarrierAppInstalled:637 carrier app not installed in this device [CONTEXT ratelimit_period="1 MINUTES [skipped: 4]" ]
+09-17 03:01:55.060  2995  4285 I DialerVoicemailStatus: com.android.voicemail.impl.VoicemailStatus$Editor.apply:112 enter
+09-17 03:01:55.060  2995  4285 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.insertOrUpdateVoicemailStatus:196 enter
+09-17 03:01:55.065  2995  6642 I DialerRestVoicemailEnabledFn: com.android.dialer.voicemail.service.impl.vvmclients.rest.RestVoicemailEnabledFn.isEnabled:51 disabled by flag [CONTEXT ratelimit_period="1 MINUTES [skipped: 23]" ]
+09-17 03:01:55.065  2995  6642 I DialerCvvmEnabledFn: com.android.dialer.voicemail.service.impl.vvmclients.omtp.protocol.cvvm.CvvmEnabledFn.isEnabled:37 disabled by flag [CONTEXT ratelimit_period="1 MINUTES [skipped: 11]" ]
+09-17 03:01:55.093  2995  6642 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+09-17 03:01:55.093  2995  6642 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.lambda$insertOrUpdateVoicemailStatus$5:213 merged status: # kee@6600c263
+09-17 03:01:55.094  2995  4285 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.onExecuteInBackgroundThread:292 VVM content provider configured - vvm_type_cvvm PhoneAccountHandle: [ComponentName: com.android.phone/com.android.services.telephony.TelephonyConnectionService subId: 1] [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.094  2995  4285 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.updateVoicemailsWithIccId:477 conversion disabled [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.095  2995  4285 I DialerOmtpVvmCarrierConfigHelper: com.android.voicemail.impl.OmtpVvmCarrierConfigHelper.handleEvent:527 OmtpEvent:CONFIG_ACTIVATING PhoneAccountHandle: [ComponentName: com.android.phone/com.android.services.telephony.TelephonyConnectionService subId: 1] [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.095  2995  4285 I DialerVoicemailStatus: com.android.voicemail.impl.VoicemailStatus$Editor.apply:112 enter
+09-17 03:01:55.096  2995  4285 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.insertOrUpdateVoicemailStatus:196 enter
+09-17 03:01:55.116  2995  6643 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+09-17 03:01:55.116  2995  6643 I DialerVoicemailStatusDataServiceImpl: com.android.dialer.voicemailstatus.dataservice.impl.VoicemailStatusDataServiceImpl.lambda$insertOrUpdateVoicemailStatus$5:213 merged status: # kee@6600c263
+09-17 03:01:55.123  2995  4285 I DialerActivationTask: com.android.voicemail.impl.ActivationTask.onExecuteInBackgroundThread:339 sending an activation request [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.125  1052  1403 D SmsNumberUtils: enter filterDestAddr. destAddr="[BajqU4K5_YhSYbs-7QUn0dOwcmI]"
+09-17 03:01:55.125  1052  1403 D SmsNumberUtils: destAddr is not formatted.
+09-17 03:01:55.125  1052  1403 D SmsNumberUtils: leave filterDestAddr, new destAddr="[BajqU4K5_YhSYbs-7QUn0dOwcmI]"
+09-17 03:01:55.136  2995  4285 I DialerLogcatLoggingBindings: com.android.dialer.logging.logcat.LogcatLoggingBindings.logImpression:46 Impression: CVVM_SEND_VVM_SMS
+09-17 03:01:55.351  6406  6481 I OpenGLRenderer: Davey! duration=949ms; Flags=0, FrameTimelineVsyncId=23146, IntendedVsync=323094329309, Vsync=323577662565, InputEventId=0, HandleInputStart=323587487824, AnimationStart=323587490900, PerformTraversalsStart=323641429446, DrawStart=323646313014, FrameDeadline=323994318176, FrameInterval=323587318647, FrameStartTime=16666664, SyncQueued=323742482897, SyncStart=323835388349, IssueDrawCommandsStart=323835466064, SwapBuffers=323961982437, FrameCompleted=324136728457, DequeueBufferDuration=27826650, QueueBufferDuration=259846, GpuCompleted=324136728457, SwapBuffersCompleted=323990802422, DisplayPresentTime=0, CommandSubmissionCompleted=323961982437, 
+09-17 03:01:55.515  6406  6481 I OpenGLRenderer: Davey! duration=707ms; Flags=0, FrameTimelineVsyncId=23182, IntendedVsync=323627651524, Vsync=323827651516, InputEventId=0, HandleInputStart=323843039868, AnimationStart=323843042292, PerformTraversalsStart=323870928975, DrawStart=323871120863, FrameDeadline=324160995807, FrameInterval=323841918164, FrameStartTime=16666666, SyncQueued=324029622236, SyncStart=324029656260, IssueDrawCommandsStart=324029837337, SwapBuffers=324264932686, FrameCompleted=324335036789, DequeueBufferDuration=2725, QueueBufferDuration=256019, GpuCompleted=324335036789, SwapBuffersCompleted=324268338687, DisplayPresentTime=0, CommandSubmissionCompleted=324264932686, 
+09-17 03:01:55.673  2995  2995 I DialerStatusSmsFetcher: com.android.voicemail.impl.sms.StatusSmsFetcher.onReceive:106 Request SMS successfully sent [CONTEXT enable_persistent_logger=true ]
+09-17 03:01:55.925  6406  6456 D EGL_emulation: app_time_stats: avg=159.97ms min=70.21ms max=277.56ms count=5
+09-17 03:01:56.110  6644  6644 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-17 03:01:56.116  6644  6644 I AndroidRuntime: Using default boot image
+09-17 03:01:56.116  6644  6644 I AndroidRuntime: Leaving lock profiling enabled
+09-17 03:01:56.119  6644  6644 I app_process: Core platform API reporting enabled, enforcing=false
+09-17 03:01:56.120  6644  6644 I app_process: Using CollectorTypeCC GC.
+09-17 03:01:56.319  6644  6644 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-17 03:01:56.369  6644  6644 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+09-17 03:01:56.374  6644  6644 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
+09-17 03:01:56.406  6644  6644 W app_process: Unexpected CPU variant for x86: x86_64.
+09-17 03:01:56.406  6644  6644 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+09-17 03:01:56.407  6644  6644 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
+09-17 03:01:56.418  6644  6644 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
+09-17 03:01:56.471  6644  6644 W main    : type=1400 audit(0.0:99): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:01:56.482  6644  6644 W libc    : Access denied finding property "ro.product.name_for_attestation"
+09-17 03:01:56.488  6644  6644 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+09-17 03:01:56.488  6644  6644 W libc    : Access denied finding property "ro.product.model_for_attestation"
+09-17 03:01:56.496  6644  6644 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+09-17 03:01:56.479  6644  6644 W main    : type=1400 audit(0.0:100): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:01:56.503  6644  6644 D UiAutomationConnection: Created on user UserHandle{0}
+09-17 03:01:56.503  6644  6644 I UiAutomation: Initialized for user 0 on display 0
+09-17 03:01:56.503  6644  6644 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+09-17 03:01:56.505   519  1397 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+09-17 03:01:56.505   519  1397 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
+09-17 03:01:56.506   519  1397 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:01:56.507   519   519 D BatterySaverPolicy: accessibility changed to true, updating policy.
+09-17 03:01:56.507  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:01:56.508  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:01:56.511  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:01:56.513  6644  6657 V UiAutomation: Init UiAutomation@8264fdb[id=13, displayId=0, flags=0]
+09-17 03:01:56.514  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:01:56.514   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:01:56.518   519  2046 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:01:56.518  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:01:56.520  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:01:56.527  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:01:56.528  1801  2510 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
+09-17 03:01:56.528  1801  2510 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
+09-17 03:01:56.487  6644  6644 W main    : type=1400 audit(0.0:101): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:01:56.533  1613  1675 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-17 03:01:56.533  1613  1675 I A       : [Memory] eligibility: StashEligibility{4}
+09-17 03:01:56.535  1613  2234 I A       : Unsubscribed to apa or classic variant change.
+09-17 03:01:56.540   841   875 W Looper  : Slow dispatch took 30ms wmshell.main h=android.view.ViewRootImpl$ViewRootHandler c=android.view.accessibility.AccessibilityManager$$ExternalSyntheticLambda1@a9a07f1 m=0
+09-17 03:01:56.552  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:01:56.552   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:01:56.563  6406  6524 D EGL_emulation: app_time_stats: avg=2219.27ms min=2219.27ms max=2219.27ms count=1
+09-17 03:01:56.972  6406  6456 D EGL_emulation: app_time_stats: avg=222.44ms min=81.25ms max=571.29ms count=4
+09-17 03:01:57.216  5482  5482 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.feedback.internal.IFeedbackService dat=chimera-action:/... cmp=com.google.android.gms/.chimera.GmsBoundBrokerService }
+09-17 03:01:57.246   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 03:01:57.526  6406  6512 I OpenGLRenderer: Davey! duration=731ms; Flags=0, FrameTimelineVsyncId=23389, IntendedVsync=325360984788, Vsync=325560984780, InputEventId=0, HandleInputStart=325575899230, AnimationStart=325575902035, PerformTraversalsStart=325680415796, DrawStart=325680676343, FrameDeadline=325977651430, FrameInterval=325571303501, FrameStartTime=16666666, SyncQueued=325716424302, SyncStart=325885020130, IssueDrawCommandsStart=325929571455, SwapBuffers=326067978061, FrameCompleted=326261189491, DequeueBufferDuration=66728168, QueueBufferDuration=207898, GpuCompleted=326261189491, SwapBuffersCompleted=326135391287, DisplayPresentTime=0, CommandSubmissionCompleted=326067978061, 
+09-17 03:01:57.987  6406  6456 D EGL_emulation: app_time_stats: avg=144.79ms min=65.97ms max=238.86ms count=5
+09-17 03:01:58.525  6406  6524 D EGL_emulation: app_time_stats: avg=1961.68ms min=1961.68ms max=1961.68ms count=1
+09-17 03:01:58.616  6406  6512 I OpenGLRenderer: Davey! duration=852ms; Flags=0, FrameTimelineVsyncId=23502, IntendedVsync=326577651406, Vsync=326777651398, InputEventId=0, HandleInputStart=326790088981, AnimationStart=326790091445, PerformTraversalsStart=326879252714, DrawStart=326879472294, FrameDeadline=326994318056, FrameInterval=326789980037, FrameStartTime=16666666, SyncQueued=326912906594, SyncStart=326912937712, IssueDrawCommandsStart=326913006771, SwapBuffers=326980906115, FrameCompleted=327430100092, DequeueBufferDuration=3857, QueueBufferDuration=449529, GpuCompleted=327430100092, SwapBuffersCompleted=327355053037, DisplayPresentTime=0, CommandSubmissionCompleted=326980906115, 
+09-17 03:01:58.981  6406  6512 I OpenGLRenderer: Davey! duration=726ms; Flags=0, FrameTimelineVsyncId=23545, IntendedVsync=326960984724, Vsync=327344318042, InputEventId=0, HandleInputStart=327357141170, AnimationStart=327357144677, PerformTraversalsStart=327381189987, DrawStart=327381448270, FrameDeadline=327660984696, FrameInterval=327356423275, FrameStartTime=16666666, SyncQueued=327407453540, SyncStart=327529011664, IssueDrawCommandsStart=327529083509, SwapBuffers=327626278185, FrameCompleted=327809372057, DequeueBufferDuration=2805, QueueBufferDuration=197518, GpuCompleted=327809372057, SwapBuffersCompleted=327629549392, DisplayPresentTime=0, CommandSubmissionCompleted=327626278185, 
+09-17 03:01:59.083  6406  6456 D EGL_emulation: app_time_stats: avg=185.45ms min=89.86ms max=454.92ms count=5
+09-17 03:01:59.298  6406  6418 I r.glidercopilot: Background concurrent copying GC freed 539846(20MB) AllocSpace objects, 67(1072KB) LOS objects, 49% free, 22MB/45MB, paused 27us,37us total 779.695ms
+09-17 03:01:59.426   519   540 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+09-17 03:01:59.428   519   540 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+09-17 03:01:59.428   519   540 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+09-17 03:01:59.429   519   540 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+09-17 03:02:00.004  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:00.004  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:00.004  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:00.005  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:00.005  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:02:00.006   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:02:00.055   825   825 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 03:02:00.174   841   905 D EGL_emulation: app_time_stats: avg=60082.79ms min=60082.79ms max=60082.79ms count=1
+09-17 03:02:00.292  6406  6456 D EGL_emulation: app_time_stats: avg=191.94ms min=96.23ms max=263.06ms count=5
+09-17 03:02:00.463  6406  6524 D EGL_emulation: app_time_stats: avg=1938.75ms min=1938.75ms max=1938.75ms count=1
+09-17 03:02:01.014  6406  6406 I Choreographer: Skipped 39 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:01.061  6406  6512 I OpenGLRenderer: Davey! duration=1061ms; Flags=0, FrameTimelineVsyncId=23723, IntendedVsync=328777651318, Vsync=329010984642, InputEventId=0, HandleInputStart=329039122268, AnimationStart=329039128299, PerformTraversalsStart=329125898724, DrawStart=329126120258, FrameDeadline=329310984630, FrameInterval=329026908586, FrameStartTime=16666666, SyncQueued=329207856114, SyncStart=329207892903, IssueDrawCommandsStart=329207981969, SwapBuffers=329292187776, FrameCompleted=329839686843, DequeueBufferDuration=546853032, QueueBufferDuration=207368, GpuCompleted=329839391715, SwapBuffersCompleted=329839686843, DisplayPresentTime=0, CommandSubmissionCompleted=329292187776, 
+09-17 03:02:01.407  6406  6512 I OpenGLRenderer: Davey! duration=1000ms; Flags=0, FrameTimelineVsyncId=23785, IntendedVsync=329260984632, Vsync=329910984606, InputEventId=0, HandleInputStart=329971353707, AnimationStart=329971358176, PerformTraversalsStart=329995759171, DrawStart=329995961118, FrameDeadline=330077651266, FrameInterval=329926194408, FrameStartTime=16666666, SyncQueued=330019727548, SyncStart=330019793644, IssueDrawCommandsStart=330019864577, SwapBuffers=330056172181, FrameCompleted=330261130500, DequeueBufferDuration=69737651, QueueBufferDuration=122949, GpuCompleted=330261130500, SwapBuffersCompleted=330127941013, DisplayPresentTime=0, CommandSubmissionCompleted=330056172181, 
+09-17 03:02:01.459  6406  6456 D EGL_emulation: app_time_stats: avg=137.51ms min=84.94ms max=243.15ms count=4
+09-17 03:02:01.555   519  1397 D OomAdjuster: Not killing cached processes
+09-17 03:02:02.460  6406  6456 D EGL_emulation: app_time_stats: avg=124.52ms min=49.88ms max=223.06ms count=6
+09-17 03:02:02.757  6406  6524 D EGL_emulation: app_time_stats: avg=2293.33ms min=2293.33ms max=2293.33ms count=1
+09-17 03:02:03.448   519   609 D ActivityManager: freezing 1632 com.google.process.gservices
+09-17 03:02:03.449   519   609 D ActivityManager: freezing 1511 com.google.android.apps.wellbeing
+09-17 03:02:03.522  6406  6512 I OpenGLRenderer: Davey! duration=772ms; Flags=0, FrameTimelineVsyncId=23959, IntendedVsync=331294323432, Vsync=331544323407, InputEventId=0, HandleInputStart=331551787548, AnimationStart=331551790433, PerformTraversalsStart=331648211648, DrawStart=331648366467, FrameDeadline=332077656688, FrameInterval=331551672112, FrameStartTime=16666665, SyncQueued=331683029000, SyncStart=331974843984, IssueDrawCommandsStart=332031974553, SwapBuffers=332156612054, FrameCompleted=332358248604, DequeueBufferDuration=195658230, QueueBufferDuration=171810, GpuCompleted=332358248604, SwapBuffersCompleted=332352963296, DisplayPresentTime=0, CommandSubmissionCompleted=332156612054, 
+09-17 03:02:03.631  6406  6456 D EGL_emulation: app_time_stats: avg=182.57ms min=5.34ms max=433.18ms count=4
+09-17 03:02:03.969  6406  6445 W r.glidercopilot: Long monitor contention with owner DefaultDispatcher-worker-3 (6455) at void com.neutronstar.glidercopilot.OgnLiveRepository.publish()(OgnLiveRepository.kt:170) waiters=0 in void com.neutronstar.glidercopilot.OgnLiveRepository.handle(com.neutronstar.glidercopilot.ogn.AprsLine) for 107ms
+09-17 03:02:03.973  6406  6512 I OpenGLRenderer: Davey! duration=735ms; Flags=0, FrameTimelineVsyncId=24012, IntendedVsync=332010984522, Vsync=332377651174, InputEventId=0, HandleInputStart=332390727312, AnimationStart=332390731079, PerformTraversalsStart=332437667016, DrawStart=332437885805, FrameDeadline=332560984500, FrameInterval=332379976872, FrameStartTime=16666666, SyncQueued=332471553690, SyncStart=332471588625, IssueDrawCommandsStart=332471656913, SwapBuffers=332542387793, FrameCompleted=332746708274, DequeueBufferDuration=202863961, QueueBufferDuration=209141, GpuCompleted=332746318750, SwapBuffersCompleted=332746708274, DisplayPresentTime=0, CommandSubmissionCompleted=332542387793, 
+09-17 03:02:04.012   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 03:02:04.535  6644  6644 W AccessibilityNodeInfoDumper: Fetch time: 5913ms
+09-17 03:02:04.540  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:02:04.540  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:04.541  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:04.541  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:04.541  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:04.545  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:04.545  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:04.545  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:04.546  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:04.547  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:02:04.547  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:02:04.548   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:02:04.550   519  1397 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:02:04.551   519  1397 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
+09-17 03:02:04.553  1801  2495 I A       : NGA enabled in interactor.
+09-17 03:02:04.553  1801  2495 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
+09-17 03:02:04.556  1613  5426 I A       : Initializing all components
+09-17 03:02:04.565  1613  5426 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-17 03:02:04.566  1613  5426 I A       : [Memory] eligibility: StashEligibility{6}
+09-17 03:02:04.567  1613  2194 I A       : onIsEnabledChanged, isEnabled: false
+09-17 03:02:04.567  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.567  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.567  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.567  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.568  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.568  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.568  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.570  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.570  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.571  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.571  1613  2194 I A       : onOpaVisibilityChanged: false
+09-17 03:02:04.577  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.578  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.578  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.579  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.579   519   519 D BatterySaverPolicy: accessibility changed to false, updating policy.
+09-17 03:02:04.579  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.579  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.580  1613  2194 I A       : Setting session to type: NO_SESSION
+09-17 03:02:04.580  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.580  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.581  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.582  1613  2234 I A       : on opa visibility changed false
+09-17 03:02:04.582  1613  2234 I A       : on opa visibility changed false
+09-17 03:02:04.582  1613  2234 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
+09-17 03:02:04.582  1613  2234 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
+09-17 03:02:04.583  1613  2234 I A       : onActiveStateChangeEvent: IDLE => IDLE
+09-17 03:02:04.583  1613  2234 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
+09-17 03:02:04.586  1613  2194 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
+09-17 03:02:04.586  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.586  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.586  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.586  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.587  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.591  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:04.591  1613  2194 I A       : onDisabled. Registered: false
+09-17 03:02:04.592  1613  2194 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
+09-17 03:02:04.593  1613  2234 I A       : Initialize
+09-17 03:02:04.596  1613  2194 I NgaEntryPointEventSendr: setupConnection
+09-17 03:02:04.603  6644  6644 D AndroidRuntime: Shutting down VM
+09-17 03:02:04.608   519  1397 W ProcessStats: Tracking association SourceState{759d610 com.google.android.googlequicksearchbox:interactor/10132 BFgs #12961} whose proc state 4 is better than process ProcessState{319a159 com.google.android.googlequicksearchbox:search/10132 pkg=com.google.android.googlequicksearchbox} proc state 14 (45 skipped)
+09-17 03:02:04.609  1801  1801 I A       : Creating pss binder().
+09-17 03:02:04.609  1613  2194 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
+09-17 03:02:04.615  1613  2234 I NgaEntryPointEventSendr: onServiceConnected
+09-17 03:02:04.616  1801  3228 I A       : Calling beginBinderSession().
+09-17 03:02:04.616  1801  3228 I A       : beginBinderSession(): calling binder
+09-17 03:02:04.616  1613  2234 I NgaEntryPointEventSendr: State changed: Connecting => Ready
+09-17 03:02:04.618  1613  2234 I A       : Successfully initialized all components
+09-17 03:02:04.625   519  1397 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
+09-17 03:02:04.640  1801  2711 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
+09-17 03:02:04.648  1801  4054 I PBSessionCacheImpl: Deleted sessionId[7922671380330449] from persistence.
+09-17 03:02:04.649  1801  2711 W SearchServiceCore: Abort, client detached.
+09-17 03:02:04.686  1613  2234 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
+09-17 03:02:04.766  6406  6456 D EGL_emulation: app_time_stats: avg=134.99ms min=73.30ms max=250.42ms count=5
+09-17 03:02:05.109  6406  6524 D EGL_emulation: app_time_stats: avg=2352.00ms min=2352.00ms max=2352.00ms count=1
+09-17 03:02:05.221  6406  6481 I OpenGLRenderer: Davey! duration=837ms; Flags=0, FrameTimelineVsyncId=24122, IntendedVsync=333227651140, Vsync=333327651136, InputEventId=0, HandleInputStart=333340800107, AnimationStart=333340804515, PerformTraversalsStart=333340807761, DrawStart=333341032420, FrameDeadline=333577651126, FrameInterval=333340570318, FrameStartTime=16666666, SyncQueued=333364466180, SyncStart=333427953320, IssueDrawCommandsStart=333428047806, SwapBuffers=333674581079, FrameCompleted=334128960562, DequeueBufferDuration=3988, QueueBufferDuration=203520, GpuCompleted=334128960562, SwapBuffersCompleted=333679614866, DisplayPresentTime=0, CommandSubmissionCompleted=333674581079, 
+09-17 03:02:05.566  6406  6481 I OpenGLRenderer: Davey! duration=796ms; Flags=0, FrameTimelineVsyncId=24143, IntendedVsync=333444317798, Vsync=333444317798, InputEventId=0, HandleInputStart=333454026022, AnimationStart=333454030281, PerformTraversalsStart=333566047483, DrawStart=333566302599, FrameDeadline=334160984436, FrameInterval=333454013369, FrameStartTime=16666666, SyncQueued=333590860678, SyncStart=333679696830, IssueDrawCommandsStart=333685000391, SwapBuffers=334133010533, FrameCompleted=334329245832, DequeueBufferDuration=4137, QueueBufferDuration=212276, GpuCompleted=334329245832, SwapBuffersCompleted=334134030527, DisplayPresentTime=0, CommandSubmissionCompleted=334133010533, 
+09-17 03:02:05.721  1091  1091 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=946.0, y[0]=538.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=334630, downTime=334630, deviceId=-1, source=0x1002, displayId=0, eventId=-894730006 }
+09-17 03:02:05.748  1091  1091 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=946.0, y[0]=538.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=334630, downTime=334630, deviceId=-1, source=0x1002, displayId=0, eventId=-86563821 }
+09-17 03:02:05.829  6406  6456 D EGL_emulation: app_time_stats: avg=244.27ms min=70.81ms max=454.50ms count=4
+09-17 03:02:05.918  6406  6481 I OpenGLRenderer: Davey! duration=736ms; Flags=0, FrameTimelineVsyncId=24200, IntendedVsync=333710984454, Vsync=334127651104, InputEventId=0, HandleInputStart=334135841528, AnimationStart=334135844935, PerformTraversalsStart=334163110327, DrawStart=334163334937, FrameDeadline=334577651086, FrameInterval=334135717847, FrameStartTime=16666666, SyncQueued=334186712651, SyncStart=334479764411, IssueDrawCommandsStart=334543948388, SwapBuffers=334549656586, FrameCompleted=334740897861, DequeueBufferDuration=84333265, QueueBufferDuration=214060, GpuCompleted=334740897861, SwapBuffersCompleted=334637523788, DisplayPresentTime=0, CommandSubmissionCompleted=334549656586, 
+09-17 03:02:06.021  6674  6674 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-17 03:02:06.040  6674  6674 I AndroidRuntime: Using default boot image
+09-17 03:02:06.045  6674  6674 I AndroidRuntime: Leaving lock profiling enabled
+09-17 03:02:06.047  6674  6674 I app_process: Core platform API reporting enabled, enforcing=false
+09-17 03:02:06.050  6674  6674 I app_process: Using CollectorTypeCC GC.
+09-17 03:02:06.138  6406  6524 D EGL_emulation: app_time_stats: avg=1028.73ms min=1028.73ms max=1028.73ms count=1
+09-17 03:02:06.178  6674  6674 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-17 03:02:06.193  6674  6674 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+09-17 03:02:06.193  6674  6674 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
+09-17 03:02:06.201  6674  6674 W app_process: Unexpected CPU variant for x86: x86_64.
+09-17 03:02:06.201  6674  6674 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+09-17 03:02:06.204  6674  6674 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
+09-17 03:02:06.205  6674  6674 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
+09-17 03:02:06.250  6674  6674 W libc    : Access denied finding property "ro.product.name_for_attestation"
+09-17 03:02:06.250  6674  6674 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+09-17 03:02:06.250  6674  6674 W libc    : Access denied finding property "ro.product.model_for_attestation"
+09-17 03:02:06.252  6674  6674 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+09-17 03:02:06.235  6674  6674 W main    : type=1400 audit(0.0:102): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:02:06.247  6674  6674 W main    : type=1400 audit(0.0:103): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:02:06.285  6674  6674 D UiAutomationConnection: Created on user UserHandle{0}
+09-17 03:02:06.285  6674  6674 I UiAutomation: Initialized for user 0 on display 0
+09-17 03:02:06.285  6674  6674 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+09-17 03:02:06.247  6674  6674 W main    : type=1400 audit(0.0:104): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-17 03:02:06.289   519  1397 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+09-17 03:02:06.289   519  1397 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
+09-17 03:02:06.292   519  1397 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:02:06.293   519   519 D BatterySaverPolicy: accessibility changed to true, updating policy.
+09-17 03:02:06.297  6674  6689 V UiAutomation: Init UiAutomation@7f0498a[id=14, displayId=0, flags=0]
+09-17 03:02:06.298  1801  2512 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
+09-17 03:02:06.298  1801  2512 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
+09-17 03:02:06.299  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:02:06.368  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:06.368  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:06.368  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:06.368  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:06.368  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:02:06.369  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:06.369  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:06.369  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:06.369  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:06.369  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:02:06.369   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:02:06.370  1613  1675 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-17 03:02:06.370  1613  1675 I A       : [Memory] eligibility: StashEligibility{4}
+09-17 03:02:06.370  1613  2234 I A       : Unsubscribed to apa or classic variant change.
+09-17 03:02:06.375  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:06.375  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:06.376  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:02:06.376  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:02:06.452   519  1397 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:02:06.454   841   875 W Looper  : Slow dispatch took 79ms wmshell.main h=android.view.ViewRootImpl$ViewRootHandler c=android.view.accessibility.AccessibilityManager$$ExternalSyntheticLambda1@eb1872f m=0
+09-17 03:02:06.457   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:02:06.465  6406  6524 E EGL_emulation: tid 6524: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
+09-17 03:02:06.465  6406  6524 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
+09-17 03:02:06.465  6406  6524 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
+09-17 03:02:06.560  6406  6524 E Surface : getSlotFromBufferLocked: unknown buffer: 0x8
+09-17 03:02:06.562  6406  6406 I Choreographer: Skipped 44 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:06.816  6406  6470 I OpenGLRenderer: Davey! duration=1111ms; Flags=0, FrameTimelineVsyncId=24248, IntendedVsync=334494317756, Vsync=334660984416, InputEventId=-86563821, HandleInputStart=334662783336, AnimationStart=334662786312, PerformTraversalsStart=334718364503, DrawStart=334718710779, FrameDeadline=334960984404, FrameInterval=334662672349, FrameStartTime=16666666, SyncQueued=335412124773, SyncStart=335471827372, IssueDrawCommandsStart=335511607940, SwapBuffers=335593455605, FrameCompleted=335665365746, DequeueBufferDuration=3165, QueueBufferDuration=252210, GpuCompleted=335665365746, SwapBuffersCompleted=335594506316, DisplayPresentTime=0, CommandSubmissionCompleted=335593455605, 
+09-17 03:02:06.927  6406  6456 D EGL_emulation: app_time_stats: avg=316.21ms min=73.80ms max=763.92ms count=3
+09-17 03:02:06.999  6406  6470 I OpenGLRenderer: Davey! duration=1028ms; Flags=0, FrameTimelineVsyncId=24272, IntendedVsync=334727651080, Vsync=335460984384, InputEventId=0, HandleInputStart=335474569521, AnimationStart=335474571795, PerformTraversalsStart=335497259382, DrawStart=335497568218, FrameDeadline=335694317708, FrameInterval=335474355992, FrameStartTime=16666666, SyncQueued=335511593112, SyncStart=335594694567, IssueDrawCommandsStart=335606526768, SwapBuffers=335666850297, FrameCompleted=335839323417, DequeueBufferDuration=60244352, QueueBufferDuration=285213, GpuCompleted=335839323417, SwapBuffersCompleted=335728508680, DisplayPresentTime=0, CommandSubmissionCompleted=335666850297, 
+09-17 03:02:07.016   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 03:02:07.240   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 03:02:07.987   825   825 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 03:02:07.998  6406  6456 D EGL_emulation: app_time_stats: avg=157.99ms min=69.76ms max=255.20ms count=5
+09-17 03:02:09.020  6406  6481 I OpenGLRenderer: Davey! duration=798ms; Flags=0, FrameTimelineVsyncId=24503, IntendedVsync=337044317654, Vsync=337077650986, InputEventId=0, HandleInputStart=337079847580, AnimationStart=337079850625, PerformTraversalsStart=337131784062, DrawStart=337132001798, FrameDeadline=337310984310, FrameInterval=337079830017, FrameStartTime=16666666, SyncQueued=337149159591, SyncStart=337234534338, IssueDrawCommandsStart=337269193585, SwapBuffers=337293867940, FrameCompleted=337927781333, DequeueBufferDuration=102101648, QueueBufferDuration=417199, GpuCompleted=337927781333, SwapBuffersCompleted=337396905745, DisplayPresentTime=0, CommandSubmissionCompleted=337293867940, 
+09-17 03:02:09.023   519  1397 D OomAdjuster: Not killing cached processes
+09-17 03:02:09.131  6406  6456 D EGL_emulation: app_time_stats: avg=242.54ms min=60.30ms max=645.82ms count=4
+09-17 03:02:09.142  6406  6406 I Choreographer: Skipped 37 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:09.382  6406  6481 I OpenGLRenderer: Davey! duration=721ms; Flags=0, FrameTimelineVsyncId=24531, IntendedVsync=337260984312, Vsync=337260984312, InputEventId=0, HandleInputStart=337265695474, AnimationStart=337265698800, PerformTraversalsStart=337268527210, DrawStart=337268709050, FrameDeadline=337960984284, FrameInterval=337265683642, FrameStartTime=16666666, SyncQueued=337269109317, SyncStart=337397118863, IssueDrawCommandsStart=337397177232, SwapBuffers=337933087494, FrameCompleted=338110421495, DequeueBufferDuration=4128, QueueBufferDuration=2733423, GpuCompleted=338110421495, SwapBuffersCompleted=338043082508, DisplayPresentTime=0, CommandSubmissionCompleted=337933087494, 
+09-17 03:02:09.625  6406  6512 I OpenGLRenderer: Davey! duration=910ms; Flags=0, FrameTimelineVsyncId=24557, IntendedVsync=337427650972, Vsync=338044317614, InputEventId=0, HandleInputStart=338058753665, AnimationStart=338058757061, PerformTraversalsStart=338078923511, DrawStart=338079149563, FrameDeadline=338310984270, FrameInterval=338053969924, FrameStartTime=16666666, SyncQueued=338089030420, SyncStart=338223480101, IssueDrawCommandsStart=338223545323, SwapBuffers=338294063045, FrameCompleted=338472425458, DequeueBufferDuration=2735, QueueBufferDuration=269282, GpuCompleted=338472425458, SwapBuffersCompleted=338372864143, DisplayPresentTime=0, CommandSubmissionCompleted=338294063045, 
+09-17 03:02:10.020   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 03:02:10.190  6406  6456 D EGL_emulation: app_time_stats: avg=143.89ms min=95.81ms max=210.47ms count=6
+09-17 03:02:10.967   519  1397 D ActivityManager: sync unfroze 1632 com.google.process.gservices for 7
+09-17 03:02:11.048  6674  6674 W AccessibilityNodeInfoDumper: Fetch time: 2920ms
+09-17 03:02:11.050   519  1397 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-17 03:02:11.050   519  1397 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
+09-17 03:02:11.051   519   519 D BatterySaverPolicy: accessibility changed to false, updating policy.
+09-17 03:02:11.052  1801  2510 I A       : NGA enabled in interactor.
+09-17 03:02:11.052  1801  2510 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
+09-17 03:02:11.055  1624  2460 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-17 03:02:11.056  1613  6613 I A       : Initializing all components
+09-17 03:02:11.056  1613  6613 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-17 03:02:11.056  1613  6613 I A       : [Memory] eligibility: StashEligibility{6}
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Predicting[0]: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: EchoTargets: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Filtered by AiAi flag check: 
+09-17 03:02:11.057  1624  1760 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-17 03:02:11.058  1613  2194 I A       : onIsEnabledChanged, isEnabled: false
+09-17 03:02:11.066  6674  6674 D AndroidRuntime: Shutting down VM
+09-17 03:02:11.074  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.077  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.078  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.078  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.078  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.078  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.079  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.079  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.080  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-17 03:02:11.080  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.080  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.081  1613  2194 I A       : onOpaVisibilityChanged: false
+09-17 03:02:11.082  1613  2234 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
+09-17 03:02:11.082  1613  2234 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
+09-17 03:02:11.083  1613  2234 I A       : onActiveStateChangeEvent: IDLE => IDLE
+09-17 03:02:11.083  1624  1760 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-17 03:02:11.084  1613  2234 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
+09-17 03:02:11.084   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-17 03:02:11.086  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.086  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.086  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.086  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.089  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.089  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.089  1613  2194 I A       : Setting session to type: NO_SESSION
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.090  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.091  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.092  1613  2194 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-17 03:02:11.092  1613  2194 I A       : onDisabled. Registered: false
+09-17 03:02:11.092  1613  2234 I A       : Initialize
+09-17 03:02:11.093  1613  2234 I A       : on opa visibility changed false
+09-17 03:02:11.107  1613  2234 I A       : on opa visibility changed false
+09-17 03:02:11.108  1613  2234 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
+09-17 03:02:11.108  1613  2234 I NgaEntryPointEventSendr: setupConnection
+09-17 03:02:11.109  1613  2194 I A       : Successfully initialized all components
+09-17 03:02:11.112  1801  1801 I A       : Creating pss binder().
+09-17 03:02:11.115  1613  2234 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
+09-17 03:02:11.115  1613  2234 I NgaEntryPointEventSendr: onServiceConnected
+09-17 03:02:11.115  1801  3228 I A       : Calling beginBinderSession().
+09-17 03:02:11.116  1801  3228 I A       : beginBinderSession(): calling binder
+09-17 03:02:11.116  1613  2234 I NgaEntryPointEventSendr: State changed: Connecting => Ready
+09-17 03:02:11.120   519  2237 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
+09-17 03:02:11.129  1801  2711 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
+09-17 03:02:11.130  1801  4054 I PBSessionCacheImpl: Deleted sessionId[7922671380330452] from persistence.
+09-17 03:02:11.132  1613  2234 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
+09-17 03:02:11.134  1801  2711 W SearchServiceCore: Abort, client detached.
+09-17 03:02:11.332  6406  6456 D EGL_emulation: app_time_stats: avg=112.60ms min=63.23ms max=181.42ms count=7
+09-17 03:02:12.382  1091  1091 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=986.0, y[0]=1943.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=341293, downTime=341293, deviceId=-1, source=0x1002, displayId=0, eventId=-928170300 }
+09-17 03:02:12.662  6406  6456 D EGL_emulation: app_time_stats: avg=231.84ms min=94.97ms max=459.07ms count=4
+09-17 03:02:12.667  1091  1091 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=986.0, y[0]=1943.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=341293, downTime=341293, deviceId=-1, source=0x1002, displayId=0, eventId=-980273938 }
+09-17 03:02:12.797  6406  6524 E EGL_emulation: tid 6524: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
+09-17 03:02:12.797  6406  6524 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
+09-17 03:02:12.797  6406  6524 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
+09-17 03:02:13.024   841   841 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-17 03:02:13.040  6406  6470 I OpenGLRenderer: Davey! duration=902ms; Flags=0, FrameTimelineVsyncId=24956, IntendedVsync=340710984174, Vsync=341110984158, InputEventId=0, HandleInputStart=341120807752, AnimationStart=341120810818, PerformTraversalsStart=341177821262, DrawStart=341178050862, FrameDeadline=341660984136, FrameInterval=341120303160, FrameStartTime=16666666, SyncQueued=341246154717, SyncStart=341574745739, IssueDrawCommandsStart=341622766070, SwapBuffers=341770053684, FrameCompleted=341942161479, DequeueBufferDuration=4208, QueueBufferDuration=283319, GpuCompleted=341942161479, SwapBuffersCompleted=341875067830, DisplayPresentTime=0, CommandSubmissionCompleted=341770053684, 
+09-17 03:02:13.243  6406  6470 I OpenGLRenderer: Davey! duration=737ms; Flags=0, FrameTimelineVsyncId=24978, IntendedVsync=341144317490, Vsync=341577650806, InputEventId=-980273938, HandleInputStart=341585030961, AnimationStart=341585033806, PerformTraversalsStart=341615663850, DrawStart=341615921521, FrameDeadline=341960984124, FrameInterval=341584921697, FrameStartTime=16666666, SyncQueued=341708575321, SyncStart=341942824006, IssueDrawCommandsStart=342002710272, SwapBuffers=342061969123, FrameCompleted=342116026926, DequeueBufferDuration=4369, QueueBufferDuration=314387, GpuCompleted=342116026926, SwapBuffersCompleted=342063744186, DisplayPresentTime=0, CommandSubmissionCompleted=342061969123, 
+09-17 03:02:13.703  6406  6456 D EGL_emulation: app_time_stats: avg=159.45ms min=54.16ms max=300.73ms count=6
+09-17 03:02:14.302  6406  6524 E BufferQueueProducer: [SurfaceView[com.neutronstar.glidercopilot/com.neutronstar.glidercopilot.MainActivity]#1(BLAST Consumer)1](id:190600000001,api:1,p:6406,c:6406) queueBuffer: slot 0 is not owned by the producer (state = FREE)
+09-17 03:02:14.302  6406  6524 E Surface : queueBuffer: error queuing buffer, -22
+09-17 03:02:14.889  6406  6456 D EGL_emulation: app_time_stats: avg=275.12ms min=27.77ms max=692.06ms count=4
+09-17 03:02:16.012  6406  6456 D EGL_emulation: app_time_stats: avg=119.27ms min=35.43ms max=258.96ms count=7
+09-17 03:02:16.183   825   825 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-17 03:02:17.063   519  1397 D OomAdjuster: Not killing cached processes
+09-17 03:02:17.126  6406  6456 D EGL_emulation: app_time_stats: avg=278.51ms min=144.52ms max=602.89ms count=4
+09-17 03:02:17.244  2995  2995 W JobService: onNetworkChanged() not implemented in com.android.voicemail.impl.scheduling.TaskSchedulerJobService. Must override in a subclass.
+09-17 03:02:17.255   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-17 03:02:17.368   841   905 D EGL_emulation: app_time_stats: avg=17190.64ms min=17190.64ms max=17190.64ms count=1
+09-17 03:02:17.960  2995  2995 I DialerCallerIdFeedbackDeletionWorker: com.android.dialer.calleridfeedback.impl.database.retention.CallerIdFeedbackDeletionWorker.startWork:60 startWork
+09-17 03:02:17.960  2995  2995 I DialerCallerIdFeedbackEnabledFn: com.android.dialer.calleridfeedback.impl.CallerIdFeedbackEnabledFn.isEnabled:41 Caller ID feedback enabled [CONTEXT ratelimit_period="1 MINUTES [skipped: 1]" ]
+09-17 03:02:17.962  2995  3140 I WM-WorkerWrapper: Worker result SUCCESS for Work [ id=b10c5354-eb35-4519-ab72-4baf32592db7, tags={ com.google.apps.tiktok.contrib.work.TikTokListenableWorker, TikTokWorker#com.android.dialer.calleridfeeback.impl.database.retention.CallerIdFeedbackDeletionWorker } ]
+09-17 03:02:17.972  2995  3180 I DialerCallerIdFeedbackDatabase: com.android.dialer.calleridfeedback.impl.database.CallerIdFeedbackDatabase.deleteAllMatching:409 feedbackCreationTimestamp list empty
+09-17 03:02:17.973  2995  3180 I DialerCallerIdFeedbackDatabase: com.android.dialer.calleridfeedback.impl.database.CallerIdFeedbackDatabase$1.onSuccess:351 Deleted old caller IDs.
+09-17 03:02:18.135  2995  2995 I DialerXatuMetricsWorker: com.android.dialer.xatu.impl.storage.postcall.XatuMetricsWorker.startWork:66 enter
+09-17 03:02:18.144  2995  3140 I WM-WorkerWrapper: Worker result SUCCESS for Work [ id=e7b7ba1e-7fd7-4e1f-9f36-f38466657088, tags={ com.google.apps.tiktok.contrib.work.TikTokListenableWorker, TikTokWorker#com.android.dialer.xatu.impl.storage.postcall.XatuMetricsWorker } ]
+09-17 03:02:18.157  6406  6456 D EGL_emulation: app_time_stats: avg=165.41ms min=124.15ms max=199.80ms count=5
+09-17 03:02:18.560  6406  6524 D EGL_emulation: app_time_stats: avg=1914.46ms min=1435.59ms max=2393.34ms count=2
+09-17 03:02:19.063   519   609 D ActivityManager: freezing 5482 com.google.android.gms
+09-17 03:02:19.275  6699  6699 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-17 03:02:19.276  6699  6699 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-17 03:02:19.339  6406  6456 D EGL_emulation: app_time_stats: avg=253.85ms min=42.10ms max=596.50ms count=4
+09-17 03:02:19.370   136   136 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-17 03:02:19.374  6699  6700 I Gralloc4: mapper 4.x is not supported
 --------- beginning of kernel
-09-17 02:51:00.733     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
-09-17 02:51:00.539  6669  6670 I Gralloc4: mapper 4.x is not supported
-09-17 02:51:01.368  6396  6500 D EGL_emulation: app_time_stats: avg=2570.74ms min=2570.74ms max=2570.74ms count=1
-09-17 02:51:01.945  6396  6437 D EGL_emulation: app_time_stats: avg=233.26ms min=47.96ms max=692.99ms count=5
-09-17 02:51:02.310   840   840 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
-09-17 02:51:02.678   522   539 I GnssLocationProvider: WakeLock acquired by handleDownloadPsdsData()
-09-17 02:51:02.718   522  6671 E GnssPsdsDownloader: No Long-Term PSDS servers were specified in the GnssConfiguration
-09-17 02:51:02.953  6396  6437 D EGL_emulation: app_time_stats: avg=156.51ms min=54.93ms max=298.52ms count=5
-09-17 02:51:03.113  6396  6500 D EGL_emulation: app_time_stats: avg=1744.37ms min=1744.37ms max=1744.37ms count=1
-09-17 02:51:04.015  6396  6437 D EGL_emulation: app_time_stats: avg=300.53ms min=128.74ms max=561.88ms count=3
+09-17 03:02:19.563     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-17 03:02:19.813  6406  6524 D EGL_emulation: app_time_stats: avg=732.80ms min=732.80ms max=732.80ms count=1
+09-17 03:02:20.218   519   538 I GnssLocationProvider: WakeLock acquired by handleDownloadPsdsData()
+09-17 03:02:20.218   519   538 W Looper  : Slow delivery took 216ms android.fg h=android.os.Handler c=com.android.server.location.gnss.GnssLocationProvider$$ExternalSyntheticLambda26@21b2f0e m=0
+09-17 03:02:20.221   519  6701 E GnssPsdsDownloader: No Long-Term PSDS servers were specified in the GnssConfiguration
+09-17 03:02:20.248  6406  6406 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:20.496  6406  6456 D EGL_emulation: app_time_stats: avg=289.16ms min=158.46ms max=575.91ms count=4
+09-17 03:02:20.556  6406  6470 I OpenGLRenderer: Davey! duration=784ms; Flags=0, FrameTimelineVsyncId=25798, IntendedVsync=348510983862, Vsync=348577650526, InputEventId=0, HandleInputStart=348591070207, AnimationStart=348591072661, PerformTraversalsStart=348717042442, DrawStart=348717451276, FrameDeadline=348744317186, FrameInterval=348591053646, FrameStartTime=16666666, SyncQueued=348718197519, SyncStart=348718231653, IssueDrawCommandsStart=348718327772, SwapBuffers=349248608501, FrameCompleted=349295503250, DequeueBufferDuration=2415, QueueBufferDuration=113252, GpuCompleted=349295503250, SwapBuffersCompleted=349249859656, DisplayPresentTime=0, CommandSubmissionCompleted=349248608501, 
+09-17 03:02:21.177  6406  6524 D EGL_emulation: app_time_stats: avg=1363.65ms min=1363.65ms max=1363.65ms count=1
+09-17 03:02:21.661  6406  6456 D EGL_emulation: app_time_stats: avg=250.06ms min=53.57ms max=620.05ms count=4
+09-17 03:02:21.678  6406  6406 I Choreographer: Skipped 30 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:22.044  6406  6481 I OpenGLRenderer: Davey! duration=834ms; Flags=0, FrameTimelineVsyncId=25927, IntendedVsync=349860983808, Vsync=349860983808, InputEventId=0, HandleInputStart=349861180352, AnimationStart=349861182516, PerformTraversalsStart=349869984900, DrawStart=349870174353, FrameDeadline=350127650464, FrameInterval=349861171716, FrameStartTime=16666666, SyncQueued=349870685247, SyncStart=349953086184, IssueDrawCommandsStart=349961484784, SwapBuffers=350572026704, FrameCompleted=350777769808, DequeueBufferDuration=2123574, QueueBufferDuration=270805, GpuCompleted=350777769808, SwapBuffersCompleted=350575800390, DisplayPresentTime=0, CommandSubmissionCompleted=350572026704, 
+09-17 03:02:22.733  6406  6456 D EGL_emulation: app_time_stats: avg=178.26ms min=125.71ms max=207.33ms count=5
+09-17 03:02:22.913  6406  6524 D EGL_emulation: app_time_stats: avg=1736.26ms min=1736.26ms max=1736.26ms count=1
+09-17 03:02:23.473  6406  6406 I Choreographer: Skipped 36 frames!  The application may be doing too much work on its main thread.
+09-17 03:02:23.582  6406  6481 I OpenGLRenderer: Davey! duration=742ms; Flags=0, FrameTimelineVsyncId=26092, IntendedVsync=351560983740, Vsync=351560983740, InputEventId=0, HandleInputStart=351561855658, AnimationStart=351561857963, PerformTraversalsStart=351564338614, DrawStart=351568583730, FrameDeadline=351710983734, FrameInterval=351561847814, FrameStartTime=16666666, SyncQueued=351568982494, SyncStart=351648529524, IssueDrawCommandsStart=351649436366, SwapBuffers=351844278127, FrameCompleted=352382961754, DequeueBufferDuration=4588, QueueBufferDuration=71918973, GpuCompleted=352382882024, SwapBuffersCompleted=352382961754, DisplayPresentTime=0, CommandSubmissionCompleted=351844278127, 
