@@ -56,7 +56,8 @@ Rien n'est enregistré en mode suivi : pas d'IGC, pour respecter les règles OGN
 | Terrain de repli | le terrain du club n'est plus rejoignable, un autre l'est | « Terrain de repli : <nom>… » | 2 courtes |
 | Marge rétablie | marge remontée au-dessus de 200 m | « Marge rétablie » | 1 courte |
 
-- Pas d'alerte de marge dans le circuit : terrain à moins de 2,5 km et atteignable en finesse.
+- Alertes armées seulement quand la marge a été confortable une première fois : rien au remorqué ni au treuil.
+- Silence dans le circuit (terrain à moins de 1,5 km, ou à moins de 3 km et atteignable) et au sol.
 - Hypothèses de calcul, affichées à l'écran :
   - vitesse de plané 90 km/h ;
   - arrivée +300 m au-dessus du terrain ;

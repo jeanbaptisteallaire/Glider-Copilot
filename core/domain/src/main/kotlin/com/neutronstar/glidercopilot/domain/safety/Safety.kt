@@ -249,6 +249,10 @@ class SafetyAlerts(
     private var level = 2          // 2 confortable, 1 faible, 0 sous la sécurité
     private var reliefActive = false
     private var projectedActive = false
+    private var projectedSince: Instant? = null
+    /** Armé seulement une fois la marge confortable atteinte : pas d'alerte au remorqué ni au treuil. */
+    var established = false
+        private set
     private val last = HashMap<SafetyAlert.Kind, Instant>()
 
     private fun ok(k: SafetyAlert.Kind, now: Instant, every: Duration = cooldown): Boolean {
@@ -258,12 +262,20 @@ class SafetyAlerts(
         return true
     }
 
-    fun update(choice: FieldSelectorChoice, projectedMarginM: Double?, now: Instant): List<SafetyAlert> {
+    fun update(choice: FieldSelectorChoice, projectedMarginM: Double?, now: Instant, onGround: Boolean = false): List<SafetyAlert> {
         val out = ArrayList<SafetyAlert>()
         val r = choice.result
-        // dans le circuit d'atterrissage (terrain à moins de 2,5 km, arrivée directe possible) : pas d'alerte de marge
-        val inCircuit = r.distanceKm < 2.5 && r.arrivalAglM > 50 && r.relief == null
-        val m = if (inCircuit) max(r.marginM, lowM + hysteresisM) else r.marginM
+        // circuit d'atterrissage (terrain à moins de 1,5 km, ou moins de 3 km et atteignable sans la marge d'arrivée) et roulage : silence, état figé
+        val inCircuit = onGround || r.distanceKm < 1.5 || (r.distanceKm < 3.0 && r.arrivalAglM > -50 && r.relief == null)
+        if (inCircuit) {
+            projectedActive = false; projectedSince = null
+            return out
+        }
+        val m = r.marginM
+        if (!established) {
+            if (m >= lowM + hysteresisM) { established = true; level = 2 }
+            return out
+        }
         val newLevel = when {
             m < 0 -> 0
             m < lowM -> if (level == 0 && m < hysteresisM) 0 else 1
@@ -290,7 +302,10 @@ class SafetyAlerts(
             out += SafetyAlert(SafetyAlert.Kind.RELIEF, "Relief sur la route du terrain à ${fmtKm(r.relief!!.sKm)}", AlertLevel.URGENT)
         }
         reliefActive = relief
-        val projected = projectedMarginM != null && projectedMarginM < 0 && m >= 0
+        val projectedNow = projectedMarginM != null && projectedMarginM < 0 && m >= 0
+        if (projectedNow) { if (projectedSince == null) projectedSince = now } else projectedSince = null
+        // la projection doit rester sous zéro 10 s (sortie de spirale, virage) avant d'être annoncée
+        val projected = projectedNow && Duration.between(projectedSince, now).seconds >= 10
         if (projected && !projectedActive && ok(SafetyAlert.Kind.PROJECTED_BELOW, now)) {
             out += SafetyAlert(SafetyAlert.Kind.PROJECTED_BELOW, "Marge nulle dans deux minutes", AlertLevel.WARNING)
         }
@@ -351,7 +366,7 @@ class SafetyEngine(
         val projected = GlideComputer.toField(pp, pa, choice.field, cfg, w, t, stepKm = 0.25).marginM
         val s = SafetyState(choice, projected, pp, w, results.sortedByDescending { it.marginM })
         state = s
-        if (armed) alerts.update(choice, projected, now).forEach(alert)
+        if (armed) alerts.update(choice, projected, now, onGround = (fix.groundSpeedKmh ?: 99.0) < 30).forEach(alert)
         return s
     }
 }

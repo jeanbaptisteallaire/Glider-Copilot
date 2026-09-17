@@ -1,5 +1,48 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 6 — Sécurité en vol, mode démo, suivi & debug (17/09/2026)
+
+### Livré
+- **Relief réel hors ligne** (`data:carto/Relief.kt`) : lecteur PMTiles v3 (répertoires gzip, feuilles, Hilbert) et décodeur PNG sans dépendance
+  (filtres 0–4, RVB/RVBA/palette), altitude Terrarium interpolée au zoom 11 (≈ 38 m), cache de 9 tuiles. Interface `Terrain` dans `core:domain`.
+- **Moteur de sécurité** (`core:domain/safety/Safety.kt`, JVM pur) :
+  - **vent en spirale** : moyenne des vecteurs vitesse sol sur chaque tour complet (14–65 s), lissage entre tours, validité 25 min ;
+  - **arrivée terrain** : finesse sol = finesse × Vsol / 90 km/h avec le vent, +300 m à l'arrivée, **relief franchi à +100 m** tous les 100 m le long de la route (hors 200 premiers et 800 derniers mètres) ;
+    altitude nécessaire = max(arrivée, obstacles), obstacle retenu signalé ;
+  - **projection à 2 min** : route et vitesse sol (dérive du vent en spirale), montée moyenne ;
+  - **terrain de référence** : club tant qu'il est rejoignable, sinon meilleur terrain openAIP à 40 km (hystérésis 100 m, retour au club au-delà de +80 m), choix manuel prioritaire ;
+  - **alertes** voix + vibration : marge nulle dans 2 min, marge faible (< 150 m, rétablie > 200 m), sous la sécurité (répétée toutes les 30 s, cap et distance du terrain),
+    relief sur la route, terrain de repli, marge rétablie ; armées seulement une fois la marge confortable atteinte (silence au remorqué/treuil), muettes dans le circuit (terrain < 1,5 km, ou < 3 km et atteignable) et au sol ; projection annoncée après 10 s de persistance.
+- **Pilotage** : MARGE / ALT / SÉCU / distance / cap calculés par ce moteur ; **coupe sur le relief Copernicus** avec obstacle « RELIEF » ; « 2 min : ±n m » sous la marge ;
+  case **vent estimé** (« vent — » tant qu'aucune spirale) ; bandeau rouge **CAP TERRAIN** sous la sécurité ; **choix du terrain** par appui sur AUTO (liste distance + marge, AUTO/MANU) ;
+  finesse F20/F15/F10 transmise au moteur. Plus de plafond ni de vent inventés en usage réel.
+- **Mode démo** (demande JB) : bascule discrète « démo » en haut à droite de la carte ; vol simulé en boucle (6 pompes et transitions à 3,5–5 km de LFNL, 1 450–1 650 m, vent 300°/15)
+  passé par le banc capteurs, donc vario, son, vent, sécurité et coupe fonctionnent ; **trafic OGN en direct conservé** (légende « n à 15 km »). Pas d'IGC.
+- **Suivi & debug** (demande JB) : Prévol › interrupteur sous « Détec. auto. décollage », saisie ou raccourcis **F-CGXB** (Twin Astir III, DDB2A0) et **F-CEIQ** ;
+  vérification DDB (refus de suivi respecté), boîtiers ajoutés au filtre APRS, trames du planeur suivi injectées dans le moteur de vol à la place du téléphone
+  (vario OGN, spirales et vent à la cadence OGN), sécurité et trajectoire calculées dessus ; étiquette « SUIVI F-CGXB · FLARM via OGN · n s » ; rien n'est enregistré.
+- Plus aucun signal de démonstration implicite dans l'app : sans donnée, les valeurs affichent « — » (démo = bascule explicite, aperçus seulement).
+- Protocole : `docs/PROTOCOLE-TEST-S6.md`.
+
+### Vérifié
+- Tests JVM : 17 nouveaux (90 au total), dont :
+  - **scénario rejoué** (planeur qui s'éloigne puis spirale) : « 2 min » à 31 s (après 10 s de persistance), « faible » à 74 s, « sous la sécurité » à 141 s puis toutes les 30 s, « rétablie » à 792 s, conformes au calcul ;
+  - vent retrouvé à ±2,5 km/h / ±6° en spirale ; crête sur la route ; hystérésis du choix de terrain ; silence dans le circuit ;
+  - **relief réel** : extrait du pack occitanie-est (4 tuiles z11) — LFNL 178 m (openAIP 183), sommet du Pic Saint-Loup 600–680 m, obstacle détecté sur la route Pic → LFNL ;
+  - **suivi sur trace OGN réelle** (planeur anonymisé en spirale) : source OGN, spirales, pompe > 1 m/s, vent estimé, terrain LFNL et marge ;
+  - boucle du mode démo fermée, altitudes et distance au terrain bornées.
+  - **vol de démonstration rejoué avec la sécurité** : aucune alerte au remorqué, en finale ni au sol, vent estimé (défaut trouvé en rejouant le vol : alertes au décollage et en tour de piste, corrigé).
+- CI verte ; captures émulateur : vol rejoué avec marge sur relief Copernicus et vent estimé en spirale (200°/28), mode démo, liste des terrains, F10, carte Suivi & debug
+  (F-CGXB trouvé dans la DDB, en attente de trame), Pilotage en suivi.
+- Livrables : `Planneur APP/Session 6/` (APK 0.6.0, captures, protocole).
+
+### Limites / à faire
+- Vitesse de plané fixe (90 km/h) et vent au sol ignoré en finale ; polaire et MacCready en v1.1.
+- Relief au pas de 100 m sur le zoom 11 : un piton isolé plus étroit peut être lissé.
+- Suivi & debug dépend du réseau OGN (retard, trous de couverture) : outil de mise au point, pas d'aide au vol.
+- Vent de prévision (precog) non utilisé en attendant la première spirale ; carte orientée route et consignes de centrage : session 7.
+
+
 ## Session 5 — Capteurs, vario, trace IGC (17/09/2026)
 
 ### Livré

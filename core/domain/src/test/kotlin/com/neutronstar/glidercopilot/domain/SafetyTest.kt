@@ -149,9 +149,9 @@ class SafetyTest {
         while (s < 1000) step(270.0, 0.0, 2.0, true)
         val kinds = heard.map { it.second.kind }
         val first = { k: SafetyAlert.Kind -> heard.first { it.second.kind == k }.first }
-        // marge(t) = 317 − 2,25 t : projection < 0 à t ≈ 141 − 120 = 21 s ; faible (< 150) à t ≈ 74 s ; sous la sécurité à t ≈ 141 s
+        // marge(t) = 317 − 2,25 t : projection < 0 à t ≈ 141 − 120 = 21 s (annoncée après 10 s de persistance) ; faible (< 150) à t ≈ 74 s ; sous la sécurité à t ≈ 141 s
         assertEquals(SafetyAlert.Kind.PROJECTED_BELOW, kinds.first())
-        assertEquals(21.0, first(SafetyAlert.Kind.PROJECTED_BELOW).toDouble(), 3.0)
+        assertEquals(31.0, first(SafetyAlert.Kind.PROJECTED_BELOW).toDouble(), 3.0)
         assertEquals(74.0, first(SafetyAlert.Kind.MARGIN_LOW).toDouble(), 3.0)
         assertEquals(141.0, first(SafetyAlert.Kind.MARGIN_BELOW).toDouble(), 3.0)
         // répétée toutes les 30 s tant que sous la sécurité (jusqu'à la remontée)

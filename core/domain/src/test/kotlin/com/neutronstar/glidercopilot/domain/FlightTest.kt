@@ -330,6 +330,34 @@ class FlightEngineTest {
         assertTrue(igcLines.filter { it.startsWith("B") }.all { it.length == 35 })
     }
 
+    /** Vol de démonstration rejoué avec la sécurité : silence au remorqué, dans le circuit et au sol. */
+    @Test fun demoFlightSafetyAlertsAreQuietAtTakeoffAndLanding() {
+        val fixes = Igc.parse(demoIgc())
+        val replay = SensorReplay(fixes)
+        val start = Instant.parse("2026-07-14T11:00:00Z")
+        val lfnl = com.neutronstar.glidercopilot.domain.safety.FieldOption("LFNL", "Saint-Martin-de-Londres", field, 183.0, isClub = true, icao = "LFNL")
+        val core = FlightEngineCore(igc = { null }, fieldElevationM = { 183.0 }, field = { field })
+        val heard = ArrayList<Pair<Long, com.neutronstar.glidercopilot.domain.safety.SafetyAlert>>()
+        var t = 0L
+        val safety = com.neutronstar.glidercopilot.domain.safety.SafetyEngine(terrain = { Terrain { 150.0 } }, fields = { listOf(lfnl) }, alert = { heard += t to it })
+        for (s in replay.samples()) when (s) {
+            is SensorSample.Baro -> core.onBaro(s.hPa, s.timeNs)
+            is SensorSample.Accel -> core.onAcceleration(s.upMs2, s.timeNs)
+            is SensorSample.Gps -> {
+                val fix = s.fix.copy(time = start.plusNanos(s.timeNs))
+                core.onGps(fix, s.timeNs); safety.onFix(fix)
+                t = s.timeNs / 1_000_000_000
+                val snap = core.snapshot(s.timeNs, fix.time)
+                snap.altitudeM?.let { alt -> safety.update(fix, alt, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), fix.time, snap.phase == FlightPhase.FLYING) }
+            }
+        }
+        val margin = heard.filter { it.second.kind == com.neutronstar.glidercopilot.domain.safety.SafetyAlert.Kind.MARGIN_BELOW || it.second.kind == com.neutronstar.glidercopilot.domain.safety.SafetyAlert.Kind.MARGIN_LOW }
+        assertTrue("alertes au remorqué : $heard", heard.none { it.first < 330 })
+        assertTrue("alertes en finale : $heard", heard.none { it.first > 1700 })
+        assertTrue("alertes de marge : $margin", margin.isEmpty())
+        assertTrue("vent estimé", safety.state?.wind != null)
+    }
+
     @Test fun ognFallbackWithoutBarometer() {
         val engine = FlightEngineCore(igc = { null })
         val t = Instant.parse("2026-07-14T11:00:00Z")
