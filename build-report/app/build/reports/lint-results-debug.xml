@@ -2,6 +2,24 @@
 <issues format="6" by="lint 8.9.1">
 
     <issue
+        id="ImplicitSamInstance"
+        severity="Warning"
+        message="This argument is a new instance so `stopService` will not remove anything"
+        category="Correctness"
+        priority="6"
+        summary="Implicit SAM Instances"
+        explanation="Kotlin&apos;s support for SAM (single abstract method) interfaces lets you pass a lambda to the interface. This will create a new instance on the fly even though there is no explicit constructor call. If you pass one of these lambdas or method references into a method which (for example) stores or compares the object identity, unexpected results may happen.&#xA;&#xA;In particular, passing a lambda variable in as a listener, and then later attempting to remove the listener will not work because a different instance is passed in."
+        url="https://kotlinlang.org/docs/fun-interfaces.html#sam-conversions"
+        urls="https://kotlinlang.org/docs/fun-interfaces.html#sam-conversions"
+        errorLine1="            runCatching { context.stopService(Intent(context, FlightService::class.java)) }"
+        errorLine2="                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightService.kt"
+            line="126"
+            column="47"/>
+    </issue>
+
+    <issue
         id="OldTargetApi"
         severity="Warning"
         message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
@@ -417,7 +435,7 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="23"
+            line="35"
             column="13"/>
     </issue>
 
@@ -433,8 +451,88 @@
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="23"
+            line="35"
             column="13"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="            .onFailure { Log.w(TAG, &quot;GPS indisponible&quot;, it) }"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="252"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="        val w = runCatching { file.bufferedWriter(Charsets.US_ASCII) }.getOrElse { Log.w(TAG, &quot;IGC impossible&quot;, it); return null }"
+        errorLine2="                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="299"
+            column="84"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="        Log.i(TAG, &quot;annonce : $text&quot;)"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
+            line="383"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="            Log.w(TAG, &quot;service de vol refusé&quot;, started.exceptionOrNull())"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightService.kt"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="                .onFailure { Log.w(TAG, &quot;démarrage du service impossible&quot;, it) }"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightService.kt"
+            line="121"
+            column="30"/>
     </issue>
 
     <issue
@@ -469,8 +567,24 @@
         errorLine2="                             ~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/AndroidManifest.xml"
-            line="14"
+            line="25"
             column="30"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        severity="Warning"
+        message="Unnecessary; `SDK_INT` is never &lt; 26"
+        category="Performance"
+        priority="6"
+        summary="Obsolete SDK_INT Version Check"
+        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
+        errorLine1="        if (Build.VERSION.SDK_INT &lt; 26) return"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightService.kt"
+            line="82"
+            column="13"/>
     </issue>
 
     <issue

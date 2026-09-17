@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.DdbIndexTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-17T02:43:32" hostname="runnervmlun5p" time="0.125">
+<testsuite name="com.neutronstar.glidercopilot.ogn.DdbIndexTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-17T07:49:39" hostname="runnervmlun5p" time="0.122">
   <properties/>
-  <testcase name="cachedDeviceReadsDiskRarely" classname="com.neutronstar.glidercopilot.ogn.DdbIndexTest" time="0.125"/>
+  <testcase name="cachedDeviceReadsDiskRarely" classname="com.neutronstar.glidercopilot.ogn.DdbIndexTest" time="0.122"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
