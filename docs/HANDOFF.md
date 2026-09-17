@@ -1,5 +1,46 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 5 — Capteurs, vario, trace IGC (17/09/2026)
+
+### Livré
+- **Vario du téléphone** (`core:domain/flight/Vario.kt`) : filtre de Kalman à 3 états (altitude, vitesse verticale, biais d'accéléromètre),
+  prédiction à l'accélération verticale (~50 Hz, `acc·ĝ − g` avec le capteur de gravité ou un passe-bas), correction au baromètre (altitude pression ISA, ~25 Hz).
+  Sans accéléromètre : même filtre en « baro seul ». Amortissement affichage τ 1 s, son τ 0,3 s. Qualité mesurée : fréquence et bruit du baro (écart type détendu sur 4 s).
+- **Moteur de vol** (`FlightEngineCore`, JVM pur, testé) : source du vario (baro+accél. › baro › **OGN de mon planeur si pas de baromètre** › indisponible, toujours affichée),
+  altitude calée terrain au sol près du terrain (openAIP), sinon calée GPS (altitude mer : `mslAltitude` Android 14, trame NMEA GGA avant), sinon altitude pression 1013 ;
+  calage figé en vol. Décollage > 50 km/h pendant 3 s, atterrissage < 10 km/h pendant 30 s (réglage « Détec. auto. décollage », **activé par défaut** ; coupé : chrono manuel par appui sur le chrono).
+  Spirales par la route GPS (≥ 150° sur 20 s), moyennes Spirale (25 s), Pompe (depuis l'entrée en spirale), Jour (spirales montantes).
+- **IGC** (`Igc`, `IgcRecorder`) : enregistreur non approuvé (`AXXXGLY`, pas d'enregistrement G), 1 Hz, altitude pression ISA + hauteur GNSS ellipsoïdale, fichier `AAAA-MM-JJ-XXX-GLY-NN.igc`
+  écrit ligne à ligne dans le dossier privé de l'app (`igc/`, rejeux dans `igc-rejeu/`), partage par FileProvider.
+- **Annonces vocales** (TextToSpeech français, délai 45 s par type) : décollage, atterrissage avec durée, perte du baromètre / vario OGN en secours. Règles de marge prêtes (hystérésis), branchées en S6.
+- **Android** : `FlightEngine` (fil dédié, capteurs, GPS 1 Hz, son, voix, OGN) ; `FlightService` de premier plan type localisation, lancé app visible quand Pilotage est ouvert ou pendant un vol enregistré :
+  capteurs, son, voix et réseau OGN continuent écran éteint ; notification chrono · vario · altitude, action « Arrêter le suivi ». Permissions : notifications demandées avec la localisation.
+- **Pilotage** : plus aucune valeur de démonstration dès qu'une source réelle existe ; vario, altitude (et sa référence), chrono, moyennes, pastilles GPS/BARO réelles,
+  position et trace colorée par le vario, **distance et cap réels vers le terrain**, marge calculée sur la distance réelle (« — » si position ou altitude inconnue).
+  Sans pack de carte : trace réelle sur fond neutre (plus de spirale démo). Relief du profil et vent restent schématiques (S6), libellés comme tels.
+- **Prévol** : carte **Capteurs & vols** (source du vario, fréquence et bruit baro, accéléromètre, précision GPS, altitude et référence, état du vol, son, annonces, essais du son et de la voix, 5 derniers IGC avec partage).
+- **Banc de rejeu** (`SensorReplay`) : reconstruit baro 25 Hz, accélération 50 Hz (dérivée seconde Hermite + vibrations + biais) et GPS 1 Hz depuis un IGC.
+  **Vol de démonstration** `assets/flight/demo.igc` (`tools/flight/make_demo_igc.py`) : sol LFNL, roulage, remorqué à 3 m/s, **trace réelle OGN anonymisée du planeur en spirale (10 min)**, retour, tour de piste, atterrissage — 34 min.
+  `--ez glidy.flight.replay true --ef glidy.flight.speed 4` (rejeu OGN lancé en même temps), signalé « REJEU VOL · capteurs simulés ».
+- Protocole de test sur téléphone : `docs/PROTOCOLE-TEST-S5.md` (escalier, sol en voiture, secours, vol).
+
+### Vérifié
+- Tests JVM : 16 nouveaux (73 au total) — ISA, signe de l'accélération, convergence à 2 m/s (±0,1), **retard sur une entrée en pompe 0 → 3 m/s en 1 s : 0,03 s avec l'accéléromètre contre 0,79 s en baro seul**,
+  bruit au repos 0,10 m/s avant amortissement, biais appris, décollage/atterrissage (à-coup de roulage ignoré), format B (35 caractères) et aller-retour IGC, hystérésis des annonces,
+  secours OGN, chrono manuel, et **vol de démonstration de bout en bout** : décollage à 60–75 s, altitude à 0,4 m près, pompe 3,0 m/s, atterrissage, IGC 1 871 s, annonces.
+- CI verte (build 19 et 20) ; captures émulateur avec le vol rejoué ×6 : vario « baro+accél. », chrono, moyennes, trace, carte Capteurs & vols en vol puis « Posé · vol de 0 h 31 enregistré » ;
+  **IGC récupéré depuis l'émulateur et contrôlé par `tools/flight/check_igc.py` : 1 898 points, OK**.
+- Défaut trouvé grâce aux captures : l'émulateur (position Mountain View) changeait le club le plus proche au premier fix GPS → carte absente en Pilotage. Émulateur positionné sur LFNL.
+- Livrables : `Planneur APP/Session 5/glidy-v0.5-debug.apk`, `Session 5/captures/`, `Session 5/PROTOCOLE-TEST-S5.md` (Sessions 1–4 intactes).
+
+### Limites / à faire
+- **Critère « escalier » et essais réels à faire par JB** (protocole) : réglages du filtre (bruits 0,35 m / 0,6 m/s²) à ajuster sur ses mesures.
+- Vario sur téléphone : la pression statique en cabine varie avec la vitesse et l'aération (pas de compensation d'énergie totale) ; le vario de bord prime.
+- Hauteur GNSS ellipsoïdale dans l'IGC (`HFALGALTGPS:ELL`) ; altitude affichée : mer.
+- Marge et relief réels, vent estimé, choix du terrain de repli : session 6.
+- Rejeu : l'accélération est dérivée d'une trace 1 Hz, plus douce qu'en vol réel.
+
+
 ## Session 4 — OGN en direct (17/09/2026)
 
 ### Livré
