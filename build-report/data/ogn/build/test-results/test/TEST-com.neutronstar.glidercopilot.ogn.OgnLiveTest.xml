@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.OgnLiveTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-17T02:25:53" hostname="runnervmlun5p" time="0.729">
+<testsuite name="com.neutronstar.glidercopilot.ogn.OgnLiveTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-09-17T02:43:32" hostname="runnervmlun5p" time="0.861">
   <properties/>
-  <testcase name="clientLogsInAndStreamsLines" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.668"/>
-  <testcase name="serverAndReceiverLines" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.0"/>
-  <testcase name="storeRespectsPrivacyAndDeduplicates" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.031"/>
-  <testcase name="detectsSpiralAndIgnoresStraightFlight" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.002"/>
-  <testcase name="ownGliderCadenceLatencyAndFilter" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.014"/>
-  <testcase name="mergesSameThermalAcrossGliders" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.002"/>
+  <testcase name="clientLogsInAndStreamsLines" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.75"/>
+  <testcase name="serverAndReceiverLines" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.002"/>
+  <testcase name="storeRespectsPrivacyAndDeduplicates" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.056"/>
+  <testcase name="detectsSpiralAndIgnoresStraightFlight" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.005"/>
+  <testcase name="ownGliderCadenceLatencyAndFilter" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.026"/>
+  <testcase name="mergesSameThermalAcrossGliders" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.001"/>
   <testcase name="midnightRollover" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.0"/>
   <testcase name="parsesWikiExample" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.007"/>
   <testcase name="precisionStealthAndNoTracking" classname="com.neutronstar.glidercopilot.ogn.OgnLiveTest" time="0.001"/>
