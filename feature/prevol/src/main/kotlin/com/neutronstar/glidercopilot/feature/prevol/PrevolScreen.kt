@@ -55,9 +55,10 @@ import com.neutronstar.glidercopilot.precog.DayWeather
 import com.neutronstar.glidercopilot.precog.HourWeather
 
 @Composable
-fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, modifier: Modifier = Modifier) {
+fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSource: OgnNetworkSource, modifier: Modifier = Modifier) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val map by mapSource.state.collectAsStateWithLifecycle()
+    val ogn by ognSource.network.collectAsStateWithLifecycle()
     var picking by remember { mutableStateOf(false) }
     val c = Gc.colors
 
@@ -79,6 +80,7 @@ fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, modifi
                 )
             }
             item { OfflineMapCard(map, mapSource::download, mapSource::cancel, mapSource::refreshCatalog) }
+            item { OgnNetworkCard(ogn) }
             val day = state.day
             when {
                 day != null -> dayItems(day, state, viewModel::selectHour)

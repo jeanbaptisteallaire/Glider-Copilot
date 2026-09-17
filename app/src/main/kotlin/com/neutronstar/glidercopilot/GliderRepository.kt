@@ -4,10 +4,14 @@ import com.neutronstar.glidercopilot.domain.checklist.CableBriefInput
 import com.neutronstar.glidercopilot.feature.checklist.ChecklistStore
 import com.neutronstar.glidercopilot.feature.prevol.GliderSource
 import com.neutronstar.glidercopilot.feature.prevol.PairingStatus
+import com.neutronstar.glidercopilot.ogn.DdbDevice
 import com.neutronstar.glidercopilot.ogn.OgnDeviceDatabase
 import com.neutronstar.glidercopilot.ogn.PairingLookup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
@@ -15,7 +19,11 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 /** Planeur du jour : préférences locales + Device Database OGN pour vérifier l'appairage FLARM. */
-class GliderRepository(private val prefs: UserPreferences, private val ddb: OgnDeviceDatabase) : GliderSource {
+class GliderRepository(private val prefs: UserPreferences, val ddb: OgnDeviceDatabase) : GliderSource {
+    private val _ownDevices = MutableStateFlow<List<DdbDevice>>(emptyList())
+    /** Boîtiers FLARM/OGN de mon planeur appairé (suivi autorisé), pour le filtre APRS et le suivi OGN. */
+    val ownDevices: StateFlow<List<DdbDevice>> = _ownDevices.asStateFlow()
+
     override val pairedRegistration: Flow<String?> = prefs.pairedRegistration
     override val recentRegistrations: Flow<List<String>> = prefs.recentRegistrations
     override val autoTakeoff: Flow<Boolean> = prefs.autoTakeoff
@@ -29,14 +37,15 @@ class GliderRepository(private val prefs: UserPreferences, private val ddb: OgnD
     override suspend fun currentStatus(registration: String): PairingStatus = withContext(Dispatchers.IO) {
         when (val r = runCatching { ddb.lookup(registration) }.getOrElse { PairingLookup.Unavailable(it.message ?: "erreur") }) {
             is PairingLookup.Found -> {
+                _ownDevices.value = r.devices
                 val d = r.devices.first()
                 PairingStatus.Paired(
                     device = listOfNotNull((if (d.deviceType == "F") "ID " else "${d.deviceTypeLabel} ") + d.deviceId, d.aircraftModel).joinToString(" · "),
                     source = source(r.fetchedAt, r.offline),
                 )
             }
-            is PairingLookup.NotFound -> PairingStatus.NotFound(source(r.fetchedAt, r.offline))
-            is PairingLookup.NotTracked -> PairingStatus.NotTracked
+            is PairingLookup.NotFound -> { _ownDevices.value = emptyList(); PairingStatus.NotFound(source(r.fetchedAt, r.offline)) }
+            is PairingLookup.NotTracked -> { _ownDevices.value = emptyList(); PairingStatus.NotTracked }
             is PairingLookup.Unavailable -> PairingStatus.Unverified
         }
     }

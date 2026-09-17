@@ -32,6 +32,7 @@ class AppContainer(app: Application) {
     )
     val checklist = ChecklistRepository(prefs)
     val carto = CartoRepository(app, UrlConnectionHttpClient(userAgent = userAgent), clubs, userAgent)
+    val ogn = OgnLiveRepository(app, clubs, glider, prefs)
 }
 
 class GliderApp : Application() {

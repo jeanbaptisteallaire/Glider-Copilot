@@ -127,7 +127,9 @@ def analyse(raw_path, out):
             prev_t = b["t"]
             climb_known += b["fpm"] is not None
             rot_known += b["rot"] is not None
-        turning = [b for b in seq if b["rot"] is not None and abs(b["rot"]) >= 2.0 and (b["gs"] or 0) > 20]
+        # planeurs, deltas, parapentes (ou type inconnu lent) qui virent : candidats « pompe »
+        slow = seq[0]["type"] in (1, 6, 7) or (seq[0]["type"] == 0 and max((b["gs"] or 0) for b in seq) < 120)
+        turning = [b for b in seq if b["rot"] is not None and abs(b["rot"]) >= 2.0 and 20 < (b["gs"] or 0) < 150] if slow else []
         if len(turning) >= 6:
             circlers.append((len(turning), addr))
 
@@ -147,7 +149,8 @@ def analyse(raw_path, out):
     # extrait anonymisé : les aéronefs qui spiralent le plus + quelques trajectoires rectilignes
     circlers.sort(reverse=True)
     chosen = [a for _, a in circlers[:6]]
-    straight = sorted(((len(s), a) for a, s in by_ac.items() if a not in chosen and len(s) >= 20 and not s[0]["stealth"] and not s[0]["notrack"]), reverse=True)
+    straight = sorted(((len(s), a) for a, s in by_ac.items() if a not in chosen and len(s) >= 20 and not s[0]["stealth"] and not s[0]["notrack"]
+                       and s[0]["type"] in (1, 2, 6, 7, 8) and max((b["gs"] or 0) for b in s) < 150), reverse=True)
     chosen += [a for _, a in straight[:4]]
     rnd = random.Random(42)
     center = (43.80028, 3.78167)   # LFNL

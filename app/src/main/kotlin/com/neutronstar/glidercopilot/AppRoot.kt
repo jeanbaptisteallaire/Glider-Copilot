@@ -79,6 +79,20 @@ private fun MainScaffold(container: AppContainer) {
     var tab by rememberSaveable { mutableStateOf(Tab.PREVOL) }
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
     val status = rememberFlightStatus()
+    val traffic by container.ogn.traffic.collectAsState()
+    // réseau OGN actif tant que l'app est visible
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    androidx.compose.runtime.DisposableEffect(lifecycle) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            when (event) {
+                androidx.lifecycle.Lifecycle.Event.ON_START -> container.ogn.start()
+                androidx.lifecycle.Lifecycle.Event.ON_STOP -> container.ogn.stop()
+                else -> Unit
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
+    }
     val activeMap by container.carto.active.collectAsState()
     val club by container.clubs.selectedClub.collectAsState(initial = null)
     val palette = rememberMapPalette()
@@ -112,9 +126,9 @@ private fun MainScaffold(container: AppContainer) {
     Column(Modifier.fillMaxSize().background(c.background).statusBarsPadding()) {
         Box(Modifier.weight(1f)) {
             when (tab) {
-                Tab.PREVOL -> PrevolScreen(prevolVm, container.carto)
+                Tab.PREVOL -> PrevolScreen(prevolVm, container.carto, container.ogn)
                 Tab.CHECKLIST -> ChecklistScreen(container.checklist)
-                Tab.PILOTAGE -> FlightScreen(status, map = flightMap)
+                Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic)
             }
         }
         Row(

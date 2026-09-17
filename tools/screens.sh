@@ -52,25 +52,32 @@ for i in $(seq 1 60); do
   P=$(tap_text "Installée"); [ -n "$P" ] && { echo "pack installé après $((i*6)) s"; break; }
 done
 timeout 20 adb exec-out screencap -p > "$OUT/04-prevol-carte.png"
+# réseau OGN en direct (connexion réelle depuis l'émulateur de la CI)
+adb shell input swipe 540 1500 540 700 400; sleep 20
+timeout 20 adb exec-out screencap -p > "$OUT/05-prevol-ogn-direct.png"
 for i in 1 2 3 4 5 6; do adb shell input swipe 540 1700 540 300 300; sleep 1; done
 sleep 2
-timeout 20 adb exec-out screencap -p > "$OUT/05-prevol-espaces.png"
+timeout 20 adb exec-out screencap -p > "$OUT/06-prevol-espaces.png"
 P=$(tap_text "Check-lists"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 3
-timeout 20 adb exec-out screencap -p > "$OUT/06-checklists.png"
+timeout 20 adb exec-out screencap -p > "$OUT/07-checklists.png"
 P=$(tap_text "Visite prévol ou tour complet du planeur effectué"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 1
 adb shell input swipe 540 1700 540 400 400; sleep 2
-timeout 20 adb exec-out screencap -p > "$OUT/07-checklists-suite.png"
+timeout 20 adb exec-out screencap -p > "$OUT/07b-checklists-suite.png"
+# Pilotage avec le rejeu OGN anonymisé (trafic et pompes réels déplacés autour de LFNL)
+adb shell am force-stop com.neutronstar.glidercopilot
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.ogn.replay true
+sleep 10
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
-sleep 15
-timeout 20 adb exec-out screencap -p > "$OUT/08-pilotage-carte.png"
+sleep 50
+timeout 20 adb exec-out screencap -p > "$OUT/08-pilotage-ogn-rejeu.png"
 P=$(tap_text "Zoom arrière"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 1; timeout 10 adb shell input tap $P; }
 sleep 8
-timeout 20 adb exec-out screencap -p > "$OUT/09-pilotage-carte-large.png"
+timeout 20 adb exec-out screencap -p > "$OUT/09-pilotage-ogn-large.png"
 P=$(tap_text "Réduire"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 P=$(tap_text "Masquer le vario"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 6
-timeout 20 adb exec-out screencap -p > "$OUT/10-pilotage-carte-plein.png"
+timeout 20 adb exec-out screencap -p > "$OUT/10-pilotage-ogn-plein.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

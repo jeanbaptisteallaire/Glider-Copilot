@@ -117,6 +117,19 @@ class OgnDeviceDatabase(
         }
     }
 
+    @Volatile private var index: Pair<Instant, Map<String, DdbDevice>>? = null
+
+    /**
+     * Fiche DDB d'une adresse radio, lue dans la copie locale uniquement (jamais d'appel réseau : utilisé pour chaque trame).
+     * null si la base n'a pas encore été téléchargée ou si l'appareil n'y est pas déclaré.
+     */
+    fun cachedDevice(address: String): DdbDevice? {
+        val cached = cache.read(url) ?: return null
+        val idx = index?.takeIf { it.first == cached.fetchedAt }?.second
+            ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
+        return idx[address.uppercase()]
+    }
+
     private fun devicesOf(c: CachedResponse): List<DdbDevice> {
         parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }
         return DdbParser.parse(c.body).also { parsed = c.fetchedAt to it }

@@ -24,6 +24,7 @@ data class MapPalette(
     val navaid: String = "#c4c4c4",
     val route: String = "#b7f7a5",
     val glider: String = "#f5f5f5",
+    val traffic: String = "#69c8ff",
 )
 
 /** JSON brut à insérer tel quel (GeoJSON déjà sérialisé). */
@@ -34,6 +35,9 @@ object MapStyle {
     const val SRC_GLIDER = "glidy-glider"
     const val SRC_ROUTE = "glidy-route"
     const val IMG_GLIDER = "glidy-glider-icon"
+    const val SRC_TRAFFIC = "glidy-traffic"
+    const val SRC_THERMALS = "glidy-thermals"
+    const val IMG_TRAFFIC = "glidy-traffic-icon"
 
     /**
      * Style MapLibre complet du pack installé dans [packDir]. Tout est local : PMTiles en file://, glyphes dans les assets,
@@ -49,6 +53,8 @@ object MapStyle {
         sources[SRC_ROUTE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_TRACE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_GLIDER] = mapOf("type" to "geojson", "data" to EMPTY_FC)
+        sources[SRC_THERMALS] = mapOf("type" to "geojson", "data" to EMPTY_FC)
+        sources[SRC_TRAFFIC] = mapOf("type" to "geojson", "data" to EMPTY_FC)
 
         val layers = ArrayList<Any>()
         layers += mapOf("id" to "background", "type" to "background", "paint" to mapOf("background-color" to p.background))
@@ -142,6 +148,24 @@ object MapStyle {
             "layout" to mapOf("text-field" to listOf("coalesce", listOf("get", "icao"), listOf("get", "name")), "text-font" to listOf("Noto Sans Medium"),
                 "text-size" to zoomInterp(8.5, 9, 13, 12), "text-anchor" to "left", "text-offset" to listOf("literal", listOf(0.8, 0))),
             "paint" to mapOf("text-color" to p.airport, "text-halo-color" to p.halo, "text-halo-width" to 1.2))
+        // pompes du réseau OGN : disque coloré par la montée, opacité selon l'âge, libellé « +1,8 »
+        layers += mapOf("id" to "thermals", "type" to "circle", "source" to SRC_THERMALS,
+            "paint" to mapOf(
+                "circle-radius" to listOf("interpolate", listOf("linear"), listOf("get", "count"), 1, 9, 4, 15),
+                "circle-color" to listOf("get", "color"), "circle-opacity" to listOf("*", 0.28, listOf("get", "fresh")),
+                "circle-stroke-color" to listOf("get", "color"), "circle-stroke-width" to 2, "circle-stroke-opacity" to listOf("get", "fresh"),
+            ))
+        layers += mapOf("id" to "thermals-label", "type" to "symbol", "source" to SRC_THERMALS,
+            "layout" to mapOf("text-field" to listOf("get", "label"), "text-font" to listOf("Noto Sans Medium"), "text-size" to 11,
+                "text-allow-overlap" to true, "text-anchor" to "top", "text-offset" to listOf("literal", listOf(0, 1.1))),
+            "paint" to mapOf("text-color" to listOf("get", "color"), "text-halo-color" to p.halo, "text-halo-width" to 1.4, "text-opacity" to listOf("get", "fresh")))
+        // trafic OGN : flèche orientée selon la route, libellé (CN ou immatriculation si la DDB l'autorise) et écart d'altitude
+        layers += mapOf("id" to "traffic", "type" to "symbol", "source" to SRC_TRAFFIC,
+            "layout" to mapOf("icon-image" to IMG_TRAFFIC, "icon-rotate" to listOf("get", "track"), "icon-rotation-alignment" to "map",
+                "icon-allow-overlap" to true, "icon-ignore-placement" to true,
+                "text-field" to listOf("get", "label"), "text-font" to listOf("Noto Sans Medium"), "text-size" to 10,
+                "text-anchor" to "left", "text-offset" to listOf("literal", listOf(1.0, -0.8)), "text-optional" to true),
+            "paint" to mapOf("text-color" to p.traffic, "text-halo-color" to p.halo, "text-halo-width" to 1.3))
         // couches dynamiques : route vers le terrain, trace colorée par le vario, planeur
         layers += mapOf("id" to "route", "type" to "line", "source" to SRC_ROUTE,
             "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))

@@ -47,6 +47,24 @@ data class FlightMapConfig(
     val fieldElevationM: Int? = null,
 )
 
+/** Autre aéronef du réseau OGN à dessiner. */
+data class TrafficMark(val position: LatLon, val trackDeg: Double?, val label: String, val altitudeM: Double?, val circling: Boolean)
+
+/** Pompe détectée dans les spirales du réseau. */
+data class ThermalMark(val position: LatLon, val climbMs: Double, val aircraftCount: Int, val ageMinutes: Long)
+
+/** Mon planeur vu par OGN (secours) : position, altitude, montée et retard mesurés. */
+data class OwnOgn(val position: LatLon, val trackDeg: Double?, val altitudeM: Double?, val climbMs: Double?, val latencyS: Double?, val ageS: Long)
+
+/** Données réseau affichées en vol. [replay] : rejeu d'un enregistrement anonymisé, signalé à l'écran. */
+data class FlightTraffic(
+    val aircraft: List<TrafficMark> = emptyList(),
+    val thermals: List<ThermalMark> = emptyList(),
+    val own: OwnOgn? = null,
+    val live: Boolean = false,
+    val replay: Boolean = false,
+)
+
 /** Position démo du planeur et trace colorée, en coordonnées géographiques. */
 data class GeoFrame(
     val glider: LatLon,
@@ -83,7 +101,14 @@ class MapController {
 }
 
 @Composable
-internal fun LiveMap(config: FlightMapConfig, frame: GeoFrame, controller: MapController, modifier: Modifier = Modifier) {
+internal fun LiveMap(
+    config: FlightMapConfig,
+    frame: GeoFrame,
+    controller: MapController,
+    traffic: FlightTraffic,
+    thermalColor: (Double) -> Color,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val mapView = remember {
@@ -133,6 +158,7 @@ internal fun LiveMap(config: FlightMapConfig, frame: GeoFrame, controller: MapCo
             }
             map.setStyle(Style.Builder().fromJson(config.styleJson)) { s ->
                 s.addImage(MapStyle.IMG_GLIDER, gliderBitmap())
+                s.addImage(MapStyle.IMG_TRAFFIC, trafficBitmap())
                 style = s
             }
         }
@@ -143,6 +169,8 @@ internal fun LiveMap(config: FlightMapConfig, frame: GeoFrame, controller: MapCo
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(frame))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_ROUTE)?.setGeoJson(line(frame.glider, frame.field))
+        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(trafficJson(traffic.aircraft))
+        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(thermalsJson(traffic.thermals, thermalColor))
         if (controller.follow) controller.map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(frame.glider.lat, frame.glider.lon)))
     }
 
@@ -165,6 +193,41 @@ private fun traceJson(f: GeoFrame): String = buildString {
 }
 
 internal fun hex(c: Color): String = String.format("#%06X", c.toArgb() and 0xFFFFFF)
+
+private fun esc(s: String) = s.replace("\\", "\\\\").replace("\"", "\\\"")
+
+private fun trafficJson(list: List<TrafficMark>): String = buildString {
+    append("""{"type":"FeatureCollection","features":[""")
+    list.forEachIndexed { i, a ->
+        if (i > 0) append(',')
+        append("""{"type":"Feature","properties":{"track":${a.trackDeg ?: 0.0},"label":"${esc(a.label)}"},"geometry":{"type":"Point","coordinates":[${a.position.lon},${a.position.lat}]}}""")
+    }
+    append("]}")
+}
+
+private fun thermalsJson(list: List<ThermalMark>, color: (Double) -> Color): String = buildString {
+    append("""{"type":"FeatureCollection","features":[""")
+    list.forEachIndexed { i, t ->
+        if (i > 0) append(',')
+        val fresh = (1.0 - t.ageMinutes / 45.0).coerceIn(0.35, 1.0)
+        val label = String.format(Locale.FRANCE, "%+.1f", t.climbMs) + if (t.aircraftCount > 1) " ×${t.aircraftCount}" else ""
+        append("""{"type":"Feature","properties":{"color":"${hex(color(t.climbMs))}","count":${t.aircraftCount},"fresh":$fresh,"label":"$label"},"geometry":{"type":"Point","coordinates":[${t.position.lon},${t.position.lat}]}}""")
+    }
+    append("]}")
+}
+
+/** Flèche blanche cernée de noir, pointe vers le haut (tournée selon la route). */
+private fun trafficBitmap(size: Int = 48): Bitmap {
+    val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val cv = android.graphics.Canvas(bmp)
+    val k = size / 24f
+    val path = android.graphics.Path().apply {
+        moveTo(12f * k, 3f * k); lineTo(19f * k, 20f * k); lineTo(12f * k, 16f * k); lineTo(5f * k, 20f * k); close()
+    }
+    cv.drawPath(path, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.BLACK; style = Paint.Style.STROKE; strokeWidth = 3f * k; strokeJoin = Paint.Join.ROUND })
+    cv.drawPath(path, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.WHITE; style = Paint.Style.FILL })
+    return bmp
+}
 
 /** Silhouette de planeur vue de dessus, nez vers le haut (la couche la tourne selon le cap). */
 private fun gliderBitmap(size: Int = 72): Bitmap {

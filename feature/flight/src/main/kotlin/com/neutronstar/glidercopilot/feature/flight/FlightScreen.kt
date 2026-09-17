@@ -52,6 +52,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -96,6 +99,7 @@ fun FlightScreen(
     status: FlightStatus,
     modifier: Modifier = Modifier,
     map: FlightMapConfig? = null,
+    traffic: FlightTraffic = FlightTraffic(),
     flightSeconds: Long = 0,
 ) {
     val c = Gc.colors
@@ -123,7 +127,11 @@ fun FlightScreen(
     }
 
     // Signal de démonstration : spirale dans une pompe de ~1,5 m/s.
-    val v = 1.4 + 1.3 * sin(t * 2 * Math.PI / 26) + 0.3 * sin(t * 1.7)
+    val demoV = 1.4 + 1.3 * sin(t * 2 * Math.PI / 26) + 0.3 * sin(t * 1.7)
+    // secours OGN : mon planeur reçu il y a moins de 60 s → sa montée remplace le signal de démonstration
+    val ownOgn = traffic.own?.takeIf { it.ageS <= 60 && it.climbMs != null }
+    val v = ownOgn?.climbMs ?: demoV
+    val varioLabel = ownOgn?.let { o -> "Vario OGN" + (o.latencyS?.let { String.format(Locale.FRANCE, " · %.0f s", it + o.ageS) } ?: "") } ?: "Vario m/s"
     val alt = 1250.0 + 40 * sin(t / 30)
     val fieldElev = map?.fieldElevationM?.toDouble() ?: DEFAULT_FIELD_ELEV
     val need = fieldElev + ARRIVAL_MARGIN + FIELD_DIST_KM * 1000 / finesse
@@ -153,16 +161,19 @@ fun FlightScreen(
         ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, finesse.toDouble(), marge)
         Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
             if (map != null) {
-                LiveMap(map, demoFrame(map.field, t), controller, Modifier.fillMaxSize())
+                val demo = demoFrame(map.field, t)
+                val frame = traffic.own?.takeIf { it.ageS <= 60 }?.let { o -> demo.copy(glider = o.position, headingDeg = o.trackDeg ?: demo.headingDeg, trace = emptyList()) } ?: demo
+                LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
             } else {
                 DemoMap(t, v)
             }
-            MapOverlays(status, flightSeconds, map, controller)
+            MapOverlays(status, flightSeconds, map, controller, traffic)
         }
         VarioPanel(
             open = varioOpen,
             soundOn = soundOn,
             v = v,
+            label = varioLabel,
             history = history,
             alt = alt,
             need = need,
@@ -440,14 +451,32 @@ private fun DrawScope.drawGlider(x: Float, y: Float, headingDeg: Float, color: C
 }
 
 @Composable
-private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long, map: FlightMapConfig?, controller: MapController) {
+private fun BoxScope.MapOverlays(status: FlightStatus, flightSeconds: Long, map: FlightMapConfig?, controller: MapController, traffic: FlightTraffic) {
     val c = Gc.colors
     // démonstration
     Text(
-        if (map != null) "DÉMO · planeur simulé" else "Carte hors ligne à télécharger dans Prévol",
+        when {
+            map == null -> "Carte hors ligne à télécharger dans Prévol"
+            traffic.replay -> "REJEU OGN · planeur simulé"
+            traffic.own?.let { it.ageS <= 60 } == true -> "Position OGN de mon planeur"
+            else -> "DÉMO · planeur simulé"
+        },
         style = TextStyle(fontSize = 9.sp, color = c.faint),
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 14.dp).background(c.overlay, RoundedCornerShape(7.dp)).padding(horizontal = 8.dp, vertical = 4.dp),
     )
+    // légende trafic OGN (maquette v8 : .traffic-key)
+    if (map != null && (traffic.live || traffic.replay)) {
+        Text(
+            buildAnnotatedString {
+                withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append("OGN ") }
+                append("${traffic.aircraft.size} aéronef" + (if (traffic.aircraft.size > 1) "s" else "") + " · ${traffic.thermals.size} pompe" + (if (traffic.thermals.size > 1) "s" else ""))
+            },
+            style = TextStyle(fontSize = 9.sp, color = c.cardTitle),
+            modifier = Modifier.align(Alignment.TopStart).padding(start = 14.dp, top = 62.dp)
+                .background(c.overlay, RoundedCornerShape(10.dp)).border(1.dp, c.line, RoundedCornerShape(10.dp))
+                .padding(horizontal = 8.dp, vertical = 5.dp),
+        )
+    }
     // orientation
     RoundTool(
         if (controller.follow) "AUTO" else "LIBRE",
@@ -578,6 +607,7 @@ private fun VarioPanel(
     open: Boolean,
     soundOn: Boolean,
     v: Double,
+    label: String,
     history: List<Sample>,
     alt: Double,
     need: Double,
@@ -593,7 +623,7 @@ private fun VarioPanel(
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(13.dp)) {
             if (open) {
                 Column(Modifier.width(92.dp)) {
-                    Text("Vario m/s", style = eyebrow(c), modifier = Modifier.padding(bottom = 4.dp))
+                    Text(label, style = eyebrow(c), modifier = Modifier.padding(bottom = 4.dp), maxLines = 1)
                     Text(
                         signed1(v),
                         style = TextStyle(fontSize = 40.sp, lineHeight = 44.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1.5).sp, color = c.vario(v), fontFeatureSettings = "tnum"),
