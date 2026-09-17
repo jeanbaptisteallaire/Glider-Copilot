@@ -105,5 +105,35 @@ if ! ls "$OUT"/igc/*.igc >/dev/null 2>&1; then
 fi
 python3 tools/flight/check_igc.py "$OUT"/igc/*.igc > "$OUT/igc-controle.txt" 2>&1 || true
 cat "$OUT/igc-controle.txt"
+# S6 : mode démo (vol simulé autour du terrain, trafic OGN réel), choix du terrain, finesse F10
+adb shell am force-stop com.neutronstar.glidercopilot
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+sleep 10
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 4
+P=$(tap_text "Mode démo"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 50
+timeout 20 adb exec-out screencap -p > "$OUT/13-pilotage-mode-demo.png"
+P=$(tap_text "AUTO"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/14-pilotage-choix-terrain.png"
+adb shell input keyevent 4; sleep 1
+P=$(tap_text "Finesse de sécurité 10"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 1
+P=$(tap_text "Finesse de sécurité 10"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 5
+timeout 20 adb exec-out screencap -p > "$OUT/15-pilotage-demo-f10.png"
+P=$(tap_text "Mode démo"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+# S6 : Suivi & debug d'un planeur du club en vol (F-CGXB)
+P=$(tap_text "Prévol"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 3
+P=$(tap_text "Suivi et debug d'un planeur en vol"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 2
+P=$(tap_text "F-CGXB"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 30
+timeout 20 adb exec-out screencap -p > "$OUT/16-prevol-suivi-debug.png"
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 20
+timeout 20 adb exec-out screencap -p > "$OUT/17-pilotage-suivi.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

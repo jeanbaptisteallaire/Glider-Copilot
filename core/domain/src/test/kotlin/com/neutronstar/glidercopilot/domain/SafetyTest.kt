@@ -167,6 +167,21 @@ class SafetyTest {
         assertNotNull(engine.state)
     }
 
+    @Test fun noMarginAlertsInTheCircuit() {
+        val heard = ArrayList<SafetyAlert>()
+        val engine = SafetyEngine(terrain = { flat }, fields = { listOf(lfnl) }, alert = { heard += it })
+        // vent arrière à 1,5 km du terrain, 350 m sol : marge négative (arrivée +300 m exigée) mais terrain en finesse
+        var alt = 183.0 + 350
+        for (s in 0 until 90) {
+            val p = Geo.destination(lfnl.position, 180.0, 1.5)
+            val fix = GpsFix(t0.plusSeconds(s.toLong()), p, alt, 90.0, 0.0, 5.0)
+            val st = engine.update(fix, alt, -1.0, false, cfg, fix.time, armed = true)!!
+            assertTrue(st.choice.result.marginM < 0)
+            alt -= 1.0
+        }
+        assertTrue("alertes $heard", heard.none { it.kind == SafetyAlert.Kind.MARGIN_BELOW || it.kind == SafetyAlert.Kind.MARGIN_LOW })
+    }
+
     @Suppress("FunctionName")
     private fun Duration(now: Instant, start: Instant) = java.time.Duration.between(start, now).seconds
 }

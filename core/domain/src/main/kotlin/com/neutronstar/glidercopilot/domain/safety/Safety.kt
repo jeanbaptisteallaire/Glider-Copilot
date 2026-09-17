@@ -247,7 +247,9 @@ class SafetyAlerts(
     fun update(choice: FieldSelectorChoice, projectedMarginM: Double?, now: Instant): List<SafetyAlert> {
         val out = ArrayList<SafetyAlert>()
         val r = choice.result
-        val m = r.marginM
+        // dans le circuit d'atterrissage (terrain à moins de 2,5 km, arrivée directe possible) : pas d'alerte de marge
+        val inCircuit = r.distanceKm < 2.5 && r.arrivalAglM > 50 && r.relief == null
+        val m = if (inCircuit) max(r.marginM, lowM + hysteresisM) else r.marginM
         val newLevel = when {
             m < 0 -> 0
             m < lowM -> if (level == 0 && m < hysteresisM) 0 else 1

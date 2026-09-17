@@ -250,7 +250,7 @@ fun FlightScreen(
             MapOverlays(
                 shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls),
                 wind = safety?.wind?.let { it.fromDeg to it.speedKmh },
-                capBanner = if (result != null && marge != null && marge < 0) "CAP TERRAIN · ${result.field.id} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
+                capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 2.5 && result.arrivalAglM > 50 && result.relief == null)) "CAP TERRAIN · ${result.field.id} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
                 demoOn = live.demo,
                 onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
                 nearTraffic = if (live.mode == OwnshipMode.DEMO) nearTraffic else null,
