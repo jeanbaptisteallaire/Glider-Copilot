@@ -111,22 +111,23 @@ adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 sleep 10
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
-# S7 : le menu du terrain de repli doit s'ouvrir au sol, avant tout calcul de sécurité
+# S7 : le menu du terrain de repli doit s'ouvrir au sol, avant tout calcul de sécurité.
+# Démarrage à part : ni la touche retour ni le menu resté ouvert ne doivent perturber la suite.
 P=$(tap_text "AUTO"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/12b-pilotage-terrain-au-sol.png"
-close_menu() {   # la touche retour ne doit partir que si le menu est ouvert, sinon elle quitte l'app
-  P=$(tap_text "AUTO · terrain du club, sinon le meilleur rejoignable")
-  [ -n "$P" ] && { adb shell input keyevent 4; sleep 2; }
-}
-close_menu
+adb shell am force-stop com.neutronstar.glidercopilot
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+sleep 10
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 4
 P=$(tap_text "Mode démo"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 50
 timeout 20 adb exec-out screencap -p > "$OUT/13-pilotage-mode-demo.png"
 P=$(tap_text "AUTO"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/14-pilotage-choix-terrain.png"
-close_menu
+adb shell input keyevent 4; sleep 1
 P=$(tap_text "Finesse de sécurité 10"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 1
 P=$(tap_text "Finesse de sécurité 10"); [ -n "$P" ] && timeout 10 adb shell input tap $P
@@ -145,8 +146,11 @@ P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/17-pilotage-suivi.png"
 # S7 : onglet Carte (aéronefs du sud de la France), pistes des terrains, fiche d'un aéronef
+adb shell am force-stop com.neutronstar.glidercopilot
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+sleep 12
 P=$(tap_text "Carte"); [ -n "$P" ] && timeout 10 adb shell input tap $P
-sleep 30
+sleep 40
 timeout 20 adb exec-out screencap -p > "$OUT/18-carte-sud-france.png"
 # fiche d'un aéronef : la carte est une seule vue pour uiautomator, on sonde une grille de points
 found=""
