@@ -111,6 +111,11 @@ adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 sleep 10
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
+# S7 : le menu du terrain de repli doit s'ouvrir au sol, avant tout calcul de sécurité
+P=$(tap_text "Choisir le terrain"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/12b-pilotage-terrain-au-sol.png"
+adb shell input keyevent 4; sleep 2
 P=$(tap_text "Mode démo"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 50
 timeout 20 adb exec-out screencap -p > "$OUT/13-pilotage-mode-demo.png"
