@@ -356,18 +356,18 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
         }
         // distance au terrain : deuxième information fondamentale, au centre et en grand (V7.1)
         Column(
-            Modifier.widthIn(min = 92.dp).padding(top = 1.dp),
+            Modifier.widthIn(min = 104.dp).padding(top = 1.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text("Distance terrain", style = eyebrow(c), maxLines = 1)
             Text(
                 distKm?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—",
-                style = TextStyle(fontSize = 21.8.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp, lineHeight = 26.sp),
+                style = TextStyle(fontSize = 38.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-1.2).sp, lineHeight = 41.sp),
                 maxLines = 1, softWrap = false,
-                modifier = Modifier.padding(top = 2.dp)
+                modifier = Modifier.padding(top = 1.dp)
                     .semantics { contentDescription = distKm?.let { "Distance au terrain ${km(it)}" } ?: "Distance au terrain inconnue" },
             )
-            Text("km", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.ok))
+            Text("km", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ok))
         }
         Column(Modifier.width(155.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
