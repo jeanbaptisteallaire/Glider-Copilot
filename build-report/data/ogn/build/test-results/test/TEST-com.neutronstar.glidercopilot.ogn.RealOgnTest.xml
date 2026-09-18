@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.ogn.RealOgnTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-18T07:33:52" hostname="runnervmlun5p" time="0.182">
+  <properties/>
+  <testcase name="parsesEveryGliderFrame" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.067"/>
+  <testcase name="findsRealThermalsOnly" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.064"/>
+  <testcase name="realCadenceIsAFewSeconds" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.049"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
