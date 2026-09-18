@@ -135,5 +135,27 @@ timeout 20 adb exec-out screencap -p > "$OUT/16-prevol-suivi-debug.png"
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/17-pilotage-suivi.png"
+# S7 : onglet Carte (aéronefs du sud de la France), pistes des terrains, fiche d'un aéronef
+P=$(tap_text "Carte"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 30
+timeout 20 adb exec-out screencap -p > "$OUT/18-carte-sud-france.png"
+# fiche d'un aéronef : la carte est une seule vue pour uiautomator, on sonde une grille de points
+found=""
+for y in 900 1150 1400 700 1650; do
+  for x in 270 540 810 400 680; do
+    timeout 10 adb shell input tap $x $y; sleep 2
+    P=$(tap_text "VITESSE")
+    if [ -n "$P" ]; then found="$x,$y"; break; fi
+  done
+  [ -n "$found" ] && break
+done
+echo "fiche aéronef ouverte en $found"
+timeout 20 adb exec-out screencap -p > "$OUT/19-carte-fiche-aeronef.png"
+P=$(tap_text "VITESSE"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }   # ferme la fiche
+# zoom sur le club : pistes de LFNL, LFMT et LFMS à leur orientation réelle
+P=$(tap_text "Zoom avant")
+if [ -n "$P" ]; then for i in 1 2 3; do timeout 10 adb shell input tap $P; sleep 3; done; fi
+sleep 8
+timeout 20 adb exec-out screencap -p > "$OUT/20-carte-pistes.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

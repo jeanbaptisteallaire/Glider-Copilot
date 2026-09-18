@@ -196,9 +196,11 @@ internal fun LiveMap(
         style = null
         mapView.getMapAsync { map ->
             if (onAircraftTap != null) {
+                // tolérance de la taille d'un doigt (22 dp autour du point touché), pas de la pastille dessinée
+                val slop = 22f * context.resources.displayMetrics.density
                 map.addOnMapClickListener { point ->
                     val p = map.projection.toScreenLocation(point)
-                    val box = android.graphics.RectF(p.x - 28, p.y - 28, p.x + 28, p.y + 28)
+                    val box = android.graphics.RectF(p.x - slop, p.y - slop, p.x + slop, p.y + slop)
                     val hit = map.queryRenderedFeatures(box, MapStyle.LAYER_TRAFFIC, MapStyle.LAYER_TRAFFIC_DOTS)
                         .firstNotNullOfOrNull { f -> f.getStringProperty("id") }
                     if (hit != null) onAircraftTap(hit)
