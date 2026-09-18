@@ -21,7 +21,7 @@ jobs:
       - name: Écouter le réseau OGN
         run: |
           python3 tools/ogn/scan.py \
-            --seconds "${{ github.event.inputs.seconds || '120' }}" \
+            --seconds "${{ github.event.inputs.seconds || '240' }}" \
             --radius "${{ github.event.inputs.radius || '300' }}" \
             --app-user "${{ github.event.inputs.app_user || 'GLIDY01234' }}" \
             --out out
