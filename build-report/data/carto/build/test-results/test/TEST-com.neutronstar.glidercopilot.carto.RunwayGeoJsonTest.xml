@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.carto.RunwayGeoJsonTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-18T12:22:24" hostname="runnervmlun5p" time="0.251">
-  <properties/>
-  <testcase name="airportsWithoutKnownRunwayAreSkipped" classname="com.neutronstar.glidercopilot.carto.RunwayGeoJsonTest" time="0.11"/>
-  <testcase name="knownRunwaysAreDrawnWithTheirOrientation" classname="com.neutronstar.glidercopilot.carto.RunwayGeoJsonTest" time="0.141"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
