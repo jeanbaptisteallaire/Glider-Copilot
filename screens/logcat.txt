@@ -1,650 +1,645 @@
 --------- beginning of main
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:26:55.566  1723  2232 I A       : onDisabled. Registered: false
-09-18 17:26:55.567  1723  2214 I A       : on opa visibility changed false
-09-18 17:26:55.567  1723  2214 I A       : on opa visibility changed false
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:26:55.567  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:26:55.568  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:26:55.569   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:26:55.569  1723  2214 I A       : Initialize
-09-18 17:26:55.569  1723  2214 I NgaEntryPointEventSendr: setupConnection
-09-18 17:26:55.576  1723  2214 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
-09-18 17:26:55.576  1723  2214 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
-09-18 17:26:55.581  1723  2232 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
-09-18 17:26:55.581  1723  2232 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
-09-18 17:26:55.581  1723  2232 I A       : onActiveStateChangeEvent: IDLE => IDLE
-09-18 17:26:55.582  1723  2232 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
-09-18 17:26:55.582  1723  2214 I A       : Successfully initialized all components
-09-18 17:26:55.600  1777  1777 I A       : Creating pss binder().
-09-18 17:26:55.600  1723  2232 I NgaEntryPointEventSendr: onServiceConnected
-09-18 17:26:55.601  1777  4143 I A       : Calling beginBinderSession().
-09-18 17:26:55.601  1777  4143 I A       : beginBinderSession(): calling binder
-09-18 17:26:55.601  1723  2232 I NgaEntryPointEventSendr: State changed: Connecting => Ready
+09-18 17:49:22.719  7649  7687 D EGL_emulation: app_time_stats: avg=438.30ms min=40.47ms max=1009.83ms count=3
+09-18 17:49:22.938   401   503 D AudioFlinger: mixer(0x76fe051c9930) throttle end: throttle time(49)
+09-18 17:49:23.670   401   503 D AudioFlinger: mixer(0x76fe051c9930) throttle end: throttle time(43)
+09-18 17:49:23.703  7649  7897 D EGL_emulation: app_time_stats: avg=237.90ms min=74.55ms max=400.32ms count=4
+09-18 17:49:23.894   401   503 D AudioFlinger: mixer(0x76fe051c9930) throttle end: throttle time(28)
+09-18 17:49:24.010  2690  7703 D AudioTrack: stop(18): called with 66600 frames delivered
+09-18 17:49:24.015  1029  1029 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=NONE(0), position=0, buffered position=0, speed=0.0, updated=29137, actions=2409991, custom actions=[Action:mName='Rewind 10 seconds, mIcon=2131234345, mExtras=null, Action:mName='Fast forward 30 second, mIcon=2131234125, mExtras=null, Action:mName='Skip to next episode, mIcon=2131234405, mExtras=null], active item id=-1, error=null}
+09-18 17:49:24.016  1029  1029 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=NONE(0), position=0, buffered position=0, speed=0.0, updated=29137, actions=2409991, custom actions=[Action:mName='Rewind 10 seconds, mIcon=2131234345, mExtras=null, Action:mName='Fast forward 30 second, mIcon=2131234125, mExtras=null, Action:mName='Skip to next episode, mIcon=2131234405, mExtras=null], active item id=-1, error=null}
+09-18 17:49:24.016  1029  1029 D AvrcpTargetJni: sendMediaUpdateNative
+09-18 17:49:24.016  1029  1029 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
+09-18 17:49:24.019  1029  1029 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=NONE(0), position=0, buffered position=0, speed=0.0, updated=29137, actions=2409991, custom actions=[Action:mName='Rewind 10 seconds, mIcon=2131234345, mExtras=null, Action:mName='Fast forward 30 second, mIcon=2131234125, mExtras=null, Action:mName='Skip to next episode, mIcon=2131234405, mExtras=null], active item id=-1, error=null}
+09-18 17:49:24.020  1029  1029 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=NONE(0), position=0, buffered position=0, speed=0.0, updated=29137, actions=2409991, custom actions=[Action:mName='Rewind 10 seconds, mIcon=2131234345, mExtras=null, Action:mName='Fast forward 30 second, mIcon=2131234125, mExtras=null, Action:mName='Skip to next episode, mIcon=2131234405, mExtras=null], active item id=-1, error=null}
+09-18 17:49:24.020  1029  1029 D MediaControlGattService: updatePlayerState: playbackState= INACTIVE
+09-18 17:49:24.021  1029  1029 D MediaControlGattService: updateMediaStateChar
+09-18 17:49:24.021  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.022  1029  1029 D MediaControlGattService: updateMediaStateChar setting to state= 1
+09-18 17:49:24.023  1029  1029 W MediaControlGattService: Feature PLAYER_NAME(BIT 1) support: true
+09-18 17:49:24.027  1029  1029 W MediaControlGattService: Feature PLAYER_ICON_URL(BIT 3) support: false
+09-18 17:49:24.028  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.028  1029  1029 W MediaControlGattService: Feature PLAYER_ICON_OBJ_ID(BIT 2) support: false
+09-18 17:49:24.028  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.028  1029  1029 W MediaControlGattService: Feature CURRENT_TRACK_SEGMENT_OBJ_ID(BIT 10) support: false
+09-18 17:49:24.028  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.028  1029  1029 W MediaControlGattService: Feature CURRENT_TRACK_OBJ_ID(BIT 11) support: false
+09-18 17:49:24.028  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.028  1029  1029 W MediaControlGattService: Feature NEXT_TRACK_OBJ_ID(BIT 12) support: false
+09-18 17:49:24.028  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.029  1029  1029 W MediaControlGattService: Feature CURRENT_GROUP_OBJ_ID(BIT 13) support: false
+09-18 17:49:24.029  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.029  1029  1029 W MediaControlGattService: Feature PARENT_GROUP_OBJ_ID(BIT 14) support: false
+09-18 17:49:24.029  1029  1029 D MediaControlGattService: updateObjectID
+09-18 17:49:24.029  1029  1029 W MediaControlGattService: Feature SEARCH_RESULT_OBJ_ID(BIT 20) support: false
+09-18 17:49:24.029  1029  1029 W MediaControlGattService: Feature TRACK_TITLE(BIT 5) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature TRACK_DURATION(BIT 6) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER_SUPPORTED(BIT 16) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER(BIT 15) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYER_NAME(BIT 1) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYER_NAME(BIT 1) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYER_NAME(BIT 1) support: true
+09-18 17:49:24.030  1029  1029 W MediaControlGattService: Feature PLAYER_NAME_NOTIFY support: true
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER_SUPPORTED(BIT 16) support: true
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER(BIT 15) support: true
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature PLAYER_ICON_OBJ_ID(BIT 2) support: false
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature PLAYER_ICON_URL(BIT 3) support: false
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+09-18 17:49:24.031  1029  1029 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED_NOTIFY support: true
+09-18 17:49:24.032  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.032  1029  1029 D MediaControlGattService: updateMediaStateChar
+09-18 17:49:24.032  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.032  1029  1029 D MediaControlGattService: updateMediaStateChar setting to state= 0
+09-18 17:49:24.032  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER_SUPPORTED(BIT 16) support: true
+09-18 17:49:24.032  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER(BIT 15) support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature PLAYING_ORDER_NOTIFY support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature TRACK_DURATION(BIT 6) support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature TRACK_DURATION(BIT 6) support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature TRACK_DURATION_NOTIFY support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+09-18 17:49:24.033  1029  1029 W MediaControlGattService: Feature TRACK_CHANGED(BIT 4) support: true
 --------- beginning of system
-09-18 17:26:55.604   520  2402 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
-09-18 17:26:55.617  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-18 17:26:55.621  1777  2591 W SearchServiceCore: Abort, client detached.
-09-18 17:26:55.632  1723  2232 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-09-18 17:26:55.636  1777  2840 I PBSessionCacheImpl: Deleted sessionId[7817118401810940] from persistence.
-09-18 17:26:55.777  7897  7936 D EGL_emulation: app_time_stats: avg=1128.76ms min=1128.76ms max=1128.76ms count=1
-09-18 17:26:56.429  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=798.0, y[0]=1784.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=868274, downTime=868274, deviceId=-1, source=0x1002, displayId=0, eventId=-205664496 }
-09-18 17:26:56.434  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=798.0, y[0]=1784.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=868274, downTime=868274, deviceId=-1, source=0x1002, displayId=0, eventId=-787304127 }
-09-18 17:26:56.464  7897  8006 E EGL_emulation: tid 8006: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
-09-18 17:26:56.465  7897  8006 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
-09-18 17:26:56.465  7897  8006 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-18 17:26:56.465  7897  7897 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-18 17:26:56.469  7897  8006 E Surface : getSlotFromBufferLocked: unknown buffer: 0x0
-09-18 17:26:56.511   333  8145 I resolv  : GetAddrInfoHandler::run: {100 100 100 983140 10192 0}
-09-18 17:26:56.515   333  8146 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-09-18 17:26:56.515   333  8147 I resolv  : res_nmkquery: (QUERY, IN, A)
-09-18 17:26:56.515   333  8147 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x725ee38504b0
-09-18 17:26:56.515   333  8147 I resolv  : doQuery: rcode=0, ancount=4, return value=108
-09-18 17:26:56.515   333  8146 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x725ee3851590
-09-18 17:26:56.515   333  8146 I resolv  : doQuery: rcode=0, ancount=4, return value=144
-09-18 17:26:56.516  7897  7969 D TrafficStats: tagSocket(130) with statsTag=0xffffffff, statsUid=-1
-09-18 17:26:56.528   520  2024 I ActivityManager: Background started FGS: Allowed [callingPackage: com.neutronstar.glidercopilot; callingUid: 10192; uidState: TOP ; uidBFSL: [BFSL]; intent: Intent { cmp=com.neutronstar.glidercopilot/.FlightService }; code:PROC_STATE_TOP; tempAllowListReason:<null>; targetSdkVersion:35; callerTargetSdkVersion:35; startForegroundCount:0; bindFromPackage:null: isBindService:false]
-09-18 17:26:56.531  7897  7897 V Mbgl-ConnectivityReceiver: connected - true
-09-18 17:26:56.545  7897  8144 I Mbgl-EGLConfigChooser: In emulator: false
-09-18 17:26:56.597  7897  7897 D CompatibilityChangeReporter: Compat change id reported: 160794467; UID 10192; state: ENABLED
-09-18 17:26:56.608   520  2024 D CompatibilityChangeReporter: Compat change id reported: 170668199; UID 10192; state: ENABLED
-09-18 17:26:56.615   520  2402 W BatteryExternalStatsWorker: error reading Bluetooth stats: 11
-09-18 17:26:56.618   520  2402 D TelephonyManager: requestModemActivityInfo: Sending result to app: ModemActivityInfo{ mTimestamp=868461 mSleepTimeMs=0 mIdleTimeMs=868457 mActivityStatsTechSpecificInfo=[{mRat=UNKNOWN,mFrequencyRange=UNKNOWN,mTxTimeMs[]=[0, 0, 0, 0, 0],mRxTimeMs=0}]}
-09-18 17:26:56.660   333   362 I netd    : tetherGetStats() -> {[]} <0.29ms>
-09-18 17:26:56.805  7897  7936 D EGL_emulation: app_time_stats: avg=297.91ms min=24.38ms max=771.65ms count=3
-09-18 17:26:56.823  7897  8008 W Mbgl    : {r.glidercopilot}[ParseStyle]: "zoom" expression may only be used as input to a top-level "step" or "interpolate" expression.
-09-18 17:26:57.383  7897  7904 I r.glidercopilot: JIT allocated 55KB for compiled code of void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.MapOverlays(androidx.compose.foundation.layout.BoxScope, com.neutronstar.glidercopilot.feature.flight.FlightStatus, long, java.lang.String, com.neutronstar.glidercopilot.feature.flight.FlightMapConfig, com.neutronstar.glidercopilot.feature.flight.MapController, com.neutronstar.glidercopilot.feature.flight.FlightTraffic, kotlin.jvm.functions.Function0, kotlin.Pair, java.lang.String, boolean, kotlin.jvm.functions.Function0, java.lang.Integer, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:26:57.384  7897  7904 I r.glidercopilot: Compiler allocated 8177KB to compile void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.MapOverlays(androidx.compose.foundation.layout.BoxScope, com.neutronstar.glidercopilot.feature.flight.FlightStatus, long, java.lang.String, com.neutronstar.glidercopilot.feature.flight.FlightMapConfig, com.neutronstar.glidercopilot.feature.flight.MapController, com.neutronstar.glidercopilot.feature.flight.FlightTraffic, kotlin.jvm.functions.Function0, kotlin.Pair, java.lang.String, boolean, kotlin.jvm.functions.Function0, java.lang.Integer, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:26:57.415  7897  7905 I r.glidercopilot: Background young concurrent copying GC freed 569166(18MB) AllocSpace objects, 15(1024KB) LOS objects, 10% free, 172MB/192MB, paused 1.539ms,55us total 221.277ms
-09-18 17:26:57.624  7897  7934 I r.glidercopilot: Starting a blocking GC Alloc
-09-18 17:26:57.625  7897  7934 I r.glidercopilot: Starting a blocking GC Alloc
-09-18 17:26:57.773  7897  7934 I r.glidercopilot: Alloc concurrent copying GC freed 4716174(128MB) AllocSpace objects, 51(34MB) LOS objects, 45% free, 28MB/52MB, paused 40us,20us total 148.473ms
-09-18 17:26:57.774  7897  7905 I r.glidercopilot: WaitForGcToComplete blocked Background on Alloc for 91.413ms
-09-18 17:26:58.146  7897  7936 D EGL_emulation: app_time_stats: avg=183.70ms min=31.73ms max=406.51ms count=7
-09-18 17:26:58.464  7897  8144 D EGL_emulation: app_time_stats: avg=282.45ms min=79.74ms max=601.80ms count=5
-09-18 17:26:58.970  7897  7904 I r.glidercopilot: JIT allocated 55KB for compiled code of void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.MapOverlays(androidx.compose.foundation.layout.BoxScope, com.neutronstar.glidercopilot.feature.flight.FlightStatus, long, java.lang.String, com.neutronstar.glidercopilot.feature.flight.FlightMapConfig, com.neutronstar.glidercopilot.feature.flight.MapController, com.neutronstar.glidercopilot.feature.flight.FlightTraffic, kotlin.jvm.functions.Function0, kotlin.Pair, java.lang.String, boolean, kotlin.jvm.functions.Function0, java.lang.Integer, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:26:58.970  7897  7904 I r.glidercopilot: Compiler allocated 8177KB to compile void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.MapOverlays(androidx.compose.foundation.layout.BoxScope, com.neutronstar.glidercopilot.feature.flight.FlightStatus, long, java.lang.String, com.neutronstar.glidercopilot.feature.flight.FlightMapConfig, com.neutronstar.glidercopilot.feature.flight.MapController, com.neutronstar.glidercopilot.feature.flight.FlightTraffic, kotlin.jvm.functions.Function0, kotlin.Pair, java.lang.String, boolean, kotlin.jvm.functions.Function0, java.lang.Integer, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:26:59.147  7897  7936 D EGL_emulation: app_time_stats: avg=192.02ms min=46.16ms max=335.56ms count=5
-09-18 17:26:59.643  7897  8144 D EGL_emulation: app_time_stats: avg=392.95ms min=344.07ms max=476.38ms count=3
-09-18 17:27:00.083  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:00.083  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:00.083  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:00.083  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:00.083  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:00.086   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:00.257   834   901 D EGL_emulation: app_time_stats: avg=15853.18ms min=15853.18ms max=15853.18ms count=1
-09-18 17:27:00.489  7897  7936 D EGL_emulation: app_time_stats: avg=653.62ms min=299.80ms max=1007.45ms count=2
-09-18 17:27:00.861  7897  8144 D EGL_emulation: app_time_stats: avg=243.58ms min=204.82ms max=298.04ms count=5
-09-18 17:27:00.873  7897  7934 I GlidyFlight: annonce : Décollage détecté, chrono lancé
-09-18 17:27:00.875  2804  7946 I GoogleTTSServiceImpl: Synthesis request for locale fra-FRA and name fr-FR-language
-09-18 17:27:00.875  2804  7946 I GoogleTTSServiceImpl: TTS dispatch: fr-fr-x-vlf-lstm-embedded
-09-18 17:27:00.981   396  3550 D AudioFlinger: Client defaulted notificationFrames to 2048 for frameCount 4096
-09-18 17:27:00.982   396  3550 D AF::TrackHandle: OpPlayAudio: track:58 usage:12 not muted
-09-18 17:27:00.991  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-18 17:27:00.993   396  3550 D audioserver: FGS Logger Transaction failed
-09-18 17:27:00.993   396  3550 D audioserver: -129
-09-18 17:27:00.994  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=872839, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:00.995  1025  1025 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=872839, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:00.996  1025  1025 D AvrcpTargetJni: sendMediaUpdateNative
-09-18 17:27:00.996  1025  1025 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
-09-18 17:27:00.996  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-18 17:27:00.996  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=872841, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:00.996  1025  1025 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=PLAYING(3), position=0, buffered position=0, speed=1.0, updated=872841, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:00.997  1025  1025 D MediaControlGattService: updatePlayerState: playbackState= PLAYING
-09-18 17:27:00.997  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:00.997  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:00.997  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:00.998  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
-09-18 17:27:00.999  1025  1025 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
-09-18 17:27:00.999  1025  1025 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
-09-18 17:27:00.999  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:01.000  1025  1025 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
-09-18 17:27:01.000  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:01.000  1025  1025 D MediaControlGattService: updateMediaStateChar
-09-18 17:27:01.000  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:01.000  1025  1025 D MediaControlGattService: updateMediaStateChar setting to state= 1
-09-18 17:27:01.000  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:01.004  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:01.004  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:01.004  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:01.063   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(33)
-09-18 17:27:01.103   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:01.502  7897  7936 D EGL_emulation: app_time_stats: avg=324.73ms min=124.14ms max=620.30ms count=3
-09-18 17:27:01.542   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(30)
-09-18 17:27:01.652   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(25)
-09-18 17:27:01.833   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(25)
-09-18 17:27:02.040  7897  7904 I r.glidercopilot: JIT allocated 56KB for compiled code of void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.SafetyZone(java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, int, java.lang.Integer, java.lang.Double, double, boolean, java.lang.String, kotlin.jvm.functions.Function0, kotlin.jvm.functions.Function2, kotlin.jvm.functions.Function1, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:27:02.041  7897  7904 I r.glidercopilot: Compiler allocated 10MB to compile void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.SafetyZone(java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, int, java.lang.Integer, java.lang.Double, double, boolean, java.lang.String, kotlin.jvm.functions.Function0, kotlin.jvm.functions.Function2, kotlin.jvm.functions.Function1, androidx.compose.runtime.Composer, int, int, int)
-09-18 17:27:02.083   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(31)
-09-18 17:27:02.246  7897  8144 D EGL_emulation: app_time_stats: avg=346.30ms min=208.07ms max=496.59ms count=4
-09-18 17:27:02.271   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(29)
-09-18 17:27:02.478   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(25)
-09-18 17:27:02.603  7897  7936 D EGL_emulation: app_time_stats: avg=333.76ms min=45.64ms max=524.67ms count=3
-09-18 17:27:02.679   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(16)
-09-18 17:27:02.815   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(29)
-09-18 17:27:03.042   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(35)
-09-18 17:27:03.303   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(43)
-09-18 17:27:03.513  7897  8144 D EGL_emulation: app_time_stats: avg=316.73ms min=199.18ms max=519.67ms count=4
-09-18 17:27:03.573   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(28)
-09-18 17:27:03.783   396   504 D AudioFlinger: mixer(0x709213328930) throttle end: throttle time(33)
-09-18 17:27:03.793  2804  7947 D AudioTrack: stop(18): called with 66600 frames delivered
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=875644, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=875644, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:03.799  1025  1025 D AvrcpTargetJni: sendMediaUpdateNative
-09-18 17:27:03.799  1025  1025 I bt_stack: [INFO:avrcp_service.cc(515)] virtual void bluetooth::avrcp::AvrcpService::SendMediaUpdate(bool, bool, bool) track_changed=0 :  play_state=1 :  queue=0
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: no active player
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: updateMediaForAudioPlayback: update state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=875644, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:03.799  1025  1025 D MediaPlayerList: sendMediaUpdate state=PlaybackState {state=STOPPED(1), position=0, buffered position=0, speed=0.0, updated=875644, actions=0, custom actions=[], active item id=-1, error=null}
-09-18 17:27:03.799  1025  1025 D MediaControlGattService: updatePlayerState: playbackState= PAUSED
-09-18 17:27:03.799  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:03.799  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:03.799  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
-09-18 17:27:03.799  1025  1025 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
-09-18 17:27:03.800  1025  1025 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:03.801  1025  1025 D MediaControlGattService: updateMediaStateChar
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:03.801  1025  1025 D MediaControlGattService: updateMediaStateChar setting to state= 2
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:03.801  1025  1025 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
-09-18 17:27:03.924   396   504 D audioserver: FGS Logger Transaction failed
-09-18 17:27:03.924   396   504 D audioserver: -129
-09-18 17:27:03.938   396   504 D audioserver: FGS Logger Transaction failed
-09-18 17:27:03.938   396   504 D audioserver: -129
-09-18 17:27:04.467   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:04.523  7897  7936 D EGL_emulation: app_time_stats: avg=455.00ms min=30.52ms max=1104.80ms count=4
-09-18 17:27:04.685  7897  8144 D EGL_emulation: app_time_stats: avg=234.36ms min=198.16ms max=327.71ms count=5
-09-18 17:27:05.577  7897  7936 D EGL_emulation: app_time_stats: avg=1053.88ms min=1053.88ms max=1053.88ms count=1
-09-18 17:27:05.624  1777  2591 I WorkerManager: dispose()
-09-18 17:27:05.624  1777  2591 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
-09-18 17:27:06.022  7897  8144 D EGL_emulation: app_time_stats: avg=334.24ms min=217.83ms max=625.61ms count=4
-09-18 17:27:06.788   339  6630 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 1148928
-09-18 17:27:07.025  7897  7936 D EGL_emulation: app_time_stats: avg=271.37ms min=41.35ms max=734.57ms count=5
-09-18 17:27:07.286  7897  8144 D EGL_emulation: app_time_stats: avg=315.93ms min=212.19ms max=416.59ms count=4
-09-18 17:27:08.248  7897  7936 D EGL_emulation: app_time_stats: avg=394.66ms min=92.54ms max=784.67ms count=3
-09-18 17:27:08.287  7897  8144 D EGL_emulation: app_time_stats: avg=234.14ms min=198.55ms max=277.07ms count=4
-09-18 17:27:09.043   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:09.377  7897  7936 D EGL_emulation: app_time_stats: avg=1129.12ms min=1129.12ms max=1129.12ms count=1
-09-18 17:27:09.547  7897  8144 D EGL_emulation: app_time_stats: avg=251.21ms min=205.02ms max=318.78ms count=5
-09-18 17:27:10.682  7897  8144 D EGL_emulation: app_time_stats: avg=283.77ms min=204.57ms max=382.27ms count=4
-09-18 17:27:10.918  7897  7936 D EGL_emulation: app_time_stats: avg=501.88ms min=107.18ms max=822.27ms count=3
-09-18 17:27:11.771  7897  8144 D EGL_emulation: app_time_stats: avg=362.92ms min=207.51ms max=547.69ms count=3
-09-18 17:27:12.231  7897  7936 D EGL_emulation: app_time_stats: avg=317.75ms min=36.71ms max=798.51ms count=4
-09-18 17:27:12.978  7897  8144 D EGL_emulation: app_time_stats: avg=301.70ms min=209.05ms max=466.64ms count=4
-09-18 17:27:13.617  7897  7936 D EGL_emulation: app_time_stats: avg=446.94ms min=49.95ms max=1010.32ms count=3
-09-18 17:27:14.127  7897  8144 D EGL_emulation: app_time_stats: avg=229.67ms min=197.26ms max=319.84ms count=5
-09-18 17:27:14.415   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:14.445   834   901 D EGL_emulation: app_time_stats: avg=14187.70ms min=14187.70ms max=14187.70ms count=1
-09-18 17:27:14.834  7897  7936 D EGL_emulation: app_time_stats: avg=365.59ms min=117.83ms max=716.42ms count=3
-09-18 17:27:15.226  7897  8144 D EGL_emulation: app_time_stats: avg=366.30ms min=209.71ms max=522.93ms count=3
-09-18 17:27:16.002  7897  7936 D EGL_emulation: app_time_stats: avg=266.81ms min=71.63ms max=576.74ms count=4
-09-18 17:27:16.432  7897  8144 D EGL_emulation: app_time_stats: avg=402.03ms min=310.36ms max=572.85ms count=3
-09-18 17:27:17.231   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:17.553  7897  8144 D EGL_emulation: app_time_stats: avg=224.01ms min=196.45ms max=321.54ms count=5
-09-18 17:27:17.722  7897  7936 D EGL_emulation: app_time_stats: avg=561.32ms min=35.51ms max=1127.79ms count=3
-09-18 17:27:18.561  7897  8144 D EGL_emulation: app_time_stats: avg=252.04ms min=199.25ms max=339.70ms count=4
-09-18 17:27:19.428  7897  7936 D EGL_emulation: app_time_stats: avg=852.41ms min=694.17ms max=1010.65ms count=2
-09-18 17:27:19.837  7897  8144 D EGL_emulation: app_time_stats: avg=319.13ms min=211.45ms max=618.32ms count=4
-09-18 17:27:20.862  7897  7936 D EGL_emulation: app_time_stats: avg=254.39ms min=52.63ms max=516.88ms count=5
-09-18 17:27:21.051  7897  8144 D EGL_emulation: app_time_stats: avg=303.28ms min=192.65ms max=432.83ms count=4
-09-18 17:27:21.512  8155  8155 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
-09-18 17:27:21.513  8155  8155 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-18 17:49:24.079   527   615 D ActivityManager: freezing 7364 com.google.android.gms
+09-18 17:49:24.103  7649  7687 D EGL_emulation: app_time_stats: avg=691.91ms min=394.35ms max=989.47ms count=2
+09-18 17:49:24.142  1735  2421 I WorkerManager: dispose()
+09-18 17:49:24.142  1735  2421 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+09-18 17:49:24.169   401   503 D audioserver: FGS Logger Transaction failed
+09-18 17:49:24.169   401   503 D audioserver: -129
+09-18 17:49:24.182   401   503 D audioserver: FGS Logger Transaction failed
+09-18 17:49:24.182   401   503 D audioserver: -129
+09-18 17:49:24.733  7649  7897 D EGL_emulation: app_time_stats: avg=343.13ms min=148.73ms max=504.51ms count=3
+09-18 17:49:25.022  7649  7656 I r.glidercopilot: JIT allocated 56KB for compiled code of void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.SafetyZone(java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, int, java.lang.Integer, java.lang.Double, double, boolean, java.lang.String, kotlin.jvm.functions.Function0, kotlin.jvm.functions.Function2, kotlin.jvm.functions.Function1, androidx.compose.runtime.Composer, int, int, int)
+09-18 17:49:25.023  7649  7656 I r.glidercopilot: Compiler allocated 10MB to compile void com.neutronstar.glidercopilot.feature.flight.FlightScreenKt.SafetyZone(java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.String, int, java.lang.Integer, java.lang.Double, double, boolean, java.lang.String, kotlin.jvm.functions.Function0, kotlin.jvm.functions.Function2, kotlin.jvm.functions.Function1, androidx.compose.runtime.Composer, int, int, int)
+09-18 17:49:25.538  7649  7687 D EGL_emulation: app_time_stats: avg=447.94ms min=116.93ms max=882.90ms count=3
+09-18 17:49:25.919   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:49:25.969   841   915 D EGL_emulation: app_time_stats: avg=25831.70ms min=25831.70ms max=25831.70ms count=1
+09-18 17:49:26.053  7649  7897 D EGL_emulation: app_time_stats: avg=234.00ms min=156.34ms max=406.70ms count=5
+09-18 17:49:26.681  7649  7687 D EGL_emulation: app_time_stats: avg=1141.71ms min=1141.71ms max=1141.71ms count=1
+09-18 17:49:26.755   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:49:27.018   344  6630 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 1138048
+09-18 17:49:27.309  7649  7897 D EGL_emulation: app_time_stats: avg=313.70ms min=208.43ms max=535.08ms count=4
+09-18 17:49:27.539  7649  7898 I r.glidercopilot: Waiting for a blocking GC Alloc
+09-18 17:49:27.542  7649  7899 I r.glidercopilot: Waiting for a blocking GC Alloc
+09-18 17:49:27.543  7649  7649 I r.glidercopilot: Waiting for a blocking GC Alloc
+09-18 17:49:27.568  7649  7898 I r.glidercopilot: WaitForGcToComplete blocked Alloc on Background for 28.365ms
+09-18 17:49:27.568  7649  7898 I r.glidercopilot: Starting a blocking GC Alloc
+09-18 17:49:27.568  7649  7899 I r.glidercopilot: WaitForGcToComplete blocked Alloc on Background for 26.383ms
+09-18 17:49:27.568  7649  7899 I r.glidercopilot: Starting a blocking GC Alloc
+09-18 17:49:27.569  7649  7649 I r.glidercopilot: WaitForGcToComplete blocked Alloc on Background for 26.233ms
+09-18 17:49:27.569  7649  7649 I r.glidercopilot: Starting a blocking GC Alloc
+09-18 17:49:27.693  7649  7687 D EGL_emulation: app_time_stats: avg=321.80ms min=33.72ms max=500.94ms count=3
+09-18 17:49:28.309  7649  7897 D EGL_emulation: app_time_stats: avg=250.06ms min=207.68ms max=339.54ms count=4
+09-18 17:49:29.526  7649  7897 D EGL_emulation: app_time_stats: avg=243.31ms min=207.21ms max=341.38ms count=5
+09-18 17:49:29.734  7649  7687 D EGL_emulation: app_time_stats: avg=1019.89ms min=998.70ms max=1041.08ms count=2
+09-18 17:49:30.576  7649  7897 D EGL_emulation: app_time_stats: avg=261.55ms min=196.48ms max=311.11ms count=4
+09-18 17:49:30.742  7649  7687 D EGL_emulation: app_time_stats: avg=1007.45ms min=1007.45ms max=1007.45ms count=1
+09-18 17:49:31.816  7649  7687 D EGL_emulation: app_time_stats: avg=536.79ms min=92.31ms max=981.27ms count=2
+09-18 17:49:31.990  7649  7897 D EGL_emulation: app_time_stats: avg=253.56ms min=124.55ms max=428.21ms count=5
+09-18 17:49:33.183  7649  7897 D EGL_emulation: app_time_stats: avg=212.94ms min=128.01ms max=343.34ms count=5
+09-18 17:49:33.776  7649  7687 D EGL_emulation: app_time_stats: avg=930.67ms min=881.57ms max=979.77ms count=2
+09-18 17:49:34.296  7649  7897 D EGL_emulation: app_time_stats: avg=222.43ms min=154.50ms max=336.42ms count=5
+09-18 17:49:34.691   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:49:34.975  7649  7687 D EGL_emulation: app_time_stats: avg=1198.21ms min=1198.21ms max=1198.21ms count=1
+09-18 17:49:35.372  7649  7897 D EGL_emulation: app_time_stats: avg=221.41ms min=76.12ms max=368.23ms count=4
+09-18 17:49:35.889   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:49:36.130  7649  7687 D EGL_emulation: app_time_stats: avg=577.53ms min=165.69ms max=989.37ms count=2
+09-18 17:49:36.464  7649  7897 D EGL_emulation: app_time_stats: avg=319.14ms min=121.48ms max=679.51ms count=3
+09-18 17:49:37.542  7649  7897 D EGL_emulation: app_time_stats: avg=269.63ms min=216.74ms max=347.23ms count=4
+09-18 17:49:37.751  7649  7687 D EGL_emulation: app_time_stats: avg=394.75ms min=39.28ms max=1048.66ms count=4
+09-18 17:49:38.742  7649  7897 D EGL_emulation: app_time_stats: avg=239.91ms min=217.29ms max=322.61ms count=5
+09-18 17:49:38.959  7649  7687 D EGL_emulation: app_time_stats: avg=1207.83ms min=1207.83ms max=1207.83ms count=1
+09-18 17:49:39.796  7649  7897 D EGL_emulation: app_time_stats: avg=527.15ms min=442.23ms max=612.07ms count=2
+09-18 17:49:39.932  7910  7910 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-18 17:49:39.933  7910  7910 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
 --------- beginning of kernel
-09-18 17:27:21.731     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
-09-18 17:27:21.615   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
-09-18 17:27:21.615  8155  8156 I Gralloc4: mapper 4.x is not supported
-09-18 17:27:22.151  7897  8144 D EGL_emulation: app_time_stats: avg=275.07ms min=205.63ms max=366.23ms count=4
-09-18 17:27:22.497  8157  8157 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-09-18 17:27:22.501  8157  8157 I AndroidRuntime: Using default boot image
-09-18 17:27:22.501  8157  8157 I AndroidRuntime: Leaving lock profiling enabled
-09-18 17:27:22.503  8157  8157 I app_process: Core platform API reporting enabled, enforcing=false
-09-18 17:27:22.503  8157  8157 I app_process: Using CollectorTypeCC GC.
-09-18 17:27:22.548  7897  7936 D EGL_emulation: app_time_stats: avg=842.69ms min=603.25ms max=1082.13ms count=2
-09-18 17:27:22.552  8157  8157 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-09-18 17:27:22.596  8157  8157 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-09-18 17:27:22.596  8157  8157 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
-09-18 17:27:22.604  8157  8157 W app_process: Unexpected CPU variant for x86: x86_64.
-09-18 17:27:22.604  8157  8157 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
-09-18 17:27:22.607  8157  8157 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
-09-18 17:27:22.608  8157  8157 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
-09-18 17:27:22.627  8157  8157 W main    : type=1400 audit(0.0:189): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:22.634  8157  8157 W libc    : Access denied finding property "ro.product.name_for_attestation"
-09-18 17:27:22.638  8157  8157 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-09-18 17:27:22.638  8157  8157 W libc    : Access denied finding property "ro.product.model_for_attestation"
-09-18 17:27:22.638  8157  8157 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-09-18 17:27:22.631  8157  8157 W main    : type=1400 audit(0.0:190): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:22.635  8157  8157 W main    : type=1400 audit(0.0:191): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:22.700  8157  8157 D UiAutomationConnection: Created on user UserHandle{0}
-09-18 17:27:22.700  8157  8157 I UiAutomation: Initialized for user 0 on display 0
-09-18 17:27:22.700  8157  8157 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-09-18 17:27:22.702   520  2024 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
-09-18 17:27:22.702   520  2024 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
-09-18 17:27:22.703   520  2024 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:22.704  8157  8172 V UiAutomation: Init UiAutomation@87bab21[id=41, displayId=0, flags=0]
-09-18 17:27:22.705  1652  1685 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:22.705  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:22.705  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:22.705  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:22.705  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:22.706  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:22.706  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:22.706  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:22.706  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:22.706  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:22.706  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:22.706  1777  2326 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
-09-18 17:27:22.706  1777  2326 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
-09-18 17:27:22.708  1723  6429 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-18 17:27:22.708  1723  6429 I A       : [Memory] eligibility: StashEligibility{4}
-09-18 17:27:22.708  1723  2232 I A       : Unsubscribed to apa or classic variant change.
-09-18 17:27:22.711   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:22.715   520   520 D BatterySaverPolicy: accessibility changed to true, updating policy.
-09-18 17:27:22.716   520  2024 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:22.718  1652  1774 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:22.719  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:22.720  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:22.720  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:22.728   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:23.478  7897  8144 D EGL_emulation: app_time_stats: avg=442.46ms min=241.87ms max=639.42ms count=3
-09-18 17:27:23.963  8157  8157 W AccessibilityNodeInfoDumper: Fetch time: 87ms
-09-18 17:27:23.970  1652  1774 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:23.970   520  1097 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:23.970   520  1097 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:23.972  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:23.972  1777  2326 I A       : NGA enabled in interactor.
-09-18 17:27:23.972  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:23.972  1777  2326 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
-09-18 17:27:23.972  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:23.972   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:23.974  1723  6429 I A       : Initializing all components
-09-18 17:27:23.975  1723  6429 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-18 17:27:23.975  1723  6429 I A       : [Memory] eligibility: StashEligibility{6}
-09-18 17:27:23.975  1723  2232 I A       : onIsEnabledChanged, isEnabled: false
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 I A       : onOpaVisibilityChanged: false
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 I A       : Setting session to type: NO_SESSION
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:23.975  1723  2232 I A       : onDisabled. Registered: false
-09-18 17:27:23.976  1723  2214 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
-09-18 17:27:23.976  1723  2214 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
-09-18 17:27:23.977  1723  2214 I A       : onActiveStateChangeEvent: IDLE => IDLE
-09-18 17:27:23.977  1723  2214 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
-09-18 17:27:23.981   520   520 D BatterySaverPolicy: accessibility changed to false, updating policy.
-09-18 17:27:23.982  1723  2214 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
-09-18 17:27:23.982  1723  2214 I A       : on opa visibility changed false
-09-18 17:27:23.982  1723  2214 I A       : on opa visibility changed false
-09-18 17:27:23.982  1723  2232 I A       : Initialize
-09-18 17:27:23.984  1723  2232 I NgaEntryPointEventSendr: setupConnection
-09-18 17:27:23.998   520  2434 W ProcessStats: Tracking association SourceState{d99072e com.google.android.googlequicksearchbox:search/10131 BFgs #14689} whose proc state 4 is better than process ProcessState{8a2948b com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (23 skipped)
-09-18 17:27:23.999  1723  2214 I A       : Successfully initialized all components
-09-18 17:27:23.999  1723  2232 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
-09-18 17:27:24.024  8157  8157 D AndroidRuntime: Shutting down VM
-09-18 17:27:24.042  1777  1777 I A       : Creating pss binder().
-09-18 17:27:24.043  1723  2214 I NgaEntryPointEventSendr: onServiceConnected
-09-18 17:27:24.043  1777  2490 I A       : Calling beginBinderSession().
-09-18 17:27:24.043  1777  2490 I A       : beginBinderSession(): calling binder
-09-18 17:27:24.043  1723  2214 I NgaEntryPointEventSendr: State changed: Connecting => Ready
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: Invalid input from icing corpus JSON flag.
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at android.util.JsonReader.syntaxError(JsonReader.java:1162)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at android.util.JsonReader.checkLenient(JsonReader.java:840)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at android.util.JsonReader.nextInArray(JsonReader.java:615)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at android.util.JsonReader.peek(JsonReader.java:345)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at android.util.JsonReader.hasNext(JsonReader.java:321)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.searchbox.c.b.b.k.c(PG:7)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.searchbox.c.b.b.k.<init>(PG:5)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.features.n.a.c.<init>(PG:16)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.b.a(PG:14)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.x.<init>(PG:7)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.akd.b(PG:15)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at dagger.a.e.b(PG:1)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.a.a.a(PG:3)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.ok.f(Unknown Source:2541)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.ok.b(PG:1)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.search.core.service.g.a.c.a(PG:2)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.libraries.gsa.k.a.f.a(PG:2)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.shared.logger.f.a.a.l.h(PG:2)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.apps.gsa.shared.logger.f.a.a.h.a(Unknown Source:4)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.common.util.concurrent.dx.a(PG:1)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.common.util.concurrent.cv.run(PG:4)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.common.util.concurrent.dz.run(PG:1)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.libraries.i.ae.run(PG:1)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.libraries.i.k.run(PG:2)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at com.google.android.libraries.i.p.run(PG:4)
-09-18 17:27:24.073  1777  2493 W CorpusConfigHelper: 	at java.lang.Thread.run(Thread.java:1012)
-09-18 17:27:24.073  1777  2493 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
-09-18 17:27:24.085  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.085  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.085  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.085  1777  2591 I A       : Merging legacy hotword config map with new proto.
-09-18 17:27:24.086  1777  2591 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
-09-18 17:27:24.086  1777  2591 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
-09-18 17:27:24.086  1777  2591 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
-09-18 17:27:24.086  1777  2591 I A       : Skipping. Expected model: 2 Found: 1
-09-18 17:27:24.086  1777  2591 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
-09-18 17:27:24.086  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.086  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.086  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.088  1723  2232 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-09-18 17:27:24.088   520  1097 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 111] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 105] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 107] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 107] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.089  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 42] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.090  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 67] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.090  1777  2591 I MicroDetectionState: Should stop hotword detection immediately - true
-09-18 17:27:24.090  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 241] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.090  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 241] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.091  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:24.092  1777  2591 W SearchServiceCore: Abort, client detached.
-09-18 17:27:24.093  1777  2591 I MicroDetectionState: Should stop hotword detection immediately - true
-09-18 17:27:24.093  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.093  1777  2591 I A       : Using proto config with mendel
-09-18 17:27:24.123  1777  2482 I PBSessionCacheImpl: Deleted sessionId[7817118401810943] from persistence.
-09-18 17:27:24.135  1777  1855 I earchbox:search: JIT allocated 98KB for compiled code of java.lang.Object com.google.android.apps.gsa.binaries.velvet.app.ok.h()
-09-18 17:27:24.135  1777  1855 I earchbox:search: Compiler allocated 6967KB to compile java.lang.Object com.google.android.apps.gsa.binaries.velvet.app.ok.h()
-09-18 17:27:24.323  7897  7936 D EGL_emulation: app_time_stats: avg=434.32ms min=106.82ms max=983.81ms count=4
-09-18 17:27:24.400   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:24.601  7897  8144 D EGL_emulation: app_time_stats: avg=280.48ms min=199.83ms max=418.52ms count=4
-09-18 17:27:24.990  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=929.0, y[0]=2292.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=896835, downTime=896835, deviceId=-1, source=0x1002, displayId=0, eventId=-453470104 }
-09-18 17:27:24.994  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=929.0, y[0]=2292.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=896835, downTime=896835, deviceId=-1, source=0x1002, displayId=0, eventId=-957017544 }
-09-18 17:27:25.167   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:25.183  7897  8144 E EGL_emulation: tid 8144: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
-09-18 17:27:25.183  7897  8144 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
-09-18 17:27:25.183  7897  8144 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-18 17:27:25.184  7897  7897 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
-09-18 17:27:25.192  7897  8144 E Surface : getSlotFromBufferLocked: unknown buffer: 0x6567225b2c227461
-09-18 17:27:25.368   520  1097 W ForegroundServiceTypeLoggerModule: Logger should be tracking FGS types correctly for UID 10192 in package com.neutronstar.glidercopilot
-09-18 17:27:25.388  7897  7936 D EGL_emulation: app_time_stats: avg=317.90ms min=91.78ms max=541.96ms count=3
-09-18 17:27:25.392  7897  8180 I Mbgl-EGLConfigChooser: In emulator: false
-09-18 17:27:25.393  7897  7897 V Mbgl-ConnectivityReceiver: connected - true
-09-18 17:27:25.581  7897  8008 W Mbgl    : {r.glidercopilot}[ParseStyle]: "zoom" expression may only be used as input to a top-level "step" or "interpolate" expression.
-09-18 17:27:26.882  7897  8180 D EGL_emulation: app_time_stats: avg=133.96ms min=10.75ms max=283.91ms count=8
-09-18 17:27:27.350  7897  7936 D EGL_emulation: app_time_stats: avg=254.51ms min=34.12ms max=1101.56ms count=7
-09-18 17:27:27.951  7897  8180 D EGL_emulation: app_time_stats: avg=163.56ms min=62.21ms max=304.05ms count=6
-09-18 17:27:29.259  7897  7936 D EGL_emulation: app_time_stats: avg=954.17ms min=908.78ms max=999.56ms count=2
-09-18 17:27:29.372  7897  8180 D EGL_emulation: app_time_stats: avg=414.39ms min=18.52ms max=803.76ms count=3
-09-18 17:27:30.259  7897  7936 D EGL_emulation: app_time_stats: avg=1000.67ms min=1000.67ms max=1000.67ms count=1
-09-18 17:27:30.565  7897  8180 D EGL_emulation: app_time_stats: avg=370.74ms min=95.79ms max=737.47ms count=3
-09-18 17:27:31.276  7897  7936 D EGL_emulation: app_time_stats: avg=1015.85ms min=1015.85ms max=1015.85ms count=1
-09-18 17:27:31.612  7897  8180 D EGL_emulation: app_time_stats: avg=523.62ms min=220.86ms max=826.37ms count=2
-09-18 17:27:32.740  7897  8180 D EGL_emulation: app_time_stats: avg=375.58ms min=151.07ms max=692.50ms count=3
-09-18 17:27:33.103   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:33.275  7897  7936 D EGL_emulation: app_time_stats: avg=657.13ms min=20.89ms max=1000.35ms count=3
-09-18 17:27:34.092   520  2402 W ProcessStats: Tracking association SourceState{d99072e com.google.android.googlequicksearchbox:search/10131 Service #14698} whose proc state 8 is better than process ProcessState{8a2948b com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (16 skipped)
-09-18 17:27:34.379  7897  8180 D EGL_emulation: app_time_stats: avg=390.16ms min=89.75ms max=809.99ms count=4
-09-18 17:27:34.390   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:35.276  7897  7936 D EGL_emulation: app_time_stats: avg=1000.62ms min=999.48ms max=1001.76ms count=2
-09-18 17:27:35.479  7897  8180 D EGL_emulation: app_time_stats: avg=366.42ms min=105.43ms max=836.98ms count=3
-09-18 17:27:36.291  7897  7936 D EGL_emulation: app_time_stats: avg=1014.88ms min=1014.88ms max=1014.88ms count=1
-09-18 17:27:36.580  7897  8180 D EGL_emulation: app_time_stats: avg=186.81ms min=66.31ms max=261.96ms count=5
-09-18 17:27:37.296     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
-09-18 17:27:37.193  8181  8181 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
-09-18 17:27:37.200  8181  8181 I AndroidRuntime: Using default boot image
-09-18 17:27:37.200  8181  8181 I AndroidRuntime: Leaving lock profiling enabled
-09-18 17:27:37.202  8181  8181 I app_process: Core platform API reporting enabled, enforcing=false
-09-18 17:27:37.203  8181  8181 I app_process: Using CollectorTypeCC GC.
-09-18 17:27:37.241  8181  8181 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
-09-18 17:27:37.246  8181  8181 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
-09-18 17:27:37.246  8181  8181 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
-09-18 17:27:37.249  8181  8181 W app_process: Unexpected CPU variant for x86: x86_64.
-09-18 17:27:37.249  8181  8181 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
-09-18 17:27:37.250  8181  8181 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
-09-18 17:27:37.250  8181  8181 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
-09-18 17:27:37.258  8181  8181 W libc    : Access denied finding property "ro.product.name_for_attestation"
-09-18 17:27:37.258  8181  8181 W libc    : Access denied finding property "ro.product.brand_for_attestation"
-09-18 17:27:37.258  8181  8181 W libc    : Access denied finding property "ro.product.model_for_attestation"
-09-18 17:27:37.259  8181  8181 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
-09-18 17:27:37.260  8181  8181 D UiAutomationConnection: Created on user UserHandle{0}
-09-18 17:27:37.260  8181  8181 I UiAutomation: Initialized for user 0 on display 0
-09-18 17:27:37.260  8181  8181 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
-09-18 17:27:37.255  8181  8181 W main    : type=1400 audit(0.0:192): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:37.261   520  2402 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
-09-18 17:27:37.261   520  2402 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
-09-18 17:27:37.262   520  2402 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:37.263   520   520 D BatterySaverPolicy: accessibility changed to true, updating policy.
-09-18 17:27:37.264  1777  2324 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
-09-18 17:27:37.264  1777  2324 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
-09-18 17:27:37.264  1652  1685 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:37.265  1723  3310 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-18 17:27:37.265  1723  3310 I A       : [Memory] eligibility: StashEligibility{4}
-09-18 17:27:37.266  1723  2232 I A       : Unsubscribed to apa or classic variant change.
-09-18 17:27:37.267  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:37.267  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:37.267  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:37.267  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:37.267  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:37.268  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:37.268  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:37.268  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:37.268  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:37.268  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:37.268   520  1097 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:37.268  8181  8195 V UiAutomation: Init UiAutomation@eb029e1[id=42, displayId=0, flags=0]
-09-18 17:27:37.268  1652  3446 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:37.269   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:37.255  8181  8181 W main    : type=1400 audit(0.0:193): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:37.275  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:37.255  8181  8181 W main    : type=1400 audit(0.0:194): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
-09-18 17:27:37.285  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:37.285  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:37.286   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:37.334  7897  7936 D EGL_emulation: app_time_stats: avg=1042.91ms min=1042.91ms max=1042.91ms count=1
-09-18 17:27:37.605  7897  8180 D EGL_emulation: app_time_stats: avg=188.38ms min=87.39ms max=527.88ms count=5
-09-18 17:27:38.284  8181  8181 W AccessibilityNodeInfoDumper: Fetch time: 13ms
-09-18 17:27:38.285   520  2446 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-09-18 17:27:38.285   520  2446 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
-09-18 17:27:38.286  1652  3446 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:27:38.286  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:27:38.286  8181  8181 D AndroidRuntime: Shutting down VM
-09-18 17:27:38.286  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-09-18 17:27:38.286  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:27:38.287   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:27:38.288  1777  2325 I A       : NGA enabled in interactor.
-09-18 17:27:38.288  1777  2325 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
-09-18 17:27:38.290  1723  3310 I A       : Initializing all components
-09-18 17:27:38.290  1723  3310 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
-09-18 17:27:38.290  1723  3310 I A       : [Memory] eligibility: StashEligibility{6}
-09-18 17:27:38.290  1723  2232 I A       : onIsEnabledChanged, isEnabled: false
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.290  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 I A       : onOpaVisibilityChanged: false
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 I A       : Setting session to type: NO_SESSION
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.291  1723  2232 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 W A       : Disposing empty manager. Did you forgot to subscribe observables?
-09-18 17:27:38.293  1723  2232 I A       : onDisabled. Registered: false
-09-18 17:27:38.294  1723  2214 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
-09-18 17:27:38.294  1723  2214 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
-09-18 17:27:38.294  1723  2214 I A       : onActiveStateChangeEvent: IDLE => IDLE
-09-18 17:27:38.294  1723  2214 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
-09-18 17:27:38.295  1723  2214 I A       : on opa visibility changed false
-09-18 17:27:38.296  1723  2214 I NgaEntryPointEventSendr: setupConnection
-09-18 17:27:38.300   520   520 D BatterySaverPolicy: accessibility changed to false, updating policy.
-09-18 17:27:38.399  1777  1777 I A       : Creating pss binder().
-09-18 17:27:38.400  1723  2214 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
-09-18 17:27:38.400  1723  2214 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
-09-18 17:27:38.400  1723  2214 I A       : on opa visibility changed false
-09-18 17:27:38.460  1723  2232 I A       : Initialize
-09-18 17:27:38.461  1723  2232 I NgaEntryPointEventSendr: onServiceConnected
-09-18 17:27:38.462  1777  4143 I A       : Calling beginBinderSession().
-09-18 17:27:38.462  1777  4143 I A       : beginBinderSession(): calling binder
-09-18 17:27:38.463  1723  2232 I NgaEntryPointEventSendr: State changed: Connecting => Ready
-09-18 17:27:38.465  1723  2214 I A       : Successfully initialized all components
-09-18 17:27:38.466   520  2446 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
-09-18 17:27:38.482  1723  1723 V ClearcutMetricXmitter: Transmission is done.
-09-18 17:27:38.485  1777  2591 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
-09-18 17:27:38.486  1777  2840 I PBSessionCacheImpl: Deleted sessionId[7817118401810946] from persistence.
-09-18 17:27:38.488  1777  2591 W SearchServiceCore: Abort, client detached.
-09-18 17:27:38.490  1723  2232 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
-09-18 17:27:38.641  7897  8180 D EGL_emulation: app_time_stats: avg=954.95ms min=954.95ms max=954.95ms count=1
-09-18 17:27:39.134  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=910979, downTime=910979, deviceId=-1, source=0x1002, displayId=0, eventId=-605502833 }
-09-18 17:27:39.137  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=910979, downTime=910979, deviceId=-1, source=0x1002, displayId=0, eventId=-671584460 }
-09-18 17:27:39.264  7897  7936 D EGL_emulation: app_time_stats: avg=965.01ms min=962.59ms max=967.42ms count=2
-09-18 17:27:39.736  7897  8180 D EGL_emulation: app_time_stats: avg=251.77ms min=82.22ms max=587.54ms count=4
-09-18 17:27:40.294  7897  7936 D EGL_emulation: app_time_stats: avg=234.77ms min=58.52ms max=696.79ms count=4
-09-18 17:27:40.813  7897  8180 D EGL_emulation: app_time_stats: avg=358.92ms min=153.09ms max=647.35ms count=3
-09-18 17:27:41.039   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:41.309  7897  7936 D EGL_emulation: app_time_stats: avg=1015.08ms min=1015.08ms max=1015.08ms count=1
-09-18 17:27:42.067  7897  8180 D EGL_emulation: app_time_stats: avg=313.63ms min=136.15ms max=405.09ms count=4
-09-18 17:27:42.192  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=914031, downTime=914031, deviceId=-1, source=0x1002, displayId=0, eventId=-589205835 }
-09-18 17:27:42.196  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=914031, downTime=914031, deviceId=-1, source=0x1002, displayId=0, eventId=-366859905 }
-09-18 17:27:42.360  7897  7936 D EGL_emulation: app_time_stats: avg=1050.79ms min=1050.79ms max=1050.79ms count=1
-09-18 17:27:43.102  7897  8180 D EGL_emulation: app_time_stats: avg=517.45ms min=359.07ms max=675.83ms count=2
-09-18 17:27:43.362  7897  7936 D EGL_emulation: app_time_stats: avg=292.80ms min=73.79ms max=702.55ms count=3
-09-18 17:27:43.785  7897  7905 I r.glidercopilot: NativeAlloc concurrent copying GC freed 252928(6781KB) AllocSpace objects, 17(6152KB) LOS objects, 43% free, 30MB/54MB, paused 30us,16us total 181.979ms
-09-18 17:27:44.291  7897  8180 D EGL_emulation: app_time_stats: avg=395.76ms min=349.28ms max=454.75ms count=3
-09-18 17:27:44.390   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:44.667  7897  7936 D EGL_emulation: app_time_stats: avg=1305.34ms min=1305.34ms max=1305.34ms count=1
-09-18 17:27:45.581  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=917425, downTime=917425, deviceId=-1, source=0x1002, displayId=0, eventId=-412201333 }
-09-18 17:27:45.584  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=917425, downTime=917425, deviceId=-1, source=0x1002, displayId=0, eventId=-176102700 }
-09-18 17:27:45.673  7897  7936 D EGL_emulation: app_time_stats: avg=502.63ms min=116.53ms max=888.74ms count=2
-09-18 17:27:46.244  7897  8180 D EGL_emulation: app_time_stats: avg=651.01ms min=345.62ms max=1046.85ms count=3
-09-18 17:27:47.333  7897  8180 D EGL_emulation: app_time_stats: avg=363.19ms min=313.85ms max=443.95ms count=3
-09-18 17:27:47.584  7897  7936 D EGL_emulation: app_time_stats: avg=287.73ms min=5.77ms max=1082.73ms count=6
-09-18 17:27:48.411  7897  8180 D EGL_emulation: app_time_stats: avg=359.18ms min=303.17ms max=449.97ms count=3
-09-18 17:27:48.487  1777  2591 I WorkerManager: dispose()
-09-18 17:27:48.488  1777  2591 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
-09-18 17:27:48.631  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=920476, downTime=920476, deviceId=-1, source=0x1002, displayId=0, eventId=-541683693 }
-09-18 17:27:48.635  1101  1101 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=920476, downTime=920476, deviceId=-1, source=0x1002, displayId=0, eventId=-285934987 }
-09-18 17:27:48.709  7897  7936 D EGL_emulation: app_time_stats: avg=1125.25ms min=1125.25ms max=1125.25ms count=1
-09-18 17:27:49.233   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:49.691  7897  8180 D EGL_emulation: app_time_stats: avg=1280.53ms min=1280.53ms max=1280.53ms count=1
-09-18 17:27:50.794  7897  7936 D EGL_emulation: app_time_stats: avg=266.64ms min=13.73ms max=1088.12ms count=7
-09-18 17:27:50.967  7897  8180 D EGL_emulation: app_time_stats: avg=318.77ms min=187.27ms max=509.68ms count=4
-09-18 17:27:52.038  7897  8180 D EGL_emulation: app_time_stats: avg=356.80ms min=86.07ms max=679.75ms count=3
-09-18 17:27:52.651  7897  7936 D EGL_emulation: app_time_stats: avg=928.35ms min=756.36ms max=1100.33ms count=2
-09-18 17:27:53.130  7897  8180 D EGL_emulation: app_time_stats: avg=364.16ms min=300.46ms max=426.69ms count=3
-09-18 17:27:53.664  7897  7936 D EGL_emulation: app_time_stats: avg=1013.47ms min=1013.47ms max=1013.47ms count=1
-09-18 17:27:54.180  7897  8180 D EGL_emulation: app_time_stats: avg=349.60ms min=301.13ms max=435.47ms count=3
-09-18 17:27:54.393   834   834 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
-09-18 17:27:54.726  7897  7936 D EGL_emulation: app_time_stats: avg=1061.27ms min=1061.27ms max=1061.27ms count=1
-09-18 17:27:55.214  7897  8180 D EGL_emulation: app_time_stats: avg=344.64ms min=291.79ms max=444.67ms count=3
-09-18 17:27:55.757  7897  7936 D EGL_emulation: app_time_stats: avg=1031.02ms min=1031.02ms max=1031.02ms count=1
-09-18 17:27:56.243  7897  8180 D EGL_emulation: app_time_stats: avg=342.99ms min=303.31ms max=420.45ms count=3
-09-18 17:27:57.167   822   822 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
-09-18 17:27:57.575  7897  7936 D EGL_emulation: app_time_stats: avg=908.60ms min=800.76ms max=1016.44ms count=2
-09-18 17:27:57.684  7897  8180 D EGL_emulation: app_time_stats: avg=480.30ms min=290.33ms max=732.73ms count=3
-09-18 17:27:58.872  7897  7936 D EGL_emulation: app_time_stats: avg=1296.67ms min=1296.67ms max=1296.67ms count=1
-09-18 17:27:59.045  7897  8180 D EGL_emulation: app_time_stats: avg=340.32ms min=293.61ms max=451.91ms count=4
-09-18 17:27:59.763  8223  8223 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
-09-18 17:27:59.763  8223  8223 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
-09-18 17:28:00.091  1652  1976 I AiAiEcho: Predicting[0]: 
-09-18 17:28:00.092  1652  1976 I AiAiEcho: EchoTargets: 
-09-18 17:28:00.092  1652  1976 I AiAiEcho: Filtered by AiAi flag check: 
-09-18 17:28:00.092  1652  1976 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
-09-18 17:28:00.092  1652  1976 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-09-18 17:28:00.093   834   834 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-09-18 17:28:00.094   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
-09-18 17:28:00.094  8223  8224 I Gralloc4: mapper 4.x is not supported
-09-18 17:28:00.270     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
-09-18 17:28:00.108   834   901 D EGL_emulation: app_time_stats: avg=45662.84ms min=45662.84ms max=45662.84ms count=1
-09-18 17:28:00.205  7897  8180 D EGL_emulation: app_time_stats: avg=386.55ms min=296.70ms max=493.14ms count=3
-09-18 17:28:00.814  7897  7936 D EGL_emulation: app_time_stats: avg=970.84ms min=735.02ms max=1206.66ms count=2
+09-18 17:49:40.193     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-18 17:49:40.020   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-18 17:49:40.020  7910  7911 I Gralloc4: mapper 4.x is not supported
+09-18 17:49:40.628  7649  7687 D EGL_emulation: app_time_stats: avg=307.84ms min=52.05ms max=986.76ms count=5
+09-18 17:49:40.968  7649  7897 D EGL_emulation: app_time_stats: avg=292.65ms min=246.06ms max=339.84ms count=4
+09-18 17:49:41.014  7912  7912 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-18 17:49:41.017  7912  7912 I AndroidRuntime: Using default boot image
+09-18 17:49:41.017  7912  7912 I AndroidRuntime: Leaving lock profiling enabled
+09-18 17:49:41.019  7912  7912 I app_process: Core platform API reporting enabled, enforcing=false
+09-18 17:49:41.020  7912  7912 I app_process: Using CollectorTypeCC GC.
+09-18 17:49:41.071  7912  7912 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-18 17:49:41.079  7912  7912 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+09-18 17:49:41.079  7912  7912 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
+09-18 17:49:41.085  7912  7912 W app_process: Unexpected CPU variant for x86: x86_64.
+09-18 17:49:41.085  7912  7912 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+09-18 17:49:41.087  7912  7912 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
+09-18 17:49:41.087  7912  7912 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
+09-18 17:49:41.099  7912  7912 W main    : type=1400 audit(0.0:190): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:41.104  7912  7912 W libc    : Access denied finding property "ro.product.name_for_attestation"
+09-18 17:49:41.103  7912  7912 W main    : type=1400 audit(0.0:191): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:41.109  7912  7912 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+09-18 17:49:41.109  7912  7912 W libc    : Access denied finding property "ro.product.model_for_attestation"
+09-18 17:49:41.110  7912  7912 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+09-18 17:49:41.107  7912  7912 W main    : type=1400 audit(0.0:192): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:41.118  7912  7912 D UiAutomationConnection: Created on user UserHandle{0}
+09-18 17:49:41.118  7912  7912 I UiAutomation: Initialized for user 0 on display 0
+09-18 17:49:41.118  7912  7912 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+09-18 17:49:41.119   527   830 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+09-18 17:49:41.119   527   830 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
+09-18 17:49:41.121   527   830 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:41.121   527   527 D BatterySaverPolicy: accessibility changed to true, updating policy.
+09-18 17:49:41.122   527   830 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:41.122  7912  7927 V UiAutomation: Init UiAutomation@8fc21fd[id=42, displayId=0, flags=0]
+09-18 17:49:41.122  1582  1689 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:41.124  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:41.129  1582  1689 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:41.129  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:41.131  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:41.131  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:41.132   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:41.132  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:41.132  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:41.133  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:41.133   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:41.139  1735  2243 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
+09-18 17:49:41.139  1735  2243 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
+09-18 17:49:41.142  1572  4722 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-18 17:49:41.142  1572  4722 I A       : [Memory] eligibility: StashEligibility{4}
+09-18 17:49:41.163  1572  2193 I A       : Unsubscribed to apa or classic variant change.
+09-18 17:49:41.712  7649  7687 D EGL_emulation: app_time_stats: avg=1083.80ms min=1083.80ms max=1083.80ms count=1
+09-18 17:49:42.099  7649  7897 D EGL_emulation: app_time_stats: avg=282.76ms min=208.79ms max=358.47ms count=4
+09-18 17:49:42.260  7912  7912 W AccessibilityNodeInfoDumper: Fetch time: 90ms
+09-18 17:49:42.269  1582  1689 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:42.269  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:42.271  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:42.271  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:42.274   527   830 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:42.274   527   830 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
+09-18 17:49:42.275  1735  2243 I A       : NGA enabled in interactor.
+09-18 17:49:42.275  1735  2243 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
+09-18 17:49:42.277  1572  1695 I A       : Initializing all components
+09-18 17:49:42.277  1572  1695 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-18 17:49:42.277  1572  1695 I A       : [Memory] eligibility: StashEligibility{6}
+09-18 17:49:42.278   527   527 D BatterySaverPolicy: accessibility changed to false, updating policy.
+09-18 17:49:42.279  1572  2193 I A       : onIsEnabledChanged, isEnabled: false
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.280  1572  2193 I A       : onOpaVisibilityChanged: false
+09-18 17:49:42.280  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 I A       : Setting session to type: NO_SESSION
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:42.281  1572  2193 I A       : onDisabled. Registered: false
+09-18 17:49:42.287  1572  2192 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
+09-18 17:49:42.287  1572  2192 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
+09-18 17:49:42.287  1572  2192 I A       : onActiveStateChangeEvent: IDLE => IDLE
+09-18 17:49:42.290  1572  2192 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
+09-18 17:49:42.291  1572  2192 I A       : on opa visibility changed false
+09-18 17:49:42.291  1572  2192 I A       : on opa visibility changed false
+09-18 17:49:42.291  1572  2192 I NgaEntryPointEventSendr: setupConnection
+09-18 17:49:42.293   527  2636 W ProcessStats: Tracking association SourceState{f06585 com.google.android.googlequicksearchbox:interactor/10132 BFgs #14858} whose proc state 4 is better than process ProcessState{31d3bff com.google.android.googlequicksearchbox:search/10132 pkg=com.google.android.googlequicksearchbox} proc state 14 (48 skipped)
+09-18 17:49:42.294  1572  2192 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
+09-18 17:49:42.296  1572  2193 I A       : Initialize
+09-18 17:49:42.296  1572  2193 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
+09-18 17:49:42.300  7912  7912 D AndroidRuntime: Shutting down VM
+09-18 17:49:42.324   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:42.325  1735  1735 I A       : Creating pss binder().
+09-18 17:49:42.329  1572  2192 I NgaEntryPointEventSendr: onServiceConnected
+09-18 17:49:42.329  1735  7748 I A       : Calling beginBinderSession().
+09-18 17:49:42.330  1735  7748 I A       : beginBinderSession(): calling binder
+09-18 17:49:42.330  1572  2192 I NgaEntryPointEventSendr: State changed: Connecting => Ready
+09-18 17:49:42.333  1572  2193 I A       : Successfully initialized all components
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: Invalid input from icing corpus JSON flag.
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: android.util.MalformedJsonException: Use JsonReader.setLenient(true) to accept malformed JSON at line 123 column 2
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at android.util.JsonReader.syntaxError(JsonReader.java:1162)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at android.util.JsonReader.checkLenient(JsonReader.java:840)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at android.util.JsonReader.nextInArray(JsonReader.java:615)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at android.util.JsonReader.peek(JsonReader.java:345)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at android.util.JsonReader.hasNext(JsonReader.java:321)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.searchbox.c.b.b.k.c(PG:7)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.searchbox.c.b.b.k.<init>(PG:5)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.features.n.a.c.<init>(PG:16)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.b.a(PG:14)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.x.<init>(PG:7)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.akd.b(PG:15)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at dagger.a.e.b(PG:1)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.staticplugins.searchboxroot.a.a.a(PG:3)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.ok.f(Unknown Source:2541)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.binaries.velvet.app.ok.b(PG:1)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.apps.gsa.search.core.service.g.a.c.a(PG:2)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.libraries.gsa.k.a.f.a(PG:2)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.common.util.concurrent.dx.a(PG:1)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.common.util.concurrent.cv.run(PG:4)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.common.util.concurrent.dz.run(PG:1)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.libraries.i.ae.run(PG:1)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.libraries.i.k.run(PG:2)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at com.google.android.libraries.i.p.run(PG:4)
+09-18 17:49:42.356  1735  2340 W CorpusConfigHelper: 	at java.lang.Thread.run(Thread.java:1012)
+09-18 17:49:42.360   527   912 D ActivityManager: sync unfroze 7364 com.google.android.gms for 6
+09-18 17:49:42.371  1735  2352 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+09-18 17:49:42.372  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.372  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.372  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.372  1735  2421 I A       : Merging legacy hotword config map with new proto.
+09-18 17:49:42.372  1735  2421 I A       : Adding from config to map. Locale: cmn-Hant-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+09-18 17:49:42.372  1735  2421 I A       : Adding from config to map. Locale: id-ID modelPrefix: x_google Location:cfffcc1a4c1c084c003c8eb27f73d770 isSpeakerIdSupported: true
+09-18 17:49:42.372  1735  2421 I A       : Adding from config to map. Locale: ko-KR modelPrefix: x_google Location:0b132163a2eb2c1194b202067475724b isSpeakerIdSupported: true
+09-18 17:49:42.372  1735  2421 I A       : Skipping. Expected model: 2 Found: 1
+09-18 17:49:42.372  1735  2421 I A       : Adding from config to map. Locale: zh-TW modelPrefix: x_google Location:4e7cae00daee30ec565c34e3aa67a51f isSpeakerIdSupported: true
+09-18 17:49:42.372  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.373  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.373  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.382  1572  2193 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
+09-18 17:49:42.382   527   912 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 111] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 105] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 107] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 107] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.382  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 42] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.391  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 67] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.391  1735  2421 I MicroDetectionState: Should stop hotword detection immediately - true
+09-18 17:49:42.391  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 241] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.391  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 241] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.392  1735  2421 W A       : UiCallbackStub-onGenericEvent[ServiceEvent = 60] task was not run. Callback from Service received after client was disposed.
+09-18 17:49:42.394  1735  6971 I PBSessionCacheImpl: Deleted sessionId[7632400449672816] from persistence.
+09-18 17:49:42.394  1735  2421 W SearchServiceCore: Abort, client detached.
+09-18 17:49:42.396  1735  2421 I MicroDetectionState: Should stop hotword detection immediately - true
+09-18 17:49:42.397  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.397  1735  2421 I A       : Using proto config with mendel
+09-18 17:49:42.421  7364  7424 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.googlequicksearchbox componentName=null serviceId=36
+09-18 17:49:42.431  5296  5296 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.icing.LIGHTWEIGHT_INDEX_SERVICE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:49:42.431  5296  5296 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.icing.LIGHTWEIGHT_INDEX_SERVICE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:49:42.445  7364  7414 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+09-18 17:49:42.454  7364  7424 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+09-18 17:49:42.463  7364  7414 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+09-18 17:49:42.628   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:49:43.022  7649  7687 D EGL_emulation: app_time_stats: avg=654.76ms min=632.77ms max=676.74ms count=2
+09-18 17:49:43.197  7649  7897 D EGL_emulation: app_time_stats: avg=365.78ms min=94.08ms max=648.36ms count=3
+09-18 17:49:43.310  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=929.0, y[0]=2292.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=903584, downTime=903584, deviceId=-1, source=0x1002, displayId=0, eventId=-13583134 }
+09-18 17:49:43.313  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=929.0, y[0]=2292.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=903584, downTime=903584, deviceId=-1, source=0x1002, displayId=0, eventId=-222148466 }
+09-18 17:49:43.409  7649  7897 E EGL_emulation: tid 7897: eglMakeCurrent(1920): error 0x3009 (EGL_BAD_MATCH)
+09-18 17:49:43.409  7649  7897 E libEGL  : eglMakeCurrentImpl:1053 error 3009 (EGL_BAD_MATCH)
+09-18 17:49:43.409  7649  7897 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
+09-18 17:49:43.411  7649  7649 E Surface : freeAllBuffers: 1 buffers were freed while being dequeued!
+09-18 17:49:43.452  7649  7897 E Surface : getSlotFromBufferLocked: unknown buffer: 0x0
+09-18 17:49:43.614   527   792 W ForegroundServiceTypeLoggerModule: Logger should be tracking FGS types correctly for UID 10192 in package com.neutronstar.glidercopilot
+09-18 17:49:43.616  7649  7649 V Mbgl-ConnectivityReceiver: connected - true
+09-18 17:49:43.638  7649  7935 I Mbgl-EGLConfigChooser: In emulator: false
+09-18 17:49:43.753  7649  7763 W Mbgl    : {r.glidercopilot}[ParseStyle]: "zoom" expression may only be used as input to a top-level "step" or "interpolate" expression.
+09-18 17:49:44.047  7649  7687 D EGL_emulation: app_time_stats: avg=162.50ms min=39.25ms max=589.90ms count=6
+09-18 17:49:45.118  7649  7935 D EGL_emulation: app_time_stats: avg=125.76ms min=66.86ms max=212.21ms count=7
+09-18 17:49:45.884   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:49:45.915  7649  7687 D EGL_emulation: app_time_stats: avg=612.19ms min=373.83ms max=894.69ms count=3
+09-18 17:49:46.171  7649  7935 D EGL_emulation: app_time_stats: avg=195.28ms min=83.48ms max=274.15ms count=5
+09-18 17:49:46.915  7649  7687 D EGL_emulation: app_time_stats: avg=1000.23ms min=1000.23ms max=1000.23ms count=1
+09-18 17:49:48.106  7649  7935 D EGL_emulation: app_time_stats: avg=619.20ms min=91.95ms max=918.90ms count=3
+09-18 17:49:48.560     0     0 W healthd : battery l=100 v=5000 t=25.0 h=2 st=2 c=900000 fc=3000000 cc=10 chg=a
+09-18 17:49:48.916  7649  7687 D EGL_emulation: app_time_stats: avg=1000.17ms min=999.78ms max=1000.57ms count=2
+09-18 17:49:49.161  7649  7935 D EGL_emulation: app_time_stats: avg=325.26ms min=19.12ms max=799.29ms count=3
+09-18 17:49:50.186  7649  7935 D EGL_emulation: app_time_stats: avg=171.53ms min=63.78ms max=280.15ms count=5
+09-18 17:49:50.654  5296  6821 V NativeCrypto: Read error: ssl=0x7185673b5858: I/O error during system call, Connection reset by peer
+09-18 17:49:50.656  5296  7749 V NativeCrypto: SSL shutdown failed: ssl=0x7185673b5858: I/O error during system call, Broken pipe
+09-18 17:49:50.656  5296  7749 E WakeLock: GCM_HB_ALARM release without a matched acquire!
+09-18 17:49:50.656  5296  7749 W WakeLock: GCM_HB_ALARM counter does not exist
+09-18 17:49:50.656   527   769 D ConnectivityService: reportNetworkConnectivity(102, false) by 10128
+09-18 17:49:50.657  1007  6840 D NetworkMonitor/102: Forcing reevaluation for UID 10128. Dns signal count: 0
+09-18 17:49:50.657  5296  7749 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_CONN_ALARM type: 2 triggerAtMillis: 916928]
+09-18 17:49:50.658  5296  7749 E WakeLock: GCM_CONN_ALARM release without a matched acquire!
+09-18 17:49:50.658  5296  7749 W WakeLock: GCM_CONN_ALARM counter does not exist
+09-18 17:49:50.658  1007  7938 D TrafficStats: tagSocket(103) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.658  1007  7937 D TrafficStats: tagSocket(108) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.659  1007  7937 D TrafficStats: tagSocket(108) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.659  1007  7938 D TrafficStats: tagSocket(104) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.659   338  7939 I resolv  : ResNSendHandler::run: 0 / {102 983142 102 983142 1073 1}
+09-18 17:49:50.660   338  7940 I resolv  : ResNSendHandler::run: 0 / {102 983142 102 983142 1073 1}
+09-18 17:49:50.661   338  7941 I resolv  : ResNSendHandler::run: 0 / {102 983142 102 983142 1073 1}
+09-18 17:49:50.662   338  7942 I resolv  : ResNSendHandler::run: 0 / {102 983142 102 983142 1073 1}
+09-18 17:49:50.662   338  7942 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7e9c97844570
+09-18 17:49:50.783   338  7940 I resolv  : res_nsend: used send_dg 75 terrno: 0
+09-18 17:49:50.783   338  7939 I resolv  : res_nsend: used send_dg 256 terrno: 0
+09-18 17:49:50.783  1007  1007 D TrafficStats: tagSocket(104) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.783  1007  1007 D TrafficStats: tagSocket(104) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.784   338  7941 I resolv  : res_nsend: used send_dg 160 terrno: 0
+09-18 17:49:50.784  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.784  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.784  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.784  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.784  1007  7938 D NetworkMonitor/102: PROBE_DNS connectivitycheck.gstatic.com 126ms OK 192.178.164.94,2607:f8b0:4023:2007::5e
+09-18 17:49:50.784  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.785  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.785  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.785  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.785  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.785  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.786  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.786  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.786  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.786  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.787  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.787  1007  1007 D TrafficStats: tagSocket(103) with statsTag=0xffffffff, statsUid=-1
+09-18 17:49:50.787  1007  7937 D NetworkMonitor/102: PROBE_DNS www.google.com 128ms OK 142.251.152.119,142.251.156.119,142.251.151.119,142.251.153.119,142.251.155.119,142.251.150.119,142.251.154.119,142.251.157.119,2001:4860:4826:7700::,2001:4860:4828:7700::,2001:4860:4827:7700::,2001:4860:482b:7700::,2001:4860:482a:7700::,2001:4860:482c:7700::,2001:4860:482d:7700::,2001:4860:4829:7700::
+09-18 17:49:50.787   338  7943 I resolv  : GetAddrInfoHandler::run: {102 983142 102 983142 1073 1}
+09-18 17:49:50.787   338  7945 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-18 17:49:50.787   338  7945 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7e9c97844570
+09-18 17:49:50.787   338  7945 I resolv  : doQuery: rcode=0, ancount=1, return value=63
+09-18 17:49:50.788   338  7944 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-18 17:49:50.788   338  7944 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7e9c978420b0
+09-18 17:49:50.788   338  7944 I resolv  : doQuery: rcode=0, ancount=1, return value=75
+09-18 17:49:50.788  1007  7938 D TrafficStats: tagSocket(103) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.789   338  7947 I resolv  : GetAddrInfoHandler::run: {102 983142 102 983142 1073 1}
+09-18 17:49:50.789   338  7948 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-18 17:49:50.789   338  7948 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7e9c27840510
+09-18 17:49:50.789   338  7948 I resolv  : doQuery: rcode=0, ancount=8, return value=256
+09-18 17:49:50.789   338  7949 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-18 17:49:50.789   338  7949 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7e9ba7842bb0
+09-18 17:49:50.789   338  7949 I resolv  : doQuery: rcode=0, ancount=8, return value=160
+09-18 17:49:50.790  1007  7937 D TrafficStats: tagSocket(104) with statsTag=0xffffff81, statsUid=-1
+09-18 17:49:50.819   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:49:50.931  7649  7687 D EGL_emulation: app_time_stats: avg=1006.15ms min=996.28ms max=1016.02ms count=2
+09-18 17:49:51.072  1007  7938 D NetworkMonitor/102: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=286ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Fri, 18 Sep 2026 17:49:51 GMT], X-Android-Received-Millis=[1789753791071], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789753790923]}
+09-18 17:49:51.089  1007  7937 D NetworkMonitor/102: PROBE_HTTPS https://www.google.com/generate_204 time=301ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Fri, 18 Sep 2026 17:49:51 GMT], X-Android-Received-Millis=[1789753791089], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1789753791077]}
+09-18 17:49:51.090  1007  7936 D NetworkMonitor/102: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=433ms
+09-18 17:49:51.092   527   769 D ConnectivityService: [102 WIFI] validation passed
+09-18 17:49:51.334  7649  7935 D EGL_emulation: app_time_stats: avg=382.58ms min=147.45ms max=841.03ms count=3
+09-18 17:49:51.932  7649  7687 D EGL_emulation: app_time_stats: avg=996.70ms min=996.70ms max=996.70ms count=1
+09-18 17:49:52.393   527  2636 W ProcessStats: Tracking association SourceState{f7b35c6 com.google.android.gms.persistent/10128 BFgs #14898} whose proc state 4 is better than process ProcessState{9569104 com.google.android.gms/10128 pkg=com.google.android.gms} proc state 14 (78 skipped)
+09-18 17:49:52.475  7649  7935 D EGL_emulation: app_time_stats: avg=196.47ms min=85.18ms max=524.40ms count=5
+09-18 17:49:53.931  7649  7687 D EGL_emulation: app_time_stats: avg=999.66ms min=999.31ms max=1000.01ms count=2
+09-18 17:49:54.028  7649  7935 D EGL_emulation: app_time_stats: avg=354.04ms min=87.40ms max=841.81ms count=4
+09-18 17:49:55.119  7649  7935 D EGL_emulation: app_time_stats: avg=363.68ms min=145.51ms max=791.23ms count=3
+09-18 17:49:55.397  7950  7950 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-18 17:49:55.400  7950  7950 I AndroidRuntime: Using default boot image
+09-18 17:49:55.400  7950  7950 I AndroidRuntime: Leaving lock profiling enabled
+09-18 17:49:55.401  7950  7950 I app_process: Core platform API reporting enabled, enforcing=false
+09-18 17:49:55.402  7950  7950 I app_process: Using CollectorTypeCC GC.
+09-18 17:49:55.468  7950  7950 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-18 17:49:55.485  7950  7950 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+09-18 17:49:55.485  7950  7950 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
+09-18 17:49:55.490  7950  7950 W app_process: Unexpected CPU variant for x86: x86_64.
+09-18 17:49:55.490  7950  7950 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+09-18 17:49:55.494  7950  7950 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]} | PCL[])
+09-18 17:49:55.494  7950  7950 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*4168958247]{PCL[/system/framework/android.test.base.jar*836642756]#PCL[/system/framework/android.test.mock.jar*3186112116]}#PCL[/system/framework/android.test.base.jar*836642756]} | PCL[/system/framework/android.test.runner.jar*4168958247])
+09-18 17:49:55.505  7950  7950 W libc    : Access denied finding property "ro.product.name_for_attestation"
+09-18 17:49:55.505  7950  7950 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+09-18 17:49:55.505  7950  7950 W libc    : Access denied finding property "ro.product.model_for_attestation"
+09-18 17:49:55.506  7950  7950 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+09-18 17:49:55.503  7950  7950 W main    : type=1400 audit(0.0:193): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:55.512  7950  7950 D UiAutomationConnection: Created on user UserHandle{0}
+09-18 17:49:55.512  7950  7950 I UiAutomation: Initialized for user 0 on display 0
+09-18 17:49:55.512  7950  7950 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+09-18 17:49:55.503  7950  7950 W main    : type=1400 audit(0.0:194): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:55.513   527  2636 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+09-18 17:49:55.513   527  2636 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation) when called by user 0
+09-18 17:49:55.515   527  2636 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:55.503  7950  7950 W main    : type=1400 audit(0.0:195): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=86 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-18 17:49:55.516  1582  4810 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:55.517  1735  2243 I A       : NGA disabled since it's running Panthera and at least one a11y feature is on.
+09-18 17:49:55.517  1735  2243 I A       : Nga state changed to NgaStateDetails{state=DISABLED, isSpecialExperience=false}
+09-18 17:49:55.518  1572  3227 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-18 17:49:55.518  1572  3227 I A       : [Memory] eligibility: StashEligibility{4}
+09-18 17:49:55.519  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:55.519  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:55.519  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:55.519  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:55.520  1572  2193 I A       : Unsubscribed to apa or classic variant change.
+09-18 17:49:55.519  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:55.522  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:55.522  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:55.523  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:55.524  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:55.525  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:55.525  7950  7963 V UiAutomation: Init UiAutomation@5ddc012[id=43, displayId=0, flags=0]
+09-18 17:49:55.526   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:55.528   527   527 D BatterySaverPolicy: accessibility changed to true, updating policy.
+09-18 17:49:55.530   527   792 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:55.530  1582  4810 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:55.532  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:55.533  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:55.533  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:55.534   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:55.884   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:49:55.932  7649  7687 D EGL_emulation: app_time_stats: avg=999.90ms min=998.84ms max=1000.96ms count=2
+09-18 17:49:56.139  7649  7935 D EGL_emulation: app_time_stats: avg=234.95ms min=21.61ms max=613.79ms count=4
+09-18 17:49:56.534  7950  7950 W AccessibilityNodeInfoDumper: Fetch time: 11ms
+09-18 17:49:56.536  1582  4810 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+09-18 17:49:56.536   527   792 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-18 17:49:56.536   527   792 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
+09-18 17:49:56.536  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:56.536  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:56.536  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:56.536  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:56.537  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:49:56.537  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:49:56.537  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:49:56.537  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:49:56.537   527   527 D BatterySaverPolicy: accessibility changed to false, updating policy.
+09-18 17:49:56.538  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-18 17:49:56.538  1735  2252 I A       : NGA enabled in interactor.
+09-18 17:49:56.538  1735  2252 I A       : Nga state changed to NgaStateDetails{state=ENABLED, isSpecialExperience=false}
+09-18 17:49:56.538  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:49:56.539  1572  1647 I A       : Initializing all components
+09-18 17:49:56.540  7950  7950 D AndroidRuntime: Shutting down VM
+09-18 17:49:56.540  1572  1647 I A       : APA or Classic session decision: SessionDecision(sessionVariance=CLASSIC, platformVariance=CLASSIC, justification=CURRENT_PLATFORM_VARIANCE).
+09-18 17:49:56.541  1572  1647 I A       : [Memory] eligibility: StashEligibility{6}
+09-18 17:49:56.541  1572  2192 I A       : State changed: IDLE => IDLE by NGA_STATE_CHANGED and N/A with Optional.empty
+09-18 17:49:56.541  1572  2192 I A       : Recognizer choice: (recognizer_type: 1, recognizer_mode: 1, choice_reason: 4)
+09-18 17:49:56.541  1572  2193 I A       : onIsEnabledChanged, isEnabled: false
+09-18 17:49:56.541  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.541   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 I A       : onOpaVisibilityChanged: false
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 I A       : Setting session to type: NO_SESSION
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 I A       : setNavBarVisible: GestureNavBarVisible{navbarVisible=true}
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 W A       : Disposing empty manager. Did you forgot to subscribe observables?
+09-18 17:49:56.542  1572  2193 I A       : onDisabled. Registered: false
+09-18 17:49:56.543  1572  2192 I A       : onActiveStateChangeEvent: IDLE => IDLE
+09-18 17:49:56.543  1572  2192 I A       : #onActiveStateChangeEvent, newState: IDLE, previousState: IDLE.
+09-18 17:49:56.555  1572  2192 I A       : stopListening(NGA_PAUSED_UNKNOWN_REASON, NGA_CREATE), idleOverride=NOT_LISTENING
+09-18 17:49:56.558  1572  2193 I A       : Initialize
+09-18 17:49:56.559  1572  2193 I NgaEntryPointEventSendr: setupConnection
+09-18 17:49:56.565  1572  2193 I NgaEntryPointEventSendr: State changed: Disconnected => Connecting
+09-18 17:49:56.580  1572  2192 I A       : Successfully initialized all components
+09-18 17:49:56.587  1572  2193 I A       : on opa visibility changed false
+09-18 17:49:56.593  1735  1735 I A       : Creating pss binder().
+09-18 17:49:56.599  1572  2193 I A       : on opa visibility changed false
+09-18 17:49:56.599  1572  2193 I NgaEntryPointEventSendr: onServiceConnected
+09-18 17:49:56.601  1735  1832 I A       : Calling beginBinderSession().
+09-18 17:49:56.601  1735  1832 I A       : beginBinderSession(): calling binder
+09-18 17:49:56.601  1572  2193 I NgaEntryPointEventSendr: State changed: Connecting => Ready
+09-18 17:49:56.604   527   792 W ActivityManager: Unable to start service Intent { cmp=com.google.android.apps.tachyon/.clientapi.ClientApiService } U=0: not found
+09-18 17:49:56.608  1735  6971 I PBSessionCacheImpl: Deleted sessionId[7632400449672819] from persistence.
+09-18 17:49:56.609  1735  2421 W SearchServiceCore: Abort, client detached.
+09-18 17:49:56.609  1572  2192 I NgaEntryPointEventSendr: State changed: Ready => Disconnected (onOpaDisconnected)
+09-18 17:49:56.657   338  7966 I resolv  : GetAddrInfoHandler::run: {102 786534 102 983142 10128 0}
+09-18 17:49:56.657   338  7967 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
+09-18 17:49:56.659   338  7968 I resolv  : res_nmkquery: (QUERY, IN, A)
+09-18 17:49:56.774   338  7968 I resolv  : res_nsend: used send_dg 79 terrno: 0
+09-18 17:49:56.774   338  7968 I resolv  : doQuery: rcode=0, ancount=2, return value=79
+09-18 17:49:56.775   338  7967 I resolv  : res_nsend: used send_dg 91 terrno: 0
+09-18 17:49:56.775   338  7967 I resolv  : doQuery: rcode=0, ancount=2, return value=91
+09-18 17:49:56.776  5296  6821 D TrafficStats: tagSocket(-1) with statsTag=0x30000407, statsUid=-1
+09-18 17:49:56.776  5296  6821 I TrafficStats: tagSocketFd(-1, 805307399, -1) failed with errno-9
+09-18 17:49:56.777  5296  6821 D TrafficStats: tagSocket(84) with statsTag=0x30000407, statsUid=-1
+09-18 17:49:56.948  7649  7687 D EGL_emulation: app_time_stats: avg=1012.58ms min=1012.58ms max=1012.58ms count=1
+09-18 17:49:57.155  5296  7890 D TrafficStats: tagSocket(126) with statsTag=0x30000407, statsUid=-1
+09-18 17:49:57.158  5296  7890 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1477432]
+09-18 17:49:57.163  5296  5296 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.scheduler.ACTION_PROXY_SCHEDULE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:49:57.163  5296  5296 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.scheduler.ACTION_PROXY_SCHEDULE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:49:57.235  5296  7969 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1477509]
+09-18 17:49:57.236  5296  7969 E WakeLock: GCM_CONN_ALARM release without a matched acquire!
+09-18 17:49:57.236  5296  7969 I AlarmManager: setExactAndAllowWhileIdle [name: GCM_HB_ALARM type: 2 triggerAtMillis: 1477511]
+09-18 17:49:57.249  7649  7935 D EGL_emulation: app_time_stats: avg=515.24ms min=267.85ms max=762.62ms count=2
+09-18 17:49:57.456  5296  5296 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.icing.LIGHTWEIGHT_INDEX_SERVICE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:49:57.580  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=917854, downTime=917854, deviceId=-1, source=0x1002, displayId=0, eventId=-844894097 }
+09-18 17:49:57.586  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=917854, downTime=917854, deviceId=-1, source=0x1002, displayId=0, eventId=-884440746 }
+09-18 17:49:57.979  7649  7687 D EGL_emulation: app_time_stats: avg=225.79ms min=33.30ms max=749.14ms count=4
+09-18 17:49:58.322  7649  7935 D EGL_emulation: app_time_stats: avg=268.44ms min=98.96ms max=642.91ms count=4
+09-18 17:49:58.755   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:49:59.079  7649  7687 D EGL_emulation: app_time_stats: avg=540.99ms min=159.74ms max=922.23ms count=2
+09-18 17:49:59.522  7649  7935 D EGL_emulation: app_time_stats: avg=282.25ms min=143.47ms max=476.15ms count=4
+09-18 17:50:00.053  1582  1813 I AiAiEcho: Predicting[0]: 
+09-18 17:50:00.054  1582  1813 I AiAiEcho: EchoTargets: 
+09-18 17:50:00.054  1582  1813 I AiAiEcho: Filtered by AiAi flag check: 
+09-18 17:50:00.054  1582  1813 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-18 17:50:00.054  1582  1813 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-18 17:50:00.055   841   841 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-18 17:50:00.220   841   915 D EGL_emulation: app_time_stats: avg=34250.63ms min=34250.63ms max=34250.63ms count=1
+09-18 17:50:00.223  7649  7687 D EGL_emulation: app_time_stats: avg=1142.92ms min=1142.92ms max=1142.92ms count=1
+09-18 17:50:00.633  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=920907, downTime=920907, deviceId=-1, source=0x1002, displayId=0, eventId=-480521821 }
+09-18 17:50:00.636  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=920907, downTime=920907, deviceId=-1, source=0x1002, displayId=0, eventId=-160727278 }
+09-18 17:50:01.395  7649  7935 D EGL_emulation: app_time_stats: avg=624.29ms min=362.67ms max=909.60ms count=3
+09-18 17:50:02.053  7649  7687 D EGL_emulation: app_time_stats: avg=232.97ms min=1.12ms max=738.15ms count=7
+09-18 17:50:02.511  7649  7935 D EGL_emulation: app_time_stats: avg=298.27ms min=239.83ms max=359.94ms count=3
+09-18 17:50:03.254  7649  7687 D EGL_emulation: app_time_stats: avg=1200.58ms min=1200.58ms max=1200.58ms count=1
+09-18 17:50:03.681  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=923955, downTime=923955, deviceId=-1, source=0x1002, displayId=0, eventId=-624806036 }
+09-18 17:50:03.683  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=923955, downTime=923955, deviceId=-1, source=0x1002, displayId=0, eventId=-520295428 }
+09-18 17:50:04.342  7649  7935 D EGL_emulation: app_time_stats: avg=609.99ms min=441.53ms max=917.53ms count=3
+09-18 17:50:05.258  7649  7687 D EGL_emulation: app_time_stats: avg=261.17ms min=3.05ms max=1050.13ms count=7
+09-18 17:50:05.493  7649  7935 D EGL_emulation: app_time_stats: avg=308.02ms min=137.55ms max=501.83ms count=3
+09-18 17:50:05.885   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:50:06.613  1735  2421 I WorkerManager: dispose()
+09-18 17:50:06.613  1735  2421 W A       : Queue length for executor EventBus is now 11. Perhaps some tasks are too long, or the pool is too small.
+09-18 17:50:06.680  7649  7935 D EGL_emulation: app_time_stats: avg=395.68ms min=340.67ms max=487.16ms count=3
+09-18 17:50:06.691   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:50:06.713  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=926987, downTime=926987, deviceId=-1, source=0x1002, displayId=0, eventId=-561633328 }
+09-18 17:50:06.717  1110  1110 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=988.0, y[0]=1935.0, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=926987, downTime=926987, deviceId=-1, source=0x1002, displayId=0, eventId=-757230410 }
+09-18 17:50:07.027  7649  7687 D EGL_emulation: app_time_stats: avg=884.14ms min=839.87ms max=928.41ms count=2
+09-18 17:50:07.675   527   615 D ActivityManager: freezing 7364 com.google.android.gms
+09-18 17:50:07.938   527   545 I GnssLocationProvider: WakeLock acquired by handleDownloadPsdsData()
+09-18 17:50:07.939   527  7991 E GnssPsdsDownloader: No Long-Term PSDS servers were specified in the GnssConfiguration
+09-18 17:50:08.010  7649  7935 D EGL_emulation: app_time_stats: avg=664.79ms min=573.71ms max=755.87ms count=2
+09-18 17:50:08.365  7649  7687 D EGL_emulation: app_time_stats: avg=249.21ms min=55.41ms max=455.49ms count=5
+09-18 17:50:09.301  7649  7935 D EGL_emulation: app_time_stats: avg=430.60ms min=400.93ms max=462.06ms count=3
+09-18 17:50:10.326  7649  7687 D EGL_emulation: app_time_stats: avg=980.19ms min=806.02ms max=1154.36ms count=2
+09-18 17:50:10.458  7649  7935 D EGL_emulation: app_time_stats: avg=385.25ms min=247.69ms max=469.72ms count=3
+09-18 17:50:11.505  7649  7935 D EGL_emulation: app_time_stats: avg=264.10ms min=237.75ms max=310.24ms count=3
+09-18 17:50:12.132  7649  7687 D EGL_emulation: app_time_stats: avg=902.80ms min=861.80ms max=943.81ms count=2
+09-18 17:50:12.240  5296  5296 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.scheduler.ACTION_PROXY_SCHEDULE dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentApiService }
+09-18 17:50:12.547  7649  7935 D EGL_emulation: app_time_stats: avg=271.30ms min=246.31ms max=313.73ms count=3
+09-18 17:50:13.132  7649  7687 D EGL_emulation: app_time_stats: avg=999.17ms min=999.17ms max=999.17ms count=1
+09-18 17:50:13.551  7649  7935 D EGL_emulation: app_time_stats: avg=334.37ms min=302.72ms max=386.37ms count=3
+09-18 17:50:14.134  7649  7687 D EGL_emulation: app_time_stats: avg=1001.78ms min=1001.78ms max=1001.78ms count=1
+09-18 17:50:14.627   826   826 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS 
+09-18 17:50:14.832  7649  7935 D EGL_emulation: app_time_stats: avg=261.65ms min=136.67ms max=374.28ms count=4
+09-18 17:50:15.855  7649  7935 D EGL_emulation: app_time_stats: avg=340.89ms min=304.15ms max=402.82ms count=3
+09-18 17:50:15.935   841   841 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-18 17:50:16.157  7649  7687 D EGL_emulation: app_time_stats: avg=1009.88ms min=994.68ms max=1025.08ms count=2
+09-18 17:50:17.140  7649  7935 D EGL_emulation: app_time_stats: avg=428.20ms min=406.33ms max=471.01ms count=3
+09-18 17:50:17.438  7649  7687 D EGL_emulation: app_time_stats: avg=1277.56ms min=1277.56ms max=1277.56ms count=1
+09-18 17:50:17.805  7994  7994 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-18 17:50:17.806  7994  7994 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-18 17:50:17.895   135   135 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-18 17:50:17.896  7994  7995 I Gralloc4: mapper 4.x is not supported
+09-18 17:50:18.071     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-18 17:50:18.438  7649  7935 D EGL_emulation: app_time_stats: avg=432.30ms min=391.51ms max=467.16ms count=3
+09-18 17:50:19.162  7649  7687 D EGL_emulation: app_time_stats: avg=861.83ms min=787.22ms max=936.45ms count=2
