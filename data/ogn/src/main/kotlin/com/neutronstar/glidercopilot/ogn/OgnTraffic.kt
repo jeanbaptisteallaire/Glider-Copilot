@@ -178,6 +178,8 @@ class TrafficStore(
     private val detailRadiusKm: Double = 60.0,
 ) {
     private val tracks = LinkedHashMap<String, ArrayDeque<OgnFix>>()
+    /** Une spirale demande au moins un tour : moins de positions que cela ne peut rien donner. */
+    private val MIN_FIXES_FOR_CIRCLING = 6
     private val labels = HashMap<String, String?>()
     private val episodes = ArrayList<CirclingEpisode>()
     private val lastAnalysis = HashMap<String, Instant>()
@@ -216,11 +218,17 @@ class TrafficStore(
         episodes.removeAll { it.end.isBefore(now.minus(thermalWindow)) || it.end.isBefore(now.minus(Duration.ofHours(24))) }
     }
 
-    /** Relance la détection de spirales pour les trajectoires qui ont avancé depuis la dernière analyse. */
+    /**
+     * Relance la détection de spirales pour les trajectoires qui ont avancé depuis la dernière analyse.
+     * Seules les trajectoires complètes (proches du terrain) sont analysées : au loin la mémoire est réduite
+     * à trois positions, d'où aucune spirale à trouver, et parcourir des centaines de traces bloquerait
+     * la réception des trames (le verrou est partagé avec [add]).
+     */
     @Synchronized
     fun analyse(now: Instant) {
         purge(now)
         for ((addr, q) in tracks) {
+            if (q.size < MIN_FIXES_FOR_CIRCLING) continue
             val last = q.lastOrNull() ?: continue
             if (lastAnalysis[addr] == last.time) continue
             lastAnalysis[addr] = last.time

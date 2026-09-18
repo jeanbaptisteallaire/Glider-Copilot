@@ -48,7 +48,12 @@ P=$(tap_text "Valider"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 40
 timeout 20 adb exec-out screencap -p > "$OUT/03-prevol-appairage.png"
 # carte hors ligne : téléchargement du pack de la région du club
-P=$(tap_text "Télécharger*"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+# le bouton peut être hors écran ou le catalogue encore en cours de lecture : on insiste en faisant défiler
+for t in 1 2 3 4 5 6; do
+  P=$(tap_text "Installée"); [ -n "$P" ] && { echo "pack déjà installé"; break; }
+  P=$(tap_text "Télécharger*"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "téléchargement lancé (essai $t)"; break; }
+  adb shell input swipe 540 1500 540 1100 300; sleep 6
+done
 for i in $(seq 1 60); do
   sleep 6
   P=$(tap_text "Installée"); [ -n "$P" ] && { echo "pack installé après $((i*6)) s"; break; }
