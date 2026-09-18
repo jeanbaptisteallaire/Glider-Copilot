@@ -183,7 +183,8 @@ object MapStyle {
                 "icon-rotate" to listOf("get", "hdg"),
                 "icon-rotation-alignment" to "map",
                 "icon-allow-overlap" to true, "icon-ignore-placement" to true,
-                "icon-size" to zoomInterp(9, 0.75, 13, 2.4),
+                // la bande fait 96 px : à 1,0 elle vaut ~900 m au zoom 13, la longueur réelle d'une piste
+                "icon-size" to zoomInterp(9, 0.5, 13, 1.0),
             ))
         // pompes du réseau OGN : disque coloré par la montée, opacité selon l'âge, libellé « +1,8 »
         layers += mapOf("id" to "thermals", "type" to "circle", "source" to SRC_THERMALS,
