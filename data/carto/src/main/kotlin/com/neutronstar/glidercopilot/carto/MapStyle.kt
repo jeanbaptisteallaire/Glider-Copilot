@@ -38,6 +38,10 @@ object MapStyle {
     const val SRC_TRAFFIC = "glidy-traffic"
     const val SRC_THERMALS = "glidy-thermals"
     const val IMG_TRAFFIC = "glidy-traffic-icon"
+    /** Trace de la spirale recalée de la dérive du vent (vue centrage). */
+    const val SRC_AIR_TRACE = "glidy-air-trace"
+    /** Cœur de pompe estimé (vue centrage). */
+    const val SRC_CORE = "glidy-core"
 
     /**
      * Style MapLibre complet du pack installé dans [packDir]. Tout est local : PMTiles en file://, glyphes dans les assets,
@@ -55,6 +59,8 @@ object MapStyle {
         sources[SRC_GLIDER] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_THERMALS] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_TRAFFIC] = mapOf("type" to "geojson", "data" to EMPTY_FC)
+        sources[SRC_AIR_TRACE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
+        sources[SRC_CORE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
 
         val layers = ArrayList<Any>()
         layers += mapOf("id" to "background", "type" to "background", "paint" to mapOf("background-color" to p.background))
@@ -171,6 +177,20 @@ object MapStyle {
             "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))
         layers += mapOf("id" to "trace", "type" to "line", "source" to SRC_TRACE, "layout" to mapOf("line-cap" to "round"),
             "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 3.5))
+        // vue centrage : trace recalée du vent (en pointillé) et cœur estimé
+        layers += mapOf("id" to "air-trace", "type" to "line", "source" to SRC_AIR_TRACE, "layout" to mapOf("line-cap" to "round"),
+            "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 2.2, "line-opacity" to 0.85, "line-dasharray" to listOf("literal", listOf(2.2, 1.4))))
+        layers += mapOf("id" to "core-halo", "type" to "circle", "source" to SRC_CORE,
+            "paint" to mapOf(
+                "circle-radius" to listOf("interpolate", listOf("linear"), listOf("get", "confidence"), 0.2, 14, 1.0, 26),
+                "circle-color" to p.restricted, "circle-opacity" to 0.16,
+                "circle-stroke-color" to p.restricted, "circle-stroke-width" to 2.0,
+                "circle-stroke-opacity" to listOf("get", "confidence"),
+            ))
+        layers += mapOf("id" to "core-label", "type" to "symbol", "source" to SRC_CORE,
+            "layout" to mapOf("text-field" to listOf("get", "label"), "text-font" to listOf("Noto Sans Medium"), "text-size" to 11,
+                "text-allow-overlap" to true, "text-anchor" to "top", "text-offset" to listOf("literal", listOf(0, 1.4))),
+            "paint" to mapOf("text-color" to p.restricted, "text-halo-color" to p.halo, "text-halo-width" to 1.4))
         layers += mapOf("id" to "glider", "type" to "symbol", "source" to SRC_GLIDER,
             "layout" to mapOf("icon-image" to IMG_GLIDER, "icon-rotate" to listOf("get", "heading"), "icon-rotation-alignment" to "map",
                 "icon-allow-overlap" to true, "icon-ignore-placement" to true))

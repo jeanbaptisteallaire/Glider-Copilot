@@ -65,21 +65,55 @@ data class FlightTraffic(
     val replay: Boolean = false,
 )
 
-/** Position démo du planeur et trace colorée, en coordonnées géographiques. */
+/** Cœur de pompe estimé, à dessiner dans la vue centrage. */
+data class CoreMark(val position: LatLon, val confidence: Double, val label: String)
+
+/** Position du planeur et trace colorée, en coordonnées géographiques. */
 data class GeoFrame(
     val glider: LatLon,
     val headingDeg: Double,
     /** Segments (début, fin, couleur). */
     val trace: List<Triple<LatLon, LatLon, Color>>,
     val field: LatLon,
+    /** En spirale : la carte passe en vue centrage (nord en haut, trace recalée du vent). */
+    val circling: Boolean = false,
+    /** Trace recalée de la dérive du vent (vue centrage). */
+    val airTrace: List<Triple<LatLon, LatLon, Color>> = emptyList(),
+    val core: CoreMark? = null,
 )
+
+/** Orientation de la carte : AUTO (route en haut, nord en haut en spirale), nord en haut, route en haut. */
+enum class MapOrientation { AUTO, NORTH, TRACK }
 
 /** Pilote la caméra depuis les boutons superposés à la carte. */
 @Stable
 class MapController {
     internal var map: MapLibreMap? = null
     var follow by mutableStateOf(true)
+    var orientation by mutableStateOf(MapOrientation.AUTO)
+        private set
+    /** Vue centrage active : spirale et orientation AUTO. */
+    var centering by mutableStateOf(false)
+        internal set
+
+    fun cycleOrientation() {
+        orientation = when (orientation) {
+            MapOrientation.AUTO -> MapOrientation.NORTH
+            MapOrientation.NORTH -> MapOrientation.TRACK
+            MapOrientation.TRACK -> MapOrientation.AUTO
+        }
+        follow = true
+    }
+
+    val orientationLabel: String get() = when (orientation) {
+        MapOrientation.AUTO -> "AUTO"
+        MapOrientation.NORTH -> "N↑"
+        MapOrientation.TRACK -> "RTE"
+    }
     var zoom by mutableDoubleStateOf(DEFAULT_ZOOM)
+        internal set
+    /** Zoom réellement affiché (vue centrage comprise) : sert à l'échelle graphique. */
+    var shownZoom by mutableDoubleStateOf(DEFAULT_ZOOM)
         internal set
     var latitude by mutableDoubleStateOf(44.0)
         internal set
@@ -90,14 +124,18 @@ class MapController {
 
     /** Échelle graphique : distance ronde et longueur en dp (MapLibre : 512 dp par tuile au niveau 0). */
     fun scale(maxDp: Float = 70f): Pair<String, Float> {
-        val metersPerDp = 40_075_016.686 * cos(Math.toRadians(latitude)) / (512.0 * 2.0.pow(zoom))
+        val metersPerDp = 40_075_016.686 * cos(Math.toRadians(latitude)) / (512.0 * 2.0.pow(shownZoom))
         val maxMeters = metersPerDp * maxDp
         val nice = listOf(100.0, 200.0, 500.0, 1000.0, 2000.0, 5000.0, 10_000.0, 20_000.0, 50_000.0).lastOrNull { it <= maxMeters } ?: 50.0
         val label = if (nice >= 1000) String.format(Locale.FRANCE, "%.0f km", nice / 1000) else "${nice.toInt()} m"
         return label to (nice / metersPerDp).toFloat()
     }
 
-    companion object { const val DEFAULT_ZOOM = 10.4 }
+    companion object {
+        const val DEFAULT_ZOOM = 10.4
+        /** Vue centrage : ~250 m de large sur un téléphone, de quoi voir le cercle et le cœur. */
+        const val CENTERING_ZOOM = 15.2
+    }
 }
 
 @Composable
@@ -153,7 +191,9 @@ internal fun LiveMap(
                 if (reason == MapLibreMap.OnCameraMoveStartedListener.REASON_API_GESTURE) controller.follow = false
             }
             map.addOnCameraMoveListener {
-                controller.zoom = map.cameraPosition.zoom
+                // le zoom choisi par le pilote n'est mémorisé que pour ses propres gestes : la vue centrage zoome sans l'écraser
+                if (!controller.centering) controller.zoom = map.cameraPosition.zoom
+                controller.shownZoom = map.cameraPosition.zoom
                 controller.latitude = map.cameraPosition.target?.latitude ?: controller.latitude
             }
             map.setStyle(Style.Builder().fromJson(config.styleJson)) { s ->
@@ -166,12 +206,33 @@ internal fun LiveMap(
 
     SideEffect {
         val s = style ?: return@SideEffect
+        val centering = frame.circling && controller.orientation == MapOrientation.AUTO
+        controller.centering = centering
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
-        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(frame))
+        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(if (centering) emptyList() else frame.trace))
+        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(traceJson(if (centering) frame.airTrace else emptyList()))
+        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_CORE)?.setGeoJson(coreJson(if (centering) frame.core else null))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_ROUTE)?.setGeoJson(line(frame.glider, frame.field))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(trafficJson(traffic.aircraft))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(thermalsJson(traffic.thermals, thermalColor))
-        if (controller.follow) controller.map?.moveCamera(CameraUpdateFactory.newLatLng(LatLng(frame.glider.lat, frame.glider.lon)))
+        val map = controller.map
+        if (controller.follow && map != null) {
+            // route en haut en transition, nord en haut en spirale (une carte qui tourne à 14°/s est illisible)
+            val bearing = when {
+                centering || controller.orientation == MapOrientation.NORTH -> 0.0
+                else -> frame.headingDeg
+            }
+            val zoom = if (centering) maxOf(controller.zoom, MapController.CENTERING_ZOOM) else controller.zoom
+            // en route en haut, le planeur est placé au tiers bas de l'écran ; centré en vue centrage
+            val padTop = if (centering || bearing == 0.0) 0.0 else mapView.height * 0.34
+            val cp = CameraPosition.Builder()
+                .target(LatLng(frame.glider.lat, frame.glider.lon))
+                .bearing(bearing)
+                .zoom(zoom)
+                .padding(0.0, padTop, 0.0, 0.0)
+                .build()
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cp))
+        }
     }
 
     AndroidView(factory = { mapView }, modifier = modifier.semantics { contentDescription = "Carte hors ligne vue de dessus" })
@@ -183,9 +244,14 @@ private fun gliderJson(f: GeoFrame) =
 private fun line(a: LatLon, b: LatLon) =
     """{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[${a.lon},${a.lat}],[${b.lon},${b.lat}]]}}"""
 
-private fun traceJson(f: GeoFrame): String = buildString {
+private fun coreJson(core: CoreMark?): String {
+    if (core == null) return """{"type":"FeatureCollection","features":[]}"""
+    return """{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"confidence":${core.confidence},"label":"${esc(core.label)}"},"geometry":{"type":"Point","coordinates":[${core.position.lon},${core.position.lat}]}}]}"""
+}
+
+private fun traceJson(segments: List<Triple<LatLon, LatLon, Color>>): String = buildString {
     append("""{"type":"FeatureCollection","features":[""")
-    f.trace.forEachIndexed { i, (a, b, color) ->
+    segments.forEachIndexed { i, (a, b, color) ->
         if (i > 0) append(',')
         append("""{"type":"Feature","properties":{"color":"${hex(color)}"},"geometry":{"type":"LineString","coordinates":[[${a.lon},${a.lat}],[${b.lon},${b.lat}]]}}""")
     }

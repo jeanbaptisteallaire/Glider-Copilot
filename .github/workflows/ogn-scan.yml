@@ -1,0 +1,36 @@
+name: ogn-scan
+# Diagnostic : qui vole dans le sud de la France sur le réseau OGN, et l'indicatif de l'app est-il accepté ?
+# Rien de brut n'est publié : seules des statistiques agrégées vont dans ci-data/ogn-scan/.
+on:
+  workflow_dispatch:
+    inputs:
+      seconds: { description: "Durée d'écoute (s)", default: "120" }
+      radius: { description: "Rayon autour de LFNL (km)", default: "300" }
+      app_user: { description: "Indicatif fabriqué par l'app", default: "GLIDY01234" }
+permissions:
+  contents: write
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Écouter le réseau OGN
+        run: |
+          python3 tools/ogn/scan.py \
+            --seconds "${{ github.event.inputs.seconds || '120' }}" \
+            --radius "${{ github.event.inputs.radius || '300' }}" \
+            --app-user "${{ github.event.inputs.app_user || 'GLIDY01234' }}" \
+            --out out
+      - name: Publier le rapport (ci-data)
+        if: always()
+        run: |
+          cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
+          R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          git clone -q --depth 1 -b ci-data "$R" . || { git init -q -b ci-data . && git remote add origin "$R"; }
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          mkdir -p ogn-scan
+          cp "$GITHUB_WORKSPACE/out/scan.json" "ogn-scan/$(date -u +%Y%m%dT%H%M).json" 2>/dev/null || true
+          cp "$GITHUB_WORKSPACE/out/scan.json" ogn-scan/dernier.json 2>/dev/null || true
+          git add -A && git commit -qm "ogn-scan $(date -u +%FT%TZ)" || true
+          for i in 1 2 3 4 5; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 5; done

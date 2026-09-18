@@ -34,7 +34,7 @@ class AppContainer(app: Application) {
     val checklist = ChecklistRepository(prefs)
     val carto = CartoRepository(app, UrlConnectionHttpClient(userAgent = userAgent), clubs, userAgent)
     val ogn = OgnLiveRepository(app, clubs, glider, prefs)
-    val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn)
+    val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn, weather)
 }
 
 class GliderApp : Application() {

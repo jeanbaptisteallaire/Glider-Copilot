@@ -84,6 +84,7 @@ class FlightEngine(
     private val carto: CartoRepository,
     private val glider: GliderRepository,
     private val ogn: OgnLiveRepository,
+    private val weather: com.neutronstar.glidercopilot.precog.WeatherRepository,
 ) : FlightControls, SensorsSource {
     private val thread = HandlerThread("glidy-flight").apply { start() }
     private val handler = Handler(thread.looper)
@@ -138,7 +139,37 @@ class FlightEngine(
     @Volatile private var finesse = 20
     @Volatile private var safetyState: SafetyState? = null
     private var safety = newSafety()
-    private fun newSafety() = SafetyEngine(terrain = { terrain }, fields = { fields }, alert = { onAlert(it) })
+    private fun newSafety() = SafetyEngine(terrain = { terrain }, fields = { fields }, alert = { onAlert(it) }, forecastWind = { forecastWind() })
+
+    // vent de prévision (precog) en attendant la première spirale : tranche d'altitude de l'heure la plus proche
+    @Volatile private var forecastDay: com.neutronstar.glidercopilot.precog.DayWeather? = null
+    @Volatile private var lastAltitudeM: Double? = null
+
+    private fun forecastWind(): com.neutronstar.glidercopilot.domain.safety.Wind? {
+        val day = forecastDay ?: return null
+        val alt = lastAltitudeM ?: return null
+        val now = clockNow()
+        val hour = day.hours.minByOrNull { kotlin.math.abs(Duration.between(it.analysis.validTime, now).seconds) } ?: return null
+        if (kotlin.math.abs(Duration.between(hour.analysis.validTime, now).toHours()) > 3) return null
+        val layer = hour.winds.minByOrNull { kotlin.math.abs(it.altitudeMslM - alt) } ?: return null
+        return com.neutronstar.glidercopilot.domain.safety.Wind(
+            layer.fromDeg, layer.speedKmh,
+            com.neutronstar.glidercopilot.domain.safety.WindSource.FORECAST,
+            hour.analysis.validTime,
+        )
+    }
+
+    private suspend fun loadForecast() {
+        while (true) {
+            val c = club
+            val pos = c?.position
+            if (pos != null) {
+                val r = runCatching { weather.loadDay(pos, c.departement) }.getOrNull()
+                if (r is com.neutronstar.glidercopilot.precog.WeatherResult.Success) forecastDay = r.day
+            }
+            delay(30 * 60_000L)
+        }
+    }
 
     private var core = newCore()
     private fun newCore() = FlightEngineCore(
@@ -169,6 +200,7 @@ class FlightEngine(
         scope.launch { clubs.selectedClub.collect { club = it; fieldPosition = it?.position; updateField() } }
         scope.launch { carto.active.collect { updateField() } }
         scope.launch { prefs.followEnabled.collect { on -> if (on != followOn) { followOn = on; restartForMode() } } }
+        scope.launch { loadForecast() }
         scope.launch { refreshFlights() }
     }
 
@@ -366,6 +398,7 @@ class FlightEngine(
         safety.onFix(fix)
         val snap = core.snapshot(ns, fix.time)
         val alt = snap.altitudeM ?: return
+        lastAltitudeM = alt
         val armed = when (mode) {
             OwnshipMode.PHONE -> snap.recording
             OwnshipMode.REPLAY -> snap.phase == FlightPhase.FLYING
