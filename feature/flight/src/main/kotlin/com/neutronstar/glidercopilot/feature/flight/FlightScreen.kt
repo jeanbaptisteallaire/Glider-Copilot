@@ -331,22 +331,26 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
     val c = Gc.colors
     val below = (marge ?: 0.0) < 0
     val col = when { marge == null -> c.dim; below -> c.bad; else -> c.ok }
+    // V7.1 : trois colonnes sur la largeur d'un téléphone (360 dp). Les tailles sont calées pour que
+    // la marge ne soit jamais tronquée et qu'ALT/SÉCU ne déborde pas : marge 44 sp, distance 34 sp,
+    // colonne de droite 128 dp, espacement 9 dp.
     Row(
-        Modifier.fillMaxWidth().background(c.background).padding(start = 24.dp, end = 24.dp, top = 5.dp, bottom = 9.dp),
-        horizontalArrangement = Arrangement.spacedBy(13.dp),
+        Modifier.fillMaxWidth().background(c.background).padding(start = 18.dp, end = 18.dp, top = 5.dp, bottom = 9.dp),
+        horizontalArrangement = Arrangement.spacedBy(9.dp),
     ) {
         Column(Modifier.weight(1f)) {
-            Text("Marge de sécurité", style = eyebrow(c).copy(color = col))
+            Text("Marge de sécurité", style = eyebrow(c).copy(color = col), maxLines = 1)
             Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.padding(top = 2.dp)) {
                 Text(
                     marge?.let { signed(it) } ?: "—",
-                    style = Gc.type.giant.copy(color = col, fontSize = 50.4.sp, lineHeight = 56.sp),
+                    style = Gc.type.giant.copy(color = col, fontSize = 44.sp, lineHeight = 48.sp),
                     maxLines = 1, softWrap = false,
                     modifier = Modifier.semantics { contentDescription = marge?.let { "Marge de sécurité ${signed(it)} mètres" } ?: "Marge de sécurité indisponible, altitude inconnue" },
                 )
-                Text("m", style = Gc.type.body.copy(color = col, fontSize = 19.sp), modifier = Modifier.padding(start = 3.dp, bottom = 8.dp))
+                Text("m", style = Gc.type.body.copy(color = col, fontSize = 17.sp), modifier = Modifier.padding(start = 3.dp, bottom = 7.dp))
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(9.dp), modifier = Modifier.padding(top = 6.dp)) {
+            // l'une sous l'autre : côte à côte, « SÉCU » passait à la ligne sans sa valeur
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.padding(top = 5.dp)) {
                 AltValue("ALT", alt?.let { grouped(it.roundToInt()) } ?: "—")
                 AltValue("SÉCU", need?.let { grouped(it.roundToInt()) } ?: "—")
             }
@@ -356,25 +360,25 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
         }
         // distance au terrain : deuxième information fondamentale, au centre et en grand (V7.1)
         Column(
-            Modifier.widthIn(min = 104.dp).padding(top = 1.dp),
+            Modifier.width(68.dp).padding(top = 1.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("Distance terrain", style = eyebrow(c), maxLines = 1)
+            Text("Distance", style = eyebrow(c), maxLines = 1)
             Text(
                 distKm?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—",
-                style = TextStyle(fontSize = 38.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-1.2).sp, lineHeight = 41.sp),
+                style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-1.2).sp, lineHeight = 38.sp),
                 maxLines = 1, softWrap = false,
-                modifier = Modifier.padding(top = 1.dp)
+                modifier = Modifier.padding(top = 2.dp)
                     .semantics { contentDescription = distKm?.let { "Distance au terrain ${km(it)}" } ?: "Distance au terrain inconnue" },
             )
-            Text("km", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ok))
+            Text("km", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = c.ok))
         }
-        Column(Modifier.width(155.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(Modifier.width(128.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
-                Text("Finesse", style = eyebrow(c))
+                Text("Finesse", style = eyebrow(c), maxLines = 1)
                 Text(
                     if (pending != null) "encore : F$pending" else "+${ARRIVAL_MARGIN.toInt()} m · $windLabel",
-                    style = TextStyle(fontSize = 9.sp, color = if (pending != null) c.warn else c.dim), maxLines = 1,
+                    style = TextStyle(fontSize = 8.sp, color = if (pending != null) c.warn else c.dim), maxLines = 1,
                 )
             }
             Row(Modifier.fillMaxWidth().background(c.control, RoundedCornerShape(13.dp)).padding(3.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -391,8 +395,8 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         val tc = when { selected -> c.ok; isPending -> c.warn; else -> c.finesseIdle }
-                        Text("F", style = TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Medium, color = tc), modifier = Modifier.padding(top = 5.dp, end = 2.dp))
-                        Text("$f", style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = tc))
+                        Text("F", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.Medium, color = tc), modifier = Modifier.padding(top = 4.dp, end = 1.dp))
+                        Text("$f", style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = tc))
                     }
                 }
             }
@@ -406,11 +410,11 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                 // la distance est passée au centre de l'écran (V7.1) : terrain et cap tiennent sur une ligne
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(if (auto) "AUTO" else "MANU", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
-                    Text(LocalFieldId.current, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
+                    Text(LocalFieldId.current, style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
                     Spacer(Modifier.weight(1f))
                     Text(
                         if (distKm != null) "${brg.roundToInt()}°" else "position ?",
-                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp),
+                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp),
                         maxLines = 1, softWrap = false,
                     )
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
