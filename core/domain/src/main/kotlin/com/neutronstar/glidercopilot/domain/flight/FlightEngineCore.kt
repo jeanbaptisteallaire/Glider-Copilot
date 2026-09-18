@@ -8,7 +8,7 @@ import kotlin.math.abs
 /** Référence de l'altitude affichée : chaque valeur porte son hypothèse. */
 enum class AltitudeRef { BARO_FIELD, BARO_GPS, BARO_ISA, GPS, OGN, NONE }
 
-data class TracePoint(val position: LatLon, val climbMs: Double)
+data class TracePoint(val position: LatLon, val climbMs: Double, val time: Instant = Instant.EPOCH)
 
 /** Image instantanée du vol, publiée ~4 fois par seconde vers l'interface. */
 data class FlightSnapshot(
@@ -28,6 +28,8 @@ data class FlightSnapshot(
     val baroNoiseCm: Double? = null,
     val accelHz: Double = 0.0,
     val circling: Boolean = false,
+    /** Début de la spirale en cours, pour l'estimation du cœur. */
+    val circlingSince: Instant? = null,
     val avgSpiralMs: Double? = null,
     val avgThermalMs: Double? = null,
     val avgDayMs: Double? = null,
@@ -83,6 +85,7 @@ class FlightEngineCore(
     private val climbWindow = ArrayDeque<Pair<Long, Double>>()   // (s, vario) à 1 Hz
     private val tracks = ArrayDeque<Pair<Long, Double>>()        // (s, route)
     private var circling = false
+    private var circlingSince: Instant? = null
     private var thermalStartS = 0L
     private var thermalStartAlt = 0.0
     private var lastThermal: Double? = null
@@ -129,7 +132,7 @@ class FlightEngineCore(
             climbWindow.addLast(s to climb)
             while (climbWindow.isNotEmpty() && s - climbWindow.first().first > 25) climbWindow.removeFirst()
         }
-        trace.addLast(TracePoint(fix.position, climb ?: 0.0))
+        trace.addLast(TracePoint(fix.position, climb ?: 0.0, fix.time))
         while (trace.size > 600) trace.removeFirst()
         updateCircling(fix, s, ns)
 
@@ -219,7 +222,8 @@ class FlightEngineCore(
         }
         val alt = altitude(ns).first ?: return
         val nowCircling = abs(turn) > 150 && tracks.size >= 6 && s - tracks.first().first >= 15   // ≥ 7,5°/s soutenu sur 20 s (aussi à la cadence OGN, 2 à 4 s)
-        if (nowCircling && !circling) { thermalStartS = s; thermalStartAlt = alt }
+        if (nowCircling && !circling) { thermalStartS = s; thermalStartAlt = alt; circlingSince = fix.time }
+        if (!nowCircling) circlingSince = null
         if (!nowCircling && circling) {
             val dur = s - thermalStartS
             if (dur >= 30 && alt > thermalStartAlt) { dayGain += alt - thermalStartAlt; daySeconds += dur }
@@ -262,6 +266,7 @@ class FlightEngineCore(
             baroNoiseCm = baroStats.noise.takeIf { !it.isNaN() && baroFresh(ns) }?.let { it * 100 },
             accelHz = if (ns - lastAccelNs < 1_000_000_000L) accelStats.rateHz else 0.0,
             circling = circling,
+            circlingSince = circlingSince,
             avgSpiralMs = climbWindow.takeIf { it.size >= 5 }?.map { it.second }?.average(),
             avgThermalMs = lastThermal,
             avgDayMs = curDay.takeIf { it.second >= 30 }?.let { it.first / it.second },
