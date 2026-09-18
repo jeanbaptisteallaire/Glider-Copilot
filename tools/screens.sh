@@ -157,15 +157,12 @@ sleep 12
 P=$(tap_text "Carte"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 40
 timeout 20 adb exec-out screencap -p > "$OUT/18-carte-sud-france.png"
-# fiche d'un aéronef : la carte est une seule vue pour uiautomator, on sonde une grille de points
+# fiche d'un aéronef : la carte est une seule vue pour uiautomator, on sonde le centre de l'écran
+# (le club est au centre, c'est là que les aéronefs sont les plus nombreux)
 found=""
-for y in 900 1150 1400 700 1650; do
-  for x in 270 540 810 400 680; do
-    timeout 10 adb shell input tap $x $y; sleep 2
-    P=$(tap_text "VITESSE")
-    if [ -n "$P" ]; then found="$x,$y"; break; fi
-  done
-  [ -n "$found" ] && break
+for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"; do
+  timeout 10 adb shell input tap $p; sleep 2
+  P=$(tap_text "VITESSE"); [ -n "$P" ] && { found="$p"; break; }
 done
 echo "fiche aéronef ouverte en $found"
 timeout 20 adb exec-out screencap -p > "$OUT/19-carte-fiche-aeronef.png"
