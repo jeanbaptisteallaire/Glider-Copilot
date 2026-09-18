@@ -7,6 +7,9 @@ on:
       seconds: { description: "Durée d'écoute (s)", default: "120" }
       radius: { description: "Rayon autour de LFNL (km)", default: "300" }
       app_user: { description: "Indicatif fabriqué par l'app", default: "GLIDY01234" }
+  push:
+    branches: [main]
+    paths: ['tools/ogn/scan.py', '.github/workflows/ogn-scan.yml']
 permissions:
   contents: write
 jobs:

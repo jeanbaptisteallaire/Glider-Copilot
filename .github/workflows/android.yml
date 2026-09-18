@@ -2,7 +2,7 @@ name: android
 on:
   push:
     branches: [main]
-    paths-ignore: ['docs/**', '**.md', 'packs/**', 'tools/pack/**', '.github/workflows/region-packs.yml', 'tools/record_fixtures.sh', '.github/workflows/record-fixtures.yml']
+    paths-ignore: ['docs/**', '**.md', 'packs/**', 'tools/pack/**', '.github/workflows/region-packs.yml', 'tools/record_fixtures.sh', '.github/workflows/record-fixtures.yml', 'tools/ogn/scan.py', '.github/workflows/ogn-scan.yml']
   pull_request:
   workflow_dispatch:
 permissions:
