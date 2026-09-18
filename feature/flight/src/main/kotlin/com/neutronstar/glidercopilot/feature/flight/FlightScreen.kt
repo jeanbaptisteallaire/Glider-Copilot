@@ -207,22 +207,27 @@ fun FlightScreen(
             marge, alt, need.takeIf { !waiting }, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg,
             auto = safety?.choice?.auto ?: true,
             windLabel = safety?.wind?.let { w -> "vent ${((w.fromDeg / 10).roundToInt() * 10) % 360}°/${w.speedKmh.roundToInt()}" } ?: if (showDemo) "vent ✓" else "vent —",
-            onPickField = if (safety != null && controls != null) ({ picking = true }) else null,
+            onPickField = if (controls != null && live.fieldChoices.isNotEmpty()) ({ picking = true }) else null,
             picker = {
                 androidx.compose.material3.DropdownMenu(expanded = picking, onDismissRequest = { picking = false }, containerColor = c.panel) {
                     androidx.compose.material3.DropdownMenuItem(
                         text = { Text("AUTO · terrain du club, sinon le meilleur rejoignable", style = TextStyle(fontSize = 13.sp, color = c.ok)) },
                         onClick = { controls?.selectField(null); picking = false },
                     )
-                    safety?.alternatives?.take(8)?.forEach { r ->
+                    live.fieldChoices.take(8).forEach { f ->
                         androidx.compose.material3.DropdownMenuItem(
                             text = {
                                 Text(
-                                    (if (r.field.icao != null) "${r.field.icao} · " else "") + "${r.field.name.take(26)} · ${km(r.distanceKm)} · ${signed(r.marginM)} m",
-                                    style = TextStyle(fontSize = 13.sp, color = if (r.marginM >= 0) c.ink else c.bad),
+                                    listOfNotNull(
+                                        f.code.takeIf { it != f.name },
+                                        f.name.take(26),
+                                        f.distanceKm?.let { km(it) },
+                                        f.marginM?.let { "${signed(it)} m" },
+                                    ).joinToString(" · "),
+                                    style = TextStyle(fontSize = 13.sp, color = if ((f.marginM ?: 0.0) >= 0) c.ink else c.bad),
                                 )
                             },
-                            onClick = { controls?.selectField(r.field.id); picking = false },
+                            onClick = { controls?.selectField(f.id); picking = false },
                         )
                     }
                 }

@@ -51,6 +51,7 @@ import com.neutronstar.glidercopilot.feature.checklist.ChecklistScreen
 import com.neutronstar.glidercopilot.carto.MapStyle
 import com.neutronstar.glidercopilot.feature.flight.FlightMapConfig
 import com.neutronstar.glidercopilot.feature.flight.FlightScreen
+import com.neutronstar.glidercopilot.feature.flight.TrafficMapScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolViewModel
 import kotlinx.coroutines.launch
@@ -58,7 +59,7 @@ import kotlinx.coroutines.launch
 private const val DISCLAIMER_VERSION = 1
 
 /** Onglets de la maquette v8, dans l'ordre du vol : préparer, vérifier, piloter. */
-private enum class Tab(val label: String) { PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage") }
+private enum class Tab(val label: String) { PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte") }
 
 @Composable
 fun AppRoot(container: AppContainer) {
@@ -80,6 +81,7 @@ private fun MainScaffold(container: AppContainer) {
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
     val status = rememberFlightStatus()
     val traffic by container.ogn.traffic.collectAsState()
+    val ognUi by container.ogn.network.collectAsState()
     val live by container.flight.live.collectAsState()
     // réseau OGN et moteur de vol actifs tant que l'app est visible ; en arrière-plan seulement via le service de vol
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
@@ -109,7 +111,10 @@ private fun MainScaffold(container: AppContainer) {
         val m = activeMap ?: return@remember null
         val field = club?.position ?: m.pack.center
         FlightMapConfig(
-            styleJson = MapStyle.build(m.pack, m.dir, m.aeroText, palette),
+            styleJson = MapStyle.build(
+                m.pack, m.dir, m.aeroText, palette,
+                runwaysGeoJson = com.neutronstar.glidercopilot.carto.RunwayGeoJson.build(m.aero.airports),
+            ),
             styleKey = "${m.pack.id}-${m.pack.version}",
             fieldId = club?.airfieldIcao ?: "TERRAIN",
             field = field,
@@ -142,6 +147,7 @@ private fun MainScaffold(container: AppContainer) {
                 Tab.PREVOL -> PrevolScreen(prevolVm, container.carto, container.ogn, container.flight)
                 Tab.CHECKLIST -> ChecklistScreen(container.checklist)
                 Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
+                Tab.CARTE -> TrafficMapScreen(map = flightMap, traffic = traffic, networkLabel = ognUi.statusLabel)
             }
         }
         Row(
@@ -160,6 +166,7 @@ private fun icon(t: Tab): ImageVector = when (t) {
     Tab.PREVOL -> GcIcons.Prevol
     Tab.CHECKLIST -> GcIcons.Checklist
     Tab.PILOTAGE -> GcIcons.Pilotage
+    Tab.CARTE -> GcIcons.Carte
 }
 
 @Composable

@@ -42,12 +42,27 @@ object MapStyle {
     const val SRC_AIR_TRACE = "glidy-air-trace"
     /** Cœur de pompe estimé (vue centrage). */
     const val SRC_CORE = "glidy-core"
+    /** Pistes des terrains connus, orientées. */
+    const val SRC_RUNWAYS = "glidy-runways"
+    const val IMG_RUNWAY = "glidy-runway-icon"
+    /** Carte des aéronefs (onglet Carte) : pastilles à deux lettres. */
+    const val SRC_TRAFFIC_DOTS = "glidy-traffic-dots"
+    const val IMG_DOT = "glidy-dot-icon"
+    const val LAYER_TRAFFIC = "traffic"
+    const val LAYER_TRAFFIC_DOTS = "traffic-dots"
 
     /**
      * Style MapLibre complet du pack installé dans [packDir]. Tout est local : PMTiles en file://, glyphes dans les assets,
      * GeoJSON aéro intégré. [glyphs] : modèle d'URL des glyphes (asset://glyphs/{fontstack}/{range}.pbf sur Android).
      */
-    fun build(pack: PackInfo, packDir: File, aeroGeoJson: String?, p: MapPalette = MapPalette(), glyphs: String = "asset://glyphs/{fontstack}/{range}.pbf"): String {
+    fun build(
+        pack: PackInfo,
+        packDir: File,
+        aeroGeoJson: String?,
+        p: MapPalette = MapPalette(),
+        glyphs: String = "asset://glyphs/{fontstack}/{range}.pbf",
+        runwaysGeoJson: String? = null,
+    ): String {
         fun pm(role: String) = pack.file(role)?.let { "pmtiles://file://" + File(packDir, it.name).absolutePath }
         val sources = linkedMapOf<String, Any?>()
         pm("fond")?.let { sources["fond"] = mapOf("type" to "vector", "url" to it, "attribution" to "© OpenStreetMap") }
@@ -61,6 +76,8 @@ object MapStyle {
         sources[SRC_TRAFFIC] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_AIR_TRACE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_CORE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
+        sources[SRC_RUNWAYS] = mapOf("type" to "geojson", "data" to (runwaysGeoJson?.let(::RawJson) ?: EMPTY_FC))
+        sources[SRC_TRAFFIC_DOTS] = mapOf("type" to "geojson", "data" to EMPTY_FC)
 
         val layers = ArrayList<Any>()
         layers += mapOf("id" to "background", "type" to "background", "paint" to mapOf("background-color" to p.background))
@@ -154,6 +171,15 @@ object MapStyle {
             "layout" to mapOf("text-field" to listOf("coalesce", listOf("get", "icao"), listOf("get", "name")), "text-font" to listOf("Noto Sans Medium"),
                 "text-size" to zoomInterp(8.5, 9, 13, 12), "text-anchor" to "left", "text-offset" to listOf("literal", listOf(0.8, 0))),
             "paint" to mapOf("text-color" to p.airport, "text-halo-color" to p.halo, "text-halo-width" to 1.2))
+        // pistes des terrains connus : bande orientée au cap réel, visible dès que la carte est un peu zoomée
+        layers += mapOf("id" to "runways", "type" to "symbol", "source" to SRC_RUNWAYS, "minzoom" to 8.5,
+            "layout" to mapOf(
+                "icon-image" to IMG_RUNWAY,
+                "icon-rotate" to listOf("get", "hdg"),
+                "icon-rotation-alignment" to "map",
+                "icon-allow-overlap" to true, "icon-ignore-placement" to true,
+                "icon-size" to zoomInterp(9, 0.55, 13, 1.25),
+            ))
         // pompes du réseau OGN : disque coloré par la montée, opacité selon l'âge, libellé « +1,8 »
         layers += mapOf("id" to "thermals", "type" to "circle", "source" to SRC_THERMALS,
             "paint" to mapOf(
@@ -172,6 +198,18 @@ object MapStyle {
                 "text-field" to listOf("get", "label"), "text-font" to listOf("Noto Sans Medium"), "text-size" to 10,
                 "text-anchor" to "left", "text-offset" to listOf("literal", listOf(1.0, -0.8)), "text-optional" to true),
             "paint" to mapOf("text-color" to p.traffic, "text-halo-color" to p.halo, "text-halo-width" to 1.3))
+        // carte des aéronefs : pastille sombre cerclée de blanc, deux lettres au centre, teintée si l'aéronef spirale
+        layers += mapOf("id" to LAYER_TRAFFIC_DOTS, "type" to "symbol", "source" to SRC_TRAFFIC_DOTS,
+            "layout" to mapOf(
+                "icon-image" to IMG_DOT, "icon-allow-overlap" to true, "icon-ignore-placement" to true,
+                "icon-size" to zoomInterp(6, 0.7, 11, 1.0),
+                "text-field" to listOf("get", "short"), "text-font" to listOf("Noto Sans Medium"),
+                "text-size" to zoomInterp(6, 9, 11, 11), "text-allow-overlap" to true, "text-ignore-placement" to true,
+            ),
+            "paint" to mapOf(
+                "text-color" to listOf("case", listOf("get", "circling"), p.information, p.glider),
+                "text-halo-color" to p.halo, "text-halo-width" to 1.0,
+            ))
         // couches dynamiques : route vers le terrain, trace colorée par le vario, planeur
         layers += mapOf("id" to "route", "type" to "line", "source" to SRC_ROUTE,
             "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))

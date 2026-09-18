@@ -55,3 +55,15 @@ object AeroGeoJson {
         return LatLon(lat, lon)
     }
 }
+
+/** Pistes connues des terrains du pack : un point par terrain, avec l'orientation à appliquer à l'icône. */
+object RunwayGeoJson {
+    fun build(airports: List<com.neutronstar.glidercopilot.domain.aero.Airport>): String {
+        val features = airports.mapNotNull { a ->
+            val rwy = com.neutronstar.glidercopilot.domain.aero.Runways.forIcao(a.icao) ?: return@mapNotNull null
+            """{"type":"Feature","properties":{"hdg":${rwy.headingDeg},"len":${rwy.lengthM},"hard":${rwy.hard}},""" +
+                """"geometry":{"type":"Point","coordinates":[${a.position.lon},${a.position.lat}]}}"""
+        }
+        return """{"type":"FeatureCollection","features":[${features.joinToString(",")}]}"""
+    }
+}

@@ -16,7 +16,22 @@ data class TrafficAircraft(
     val label: String?,
     val last: OgnFix,
     val circling: Boolean,
-)
+) {
+    /**
+     * Deux caractères pour l'icône de la carte : les deux dernières lettres de l'immatriculation quand la DDB
+     * l'autorise, sinon les deux derniers caractères de l'adresse radio (les avions et jets vus par leur adresse
+     * ICAO ne sont pas dans la base).
+     */
+    val shortLabel: String
+        get() = label?.filter { it.isLetterOrDigit() }?.takeLast(2)?.uppercase()?.takeIf { it.length == 2 }
+            ?: address.takeLast(2).uppercase()
+
+    val typeLabel: String get() = when (aircraftType) {
+        1 -> "Planeur"; 2 -> "Remorqueur"; 3 -> "Hélicoptère"; 4 -> "Parachutiste"; 5 -> "Largueur"
+        6 -> "Delta"; 7 -> "Parapente"; 8 -> "Avion"; 9 -> "Jet"; 11 -> "Ballon"; 12 -> "Dirigeable"
+        13 -> "Drone"; 14 -> "Planeur électrique"; else -> "Aéronef"
+    }
+}
 
 /** Pompe détectée dans les spirales des autres planeurs. */
 data class NetworkThermal(
@@ -158,6 +173,9 @@ class TrafficStore(
     private val directory: DeviceDirectory = DeviceDirectory { null },
     private val trackWindow: Duration = Duration.ofMinutes(30),
     private val thermalWindow: Duration = Duration.ofMinutes(45),
+    /** Centre de la zone d'intérêt : au-delà de [detailRadiusKm], seule la dernière position est gardée. */
+    private val centre: () -> com.neutronstar.glidercopilot.domain.LatLon? = { null },
+    private val detailRadiusKm: Double = 60.0,
 ) {
     private val tracks = LinkedHashMap<String, ArrayDeque<OgnFix>>()
     private val labels = HashMap<String, String?>()
@@ -177,6 +195,11 @@ class TrafficStore(
         // même trame relayée par plusieurs récepteurs, ou trame plus ancienne arrivée en retard
         q.lastOrNull()?.let { if (!fix.time.isAfter(it.time)) return false }
         q.addLast(fix)
+        // au loin (carte du sud de la France), la trajectoire n'apporte rien : on ne garde que les dernières positions
+        val c = centre()
+        if (c != null && com.neutronstar.glidercopilot.domain.Geo.distanceKm(c, fix.position) > detailRadiusKm) {
+            while (q.size > 3) q.removeFirst()
+        }
         framesAccepted++
         return true
     }

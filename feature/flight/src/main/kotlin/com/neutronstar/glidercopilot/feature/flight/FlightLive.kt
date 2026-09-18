@@ -5,6 +5,9 @@ import com.neutronstar.glidercopilot.domain.flight.FlightSnapshot
 import com.neutronstar.glidercopilot.domain.flight.VarioSource
 import java.util.Locale
 
+/** Terrain proposé dans le choix du terrain de référence : toujours disponible, même au sol sans position. */
+data class FieldChoice(val id: String, val code: String, val name: String, val distanceKm: Double?, val marginM: Double?)
+
 /** Origine du planeur affiché : téléphone, rejeu du vol de démonstration, mode démo simulé, planeur suivi par OGN. */
 enum class OwnshipMode { PHONE, REPLAY, DEMO, FOLLOW }
 
@@ -23,6 +26,8 @@ data class FlightLive(
     val followLabel: String? = null,
     /** Relief du pack chargé : coupe et marge sur le terrain réel. */
     val reliefLoaded: Boolean = false,
+    /** Terrains proposés au choix (les plus proches du pack), avec marge quand la sécurité est calculée. */
+    val fieldChoices: List<FieldChoice> = emptyList(),
 ) {
     /** Vrai dès qu'une vraie source (baro, GPS, OGN) alimente l'écran : plus aucune valeur de démonstration. */
     val hasData: Boolean

@@ -44,3 +44,25 @@ class RealAeroTest {
         assertTrue(parsed["layers"]!!.arr.any { it["id"]!!.str == "hillshade" })
     }
 }
+
+/** Pistes dessinées sur la carte : orientation réelle des trois terrains proches du club. */
+class RunwayGeoJsonTest {
+    private val aero = AeroGeoJson.parse(javaClass.classLoader!!.getResource("real_occitanie_est_aero_20260916.geojson")!!.readText())
+
+    @Test fun knownRunwaysAreDrawnWithTheirOrientation() {
+        val json = RunwayGeoJson.build(aero.airports)
+        // une piste par terrain connu présent dans le pack, pas une de plus
+        assertEquals(3, Regex("\"type\":\"Feature\"").findAll(json).count())
+        assertTrue(json.contains("\"hdg\":120.0"))   // LFMT 12L/30R et LFNL 12/30
+        assertTrue(json.contains("\"hdg\":10.0"))    // LFMS 01/19
+        assertTrue(json.contains("\"hard\":false"))  // LFNL en herbe
+        // la piste est posée sur la position du terrain
+        val lfnl = aero.airports.first { it.icao == "LFNL" }
+        assertTrue(json.contains("[${lfnl.position.lon},${lfnl.position.lat}]"))
+    }
+
+    @Test fun airportsWithoutKnownRunwayAreSkipped() {
+        val json = RunwayGeoJson.build(aero.airports.filter { it.icao == null || it.icao !in listOf("LFMT", "LFNL", "LFMS") })
+        assertEquals("{\"type\":\"FeatureCollection\",\"features\":[]}", json)
+    }
+}

@@ -55,7 +55,12 @@ class OgnLiveRepository(
     private val prefs: UserPreferences,
 ) : OgnNetworkSource {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-    private val store = TrafficStore(DeviceDirectory { glider.ddb.cachedDevice(it) })
+    // rayon large : l'onglet Carte montre tout le sud de la France ; seules les trajectoires proches sont gardées en entier
+    private val store = TrafficStore(
+        DeviceDirectory { glider.ddb.cachedDevice(it) },
+        centre = { clubPosition },
+        detailRadiusKm = DETAIL_KM,
+    )
     private val aprsState = MutableStateFlow<AprsState>(AprsState.Idle)
     private val _network = MutableStateFlow(OgnNetworkUi(radiusKm = RADIUS_KM))
     override val network: StateFlow<OgnNetworkUi> = _network.asStateFlow()
@@ -192,7 +197,19 @@ class OgnLiveRepository(
         _traffic.value = FlightTraffic(
             aircraft = aircraft.map { a ->
                 val rel = if (ownAlt != null && a.last.altitudeM != null) " " + signed((a.last.altitudeM!! - ownAlt).roundToInt()) else ""
-                TrafficMark(a.last.position, a.last.trackDeg, (a.label ?: "·") + rel, a.last.altitudeM, a.circling)
+                TrafficMark(
+                    position = a.last.position,
+                    trackDeg = a.last.trackDeg,
+                    label = (a.label ?: "·") + rel,
+                    altitudeM = a.last.altitudeM,
+                    circling = a.circling,
+                    id = a.address,
+                    shortLabel = a.shortLabel,
+                    typeLabel = a.typeLabel,
+                    speedKmh = a.last.groundSpeedKmh,
+                    climbMs = a.last.climbMs,
+                    ageS = Duration.between(a.last.time, now).seconds.coerceAtLeast(0),
+                )
             },
             thermals = thermals.map { ThermalMark(it.position, it.climbMs, it.aircraftCount, it.ageMinutes(now)) },
             own = ownStatus?.let { st ->
@@ -264,7 +281,10 @@ class OgnLiveRepository(
     private fun near(a: LatLon, b: LatLon) = Geo.distanceKm(a, b)
 
     companion object {
-        const val RADIUS_KM = 100
+        /** Rayon du filtre APRS : de quoi remplir l'onglet Carte (sud de la France). */
+        const val RADIUS_KM = 250
+        /** Au-delà, seules les dernières positions sont gardées (mémoire). */
+        const val DETAIL_KM = 60.0
         const val REPLAY_SPEED = 4L
     }
 }

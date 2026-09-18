@@ -617,6 +617,7 @@ class FlightEngine(
             safety = if (running) safetyState else null,
             finesse = finesse,
             followLabel = if (mode == OwnshipMode.FOLLOW) glider.followRegistrationValue else null,
+            fieldChoices = fieldChoices(snap),
             reliefLoaded = terrain !== Terrain.NONE,
         )
         val ognDelay = ogn.traffic.value.own?.let { (it.latencyS ?: 0.0) + it.ageS }
@@ -650,6 +651,22 @@ class FlightEngine(
             testing = testing,
             flights = flights,
         )
+    }
+
+    /** Terrains proposés au choix : ceux calculés par la sécurité, sinon les plus proches du pack (même au sol). */
+    private fun fieldChoices(snap: FlightSnapshot?): List<com.neutronstar.glidercopilot.feature.flight.FieldChoice> {
+        safetyState?.alternatives?.takeIf { it.isNotEmpty() }?.let { list ->
+            return list.take(8).map { r ->
+                com.neutronstar.glidercopilot.feature.flight.FieldChoice(r.field.id, r.field.code, r.field.name, r.distanceKm, r.marginM)
+            }
+        }
+        val from = snap?.gps?.position ?: fieldPosition ?: return emptyList()
+        return fields.asSequence()
+            .map { it to com.neutronstar.glidercopilot.domain.Geo.distanceKm(from, it.position) }
+            .sortedBy { it.second }
+            .take(8)
+            .map { (f, d) -> com.neutronstar.glidercopilot.feature.flight.FieldChoice(f.id, f.code, f.name, d, null) }
+            .toList()
     }
 
     override fun startChrono() { handler.post { core.startManual(clockNow()); publish() } }

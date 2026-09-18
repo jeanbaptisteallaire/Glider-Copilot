@@ -39,4 +39,6 @@ object GcIcons {
     val ChevronDown = stroke("chevronDown", 2f, "M6 9l6 6 6-6")
     val ChevronUp = stroke("chevronUp", 2f, "M6 15l6-6 6 6")
     val WindArrow = stroke("wind", 2.4f, "M12 20V5M6 10l6-6 6 6")
+    /** Onglet Carte : carte pliée, trait au trait comme les autres onglets. */
+    val Carte = stroke("carte", 1.8f, "M9 4.5 3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z", "M9 4.5v12.7M15 6.8v12.7")
 }

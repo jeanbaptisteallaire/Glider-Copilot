@@ -48,7 +48,21 @@ data class FlightMapConfig(
 )
 
 /** Autre aéronef du réseau OGN à dessiner. */
-data class TrafficMark(val position: LatLon, val trackDeg: Double?, val label: String, val altitudeM: Double?, val circling: Boolean)
+data class TrafficMark(
+    val position: LatLon,
+    val trackDeg: Double?,
+    val label: String,
+    val altitudeM: Double?,
+    val circling: Boolean,
+    /** Adresse radio : identifiant stable pour retrouver l'aéronef touché sur la carte. */
+    val id: String = "",
+    /** Deux caractères affichés dans la pastille de la carte des aéronefs. */
+    val shortLabel: String = "",
+    val typeLabel: String = "Aéronef",
+    val speedKmh: Double? = null,
+    val climbMs: Double? = null,
+    val ageS: Long = 0,
+)
 
 /** Pompe détectée dans les spirales du réseau. */
 data class ThermalMark(val position: LatLon, val climbMs: Double, val aircraftCount: Int, val ageMinutes: Long)
@@ -146,6 +160,9 @@ internal fun LiveMap(
     traffic: FlightTraffic,
     thermalColor: (Double) -> Color,
     modifier: Modifier = Modifier,
+    /** Carte des aéronefs : aucune couche de pilotage, pastilles à deux lettres, caméra libre. */
+    trafficOnly: Boolean = false,
+    onAircraftTap: ((String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
@@ -178,6 +195,16 @@ internal fun LiveMap(
     LaunchedEffect(config.styleKey) {
         style = null
         mapView.getMapAsync { map ->
+            if (onAircraftTap != null) {
+                map.addOnMapClickListener { point ->
+                    val p = map.projection.toScreenLocation(point)
+                    val box = android.graphics.RectF(p.x - 28, p.y - 28, p.x + 28, p.y + 28)
+                    val hit = map.queryRenderedFeatures(box, MapStyle.LAYER_TRAFFIC, MapStyle.LAYER_TRAFFIC_DOTS)
+                        .firstNotNullOfOrNull { f -> f.getStringProperty("id") }
+                    if (hit != null) onAircraftTap(hit)
+                    hit != null
+                }
+            }
             controller.map = map
             map.uiSettings.apply {
                 isLogoEnabled = false
@@ -199,6 +226,8 @@ internal fun LiveMap(
             map.setStyle(Style.Builder().fromJson(config.styleJson)) { s ->
                 s.addImage(MapStyle.IMG_GLIDER, gliderBitmap())
                 s.addImage(MapStyle.IMG_TRAFFIC, trafficBitmap())
+                s.addImage(MapStyle.IMG_RUNWAY, runwayBitmap())
+                s.addImage(MapStyle.IMG_DOT, dotBitmap())
                 style = s
             }
         }
@@ -208,6 +237,17 @@ internal fun LiveMap(
         val s = style ?: return@SideEffect
         val centering = frame.circling && controller.orientation == MapOrientation.AUTO
         controller.centering = centering
+        if (trafficOnly) {
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC_DOTS)?.setGeoJson(trafficJson(traffic.aircraft))
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_CORE)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_ROUTE)?.setGeoJson(EMPTY_JSON)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(thermalsJson(traffic.thermals, thermalColor))
+            return@SideEffect
+        }
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(if (centering) emptyList() else frame.trace))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(traceJson(if (centering) frame.airTrace else emptyList()))
@@ -262,13 +302,44 @@ internal fun hex(c: Color): String = String.format("#%06X", c.toArgb() and 0xFFF
 
 private fun esc(s: String) = s.replace("\\", "\\\\").replace("\"", "\\\"")
 
+private const val EMPTY_JSON = """{"type":"FeatureCollection","features":[]}"""
+
 private fun trafficJson(list: List<TrafficMark>): String = buildString {
     append("""{"type":"FeatureCollection","features":[""")
     list.forEachIndexed { i, a ->
         if (i > 0) append(',')
-        append("""{"type":"Feature","properties":{"track":${a.trackDeg ?: 0.0},"label":"${esc(a.label)}"},"geometry":{"type":"Point","coordinates":[${a.position.lon},${a.position.lat}]}}""")
+        append(
+            """{"type":"Feature","properties":{"id":"${esc(a.id)}","track":${a.trackDeg ?: 0.0},"label":"${esc(a.label)}",""" +
+                """"short":"${esc(a.shortLabel)}","climb":${a.climbMs ?: 0.0},"circling":${a.circling}},""" +
+                """"geometry":{"type":"Point","coordinates":[${a.position.lon},${a.position.lat}]}}""",
+        )
     }
     append("]}")
+}
+
+/** Pastille ronde à deux lettres de la carte des aéronefs. */
+private fun dotBitmap(size: Int = 30): Bitmap {
+    val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val cv = android.graphics.Canvas(bmp)
+    val r = size / 2f
+    cv.drawCircle(r, r, r - 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.argb(235, 12, 12, 12) })
+    cv.drawCircle(r, r, r - 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.WHITE; style = Paint.Style.STROKE; strokeWidth = 2f
+    })
+    return bmp
+}
+
+/** Piste de terrain : bande claire bordée de noir, tournée par la couche selon l'orientation réelle. */
+private fun runwayBitmap(size: Int = 96): Bitmap {
+    val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val cv = android.graphics.Canvas(bmp)
+    val k = size / 96f
+    val rect = android.graphics.RectF(size / 2f - 5f * k, 10f * k, size / 2f + 5f * k, size - 10f * k)
+    cv.drawRoundRect(rect, 3f * k, 3f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.BLACK; style = Paint.Style.STROKE; strokeWidth = 5f * k
+    })
+    cv.drawRoundRect(rect, 3f * k, 3f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.WHITE })
+    return bmp
 }
 
 private fun thermalsJson(list: List<ThermalMark>, color: (Double) -> Color): String = buildString {

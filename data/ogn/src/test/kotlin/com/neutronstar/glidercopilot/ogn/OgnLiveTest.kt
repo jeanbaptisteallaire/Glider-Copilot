@@ -310,3 +310,50 @@ class FollowPipelineTest {
         assertTrue("marge ${r.marginM}", r.marginM > 0)
     }
 }
+
+/** Pastilles de l'onglet Carte : deux caractères par machine, et mémoire bornée loin du terrain. */
+class TrafficMapLabelTest {
+    private val t0 = Instant.parse("2026-09-18T12:00:00Z")
+
+    private fun fix(addr: String, type: Int, pos: LatLon, s: Long) = OgnFix(
+        addr, AddressType.FLARM, type, "FLR$addr", t0.plusSeconds(s), t0.plusSeconds(s), pos,
+        1200.0, 90.0, 100.0, 0.5, null, stealth = false, noTracking = false, receiver = "LFNL",
+    )
+
+    private fun ddb(reg: String, identified: Boolean) =
+        DdbDevice("F", "3EE2C1", "LS4", reg, null, tracked = true, identified = identified)
+
+    @Test fun shortLabelForTheMapTab() {
+        // immatriculation publiée : les deux dernières lettres
+        assertEquals("XB", TrafficAircraft("3EE2C1", 1, "F-CGXB", fix("3EE2C1", 1, LatLon(43.8, 3.78), 0), false).shortLabel)
+        // numéro de concours court
+        assertEquals("X7", TrafficAircraft("3EE2C1", 1, "X7", fix("3EE2C1", 1, LatLon(43.8, 3.78), 0), false).shortLabel)
+        // anonyme (avion vu par son adresse ICAO) : deux derniers caractères de l'adresse
+        assertEquals("C1", TrafficAircraft("3ee2c1", 8, null, fix("3ee2c1", 8, LatLon(43.8, 3.78), 0), false).shortLabel)
+        // types affichés dans la fiche
+        assertEquals("Planeur", TrafficAircraft("3EE2C1", 1, null, fix("3EE2C1", 1, LatLon(43.8, 3.78), 0), false).typeLabel)
+        assertEquals("Parapente", TrafficAircraft("3EE2C1", 7, null, fix("3EE2C1", 7, LatLon(43.8, 3.78), 0), false).typeLabel)
+        assertEquals("Avion", TrafficAircraft("3EE2C1", 8, null, fix("3EE2C1", 8, LatLon(43.8, 3.78), 0), false).typeLabel)
+    }
+
+    @Test fun anonymousDevicesKeepTheirAddressLabel() {
+        val store = TrafficStore(DeviceDirectory { ddb("F-CGXB", identified = false) })
+        repeat(3) { store.add(fix("3EE2C1", 1, LatLon(43.80 + it * 0.001, 3.78), it * 4L)) }
+        val a = store.aircraft(t0.plusSeconds(10)).single()
+        assertNull(a.label)
+        assertEquals("C1", a.shortLabel)
+    }
+
+    @Test fun farAwayAircraftKeepOnlyTheirLastFixes() {
+        val club = LatLon(43.80028, 3.78167)
+        val store = TrafficStore(DeviceDirectory { null }, centre = { club }, detailRadiusKm = 60.0)
+        // Perpignan, à plus de 150 km : mémoire réduite à trois positions
+        repeat(12) { store.add(fix("AABBCC", 1, LatLon(42.74 + it * 0.001, 2.87), it * 4L)) }
+        // près du club : trajectoire complète conservée
+        repeat(12) { store.add(fix("DDEEFF", 1, LatLon(43.81 + it * 0.001, 3.79), it * 4L)) }
+        val far = store.track("AABBCC"); val near = store.track("DDEEFF")
+        assertEquals(3, far.size)
+        assertEquals(12, near.size)
+        assertEquals(2, store.aircraft(t0.plusSeconds(48)).size)
+    }
+}
