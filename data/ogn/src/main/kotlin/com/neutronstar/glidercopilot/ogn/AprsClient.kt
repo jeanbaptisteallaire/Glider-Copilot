@@ -86,9 +86,13 @@ class AprsClient(
                                     state.value = AprsState.Connected(server, clock.instant(), f)
                                 }
                             } else if (line.startsWith("# logresp")) {
-                                // « # logresp GLIDY12345 unverified, server GLIDERN3 »
+                                // « # logresp GLIDY1234 unverified, server GLIDERN3 »
                                 server = line.substringAfter("server ", "").trim().ifEmpty { server }
                                 state.value = AprsState.Connected(server, clock.instant(), f)
+                            } else if (REJECTED.containsMatchIn(line)) {
+                                // le serveur refuse l'indicatif (plus de 9 caractères) ou le filtre : il n'enverra rien
+                                emit(AprsLine(line, clock.instant()))
+                                throw IOException(line.removePrefix("# ").trim())
                             }
                             emit(AprsLine(line, clock.instant()))
                         }
@@ -115,7 +119,13 @@ class AprsClient(
     }.flowOn(Dispatchers.IO)
 
     companion object {
-        /** Indicatif de lecture propre à l'installation (APRS-IS refuse deux connexions au même nom). */
-        fun userFor(installId: Long): String = "GLIDY" + (installId % 100000).toString().padStart(5, '0')
+        /** Lignes de refus du serveur : l'indicatif ou le filtre est invalide, la connexion ne servira à rien. */
+        private val REJECTED = Regex("(?i)invalid (username|callsign|filter)|login failed|not authorized")
+
+        /**
+         * Indicatif de lecture propre à l'installation. **Neuf caractères au maximum** : APRS-IS répond
+         * « # Invalid username format » au-delà et n'envoie plus aucune trame (défaut trouvé en session 7).
+         */
+        fun userFor(installId: Long): String = "GLIDY" + (installId % 10000).toString().padStart(4, '0')
     }
 }

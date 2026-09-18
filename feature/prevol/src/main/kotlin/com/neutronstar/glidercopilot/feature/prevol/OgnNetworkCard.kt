@@ -44,6 +44,11 @@ data class OgnNetworkUi(
     val ownLabel: String? = null,
     val ownLine: String? = null,
     val ownSeen: Boolean = false,
+    /** Trames reçues la dernière minute et âge de la dernière : diagnostic de la connexion. */
+    val framesPerMin: Int = 0,
+    val lastFrameAgoS: Long? = null,
+    /** Message d'alerte quand la connexion est ouverte mais muette (indicatif ou filtre refusé). */
+    val warning: String? = null,
 )
 
 private fun s1(v: Double?) = v?.let { String.format(Locale.FRANCE, "%.1f s", it) } ?: "—"
@@ -57,8 +62,15 @@ internal fun OgnNetworkCard(ui: OgnNetworkUi) {
         trailing = { GcPill(if (ui.replay) "Rejeu" else if (ui.connected) "En direct" else "Hors ligne", if (ui.replay) c.warn else if (ui.connected) c.ok else c.dim) },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Box(Modifier.size(7.dp).background(if (ui.connected) c.statusOn else c.statusOff, CircleShape))
+            Box(Modifier.size(7.dp).background(if (ui.warning != null) c.warn else if (ui.connected) c.statusOn else c.statusOff, CircleShape))
             Text(ui.statusLabel, style = TextStyle(fontSize = 11.sp, color = c.dim))
+        }
+        ui.warning?.let { Text(it, style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.warn)) }
+        if (ui.connected) {
+            Text(
+                "${ui.framesPerMin} trames/min" + (ui.lastFrameAgoS?.let { " · dernière il y a $it s" } ?: " · aucune trame encore"),
+                style = TextStyle(fontSize = 10.5.sp, color = c.faint),
+            )
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             GcKpi("${ui.aircraftCount}", "Aéronefs", Modifier.weight(1f))

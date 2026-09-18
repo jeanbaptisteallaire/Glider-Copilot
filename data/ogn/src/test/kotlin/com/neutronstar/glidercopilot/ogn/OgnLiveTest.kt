@@ -4,6 +4,8 @@ import com.neutronstar.glidercopilot.domain.LatLon
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import org.junit.Assert.assertEquals
@@ -172,12 +174,58 @@ class OgnLiveTest {
         val state = MutableStateFlow<AprsState>(AprsState.Idle)
         val got = withTimeout(10_000) { client.lines({ "r/43.8/3.78/100" }, state).take(3).toList() }
         assertEquals(3, got.size)
-        assertEquals("user GLIDY00042 pass -1 vers GLIDY 0.4 filter r/43.8/3.78/100", login)
+        assertEquals("user GLIDY0042 pass -1 vers GLIDY 0.4 filter r/43.8/3.78/100", login)
         assertTrue(state.value is AprsState.Idle || state.value is AprsState.Connected)
         val fix = got.map { OgnParser.parse(it.text, it.received) }.filterIsInstance<OgnLine.Aircraft>().single().fix
         assertEquals("DD1234", fix.address)
         server.close()
         assertNotNull(fix.turnDegS)
+    }
+
+    /**
+     * Indicatif APRS-IS : neuf caractères au maximum. Au-delà, le serveur répond « # Invalid username format »
+     * et n'envoie plus rien (défaut qui a rendu le trafic invisible en version 0.6).
+     */
+    @Test fun aprsUserNameIsNeverLongerThanNineCharacters() {
+        for (id in listOf(0L, 7L, 42L, 9999L, 10_000L, 123_456_789L, Long.MAX_VALUE / 3)) {
+            val u = AprsClient.userFor(id)
+            assertTrue("indicatif « $u » (${u.length} caractères)", u.length <= 9)
+            assertTrue(u.startsWith("GLIDY") && u.drop(5).all { it.isDigit() })
+        }
+        assertEquals("GLIDY0042", AprsClient.userFor(42))
+        assertEquals(AprsClient.userFor(10_042), AprsClient.userFor(42))
+    }
+
+    /** Refus du serveur (indicatif ou filtre invalide) : on ne reste pas « connecté » à écouter dans le vide. */
+    @Test fun serverRefusalIsTreatedAsAFailure() = runBlocking<Unit> {
+        val server = java.net.ServerSocket(0)
+        val t = Thread {
+            repeat(2) {
+                server.accept().use { s ->
+                    val r = BufferedReader(InputStreamReader(s.getInputStream()))
+                    val out = s.getOutputStream()
+                    out.write("# aprsc 2.1.20\r\n".toByteArray())
+                    r.readLine()
+                    out.write("# Invalid username format\r\n".toByteArray())
+                    out.flush()
+                    Thread.sleep(300)
+                }
+            }
+        }
+        t.isDaemon = true
+        t.start()
+        val client = AprsClient("GLIDY01234", host = "127.0.0.1", port = server.localPort, backoffSeconds = listOf(30))
+        val state = MutableStateFlow<AprsState>(AprsState.Idle)
+        val seen = ArrayList<AprsState>()
+        val watcher = launch { state.collect { seen += it } }
+        val reader = launch { client.lines({ "r/43.8/3.78/100" }, state).collect { } }
+        withTimeout(10_000) {
+            while (seen.none { it is AprsState.Waiting }) kotlinx.coroutines.delay(50)
+        }
+        val refus = seen.filterIsInstance<AprsState.Waiting>().first()
+        assertTrue("motif « ${refus.reason} »", refus.reason.contains("Invalid username", ignoreCase = true))
+        reader.cancel(); watcher.cancel()
+        server.close()
     }
 
     @Suppress("unused")

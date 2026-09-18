@@ -76,6 +76,8 @@ class OgnLiveRepository(
     @Volatile private var replayStartVirtual: Instant = Instant.EPOCH
     private fun now(): Instant = if (replay) replayStartVirtual.plusMillis((System.currentTimeMillis() - replayStartReal) * REPLAY_SPEED) else Instant.now()
 
+    private val frameTimes = ArrayDeque<Instant>()
+    @Volatile private var lastFrameAt: Instant? = null
     private val intervals = ArrayDeque<Double>()
     private val latencies = ArrayDeque<Double>()
     private val lastTimeByAddress = HashMap<String, Instant>()
@@ -148,6 +150,11 @@ class OgnLiveRepository(
         val fix = parsed.fix
         if (!store.add(fix)) return
         if (fix.address in followSet) _followFixes.tryEmit(fix)
+        synchronized(frameTimes) {
+            lastFrameAt = line.received
+            frameTimes.addLast(line.received)
+            while (frameTimes.isNotEmpty() && Duration.between(frameTimes.first(), line.received).seconds > 60) frameTimes.removeFirst()
+        }
         synchronized(intervals) {
             lastTimeByAddress.put(fix.address, fix.time)?.let { prev ->
                 val d = Duration.between(prev, fix.time).toMillis() / 1000.0
@@ -208,6 +215,15 @@ class OgnLiveRepository(
         } else glider.publishFollowLine(null)
         val clubPos = clubPosition
         _network.value = OgnNetworkUi(
+            framesPerMin = synchronized(frameTimes) { frameTimes.size },
+            lastFrameAgoS = lastFrameAt?.let { Duration.between(it, now).seconds },
+            warning = when {
+                state is AprsState.Waiting && Regex("(?i)invalid|refus").containsMatchIn(state.reason) ->
+                    "Le serveur OGN a refusé la connexion (${state.reason}). Rien ne sera reçu tant que ce n'est pas corrigé."
+                state is AprsState.Connected && !replay && (lastFrameAt == null || Duration.between(lastFrameAt, now).seconds > 120) ->
+                    "Connexion ouverte mais aucune trame depuis plus de deux minutes : vérifiez le réseau, sinon signalez-le."
+                else -> null
+            },
             statusLabel = when (state) {
                 AprsState.Idle -> "Réseau OGN à l'arrêt (app en arrière-plan)"
                 is AprsState.Connecting -> "Connexion à aprs.glidernet.org…" + if (state.attempt > 1) " (essai ${state.attempt})" else ""
