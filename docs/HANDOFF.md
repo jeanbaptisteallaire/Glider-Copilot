@@ -1,5 +1,38 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 7 — Onglet Carte, pistes des terrains, choix du terrain (18/09/2026)
+
+### Livré
+- **4e onglet « Carte »** (`feature:flight/TrafficMapScreen.kt`) : la même carte aéronautique hors ligne que Pilotage (mêmes sources, mêmes espaces),
+  **sans aucune fonction de vol** — ni planeur, ni trace, ni route, ni marge. Caméra libre, départ au zoom 7,4 (tout le sud de la France).
+  Chaque aéronef reçu de l'OGN est une **pastille à deux caractères** : les deux dernières lettres de l'immatriculation quand la DDB l'autorise,
+  sinon les deux derniers caractères de l'adresse radio (les avions et jets vus par leur adresse ICAO ne sont pas dans la base). Teinte verte en spirale.
+  Un appui ouvre la **fiche** de l'aéronef : type (planeur, remorqueur, parapente, hélico, avion, jet…), altitude, vitesse sol, vario, distance au terrain et âge de la dernière trame.
+  En-tête : nombre d'aéronefs en vol et état du réseau. Tolérance de touche 22 dp autour du doigt.
+- **Portée OGN élargie** : filtre APRS `r/lat/lon/250` (tout le sud de la France) au lieu de 15 km. Pour tenir en mémoire, au-delà de **60 km du club**
+  seules les **trois dernières positions** sont gardées (à cette échelle la trajectoire n'apporte rien) ; à moins de 60 km, trajectoire complète, spirales et pompes inchangées.
+- **Pistes des terrains** (`core:domain/aero/Runways.kt`, `data:carto/RunwayGeoJson`) : bande blanche cerclée de noir dessinée à l'**orientation réelle**
+  (couche `runways`, `icon-rotate` sur la propriété `hdg`, alignée sur la carte, visible à partir du zoom 8,5). Trois terrains pour l'instant :
+  **LFMT** Montpellier 12L/30R (120°), **LFNL** Saint-Martin-de-Londres 12/30 (120°, en herbe), **LFMS** Alès-Cévennes 01/19 (010°).
+  L'orientation n'est pas écrite sur la carte. Table tenue à la main : openAIP ne publie pas l'orientation des pistes dans le pack.
+- **Correctif du bug récurrent du terrain de repli** : le menu (AUTO · LFNL, en haut à droite de Pilotage) ne s'ouvrait **que lorsque le moteur de sécurité avait déjà calculé
+  des solutions de plané** — donc jamais au sol, ni avant la première position GPS, ce qui donnait un bouton mort. Il est maintenant alimenté par `FlightLive.fieldChoices` :
+  les terrains calculés par la sécurité quand ils existent, sinon les **huit terrains les plus proches du pack** (distance seulement). Le menu s'ouvre désormais dès l'ouverture de l'app.
+- Version 0.7.0.
+
+### Vérifié
+- Tests JVM : 5 nouveaux (108 au total) — orientation et position des trois pistes dans le GeoJSON, terrains sans piste connue ignorés,
+  pastille à deux caractères (immatriculation, numéro de concours, anonyme), rétention réduite au-delà de 60 km et trajectoire complète près du club.
+- CI verte (build 31) ; captures émulateur de l'onglet Carte (sud de la France, fiche d'un aéronef, pistes au zoom terrain).
+- Livrables : `Planneur APP/Session 7/` (APK 0.7.0, captures).
+
+### Limites / à faire
+- Trois terrains seulement ont leur piste ; la table `Runways.KNOWN` est à compléter terrain par terrain (une ligne par terrain).
+- La pastille ne porte pas le type : un planeur, un parapente et un jet se ressemblent tant qu'on n'ouvre pas la fiche.
+- Au-delà de 60 km, pas de spirale ni de pompe détectée (trois positions ne suffisent pas) — voulu.
+- Restent de la session 7 prévue : orientation de carte au choix (nord/route), zone de décision et bascule des aides au vol, vent de prévision affiché avant la première spirale.
+
+
 ## Session 6 — Sécurité en vol, mode démo, suivi & debug (17/09/2026)
 
 ### Livré

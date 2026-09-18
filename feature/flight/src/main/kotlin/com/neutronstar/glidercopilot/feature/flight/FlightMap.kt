@@ -247,7 +247,8 @@ internal fun LiveMap(
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(EMPTY_JSON)
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_CORE)?.setGeoJson(EMPTY_JSON)
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_ROUTE)?.setGeoJson(EMPTY_JSON)
-            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(thermalsJson(traffic.thermals, thermalColor))
+            // aucune aide au vol sur cet onglet : ni pompes du réseau, ni route, ni trace
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(EMPTY_JSON)
             return@SideEffect
         }
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
@@ -320,13 +321,14 @@ private fun trafficJson(list: List<TrafficMark>): String = buildString {
 }
 
 /** Pastille ronde à deux lettres de la carte des aéronefs. */
-private fun dotBitmap(size: Int = 30): Bitmap {
+private fun dotBitmap(size: Int = 42): Bitmap {
     val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val cv = android.graphics.Canvas(bmp)
+    val k = size / 42f
     val r = size / 2f
-    cv.drawCircle(r, r, r - 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.argb(235, 12, 12, 12) })
-    cv.drawCircle(r, r, r - 2f, Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.WHITE; style = Paint.Style.STROKE; strokeWidth = 2f
+    cv.drawCircle(r, r, r - 2.5f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.argb(232, 24, 30, 32) })
+    cv.drawCircle(r, r, r - 2.5f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = android.graphics.Color.WHITE; style = Paint.Style.STROKE; strokeWidth = 3.5f * k
     })
     return bmp
 }
@@ -336,9 +338,10 @@ private fun runwayBitmap(size: Int = 96): Bitmap {
     val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
     val cv = android.graphics.Canvas(bmp)
     val k = size / 96f
-    val rect = android.graphics.RectF(size / 2f - 5f * k, 10f * k, size / 2f + 5f * k, size - 10f * k)
+    val rect = android.graphics.RectF(size / 2f - 7f * k, 8f * k, size / 2f + 7f * k, size - 8f * k)
+    // liseré sombre puis bande claire : lisible sur le relief comme sur les espaces aériens
     cv.drawRoundRect(rect, 3f * k, 3f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = android.graphics.Color.BLACK; style = Paint.Style.STROKE; strokeWidth = 5f * k
+        color = android.graphics.Color.argb(220, 0, 0, 0); style = Paint.Style.STROKE; strokeWidth = 6f * k
     })
     cv.drawRoundRect(rect, 3f * k, 3f * k, Paint(Paint.ANTI_ALIAS_FLAG).apply { color = android.graphics.Color.WHITE })
     return bmp

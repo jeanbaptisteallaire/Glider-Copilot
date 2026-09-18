@@ -161,8 +161,13 @@ object MapStyle {
                 "text-size" to 9, "text-anchor" to "top", "text-offset" to listOf("literal", listOf(0, 0.6))),
             "paint" to mapOf("text-color" to p.navaid, "text-halo-color" to p.halo, "text-halo-width" to 1))
         val isAirport = listOf("all", listOf("==", listOf("get", "layer"), "airport"), listOf("!", listOf("in", listOf("get", "type"), listOf("literal", listOf(4, 7, 8)))))
+        // terrains dont la piste est dessinée : la pastille s'efface au profit de la piste (zoom 8,5)
+        val drawnRunways = listOf("literal", com.neutronstar.glidercopilot.domain.aero.Runways.KNOWN.map { it.icao })
+        val hasRunway = listOf("in", listOf("get", "icao"), drawnRunways)
         layers += mapOf("id" to "airport", "type" to "circle", "source" to "aero", "filter" to isAirport,
             "paint" to mapOf(
+                "circle-opacity" to listOf("case", hasRunway, listOf("step", listOf("zoom"), 1.0, 8.5, 0.0), 1.0),
+                "circle-stroke-opacity" to listOf("case", hasRunway, listOf("step", listOf("zoom"), 1.0, 8.5, 0.0), 1.0),
                 "circle-radius" to zoomInterp(7, 2.5, 12, 5.5),
                 "circle-color" to listOf("match", listOf("get", "type"), 1, p.airport, 6, p.background, p.airport),
                 "circle-stroke-color" to p.airport, "circle-stroke-width" to 1.5,
@@ -178,7 +183,7 @@ object MapStyle {
                 "icon-rotate" to listOf("get", "hdg"),
                 "icon-rotation-alignment" to "map",
                 "icon-allow-overlap" to true, "icon-ignore-placement" to true,
-                "icon-size" to zoomInterp(9, 0.55, 13, 1.25),
+                "icon-size" to zoomInterp(9, 0.75, 13, 2.4),
             ))
         // pompes du réseau OGN : disque coloré par la montée, opacité selon l'âge, libellé « +1,8 »
         layers += mapOf("id" to "thermals", "type" to "circle", "source" to SRC_THERMALS,
@@ -202,9 +207,9 @@ object MapStyle {
         layers += mapOf("id" to LAYER_TRAFFIC_DOTS, "type" to "symbol", "source" to SRC_TRAFFIC_DOTS,
             "layout" to mapOf(
                 "icon-image" to IMG_DOT, "icon-allow-overlap" to true, "icon-ignore-placement" to true,
-                "icon-size" to zoomInterp(6, 0.7, 11, 1.0),
+                "icon-size" to zoomInterp(5.5, 0.85, 11, 1.15),
                 "text-field" to listOf("get", "short"), "text-font" to listOf("Noto Sans Medium"),
-                "text-size" to zoomInterp(6, 9, 11, 11), "text-allow-overlap" to true, "text-ignore-placement" to true,
+                "text-size" to zoomInterp(5.5, 10, 11, 12), "text-allow-overlap" to true, "text-ignore-placement" to true,
             ),
             "paint" to mapOf(
                 "text-color" to listOf("case", listOf("get", "circling"), p.information, p.glider),

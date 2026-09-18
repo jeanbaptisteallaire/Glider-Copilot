@@ -49,7 +49,8 @@ fun TrafficMapScreen(
     modifier: Modifier = Modifier,
 ) {
     val c = Gc.colors
-    val controller = remember { MapController().apply { zoom = 7.4; shownZoom = 7.4; follow = false } }
+    // zoom d'ouverture : tout le sud de la France, soit le rayon de 250 km du filtre OGN
+    val controller = remember { MapController().apply { zoom = 6.2; shownZoom = 6.2; follow = false } }
     var selected by remember { mutableStateOf<String?>(null) }
     val chosen = traffic.aircraft.firstOrNull { it.id == selected }
 

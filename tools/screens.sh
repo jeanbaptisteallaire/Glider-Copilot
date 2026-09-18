@@ -154,7 +154,7 @@ timeout 20 adb exec-out screencap -p > "$OUT/19-carte-fiche-aeronef.png"
 P=$(tap_text "VITESSE"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }   # ferme la fiche
 # zoom sur le club : pistes de LFNL, LFMT et LFMS à leur orientation réelle
 P=$(tap_text "Zoom avant")
-if [ -n "$P" ]; then for i in 1 2 3; do timeout 10 adb shell input tap $P; sleep 3; done; fi
+if [ -n "$P" ]; then for i in 1 2 3 4; do timeout 10 adb shell input tap $P; sleep 3; done; fi
 sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/20-carte-pistes.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
