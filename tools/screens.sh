@@ -37,6 +37,13 @@ for m in re.finditer(r'<node [^>]*>',x):
             x1,y1,x2,y2=map(int,b.groups()); print((x1+x2)//2,(y1+y2)//2); break
 PY
 }
+# l'émulateur de la CI plante parfois son propre lanceur : la boîte « isn't responding » bloque tout
+dismiss_anr() {
+  for t in "Wait" "Close app" "Attendre"; do
+    P=$(tap_text "$t"); [ -n "$P" ] && { echo "boîte système écartée : $t"; timeout 10 adb shell input tap $P; sleep 3; }
+  done
+}
+dismiss_anr
 P=$(tap_text "J'ai compris"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 35
 timeout 20 adb exec-out screencap -p > "$OUT/02-prevol.png"
@@ -47,6 +54,7 @@ sleep 1
 P=$(tap_text "Valider"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 40
 timeout 20 adb exec-out screencap -p > "$OUT/03-prevol-appairage.png"
+dismiss_anr
 # carte hors ligne : téléchargement du pack de la région du club
 # le catalogue arrive par le réseau : on laisse au bouton le temps d'apparaître, sans faire défiler la page
 for t in 1 2 3 4 5 6; do
