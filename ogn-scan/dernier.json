@@ -1,0 +1,251 @@
+{
+ "utc": "2026-09-18T07:33:54Z",
+ "duree_s": 120,
+ "centre": {
+  "lat": 43.80028,
+  "lon": 3.78167
+ },
+ "rayon_km": 300,
+ "scan": {
+  "lignes": 2766,
+  "trames": 2758,
+  "erreur": null,
+  "login": "user GLIDY9042 pass -1 vers GLIDY-scan 0.6 filter r/43.8003/3.7817/300",
+  "serveur": [
+   "# aprsc 2.1.20-gf.5-g0178a1b",
+   "# logresp GLIDY9042 unverified, server GLIDERN3",
+   "# aprsc 2.1.20-gf.5-g0178a1b 18 Sep 2026 07:32:13 GMT GLIDERN3 85.188.1.173:14580",
+   "# aprsc 2.1.20-gf.5-g0178a1b 18 Sep 2026 07:32:33 GMT GLIDERN3 85.188.1.173:14580"
+  ]
+ },
+ "app": {
+  "lignes": 2,
+  "trames": 0,
+  "erreur": "OSError: cannot read from timed out object",
+  "login": "user GLIDY01234 pass -1 vers GLIDY-scan 0.6 filter r/43.8003/3.7817/100",
+  "serveur": [
+   "# aprsc 2.1.20-gf.5-g0178a1b",
+   "# Invalid username format"
+  ],
+  "aeronefs_en_vol": 0
+ },
+ "aeronefs_vus": 59,
+ "aeronefs_en_vol": 51,
+ "par_type": {
+  "avion": 23,
+  "jet": 16,
+  "parapente": 4,
+  "inconnu": 4,
+  "hélicoptère": 2,
+  "largueur": 2
+ },
+ "par_distance_km": {
+  "50": 1,
+  "100": 5,
+  "200": 24,
+  "300": 51
+ },
+ "furtifs_ou_no_tracking": 0,
+ "exemples": [
+  {
+   "type": "jet",
+   "dist_km": 47.5,
+   "alt_m": 3833,
+   "vitesse_kmh": 667,
+   "montee_ms": -9.8,
+   "trames": 13
+  },
+  {
+   "type": "avion",
+   "dist_km": 57.3,
+   "alt_m": 2494,
+   "vitesse_kmh": 176,
+   "montee_ms": -1.0,
+   "trames": 34
+  },
+  {
+   "type": "hélicoptère",
+   "dist_km": 75.8,
+   "alt_m": 2524,
+   "vitesse_kmh": 282,
+   "montee_ms": -3.3,
+   "trames": 74
+  },
+  {
+   "type": "avion",
+   "dist_km": 90.6,
+   "alt_m": 65,
+   "vitesse_kmh": 83,
+   "montee_ms": null,
+   "trames": 5
+  },
+  {
+   "type": "avion",
+   "dist_km": 92.2,
+   "alt_m": 5681,
+   "vitesse_kmh": 509,
+   "montee_ms": 0.0,
+   "trames": 27
+  },
+  {
+   "type": "inconnu",
+   "dist_km": 106.5,
+   "alt_m": 3293,
+   "vitesse_kmh": 344,
+   "montee_ms": 0.0,
+   "trames": 10
+  },
+  {
+   "type": "jet",
+   "dist_km": 117.6,
+   "alt_m": 3400,
+   "vitesse_kmh": 619,
+   "montee_ms": -9.4,
+   "trames": 51
+  },
+  {
+   "type": "avion",
+   "dist_km": 118.5,
+   "alt_m": 2203,
+   "vitesse_kmh": 307,
+   "montee_ms": 0.7,
+   "trames": 26
+  },
+  {
+   "type": "avion",
+   "dist_km": 122.0,
+   "alt_m": 4862,
+   "vitesse_kmh": 578,
+   "montee_ms": -8.1,
+   "trames": 103
+  },
+  {
+   "type": "avion",
+   "dist_km": 139.5,
+   "alt_m": 1929,
+   "vitesse_kmh": 219,
+   "montee_ms": 1.6,
+   "trames": 9
+  },
+  {
+   "type": "jet",
+   "dist_km": 141.6,
+   "alt_m": 2506,
+   "vitesse_kmh": 365,
+   "montee_ms": 5.2,
+   "trames": 1
+  },
+  {
+   "type": "jet",
+   "dist_km": 148.2,
+   "alt_m": 5545,
+   "vitesse_kmh": 693,
+   "montee_ms": 13.3,
+   "trames": 11
+  },
+  {
+   "type": "avion",
+   "dist_km": 153.8,
+   "alt_m": 617,
+   "vitesse_kmh": 157,
+   "montee_ms": -0.0,
+   "trames": 82
+  },
+  {
+   "type": "parapente",
+   "dist_km": 166.8,
+   "alt_m": null,
+   "vitesse_kmh": 143,
+   "montee_ms": null,
+   "trames": 31
+  },
+  {
+   "type": "avion",
+   "dist_km": 168.9,
+   "alt_m": 2508,
+   "vitesse_kmh": 337,
+   "montee_ms": 0.0,
+   "trames": 9
+  },
+  {
+   "type": "avion",
+   "dist_km": 173.7,
+   "alt_m": 1349,
+   "vitesse_kmh": 100,
+   "montee_ms": 0.0,
+   "trames": 120
+  },
+  {
+   "type": "avion",
+   "dist_km": 181.4,
+   "alt_m": 624,
+   "vitesse_kmh": 163,
+   "montee_ms": -0.8,
+   "trames": 36
+  },
+  {
+   "type": "jet",
+   "dist_km": 181.9,
+   "alt_m": 4939,
+   "vitesse_kmh": 704,
+   "montee_ms": -8.5,
+   "trames": 38
+  },
+  {
+   "type": "avion",
+   "dist_km": 182.4,
+   "alt_m": 4085,
+   "vitesse_kmh": 339,
+   "montee_ms": 0.0,
+   "trames": 67
+  },
+  {
+   "type": "jet",
+   "dist_km": 186.0,
+   "alt_m": 4548,
+   "vitesse_kmh": 570,
+   "montee_ms": -8.1,
+   "trames": 29
+  },
+  {
+   "type": "largueur",
+   "dist_km": 188.3,
+   "alt_m": 1356,
+   "vitesse_kmh": 178,
+   "montee_ms": 5.0,
+   "trames": 70
+  },
+  {
+   "type": "largueur",
+   "dist_km": 191.4,
+   "alt_m": 4606,
+   "vitesse_kmh": 161,
+   "montee_ms": 5.6,
+   "trames": 20
+  },
+  {
+   "type": "avion",
+   "dist_km": 191.8,
+   "alt_m": 986,
+   "vitesse_kmh": 178,
+   "montee_ms": 2.0,
+   "trames": 30
+  },
+  {
+   "type": "hélicoptère",
+   "dist_km": 197.8,
+   "alt_m": 1513,
+   "vitesse_kmh": 124,
+   "montee_ms": 11.3,
+   "trames": 1
+  },
+  {
+   "type": "avion",
+   "dist_km": 204.5,
+   "alt_m": 1360,
+   "vitesse_kmh": 196,
+   "montee_ms": 0.7,
+   "trames": 67
+  }
+ ]
+}
