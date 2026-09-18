@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.ogn.OgnDdbTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-09-18T07:41:42" hostname="runnervmlun5p" time="0.034">
+  <properties/>
+  <testcase name="parsesAndSkipsEmptyRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.0"/>
+  <testcase name="lookupRespectsTrackingChoiceAndCaches" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.01"/>
+  <testcase name="normalizesRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.0"/>
+  <testcase name="findsFlarmFirstWithTolerantKey" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.007"/>
+  <testcase name="offlineFallsBackToLastCopy" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
