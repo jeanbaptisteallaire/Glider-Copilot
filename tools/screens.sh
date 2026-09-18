@@ -166,7 +166,15 @@ for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"; do
 done
 echo "fiche aéronef ouverte en $found"
 timeout 20 adb exec-out screencap -p > "$OUT/19-carte-fiche-aeronef.png"
-P=$(tap_text "VITESSE"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }   # ferme la fiche
+# S7.1 : « Suivre » met l'aéronef au centre de Pilotage et bascule d'onglet
+P=$(tap_text "SUIVRE")
+if [ -n "$P" ]; then
+  timeout 10 adb shell input tap $P; sleep 25
+  timeout 20 adb exec-out screencap -p > "$OUT/19b-pilotage-suivi-depuis-carte.png"
+  P=$(tap_text "Carte"); [ -n "$P" ] && timeout 10 adb shell input tap $P; sleep 12
+else
+  P=$(tap_text "VITESSE"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
+fi
 # zoom sur le club : pistes de LFNL, LFMT et LFMS à leur orientation réelle
 P=$(tap_text "Zoom avant")
 if [ -n "$P" ]; then for i in 1 2 3 4; do timeout 10 adb shell input tap $P; sleep 3; done; fi

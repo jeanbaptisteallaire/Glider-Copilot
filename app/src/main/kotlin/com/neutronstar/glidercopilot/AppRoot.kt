@@ -147,7 +147,14 @@ private fun MainScaffold(container: AppContainer) {
                 Tab.PREVOL -> PrevolScreen(prevolVm, container.carto, container.ogn, container.flight)
                 Tab.CHECKLIST -> ChecklistScreen(container.checklist)
                 Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
-                Tab.CARTE -> TrafficMapScreen(map = flightMap, traffic = traffic, networkLabel = ognUi.statusLabel)
+                Tab.CARTE -> TrafficMapScreen(
+                    map = flightMap, traffic = traffic, networkLabel = ognUi.statusLabel,
+                    // « Suivre » : l'aéronef touché passe au centre de Pilotage, et l'app y bascule (V7.1)
+                    onFollow = { a ->
+                        scope.launch { container.glider.followAddress(a.id, a.fullLabel) }
+                        tab = Tab.PILOTAGE
+                    },
+                )
             }
         }
         Row(

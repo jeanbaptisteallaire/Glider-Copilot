@@ -350,7 +350,24 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                 AltValue("ALT", alt?.let { grouped(it.roundToInt()) } ?: "—")
                 AltValue("SÉCU", need?.let { grouped(it.roundToInt()) } ?: "—")
             }
-            Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
+            if (UiMask.SHOW_TREND_LINE) {
+                Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
+            }
+        }
+        // distance au terrain : deuxième information fondamentale, au centre et en grand (V7.1)
+        Column(
+            Modifier.widthIn(min = 92.dp).padding(top = 1.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text("Distance terrain", style = eyebrow(c), maxLines = 1)
+            Text(
+                distKm?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—",
+                style = TextStyle(fontSize = 21.8.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp, lineHeight = 26.sp),
+                maxLines = 1, softWrap = false,
+                modifier = Modifier.padding(top = 2.dp)
+                    .semantics { contentDescription = distKm?.let { "Distance au terrain ${km(it)}" } ?: "Distance au terrain inconnue" },
+            )
+            Text("km", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.ok))
         }
         Column(Modifier.width(155.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
@@ -386,17 +403,18 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 picker()
+                // la distance est passée au centre de l'écran (V7.1) : terrain et cap tiennent sur une ligne
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Text(if (auto) "AUTO" else "MANU", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
-                    Text(LocalFieldId.current, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink))
+                    Text(LocalFieldId.current, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
                     Spacer(Modifier.weight(1f))
+                    Text(
+                        if (distKm != null) "${brg.roundToInt()}°" else "position ?",
+                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp),
+                        maxLines = 1, softWrap = false,
+                    )
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
                 }
-                Text(
-                    distKm?.let { "${km(it)} · ${brg.roundToInt()}°" } ?: "position ?",
-                    style = TextStyle(fontSize = 16.8.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp, lineHeight = 21.sp),
-                    maxLines = 1, softWrap = false,
-                )
             }
         }
     }
@@ -423,21 +441,24 @@ private fun ReturnProfile(
     waiting: Boolean = false,
 ) {
     val c = Gc.colors
+    if (!UiMask.SHOW_PROFILE_GRAPH && !UiMask.SHOW_PROFILE_HEADER) return
     Column(Modifier.fillMaxWidth().background(c.background)) {
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
-        Row(Modifier.fillMaxWidth().height(36.dp).padding(start = 24.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text("Profil de retour au terrain", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.dim), modifier = Modifier.weight(1f))
-            Row(
-                Modifier.fillMaxHeight36().widthIn(min = 86.dp)
-                    .clickable(role = Role.Button, onClickLabel = if (open) "Réduire le profil" else "Déployer le profil", onClick = onToggle)
-                    .semantics { stateDescription = if (open) "déployé" else "réduit" }
-                    .padding(horizontal = 12.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(if (open) "Réduire" else "Déployer", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = c.ok))
-                Spacer(Modifier.width(8.dp))
-                Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
+        if (UiMask.SHOW_PROFILE_HEADER) {
+            Row(Modifier.fillMaxWidth().height(36.dp).padding(start = 24.dp), verticalAlignment = Alignment.CenterVertically) {
+                Text("Profil de retour au terrain", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.dim), modifier = Modifier.weight(1f))
+                Row(
+                    Modifier.fillMaxHeight36().widthIn(min = 86.dp)
+                        .clickable(role = Role.Button, onClickLabel = if (open) "Réduire le profil" else "Déployer le profil", onClick = onToggle)
+                        .semantics { stateDescription = if (open) "déployé" else "réduit" }
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(if (open) "Réduire" else "Déployer", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = c.ok))
+                    Spacer(Modifier.width(8.dp))
+                    Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
+                }
             }
         }
         if (open && waiting) {
@@ -446,7 +467,7 @@ private fun ReturnProfile(
                 style = TextStyle(fontSize = 11.sp, color = c.dim),
                 modifier = Modifier.fillMaxWidth().height(88.dp).padding(start = 24.dp, top = 30.dp),
             )
-        } else if (open) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
+        } else if (open && UiMask.SHOW_PROFILE_GRAPH) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
     }
 }
@@ -555,7 +576,9 @@ private fun ProfileCanvas(
         // accolade de marge
         if (known) drawLine(if (marge < 0) c.bad else c.ok, Offset(gx + 2.dp.toPx(), gy), Offset(gx + 2.dp.toPx(), y(need)), 3.dp.toPx())
         // légendes
-        label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · " + if (realRelief != null) "relief Copernicus" else "relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
+        if (UiMask.SHOW_PROFILE_CAPTION) {
+            label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · " + if (realRelief != null) "relief Copernicus" else "relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
+        }
         val bottomY = h - 8.dp.toPx()
         label(tm, "0", x(0.0), bottomY, small, TextAlign.Start)
         label(tm, km(d / 2), x(d / 2), bottomY, small, TextAlign.Center)
@@ -876,8 +899,10 @@ private fun VarioPanel(
             VarioActions(open, soundOn, onSound, onToggle)
         }
         if (open) {
-            HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.047f))
-            AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need, ceiling)
+            if (UiMask.SHOW_ALTITUDE_HISTORY) {
+                HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.047f))
+                AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need, ceiling)
+            }
         }
     }
 }

@@ -205,6 +205,7 @@ class OgnLiveRepository(
                     circling = a.circling,
                     id = a.address,
                     shortLabel = a.shortLabel,
+                    fullLabel = a.label ?: a.address.uppercase(),
                     typeLabel = a.typeLabel,
                     speedKmh = a.last.groundSpeedKmh,
                     climbMs = a.last.climbMs,

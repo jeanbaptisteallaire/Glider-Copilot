@@ -47,6 +47,27 @@ class GliderRepository(private val prefs: UserPreferences, val ddb: OgnDeviceDat
 
     override suspend fun setFollowEnabled(on: Boolean) = prefs.setFollowEnabled(on)
 
+    /**
+     * Suivi lancé depuis l'onglet Carte (V7.1) : on part de l'adresse radio vue sur la carte, pas d'une
+     * immatriculation saisie. Le refus de suivi publié dans la DDB reste respecté — un appareil qui l'a
+     * demandé n'est de toute façon jamais dans le trafic affiché.
+     * Renvoie faux si la base refuse le suivi de cet appareil.
+     */
+    suspend fun followAddress(address: String, label: String?): Boolean = withContext(Dispatchers.IO) {
+        val addr = address.uppercase()
+        val known = runCatching { ddb.cachedDevice(address) }.getOrNull()
+        if (known != null && !known.tracked) return@withContext false
+        val registration = known?.takeIf { it.identified }?.registration ?: label?.takeIf { it.contains('-') }
+        val shown = registration ?: addr
+        prefs.setFollowRegistration(shown)
+        followRegistrationValue = shown
+        _followDevices.value = listOf(
+            known ?: DdbDevice("F", addr, null, shown, null, tracked = true, identified = registration != null),
+        )
+        prefs.setFollowEnabled(true)
+        true
+    }
+
     override suspend fun follow(registration: String): PairingStatus {
         prefs.setFollowRegistration(registration)
         return currentFollowStatus(registration)

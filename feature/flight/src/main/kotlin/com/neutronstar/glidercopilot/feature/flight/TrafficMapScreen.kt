@@ -47,6 +47,8 @@ fun TrafficMapScreen(
     traffic: FlightTraffic,
     networkLabel: String,
     modifier: Modifier = Modifier,
+    /** « Suivre » : met cet aéronef au centre de Pilotage et y bascule (V7.1). */
+    onFollow: ((TrafficMark) -> Unit)? = null,
 ) {
     val c = Gc.colors
     // zoom d'ouverture : tout le sud de la France, soit le rayon de 250 km du filtre OGN
@@ -107,7 +109,11 @@ fun TrafficMapScreen(
                 )
             }
             chosen?.let { a ->
-                AircraftCard(a, map?.field, map?.fieldId) { selected = null }
+                AircraftCard(
+                    a, map?.field, map?.fieldId,
+                    onFollow = onFollow?.let { f -> { f(a); selected = null } },
+                    onClose = { selected = null },
+                )
             }
         }
     }
@@ -115,28 +121,43 @@ fun TrafficMapScreen(
 
 /** Fiche de l'aéronef touché : type, altitude, vitesse, montée, âge de la dernière trame. */
 @Composable
-private fun BoxScope.AircraftCard(a: TrafficMark, field: com.neutronstar.glidercopilot.domain.LatLon?, fieldId: String?, onClose: () -> Unit) {
+private fun BoxScope.AircraftCard(
+    a: TrafficMark,
+    field: com.neutronstar.glidercopilot.domain.LatLon?,
+    fieldId: String?,
+    onFollow: (() -> Unit)?,
+    onClose: () -> Unit,
+) {
     val c = Gc.colors
     Column(
         Modifier.align(Alignment.BottomStart).padding(start = 12.dp, end = 12.dp, bottom = 58.dp)
-            .widthIn(max = 320.dp)
+            .widthIn(max = 340.dp)
             .background(c.overlay, RoundedCornerShape(14.dp))
             .border(1.dp, c.line, RoundedCornerShape(14.dp))
-            .clickable(role = Role.Button, onClickLabel = "Fermer la fiche", onClick = onClose)
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            Box(
-                Modifier.size(30.dp).background(c.background, RoundedCornerShape(50)).border(1.dp, c.ink, RoundedCornerShape(50)),
-                contentAlignment = Alignment.Center,
-            ) { Text(a.shortLabel, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (a.circling) c.ok else c.ink)) }
-            Column {
+            Column(
+                Modifier.weight(1f).clickable(role = Role.Button, onClickLabel = "Fermer la fiche", onClick = onClose),
+            ) {
                 Text(
-                    a.label.substringBefore(' ').ifBlank { a.typeLabel },
-                    style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold, color = c.ink),
+                    a.fullLabel.ifBlank { a.label.substringBefore(' ') }.ifBlank { a.typeLabel },
+                    style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = c.ink),
+                    maxLines = 1,
                 )
                 Text(a.typeLabel + if (a.circling) " · en spirale" else "", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+            }
+            if (onFollow != null) {
+                Text(
+                    "SUIVRE",
+                    style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp, color = c.onAccent),
+                    modifier = Modifier
+                        .background(c.ok, RoundedCornerShape(9.dp))
+                        .clickable(role = Role.Button, onClickLabel = "Suivre cet aéronef dans Pilotage", onClick = onFollow)
+                        .padding(horizontal = 14.dp, vertical = 9.dp)
+                        .semantics { contentDescription = "Suivre ${a.fullLabel.ifBlank { a.typeLabel }}" },
+                )
             }
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

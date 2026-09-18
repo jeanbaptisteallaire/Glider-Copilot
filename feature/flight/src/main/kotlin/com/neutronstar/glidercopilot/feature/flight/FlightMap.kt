@@ -56,8 +56,10 @@ data class TrafficMark(
     val circling: Boolean,
     /** Adresse radio : identifiant stable pour retrouver l'aéronef touché sur la carte. */
     val id: String = "",
-    /** Deux caractères affichés dans la pastille de la carte des aéronefs. */
+    /** Deux caractères affichés dans la pastille de la carte des aéronefs (masquée depuis la V7.1). */
     val shortLabel: String = "",
+    /** Immatriculation complète (ou adresse radio à défaut), affichée à côté de la flèche sur l'onglet Carte. */
+    val fullLabel: String = "",
     val typeLabel: String = "Aéronef",
     val speedKmh: Double? = null,
     val climbMs: Double? = null,
@@ -240,8 +242,12 @@ internal fun LiveMap(
         val centering = frame.circling && controller.orientation == MapOrientation.AUTO
         controller.centering = centering
         if (trafficOnly) {
-            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC_DOTS)?.setGeoJson(trafficJson(traffic.aircraft))
-            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(EMPTY_JSON)
+            // V7.1 : même symbologie que le FLARM des calculateurs — flèche à la route, immatriculation complète.
+            // La pastille à deux caractères reste dans le code, masquée par UiMask.
+            val dots = if (UiMask.SHOW_TRAFFIC_DOTS) trafficJson(traffic.aircraft) else EMPTY_JSON
+            val arrows = if (UiMask.SHOW_TRAFFIC_DOTS) EMPTY_JSON else trafficJson(traffic.aircraft, full = true)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC_DOTS)?.setGeoJson(dots)
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(arrows)
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(EMPTY_JSON)
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(EMPTY_JSON)
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(EMPTY_JSON)
@@ -307,12 +313,14 @@ private fun esc(s: String) = s.replace("\\", "\\\\").replace("\"", "\\\"")
 
 private const val EMPTY_JSON = """{"type":"FeatureCollection","features":[]}"""
 
-private fun trafficJson(list: List<TrafficMark>): String = buildString {
+/** [full] : onglet Carte — l'étiquette porte l'immatriculation entière, sans l'écart d'altitude. */
+private fun trafficJson(list: List<TrafficMark>, full: Boolean = false): String = buildString {
     append("""{"type":"FeatureCollection","features":[""")
     list.forEachIndexed { i, a ->
         if (i > 0) append(',')
+        val label = if (full) a.fullLabel.ifBlank { a.shortLabel } else a.label
         append(
-            """{"type":"Feature","properties":{"id":"${esc(a.id)}","track":${a.trackDeg ?: 0.0},"label":"${esc(a.label)}",""" +
+            """{"type":"Feature","properties":{"id":"${esc(a.id)}","track":${a.trackDeg ?: 0.0},"label":"${esc(label)}",""" +
                 """"short":"${esc(a.shortLabel)}","climb":${a.climbMs ?: 0.0},"circling":${a.circling}},""" +
                 """"geometry":{"type":"Point","coordinates":[${a.position.lon},${a.position.lat}]}}""",
         )
