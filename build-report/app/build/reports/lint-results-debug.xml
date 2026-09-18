@@ -40,7 +40,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.application than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.application than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -56,7 +56,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.application than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.application than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -72,7 +72,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.application than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.application than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -88,7 +88,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.library than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.library than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -104,7 +104,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.library than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.library than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -120,7 +120,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of com.android.library than 8.9.1 is available: 9.4.0. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.0 is difficult: 8.9.3)"
+        message="A newer version of com.android.library than 8.9.1 is available: 9.4.1. (There is also a newer version of 8.9.𝑥 available, if upgrading to 9.4.1 is difficult: 8.9.3)"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
