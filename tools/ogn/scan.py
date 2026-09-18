@@ -110,7 +110,7 @@ def summarise(info, centre):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--seconds", type=int, default=120)
+    p.add_argument("--seconds", type=int, default=240)   # 4 min : une trame par aéronef même à faible cadence
     p.add_argument("--lat", type=float, default=43.80028)
     p.add_argument("--lon", type=float, default=3.78167)
     p.add_argument("--radius", type=int, default=300)
