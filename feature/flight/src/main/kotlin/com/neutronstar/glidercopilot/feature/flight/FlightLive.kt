@@ -28,6 +28,9 @@ data class FlightLive(
     val reliefLoaded: Boolean = false,
     /** Terrains proposés au choix (les plus proches du pack), avec marge quand la sécurité est calculée. */
     val fieldChoices: List<FieldChoice> = emptyList(),
+    /** Calibration (V7.3) : enregistrement des données brutes en cours, pour affiner le filtre baro/accél. après le vol. */
+    val calibrationOn: Boolean = false,
+    val calibrationSamples: Int = 0,
 ) {
     /** Vrai dès qu'une vraie source (baro, GPS, OGN) alimente l'écran : plus aucune valeur de démonstration. */
     val hasData: Boolean
@@ -53,6 +56,8 @@ interface FlightControls {
     fun setDemo(on: Boolean)
     /** Terrain choisi à la main, null pour revenir au choix automatique. */
     fun selectField(id: String?)
+    /** Calibration (V7.3) : capture les données brutes du téléphone pour affiner le filtre hors ligne, jamais en vol. */
+    fun setCalibration(on: Boolean)
 }
 
 fun varioSourceLabel(s: FlightSnapshot?, ognLatencyS: Double? = null): String = when (s?.source) {

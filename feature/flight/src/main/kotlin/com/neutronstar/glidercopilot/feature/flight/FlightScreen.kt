@@ -273,6 +273,8 @@ fun FlightScreen(
                 capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 1.5 || (result.distanceKm < 3.0 && result.arrivalAglM > -50 && result.relief == null) || (snap?.gps?.groundSpeedKmh ?: 99.0) < 30)) "CAP TERRAIN · ${result.field.code} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
                 demoOn = live.demo,
                 onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
+                calibrationOn = live.calibrationOn,
+                onCalibration = controls?.let { ctl -> { ctl.setCalibration(!live.calibrationOn) } },
                 nearTraffic = if (live.mode == OwnshipMode.DEMO) nearTraffic else null,
             )
         }
@@ -691,6 +693,8 @@ private fun BoxScope.MapOverlays(
     capBanner: String? = null,
     demoOn: Boolean = false,
     onDemo: (() -> Unit)? = null,
+    calibrationOn: Boolean = false,
+    onCalibration: (() -> Unit)? = null,
     nearTraffic: Int? = null,
 ) {
     val c = Gc.colors
@@ -702,16 +706,31 @@ private fun BoxScope.MapOverlays(
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 60.dp).background(c.bad, RoundedCornerShape(9.dp)).padding(horizontal = 12.dp, vertical = 7.dp)
             .semantics { contentDescription = capBanner },
     )
-    // bascule discrète du mode démo (coin haut droit)
-    if (onDemo != null) Text(
-        if (demoOn) "DÉMO" else "démo",
-        style = TextStyle(fontSize = 9.sp, fontWeight = if (demoOn) FontWeight.Bold else FontWeight.Medium, color = if (demoOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
-        modifier = Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 12.dp)
-            .background(if (demoOn) c.warn else c.overlay, RoundedCornerShape(50))
-            .clickable(role = Role.Switch, onClickLabel = if (demoOn) "Quitter le mode démo" else "Mode démo") { onDemo() }
-            .padding(horizontal = 9.dp, vertical = 6.dp)
-            .semantics { contentDescription = "Mode démo"; stateDescription = if (demoOn) "activé" else "désactivé" },
-    )
+    // bascules discrètes calibration + mode démo (coin haut droit)
+    if (onDemo != null || onCalibration != null) Row(
+        Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        // V7.3 (demande JB) : enregistrement des données brutes baro/accél./GPS, pour affiner le filtre après le vol
+        if (onCalibration != null) Text(
+            if (calibrationOn) "● CALIB" else "calib",
+            style = TextStyle(fontSize = 9.sp, fontWeight = if (calibrationOn) FontWeight.Bold else FontWeight.Medium, color = if (calibrationOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
+            modifier = Modifier
+                .background(if (calibrationOn) c.danger else c.overlay, RoundedCornerShape(50))
+                .clickable(role = Role.Switch, onClickLabel = if (calibrationOn) "Arrêter l'enregistrement de calibration" else "Enregistrer les données brutes des capteurs pour calibration") { onCalibration() }
+                .padding(horizontal = 9.dp, vertical = 6.dp)
+                .semantics { contentDescription = "Mode calibration"; stateDescription = if (calibrationOn) "enregistrement en cours" else "arrêté" },
+        )
+        if (onDemo != null) Text(
+            if (demoOn) "DÉMO" else "démo",
+            style = TextStyle(fontSize = 9.sp, fontWeight = if (demoOn) FontWeight.Bold else FontWeight.Medium, color = if (demoOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
+            modifier = Modifier
+                .background(if (demoOn) c.warn else c.overlay, RoundedCornerShape(50))
+                .clickable(role = Role.Switch, onClickLabel = if (demoOn) "Quitter le mode démo" else "Mode démo") { onDemo() }
+                .padding(horizontal = 9.dp, vertical = 6.dp)
+                .semantics { contentDescription = "Mode démo"; stateDescription = if (demoOn) "activé" else "désactivé" },
+        )
+    }
     // origine de la position affichée (démonstration, rejeu, secours)
     if (tag != null) Text(
         tag,

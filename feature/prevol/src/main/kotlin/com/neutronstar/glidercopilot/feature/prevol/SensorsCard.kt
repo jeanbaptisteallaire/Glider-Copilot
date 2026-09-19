@@ -58,6 +58,8 @@ data class SensorsUi(
     val voiceOn: Boolean = true,
     val testing: Boolean = false,
     val flights: List<IgcFileUi> = emptyList(),
+    /** Journaux de calibration (V7.3) : données brutes baro/accél./GPS d'un vol d'essai, à transmettre pour affiner le filtre. */
+    val calibrations: List<IgcFileUi> = emptyList(),
 )
 
 /** Carte « Capteurs & vols » : qualité du baromètre, accéléromètre et GPS, essais son et voix, traces IGC. */
@@ -114,6 +116,27 @@ internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
                     modifier = Modifier.clickable(role = Role.Button, onClickLabel = "Partager ${f.name}") { source.share(f) }.padding(horizontal = 10.dp, vertical = 10.dp),
                 )
             }
+        }
+        if (ui.calibrations.isNotEmpty()) {
+            Text("Journaux de calibration", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink), modifier = Modifier.padding(top = 4.dp))
+            ui.calibrations.take(5).forEach { f ->
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Column(Modifier.weight(1f)) {
+                        Text(f.name, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium, color = c.ink), maxLines = 1)
+                        Text(f.detail, style = TextStyle(fontSize = 10.5.sp, color = c.dim), maxLines = 1)
+                    }
+                    Text(
+                        "Partager",
+                        style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = c.ok),
+                        modifier = Modifier.clickable(role = Role.Button, onClickLabel = "Partager ${f.name}") { source.share(f) }.padding(horizontal = 10.dp, vertical = 10.dp),
+                    )
+                }
+            }
+            Text(
+                "Enregistrés depuis la bascule « calib » de Pilotage : baromètre, accélération verticale et GPS bruts, " +
+                    "à transmettre après un vol d'essai pour affiner le filtre du vario — jamais utilisés en vol.",
+                style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+            )
         }
         Text(
             "Vario : filtre de Kalman baromètre + accéléromètre ; sans baromètre, montée OGN de mon planeur en secours (retard de plusieurs secondes). " +

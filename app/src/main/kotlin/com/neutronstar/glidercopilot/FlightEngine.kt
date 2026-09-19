@@ -33,6 +33,7 @@ import com.neutronstar.glidercopilot.domain.safety.SafetyEngine
 import com.neutronstar.glidercopilot.domain.safety.SafetyState
 import com.neutronstar.glidercopilot.feature.flight.OwnshipMode
 import com.neutronstar.glidercopilot.ogn.OgnFix
+import com.neutronstar.glidercopilot.domain.flight.CalibrationRecorder
 import com.neutronstar.glidercopilot.domain.flight.FlightEngineCore
 import com.neutronstar.glidercopilot.domain.flight.FlightPhase
 import com.neutronstar.glidercopilot.domain.flight.FlightSnapshot
@@ -53,6 +54,7 @@ import com.neutronstar.glidercopilot.feature.prevol.IgcFileUi
 import com.neutronstar.glidercopilot.feature.prevol.SensorsSource
 import com.neutronstar.glidercopilot.feature.prevol.SensorsUi
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.android.asCoroutineDispatcher
@@ -62,13 +64,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedWriter
 import java.io.File
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.zip.GZIPOutputStream
 import kotlin.math.roundToInt
 
 /**
@@ -114,6 +119,16 @@ class FlightEngine(
     private var igcWriter: BufferedWriter? = null
     private var igcFile: File? = null
     private var flights: List<IgcFileUi> = emptyList()
+
+    // ---------------------------------------------------------------- calibration (V7.3, demande JB)
+    // Bascule manuelle, indépendante du vol détecté : capture les échantillons bruts (baro, accélération
+    // verticale déjà projetée, GPS) qui alimentent le filtre en direct, pour un réglage hors ligne après
+    // le vol — jamais en vol. Uniquement en mode téléphone (PHONE) : démo/rejeu/suivi n'ont pas de vrais capteurs.
+    @Volatile private var calibrationOn = false
+    private var calibWriter: BufferedWriter? = null
+    private var calibFile: File? = null
+    private var calibRecorder: CalibrationRecorder? = null
+    private var calibrations: List<IgcFileUi> = emptyList()
 
     // horloge : monotone réelle, ou virtuelle (accélérée) pendant le rejeu
     private var replayStartElapsed = 0L
@@ -202,6 +217,7 @@ class FlightEngine(
         scope.launch { prefs.followEnabled.collect { on -> if (on != followOn) { followOn = on; restartForMode() } } }
         scope.launch { loadForecast() }
         scope.launch { refreshFlights() }
+        scope.launch { refreshCalibrations() }
     }
 
     @Volatile private var club: com.neutronstar.glidercopilot.domain.Club? = null
@@ -252,6 +268,8 @@ class FlightEngine(
             OwnshipMode.PHONE -> {
                 registerSensors()
                 registerGps()
+                // reprise d'un enregistrement de calibration resté armé après un arrêt/relance du moteur
+                if (calibrationOn && calibWriter == null) openCalibration(clockNow())
                 jobs += scope.launch { ogn.traffic.collect { t -> t.own?.let { core.onOgn(it.climbMs, it.altitudeM, it.ageS + (it.latencyS ?: 0.0).roundToInt()) } ?: core.onOgn(null, null, Long.MAX_VALUE) } }
             }
         }
@@ -272,6 +290,7 @@ class FlightEngine(
         runCatching { locationManager?.removeNmeaListener(nmeaListener) }
         tone.stop()
         closeIgc()
+        closeCalibration()
         publish()
     }
 
@@ -307,8 +326,10 @@ class FlightEngine(
             val ns = sensorNs(e)
             when (e.sensor.type) {
                 Sensor.TYPE_PRESSURE -> {
-                    core.onBaro(e.values[0].toDouble(), ns)
+                    val hPa = e.values[0].toDouble()
+                    core.onBaro(hPa, ns)
                     if (core.source(ns) != VarioSource.OGN) tone.vario = core.fastClimb
+                    calibRecorder?.onBaro(hPa, ns)
                 }
                 Sensor.TYPE_GRAVITY -> gravity = doubleArrayOf(e.values[0].toDouble(), e.values[1].toDouble(), e.values[2].toDouble())
                 Sensor.TYPE_ACCELEROMETER -> {
@@ -318,7 +339,10 @@ class FlightEngine(
                         val k = 0.02
                         gravity = doubleArrayOf(gravity[0] + k * (ax - gravity[0]), gravity[1] + k * (ay - gravity[1]), gravity[2] + k * (az - gravity[2]))
                     }
-                    VerticalAcceleration.compute(ax, ay, az, gravity[0], gravity[1], gravity[2])?.let { core.onAcceleration(it, ns) }
+                    VerticalAcceleration.compute(ax, ay, az, gravity[0], gravity[1], gravity[2])?.let {
+                        core.onAcceleration(it, ns)
+                        calibRecorder?.onAccel(it, ns)
+                    }
                 }
             }
         }
@@ -376,6 +400,7 @@ class FlightEngine(
             ellipsoidAltM = if (l.hasAltitude()) l.altitude else null,
         )
         core.onGps(fix, ns)
+        calibRecorder?.onGps(fix, ns)
         afterGps(fix, ns)
     }
 
@@ -525,6 +550,62 @@ class FlightEngine(
         publish()
     }
 
+    // ---------------------------------------------------------------- calibration
+
+    private fun calibDir(): File = File(context.getExternalFilesDir(null) ?: context.filesDir, "calib").apply { mkdirs() }
+
+    private val calibNameFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss").withZone(ZoneOffset.UTC)
+
+    private fun openCalibration(start: Instant) {
+        closeCalibration()
+        val file = File(calibDir(), "calib-${calibNameFormat.format(start)}.csv")
+        val w = runCatching { file.bufferedWriter(Charsets.US_ASCII) }.getOrElse { Log.w(TAG, "calibration impossible", it); return }
+        calibWriter = w; calibFile = file
+        calibRecorder = CalibrationRecorder { line -> runCatching { w.write(line); w.write("\n") } }
+        scope.launch { refreshCalibrations() }
+    }
+
+    /** Ferme le fichier en cours et le compresse (gzip) pour rester léger à transmettre ; le brut est gardé si ça échoue. */
+    private fun closeCalibration() {
+        val w = calibWriter; val f = calibFile
+        calibWriter = null; calibFile = null; calibRecorder = null
+        if (w == null || f == null) return
+        runCatching { w.close() }
+        scope.launch {
+            runCatching {
+                withContext(Dispatchers.IO) {
+                    val gz = File(f.parentFile, f.name + ".gz")
+                    GZIPOutputStream(gz.outputStream()).use { out -> f.inputStream().use { it.copyTo(out) } }
+                    f.delete()
+                }
+            }.onFailure { Log.w(TAG, "compression calibration", it) }
+            refreshCalibrations()
+        }
+    }
+
+    private fun refreshCalibrations() {
+        val files = calibDir().listFiles { f -> f.name.endsWith(".csv") || f.name.endsWith(".csv.gz") }?.toList() ?: emptyList()
+        calibrations = files.sortedByDescending { it.name }.take(10).map { f ->
+            val stem = f.name.removePrefix("calib-").removeSuffix(".gz").removeSuffix(".csv")
+            val whenLabel = stem.takeIf { it.length == 17 }
+                ?.let { "${it.substring(8, 10)}/${it.substring(5, 7)} ${it.substring(11, 13)}h${it.substring(13, 15)}" }
+            val kb = f.length() / 1024.0
+            val size = if (kb > 1024) String.format(Locale.FRANCE, "%.1f Mo", kb / 1024) else "${kb.roundToInt()} Ko"
+            val detail = listOfNotNull(whenLabel, size, if (f.name.endsWith(".csv")) "en cours" else null).joinToString(" · ")
+            IgcFileUi(f.name, detail, f.absolutePath)
+        }
+        publish()
+    }
+
+    override fun setCalibration(on: Boolean) {
+        handler.post {
+            if (on == calibrationOn) return@post
+            calibrationOn = on
+            if (on) openCalibration(clockNow()) else closeCalibration()
+            publish()
+        }
+    }
+
     override fun share(file: IgcFileUi) {
         val f = File(file.path)
         val uri = runCatching { FileProvider.getUriForFile(context, "${context.packageName}.files", f) }.getOrNull() ?: return
@@ -607,6 +688,8 @@ class FlightEngine(
         if (running && mode == OwnshipMode.FOLLOW) lastFollow?.let { f ->
             core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time, Instant.now()).seconds.coerceAtLeast(0))
         }
+        // vidage périodique (4 Hz, ce même tour de boucle) plutôt qu'à chaque échantillon : baro+accél. tournent jusqu'à 75 Hz
+        runCatching { calibWriter?.flush() }
         _live.value = FlightLive(
             snapshot = snap,
             replay = replay,
@@ -619,6 +702,8 @@ class FlightEngine(
             followLabel = if (mode == OwnshipMode.FOLLOW) glider.followRegistrationValue else null,
             fieldChoices = fieldChoices(snap),
             reliefLoaded = terrain !== Terrain.NONE,
+            calibrationOn = calibrationOn,
+            calibrationSamples = calibRecorder?.samples ?: 0,
         )
         val ognDelay = ogn.traffic.value.own?.let { (it.latencyS ?: 0.0) + it.ageS }
         _sensors.value = SensorsUi(
@@ -650,6 +735,7 @@ class FlightEngine(
             voiceOn = voiceOn,
             testing = testing,
             flights = flights,
+            calibrations = calibrations,
         )
     }
 

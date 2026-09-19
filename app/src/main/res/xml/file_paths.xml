@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Traces IGC partagées depuis Prévol (dossier privé de l'app, aucune permission de stockage). -->
+<!-- Traces IGC et journaux de calibration (V7.3) partagés depuis Prévol (dossier privé de l'app, aucune permission de stockage). -->
 <paths>
     <external-files-path name="igc" path="igc/" />
     <external-files-path name="igc-rejeu" path="igc-rejeu/" />
+    <external-files-path name="calib" path="calib/" />
     <files-path name="igc-interne" path="igc/" />
     <files-path name="igc-rejeu-interne" path="igc-rejeu/" />
+    <files-path name="calib-interne" path="calib/" />
 </paths>
