@@ -3,6 +3,7 @@ package com.neutronstar.glidercopilot.domain
 import com.neutronstar.glidercopilot.domain.flight.CalibrationLog
 import com.neutronstar.glidercopilot.domain.flight.CalibrationRecorder
 import com.neutronstar.glidercopilot.domain.flight.GpsFix
+import com.neutronstar.glidercopilot.domain.flight.Isa
 import com.neutronstar.glidercopilot.domain.flight.SensorSample
 import com.neutronstar.glidercopilot.domain.flight.VarioFilter
 import org.junit.Assert.assertEquals
@@ -35,10 +36,10 @@ class CalibrationLogTest {
         assertEquals(fixFull.time, parsed.fix.time)
         assertEquals(fixFull.position.lat, parsed.fix.position.lat, 1e-9)
         assertEquals(fixFull.position.lon, parsed.fix.position.lon, 1e-9)
-        assertEquals(fixFull.altitudeM, parsed.fix.altitudeM!!, 1e-9)
-        assertEquals(fixFull.groundSpeedKmh, parsed.fix.groundSpeedKmh!!, 1e-9)
-        assertEquals(fixFull.trackDeg, parsed.fix.trackDeg!!, 1e-9)
-        assertEquals(fixFull.accuracyM, parsed.fix.accuracyM!!, 1e-9)
+        assertEquals(fixFull.altitudeM!!, parsed.fix.altitudeM!!, 1e-9)
+        assertEquals(fixFull.groundSpeedKmh!!, parsed.fix.groundSpeedKmh!!, 1e-9)
+        assertEquals(fixFull.trackDeg!!, parsed.fix.trackDeg!!, 1e-9)
+        assertEquals(fixFull.accuracyM!!, parsed.fix.accuracyM!!, 1e-9)
     }
 
     @Test fun gpsRoundTripWithMissingOptionalFields() {
@@ -75,8 +76,9 @@ class CalibrationLogTest {
         val direct = VarioFilter()
         var t = 0L
         repeat(50) { i ->
+            // le journal garde la pression brute (comme le vrai capteur) ; le filtre veut une altitude
             val hPa = 1000.0 - i * 0.02
-            direct.onBaro(hPa, t); rec.onBaro(hPa, t)
+            direct.onBaroAltitude(Isa.pressureAltitude(hPa), t); rec.onBaro(hPa, t)
             t += 40_000_000L
             val a = if (i % 2 == 0) 0.3 else -0.1
             direct.onAcceleration(a, t); rec.onAccel(a, t)
@@ -85,7 +87,7 @@ class CalibrationLogTest {
         val replay = VarioFilter()
         for (s in CalibrationLog.parse(lines.joinToString("\n"))) {
             when (s) {
-                is SensorSample.Baro -> replay.onBaro(s.hPa, s.timeNs)
+                is SensorSample.Baro -> replay.onBaroAltitude(Isa.pressureAltitude(s.hPa), s.timeNs)
                 is SensorSample.Accel -> replay.onAcceleration(s.upMs2, s.timeNs)
                 is SensorSample.Gps -> Unit
             }
