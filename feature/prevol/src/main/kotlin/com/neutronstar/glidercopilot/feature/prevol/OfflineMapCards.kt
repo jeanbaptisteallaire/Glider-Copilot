@@ -21,12 +21,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcPill
+import com.neutronstar.glidercopilot.domain.Club
 import com.neutronstar.glidercopilot.domain.aero.AirspaceFamily
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -129,6 +131,33 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
         Text(
             "openAIP" + (ui.aeroFetched?.let { " · données du ${DAY.format(it)}" } ?: "") + " · niveaux de vol en atmosphère standard. Vérifier SUP AIP et NOTAM avant le vol.",
             style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.faint),
+        )
+    }
+}
+
+/**
+ * NOTAM du club (V7.2) : l'app n'interroge aucun flux NOTAM elle-même (aucune fonction de sécurité
+ * ne doit dépendre du réseau) — cette carte donne un accès direct au site officiel DGAC pour le
+ * terrain du club, seule source à jour et faisant foi avant le vol.
+ */
+@Composable
+internal fun NotamCard(club: Club?) {
+    val c = Gc.colors
+    val uriHandler = LocalUriHandler.current
+    GcCard(title = "NOTAM") {
+        Text(
+            club?.airfieldIcao?.let { "Terrain du club : ${club.displayName} ($it)" }
+                ?: (club?.let { "Terrain du club : ${it.displayName}, code OACI inconnu" } ?: "Choisissez votre club pour préparer la recherche NOTAM."),
+            style = TextStyle(fontSize = 12.sp, color = c.dim),
+        )
+        Text(
+            "Les NOTAM ne sont pas rechargés dans l'app : consultez toujours la source officielle avant le vol.",
+            style = TextStyle(fontSize = 10.5.sp, lineHeight = 14.sp, color = c.faint),
+        )
+        GcButton(
+            "Consulter les NOTAM (SOFIA-Briefing, DGAC)",
+            onClick = { uriHandler.openUri("https://sofia-briefing.aviation-civile.gouv.fr/sofia/pages/notamsearchaero.html") },
+            primary = true,
         )
     }
 }

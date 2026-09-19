@@ -107,6 +107,7 @@ fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSou
                 }
             }
             item { AirspacesCard(map) }
+            item { NotamCard(state.club) }
         }
     }
     if (picking) {

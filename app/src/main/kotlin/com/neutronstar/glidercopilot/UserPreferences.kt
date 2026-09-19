@@ -29,6 +29,8 @@ interface UserPreferences {
     val voiceAnnouncements: Flow<Boolean>
     val followEnabled: Flow<Boolean>
     val followRegistration: Flow<String?>
+    /** Mode clair (V7.2) : s'applique à Prévol, Check-lists et Carte. Pilotage reste noir, toujours. */
+    val lightMode: Flow<Boolean>
     suspend fun acknowledgeDisclaimer(version: Int)
     suspend fun setSelectedClub(id: String)
     suspend fun pushRegistration(registration: String)
@@ -42,6 +44,7 @@ interface UserPreferences {
     suspend fun setVoiceAnnouncements(on: Boolean)
     suspend fun setFollowEnabled(on: Boolean)
     suspend fun setFollowRegistration(registration: String)
+    suspend fun setLightMode(on: Boolean)
 }
 
 class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPreferences {
@@ -61,6 +64,7 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kVoice = booleanPreferencesKey("voice_announcements")
     private val kFollow = booleanPreferencesKey("follow_enabled")
     private val kFollowReg = stringPreferencesKey("follow_registration")
+    private val kLightMode = booleanPreferencesKey("light_mode")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
@@ -78,6 +82,7 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val voiceAnnouncements: Flow<Boolean> = store.data.map { it[kVoice] ?: true }
     override val followEnabled: Flow<Boolean> = store.data.map { it[kFollow] ?: false }
     override val followRegistration: Flow<String?> = store.data.map { it[kFollowReg] }
+    override val lightMode: Flow<Boolean> = store.data.map { it[kLightMode] ?: false }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }
@@ -115,4 +120,5 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override suspend fun setVoiceAnnouncements(on: Boolean) { store.edit { it[kVoice] = on } }
     override suspend fun setFollowEnabled(on: Boolean) { store.edit { it[kFollow] = on } }
     override suspend fun setFollowRegistration(registration: String) { store.edit { it[kFollowReg] = registration } }
+    override suspend fun setLightMode(on: Boolean) { store.edit { it[kLightMode] = on } }
 }

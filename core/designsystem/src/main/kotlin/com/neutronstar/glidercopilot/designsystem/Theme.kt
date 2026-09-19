@@ -3,6 +3,7 @@ package com.neutronstar.glidercopilot.designsystem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -48,6 +49,8 @@ data class GcColors(
     val danger: Color,
     val onAccent: Color,
     val route: Color,
+    /** Mauve aéronautique (V7.2) : cap et vecteur de retour au terrain, jamais utilisé ailleurs. */
+    val heading: Color,
     val air: Color,
     val finesseIdle: Color,
     val statusOn: Color,
@@ -86,6 +89,7 @@ val GlidyColors = GcColors(
     danger = Color(0xFFFF8078),
     onAccent = Color(0xFF061008),
     route = Color(0xFFB7F7A5),
+    heading = Color(0xFFC77DFF),
     air = Color(0xFF69C8FF),
     finesseIdle = Color(0xFFC1D3BB),
     statusOn = Color(0xFF68E37F),
@@ -104,6 +108,55 @@ val GlidyColors = GcColors(
         3.5 to Color(0xFFFF8078),
     ),
     windLayer = Color(0xFFB7F7A5),
+)
+
+/*
+ * Mode clair (V7.2) — Prévol, Check-lists et Carte uniquement ; Pilotage reste noir, obligatoire (demande JB).
+ * Fond gris/blanc doux, texte quasi noir, style « Apple » (cf. system gray palette iOS).
+ */
+val GlidyLightColors = GcColors(
+    background = Color(0xFFF2F2F7),
+    panel = Color(0xFFFFFFFF),
+    control = Color(0xFFEDEDF2),
+    controlOn = Color(0xFFE0E0E8),
+    line = Color(0xFFD8D8DE),
+    lineSoft = Color(0xFFE4E4EA),
+    lineFaint = Color(0xFFEDEDF2),
+    sunken = Color(0xFFF7F7FA),
+    sunkenField = Color(0xFFFFFFFF),
+    sunkenPlan = Color(0xFFF0F0F5),
+    inkSoft = Color(0xFF1C1C1E),
+    planText = Color(0xFF3A3A3C),
+    inputLine = Color(0xFFC7C7CC),
+    ink = Color(0xFF1C1C1E),
+    dim = Color(0xFF6E6E73),
+    faint = Color(0xFF8E8E93),
+    cardTitle = Color(0xFF3A3A3C),
+    ok = Color(0xFF2E9E44),
+    warn = Color(0xFFE07E00),
+    bad = Color(0xFFE07E00),
+    danger = Color(0xFFE0342A),
+    onAccent = Color(0xFFFFFFFF),
+    route = Color(0xFF2E9E44),
+    heading = Color(0xFF8A3FFC),
+    air = Color(0xFF0A6ED8),
+    finesseIdle = Color(0xFF8E8E93),
+    statusOn = Color(0xFF2E9E44),
+    statusOff = Color(0xFFE0342A),
+    overlay = Color(0xE6FFFFFF),
+    terrainTop = Color(0xFFBFE3C4),
+    terrainBottom = Color(0xFF8FCB98),
+    mapLow = Color(0xFFEDEDF2),
+    mapHigh = Color(0xFFFAFAFC),
+    varioStops = listOf(
+        -3.0 to Color(0xFF2D7043),
+        -1.0 to Color(0xFF7DC77E),
+        0.0 to Color(0xFFBEBEBE),
+        0.6 to Color(0xFFFFBD70),
+        1.8 to Color(0xFFFF9130),
+        3.5 to Color(0xFFFF8078),
+    ),
+    windLayer = Color(0xFF2E9E44),
 )
 
 /** Couleur interpolée sur l'échelle vario de la charte. */
@@ -183,5 +236,30 @@ fun GlidyTheme(content: @Composable () -> Unit) {
     )
     CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c)) {
         MaterialTheme(colorScheme = scheme, typography = typography, content = content)
+    }
+}
+
+/**
+ * Sous-thème appliqué à une partie de l'écran (V7.2 : Prévol, Check-lists, Carte — jamais Pilotage,
+ * qui reste noir). [light] bascule vers [GlidyLightColors] ; sinon la charte sombre habituelle.
+ */
+@Composable
+fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
+    val c = if (light) GlidyLightColors else GlidyColors
+    val scheme = if (light) {
+        lightColorScheme(
+            primary = c.ok, onPrimary = c.onAccent, secondary = c.route, tertiary = c.air,
+            background = c.background, onBackground = c.ink, surface = c.panel, onSurface = c.ink,
+            surfaceVariant = c.control, onSurfaceVariant = c.dim, outline = c.line, error = c.bad,
+        )
+    } else {
+        darkColorScheme(
+            primary = c.ok, onPrimary = c.onAccent, secondary = c.route, tertiary = c.air,
+            background = c.background, onBackground = c.ink, surface = c.control, onSurface = c.ink,
+            surfaceVariant = c.control, onSurfaceVariant = c.dim, outline = c.line, error = c.bad,
+        )
+    }
+    CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c)) {
+        MaterialTheme(colorScheme = scheme, content = content)
     }
 }

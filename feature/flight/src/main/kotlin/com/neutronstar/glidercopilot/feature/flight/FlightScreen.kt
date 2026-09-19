@@ -366,12 +366,13 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
             Text("Distance", style = eyebrow(c), maxLines = 1)
             Text(
                 distKm?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—",
-                style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-1.2).sp, lineHeight = 38.sp),
+                // V7.2 : blanc, charte aéronautique (le vert reste réservé à la marge de sécurité)
+                style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, color = c.ink, letterSpacing = (-1.2).sp, lineHeight = 38.sp),
                 maxLines = 1, softWrap = false,
                 modifier = Modifier.padding(top = 2.dp)
                     .semantics { contentDescription = distKm?.let { "Distance au terrain ${km(it)}" } ?: "Distance au terrain inconnue" },
             )
-            Text("km", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = c.ok))
+            Text("km", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = c.ink))
         }
         Column(Modifier.width(128.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
@@ -414,7 +415,8 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                     Spacer(Modifier.weight(1f))
                     Text(
                         if (distKm != null) "${brg.roundToInt()}°" else "position ?",
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.ok, letterSpacing = (-0.3).sp),
+                        // V7.2 : cap en mauve, charte aéronautique
+                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.heading, letterSpacing = (-0.3).sp),
                         maxLines = 1, softWrap = false,
                     )
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
@@ -729,12 +731,19 @@ private fun BoxScope.MapOverlays(
                 .padding(horizontal = 8.dp, vertical = 5.dp),
         )
     }
-    // orientation
+    // recentrage
     RoundTool(
         if (controller.follow) "AUTO" else "LIBRE",
         Modifier.align(Alignment.TopStart).padding(start = 13.dp, top = 10.dp),
         if (controller.follow) "Carte centrée sur le planeur" else "Recentrer la carte sur le planeur",
         onClick = controller::recenter,
+    )
+    // orientation de la carte : AUTO (nord en spirale, route sinon) · N↑ (nord fixe) · RTE (route au nez, jamais nord)
+    RoundTool(
+        controller.orientationLabel,
+        Modifier.align(Alignment.TopStart).padding(start = 61.dp, top = 10.dp),
+        "Orientation de la carte : ${controller.orientationLabel}",
+        onClick = controller::cycleOrientation,
     )
     // vent
     Column(
