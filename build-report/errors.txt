@@ -1,18 +1,2 @@
-> Task :core:domain:compileTestKotlin FAILED
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:38:22 Argument type mismatch: actual type is 'Double?', but 'Double' was expected.
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:39:22 Argument type mismatch: actual type is 'Double?', but 'Double' was expected.
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:40:22 Argument type mismatch: actual type is 'Double?', but 'Double' was expected.
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:41:22 Argument type mismatch: actual type is 'Double?', but 'Double' was expected.
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:79:20 Unresolved reference 'onBaro'.
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/core/domain/src/test/kotlin/com/neutronstar/glidercopilot/domain/CalibrationLogTest.kt:88:48 Unresolved reference 'onBaro'.
-
-> Task :feature:checklist:compileDebugKotlin
-> Task :data:ogn:compileKotlin
---
-* What went wrong:
-Execution failed for task ':core:domain:compileTestKotlin'.
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
---
-BUILD FAILED in 45s
-221 actionable tasks: 105 executed, 116 from cache
+BUILD SUCCESSFUL in 1m 40s
+335 actionable tasks: 206 executed, 129 from cache
