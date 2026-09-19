@@ -12,8 +12,8 @@ android {
         applicationId = "com.neutronstar.glidy.flights"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.2.0-phase2"
+        versionCode = 3
+        versionName = "0.3.0-phase3"
     }
 
     buildTypes {

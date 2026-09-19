@@ -1,4 +1,4 @@
-# Proposition d'interface — phase 2
+# Proposition d'interface — phases 2 et 3
 
 ## Direction retenue
 
@@ -9,14 +9,17 @@ L'interface utilise une palette blanche, gris clair, graphite et noir. Elle évi
 1. La page **Mes vols** présente une synthèse locale et les vols récents.
 2. Chaque carte montre la date, le lieu, le planeur, la durée, la distance, l'altitude maximale et le dénivelé.
 3. Un appui ouvre le **détail du vol** avec aperçu de trace, profil d'altitude et données du fichier.
-4. Les boutons d'import IGC et de rejeu 3D sont visibles mais désactivés. Ils indiquent les étapes futures sans simuler une fonction qui n'existe pas encore.
+4. Le bouton d'import IGC ouvre le sélecteur de documents Android et archive réellement la trace choisie.
+5. Le bouton de rejeu 3D reste désactivé jusqu'à la phase dédiée.
 
-Les données affichées dans cette phase sont des exemples de démonstration. Le branchement aux véritables résumés IGC arrivera avec l'archive locale.
+Les valeurs, la trace et le profil d'altitude affichés en phase 3 proviennent du fichier IGC importé. Les données de démonstration de la phase 2 ont été retirées.
 
 ## Captures validées sur Android
 
 - `ui-phase2-mes-vols.png`
 - `ui-phase2-detail-vol.png`
+- `ui-phase3-imported-flight.png`
+- `ui-phase3-flight-detail.png`
 
 ## Principes d'intégration
 

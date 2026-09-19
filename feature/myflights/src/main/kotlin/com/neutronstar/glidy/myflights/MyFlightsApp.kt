@@ -1,5 +1,10 @@
 package com.neutronstar.glidy.myflights
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,15 +30,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,10 +50,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.neutronstar.glidy.flightarchive.ArchivedFlight
+import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
+import com.neutronstar.glidy.flightarchive.GeoPoint
+import com.neutronstar.glidy.flightarchive.IgcParseError
+import com.neutronstar.glidy.flightarchive.ImportIgcResult
+import java.time.Duration
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import kotlinx.coroutines.launch
 
 private val Ink = Color(0xFF141414)
 private val Graphite = Color(0xFF55575B)
@@ -80,26 +99,71 @@ data class FlightCardUi(
     val pointCount: String,
     val route: List<Pair<Float, Float>>,
     val altitudes: List<Float>,
+    val durationSeconds: Long,
+    val distanceMeters: Long?,
 )
 
 @Composable
-fun MyFlightsApp() {
-    var selectedFlight by remember { mutableStateOf<FlightCardUi?>(null) }
+fun MyFlightsApp(repository: FlightArchiveRepository) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var archivedFlights by remember { mutableStateOf<List<ArchivedFlight>?>(null) }
+    var selectedFlightId by remember { mutableStateOf<String?>(null) }
+    var notice by remember { mutableStateOf<String?>(null) }
+
+    suspend fun refresh() {
+        repository.reconcile()
+        archivedFlights = repository.listFlights()
+    }
+
+    LaunchedEffect(repository) { refresh() }
+
+    val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) {
+            scope.launch {
+                val fileName = context.displayName(uri) ?: "vol-importe.igc"
+                val result = context.contentResolver.openInputStream(uri)?.use { source ->
+                    repository.importIgc(fileName, source)
+                } ?: ImportIgcResult.Failed("Le fichier ne peut pas être ouvert")
+                notice = result.userMessage()
+                archivedFlights = repository.listFlights()
+            }
+        }
+    }
+
+    val flights = archivedFlights?.map(ArchivedFlight::toCardUi).orEmpty()
+    val selectedFlight = flights.firstOrNull { it.id == selectedFlightId }
     MaterialTheme(colorScheme = GlidyLightColors) {
         Surface(modifier = Modifier.fillMaxSize(), color = White) {
-            selectedFlight?.let { flight ->
-                FlightDetailScreen(flight = flight, onBack = { selectedFlight = null })
-            } ?: FlightsListScreen(
-                flights = sampleFlights,
-                onFlightSelected = { selectedFlight = it },
-            )
+            when {
+                selectedFlight != null -> FlightDetailScreen(
+                    flight = selectedFlight,
+                    onBack = { selectedFlightId = null },
+                )
+                archivedFlights == null -> LoadingScreen()
+                else -> FlightsListScreen(
+                    flights = flights,
+                    notice = notice,
+                    onImport = { importer.launch(arrayOf("application/octet-stream", "text/plain", "*/*")) },
+                    onFlightSelected = { selectedFlightId = it.id },
+                )
+            }
         }
+    }
+}
+
+@Composable
+private fun LoadingScreen() {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator(color = Ink, strokeWidth = 2.dp)
     }
 }
 
 @Composable
 private fun FlightsListScreen(
     flights: List<FlightCardUi>,
+    notice: String?,
+    onImport: () -> Unit,
     onFlightSelected: (FlightCardUi) -> Unit,
 ) {
     LazyColumn(
@@ -125,7 +189,18 @@ private fun FlightsListScreen(
                     color = Graphite,
                 )
                 Spacer(Modifier.height(24.dp))
-                ArchiveSummary()
+                ArchiveSummary(flights)
+                if (notice != null) {
+                    Spacer(Modifier.height(14.dp))
+                    Surface(color = CanvasGray, shape = RoundedCornerShape(14.dp)) {
+                        Text(
+                            notice,
+                            modifier = Modifier.fillMaxWidth().padding(14.dp),
+                            color = Graphite,
+                            fontSize = 13.sp,
+                        )
+                    }
+                }
                 Spacer(Modifier.height(24.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -138,6 +213,9 @@ private fun FlightsListScreen(
                 Spacer(Modifier.height(12.dp))
             }
         }
+        if (flights.isEmpty()) {
+            item { EmptyArchive() }
+        }
         items(items = flights, key = { it.id }) { flight ->
             FlightCard(
                 flight = flight,
@@ -147,17 +225,39 @@ private fun FlightsListScreen(
         }
         item {
             Button(
-                onClick = {},
-                enabled = false,
+                onClick = onImport,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp).height(54.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    disabledContainerColor = CanvasGray,
-                    disabledContentColor = Graphite,
+                    containerColor = Ink,
+                    contentColor = White,
                 ),
             ) {
-                Text("IMPORTER UN IGC · PHASE 3", fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp)
+                Text("IMPORTER UN FICHIER IGC", fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp)
             }
+        }
+    }
+}
+
+@Composable
+private fun EmptyArchive() {
+    Surface(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 7.dp),
+        color = CanvasGray,
+        shape = RoundedCornerShape(22.dp),
+    ) {
+        Column(Modifier.padding(horizontal = 24.dp, vertical = 34.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Surface(color = White, shape = CircleShape) {
+                Text("IGC", modifier = Modifier.padding(horizontal = 18.dp, vertical = 15.dp), fontWeight = FontWeight.Bold)
+            }
+            Spacer(Modifier.height(18.dp))
+            Text("Votre carnet est vide", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+            Spacer(Modifier.height(7.dp))
+            Text(
+                "Importez une trace IGC. Elle restera disponible sur cet appareil, même hors ligne.",
+                color = Graphite,
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
@@ -184,17 +284,19 @@ private fun BrandHeader() {
 }
 
 @Composable
-private fun ArchiveSummary() {
+private fun ArchiveSummary(flights: List<FlightCardUi>) {
+    val totalSeconds = flights.sumOf { it.durationSeconds }
+    val totalDistance = flights.sumOf { it.distanceMeters ?: 0L }
     Surface(color = Ink, shape = RoundedCornerShape(22.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(20.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            SummaryValue("12 h 48", "TEMPS DE VOL", White)
+            SummaryValue(formatDuration(totalSeconds), "TEMPS DE VOL", White)
             SummaryDivider()
-            SummaryValue("287 km", "DISTANCE", White)
+            SummaryValue(formatDistance(totalDistance), "DISTANCE", White)
             SummaryDivider()
-            SummaryValue("3", "VOLS", White)
+            SummaryValue(flights.size.toString(), "VOLS", White)
         }
     }
 }
@@ -441,29 +543,83 @@ private fun AltitudeChart(altitudes: List<Float>) {
     }
 }
 
-private val sampleFlights = listOf(
-    FlightCardUi(
-        id = "demo-1", day = "Aujourd'hui", date = "18 septembre",
-        place = "Saint-Martin-de-Londres", glider = "ASW 28 · F-CODE",
-        duration = "4 h 12", distance = "126 km", maxAltitude = "2 184 m", gain = "+3 420 m",
-        fileName = "2026-09-18-smdl.igc", pointCount = "14 982",
-        route = listOf(.12f to .78f, .23f to .64f, .19f to .44f, .38f to .29f, .55f to .43f, .71f to .18f, .88f to .31f, .76f to .55f, .58f to .69f, .42f to .58f, .31f to .76f, .12f to .78f),
-        altitudes = listOf(220f, 410f, 780f, 620f, 1120f, 1450f, 1310f, 1840f, 2184f, 1910f, 1560f, 980f, 540f, 260f),
-    ),
-    FlightCardUi(
-        id = "demo-2", day = "Samedi", date = "12 septembre",
-        place = "Montpellier-Candillargues", glider = "LS8 · F-GLDY",
-        duration = "5 h 03", distance = "142 km", maxAltitude = "1 876 m", gain = "+4 180 m",
-        fileName = "2026-09-12-candillargues.igc", pointCount = "18 164",
-        route = listOf(.14f to .72f, .28f to .54f, .21f to .35f, .43f to .16f, .63f to .27f, .82f to .14f, .87f to .42f, .68f to .63f, .45f to .51f, .14f to .72f),
-        altitudes = listOf(80f, 280f, 690f, 1040f, 870f, 1290f, 1710f, 1876f, 1620f, 1250f, 710f, 240f, 90f),
-    ),
-    FlightCardUi(
-        id = "demo-3", day = "Dimanche", date = "6 septembre",
-        place = "Alès — Cévennes", glider = "Duo Discus · F-JBAA",
-        duration = "3 h 33", distance = "19 km", maxAltitude = "1 462 m", gain = "+2 110 m",
-        fileName = "2026-09-06-ales.igc", pointCount = "12 771",
-        route = listOf(.18f to .76f, .33f to .57f, .27f to .37f, .48f to .22f, .69f to .37f, .82f to .63f, .63f to .78f, .45f to .62f, .18f to .76f),
-        altitudes = listOf(190f, 360f, 640f, 930f, 780f, 1140f, 1462f, 1380f, 970f, 620f, 310f, 200f),
-    ),
-)
+private fun ArchivedFlight.toCardUi(): FlightCardUi {
+    val summary = summary
+    val startedAt = summary?.startedAt?.atZone(ZoneId.systemDefault())
+    val durationSeconds = if (summary == null) 0L else Duration.between(summary.startedAt, summary.endedAt).seconds
+    val gliderLabel = listOfNotNull(gliderType, gliderId).filter(String::isNotBlank).joinToString(" · ")
+        .ifBlank { "Planeur non renseigné" }
+    return FlightCardUi(
+        id = id.value,
+        day = startedAt?.format(DAY_FORMATTER) ?: "Fichier",
+        date = startedAt?.format(DATE_FORMATTER) ?: "À vérifier",
+        place = pilot?.takeIf(String::isNotBlank)?.let { "Pilote · $it" } ?: "Vol IGC importé",
+        glider = gliderLabel,
+        duration = formatDuration(durationSeconds),
+        distance = summary?.distanceMeters?.let(::formatDistance) ?: "—",
+        maxAltitude = summary?.maximumAltitudeMeters?.let { formatInteger(it) + " m" } ?: "—",
+        gain = summary?.positiveGainMeters?.let { "+${formatInteger(it)} m" } ?: "—",
+        fileName = file.fileName,
+        pointCount = formatInteger(summary?.validPointCount ?: 0),
+        route = normalizeTrack(previewTrack),
+        altitudes = altitudeProfileMeters.map(Int::toFloat),
+        durationSeconds = durationSeconds,
+        distanceMeters = summary?.distanceMeters,
+    )
+}
+
+private fun normalizeTrack(points: List<GeoPoint>): List<Pair<Float, Float>> {
+    if (points.isEmpty()) return emptyList()
+    val minimumLatitude = points.minOf(GeoPoint::latitude)
+    val maximumLatitude = points.maxOf(GeoPoint::latitude)
+    val minimumLongitude = points.minOf(GeoPoint::longitude)
+    val maximumLongitude = points.maxOf(GeoPoint::longitude)
+    val latitudeSpan = (maximumLatitude - minimumLatitude).coerceAtLeast(0.000001)
+    val longitudeSpan = (maximumLongitude - minimumLongitude).coerceAtLeast(0.000001)
+    return points.map { point ->
+        val x = 0.08f + ((point.longitude - minimumLongitude) / longitudeSpan).toFloat() * 0.84f
+        val y = 0.08f + (1f - ((point.latitude - minimumLatitude) / latitudeSpan).toFloat()) * 0.84f
+        x to y
+    }
+}
+
+private fun formatDuration(totalSeconds: Long): String {
+    val hours = totalSeconds.coerceAtLeast(0) / 3600
+    val minutes = totalSeconds.coerceAtLeast(0) % 3600 / 60
+    return if (hours == 0L) "${minutes} min" else "%d h %02d".format(Locale.FRANCE, hours, minutes)
+}
+
+private fun formatDistance(meters: Long): String = when {
+    meters >= 100_000 -> "%.0f km".format(Locale.FRANCE, meters / 1000.0)
+    meters >= 10_000 -> "%.1f km".format(Locale.FRANCE, meters / 1000.0)
+    else -> "%.1f km".format(Locale.FRANCE, meters / 1000.0)
+}
+
+private fun formatInteger(value: Int): String = "%,d".format(Locale.FRANCE, value).replace('\u202f', ' ')
+
+private fun Context.displayName(uri: Uri): String? = contentResolver.query(
+    uri,
+    arrayOf(OpenableColumns.DISPLAY_NAME),
+    null,
+    null,
+    null,
+)?.use { cursor ->
+    val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+    if (index >= 0 && cursor.moveToFirst()) cursor.getString(index) else null
+}
+
+private fun ImportIgcResult.userMessage(): String = when (this) {
+    is ImportIgcResult.Imported -> "Vol importé et archivé sur cet appareil."
+    is ImportIgcResult.Duplicate -> "Ce vol est déjà présent dans le carnet."
+    is ImportIgcResult.Invalid -> when (error) {
+        IgcParseError.EmptyFile -> "Le fichier IGC est vide."
+        IgcParseError.MissingDateHeader -> "Le fichier IGC ne contient aucune date."
+        is IgcParseError.InvalidDateHeader -> "La date du fichier IGC est invalide."
+        IgcParseError.NoValidFix -> "Le fichier IGC ne contient aucun point GPS valide."
+    }
+    ImportIgcResult.TooLarge -> "Le fichier dépasse la limite de 64 Mo."
+    is ImportIgcResult.Failed -> "Import impossible : $reason"
+}
+
+private val DAY_FORMATTER = DateTimeFormatter.ofPattern("EEEE", Locale.FRANCE)
+private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRANCE)

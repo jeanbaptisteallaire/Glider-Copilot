@@ -170,6 +170,22 @@ class IgcParserTest {
         assertTrue(flight.summary.distanceMeters != null)
     }
 
+    @Test
+    fun `le vol synthetique realiste alimente toute la pile graphique`() {
+        val samplePath = requireNotNull(System.getProperty("glidy.generated.sample"))
+        val result = File(samplePath).reader().use(parser::parse) as IgcParseResult.Success
+
+        with(result.flight) {
+            assertEquals(6_781, summary.validPointCount)
+            assertEquals(6_780, Duration.between(summary.startedAt, summary.endedAt).seconds)
+            assertTrue(summary.distanceMeters in 120_000L..135_000L)
+            assertTrue(summary.maximumAltitudeMeters in 2_100..2_150)
+            assertTrue(summary.positiveGainMeters!! > 2_500)
+            assertTrue(points.size >= 6_000)
+            assertTrue(warnings.isEmpty())
+        }
+    }
+
     private fun parse(text: String): ParsedIgcFlight =
         (parser.parse(StringReader(text)) as IgcParseResult.Success).flight
 }

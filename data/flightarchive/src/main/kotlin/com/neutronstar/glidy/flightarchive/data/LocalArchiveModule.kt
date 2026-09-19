@@ -1,5 +1,24 @@
 package com.neutronstar.glidy.flightarchive.data
 
-/** Marqueur de module. L'implémentation du stockage local commence en phase 3. */
-object LocalArchiveModule
+import android.content.Context
+import androidx.room.Room
+import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
+import java.io.File
 
+object LocalArchiveModule {
+    fun create(context: Context): FlightArchiveRepository {
+        val applicationContext = context.applicationContext
+        val database = Room.databaseBuilder(
+            applicationContext,
+            FlightArchiveDatabase::class.java,
+            DATABASE_NAME,
+        ).build()
+        return RoomFlightArchiveRepository(
+            dao = database.flightDao(),
+            archiveDirectory = File(applicationContext.filesDir, ARCHIVE_DIRECTORY),
+        )
+    }
+
+    private const val DATABASE_NAME = "glidy-flight-archive.db"
+    private const val ARCHIVE_DIRECTORY = "igc-archive"
+}

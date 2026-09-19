@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.flightarchive
 
+import java.io.InputStream
 import java.time.Instant
 import java.util.UUID
 
@@ -39,6 +40,16 @@ data class GeoBounds(
     init {
         require(south in -90.0..90.0 && north in -90.0..90.0 && south <= north)
         require(west in -180.0..180.0 && east in -180.0..180.0)
+    }
+}
+
+data class GeoPoint(
+    val latitude: Double,
+    val longitude: Double,
+) {
+    init {
+        require(latitude in -90.0..90.0)
+        require(longitude in -180.0..180.0)
     }
 }
 
@@ -83,6 +94,8 @@ data class ArchivedFlight(
     val localState: LocalFileState,
     val syncState: SyncState = SyncState.LOCAL_ONLY,
     val remoteId: String? = null,
+    val previewTrack: List<GeoPoint> = emptyList(),
+    val altitudeProfileMeters: List<Int> = emptyList(),
 )
 
 /** Fichier terminé produit par Pilotage, importé manuellement ou fourni à l'app autonome. */
@@ -99,10 +112,20 @@ interface RecordedFlightSource {
 
 /** Port central de l'archive locale. */
 interface FlightArchiveRepository {
+    /** Copie la source dans l'archive privée. Le dépôt ne ferme pas le flux fourni. */
+    suspend fun importIgc(fileName: String, source: InputStream): ImportIgcResult
     suspend fun reconcile(): ReconciliationResult
     suspend fun listFlights(): List<ArchivedFlight>
     suspend fun findFlight(id: FlightId): ArchivedFlight?
     suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult
+}
+
+sealed interface ImportIgcResult {
+    data class Imported(val flight: ArchivedFlight) : ImportIgcResult
+    data class Duplicate(val existingFlight: ArchivedFlight) : ImportIgcResult
+    data class Invalid(val error: IgcParseError) : ImportIgcResult
+    data object TooLarge : ImportIgcResult
+    data class Failed(val reason: String) : ImportIgcResult
 }
 
 data class ReconciliationResult(
@@ -133,4 +156,3 @@ sealed interface CloudQueueResult {
     data object Disabled : CloudQueueResult
     data class Rejected(val reason: String) : CloudQueueResult
 }
-
