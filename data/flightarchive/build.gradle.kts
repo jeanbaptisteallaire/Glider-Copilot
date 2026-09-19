@@ -24,6 +24,7 @@ room { schemaDirectory("$projectDir/schemas") }
 
 dependencies {
     api(project(":core:flightarchive"))
+    implementation(libs.androidx.core.ktx)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     implementation(libs.kotlinx.coroutines.android)

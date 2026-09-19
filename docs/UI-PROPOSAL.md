@@ -1,4 +1,4 @@
-# Proposition d'interface — phases 2 à 4
+# Proposition d'interface — phases 2 à 5
 
 ## Direction retenue
 
@@ -16,6 +16,8 @@ Les valeurs, la trace et le profil d'altitude affichés en phase 3 proviennent d
 
 La phase 4 isole la logique dans un ViewModel et formalise les états chargement, vide, erreur et fichier manquant. Les cartes annoncent leur position dans la liste aux outils d'accessibilité. La liste paresseuse a été parcourue jusqu'au 500e vol dans un test Compose.
 
+La phase 5 enrichit le détail avec les informations du fichier et deux actions explicites. **Partager le fichier IGC** ouvre le sélecteur Android avec un accès temporaire en lecture. **Supprimer de cet appareil** affiche une confirmation qui précise que le fichier et son index local seront retirés sans modifier les autres vols.
+
 ## Captures validées sur Android
 
 - `ui-phase2-mes-vols.png`
@@ -24,6 +26,9 @@ La phase 4 isole la logique dans un ViewModel et formalise les états chargement
 - `ui-phase3-flight-detail.png`
 - `ui-phase4-small-screen.png` — 1080 × 1920
 - `ui-phase4-large-screen.png` — 1440 × 2560
+- `ui-phase5-detail-actions.png`
+- `ui-phase5-share-sheet.png`
+- `ui-phase5-delete-confirmation.png`
 
 ## Principes d'intégration
 

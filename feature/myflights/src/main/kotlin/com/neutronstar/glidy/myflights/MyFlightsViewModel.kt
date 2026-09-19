@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
+import com.neutronstar.glidy.flightarchive.FlightShareGateway
 import com.neutronstar.glidy.flightarchive.IgcParseError
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.ReconciliationResult
+import com.neutronstar.glidy.flightarchive.RemoveFlightResult
+import com.neutronstar.glidy.flightarchive.ShareFlightResult
 import java.io.InputStream
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +24,7 @@ sealed interface MyFlightsUiState {
     data class Ready(
         val flights: List<ArchivedFlight>,
         val selectedFlightId: FlightId? = null,
+        val pendingDeleteFlightId: FlightId? = null,
         val notice: String? = null,
     ) : MyFlightsUiState
 
@@ -49,6 +53,7 @@ internal fun ImportIgcResult.userMessage(): String = when (this) {
 
 class MyFlightsViewModel(
     private val repository: FlightArchiveRepository,
+    private val shareGateway: FlightShareGateway,
 ) : ViewModel() {
     private val mutableState = MutableStateFlow<MyFlightsUiState>(MyFlightsUiState.Loading)
     val state: StateFlow<MyFlightsUiState> = mutableState.asStateFlow()
@@ -104,6 +109,57 @@ class MyFlightsViewModel(
         mutableState.value = current.copy(selectedFlightId = null)
     }
 
+    fun shareFlight(id: FlightId) {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return
+        if (current.flights.none { it.id == id }) return
+        viewModelScope.launch {
+            val result = runCatching { shareGateway.share(id) }
+                .getOrElse { ShareFlightResult.Failed(it.message ?: "erreur locale") }
+            val latest = mutableState.value as? MyFlightsUiState.Ready ?: return@launch
+            mutableState.value = latest.copy(notice = result.userMessage())
+        }
+    }
+
+    fun requestDelete(id: FlightId) {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return
+        if (current.flights.any { it.id == id }) {
+            mutableState.value = current.copy(pendingDeleteFlightId = id)
+        }
+    }
+
+    fun cancelDelete() {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return
+        mutableState.value = current.copy(pendingDeleteFlightId = null)
+    }
+
+    fun confirmDelete() {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return
+        val id = current.pendingDeleteFlightId ?: return
+        viewModelScope.launch {
+            val result = runCatching { repository.removeLocalFlight(id) }
+                .getOrElse { RemoveFlightResult.Failed(it.message ?: "erreur locale") }
+            val latest = mutableState.value as? MyFlightsUiState.Ready ?: return@launch
+            mutableState.value = when (result) {
+                RemoveFlightResult.Removed -> latest.copy(
+                    flights = latest.flights.filterNot { it.id == id },
+                    selectedFlightId = null,
+                    pendingDeleteFlightId = null,
+                    notice = "Le vol et sa copie locale ont été supprimés.",
+                )
+                RemoveFlightResult.NotFound -> latest.copy(
+                    flights = latest.flights.filterNot { it.id == id },
+                    selectedFlightId = null,
+                    pendingDeleteFlightId = null,
+                    notice = "Ce vol n'était plus présent dans le carnet.",
+                )
+                is RemoveFlightResult.Failed -> latest.copy(
+                    pendingDeleteFlightId = null,
+                    notice = "Suppression impossible : ${result.reason}",
+                )
+            }
+        }
+    }
+
     private fun showNotice(message: String) {
         val current = mutableState.value as? MyFlightsUiState.Ready ?: return
         mutableState.value = current.copy(notice = message)
@@ -118,10 +174,18 @@ class MyFlightsViewModel(
 
 class MyFlightsViewModelFactory(
     private val repository: FlightArchiveRepository,
+    private val shareGateway: FlightShareGateway,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         require(modelClass.isAssignableFrom(MyFlightsViewModel::class.java))
-        return MyFlightsViewModel(repository) as T
+        return MyFlightsViewModel(repository, shareGateway) as T
     }
+}
+
+internal fun ShareFlightResult.userMessage(): String = when (this) {
+    ShareFlightResult.Presented -> "Le menu de partage est ouvert."
+    ShareFlightResult.NotFound -> "Ce vol n'est plus présent dans le carnet."
+    ShareFlightResult.FileUnavailable -> "Le fichier IGC n'est plus disponible sur cet appareil."
+    is ShareFlightResult.Failed -> "Partage impossible : $reason"
 }

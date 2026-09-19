@@ -145,6 +145,18 @@ sealed interface RemoveFlightResult {
     data class Failed(val reason: String) : RemoveFlightResult
 }
 
+/** Port de partage. L'implémentation Android présente le sélecteur sans exposer de chemin absolu. */
+interface FlightShareGateway {
+    suspend fun share(id: FlightId): ShareFlightResult
+}
+
+sealed interface ShareFlightResult {
+    data object Presented : ShareFlightResult
+    data object NotFound : ShareFlightResult
+    data object FileUnavailable : ShareFlightResult
+    data class Failed(val reason: String) : ShareFlightResult
+}
+
 /** Contrat cloud. La phase 1 utilise uniquement une implémentation inactive. */
 interface FlightCloudGateway {
     val enabled: Boolean

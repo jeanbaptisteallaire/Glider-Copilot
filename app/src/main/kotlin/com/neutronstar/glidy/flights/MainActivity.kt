@@ -8,9 +8,12 @@ import com.neutronstar.glidy.myflights.MyFlightsApp
 
 class MainActivity : ComponentActivity() {
     private val archiveRepository by lazy { LocalArchiveModule.create(applicationContext) }
+    private val shareGateway by lazy {
+        LocalArchiveModule.createShareGateway(applicationContext, archiveRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MyFlightsApp(repository = archiveRepository) }
+        setContent { MyFlightsApp(repository = archiveRepository, shareGateway = shareGateway) }
     }
 }

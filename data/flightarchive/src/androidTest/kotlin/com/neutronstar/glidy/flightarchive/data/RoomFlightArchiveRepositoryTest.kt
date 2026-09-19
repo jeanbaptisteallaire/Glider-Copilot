@@ -1,12 +1,15 @@
 package com.neutronstar.glidy.flightarchive.data
 
 import android.content.Context
+import android.content.Intent
+import android.provider.OpenableColumns
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.flightarchive.RemoveFlightResult
+import com.neutronstar.glidy.flightarchive.ShareFlightResult
 import java.io.ByteArrayInputStream
 import java.io.File
 import kotlinx.coroutines.runBlocking
@@ -30,7 +33,7 @@ class RoomFlightArchiveRepositoryTest {
         database = Room.inMemoryDatabaseBuilder(context, FlightArchiveDatabase::class.java)
             .allowMainThreadQueries()
             .build()
-        archiveDirectory = File(context.cacheDir, "archive-test-${System.nanoTime()}").apply { mkdirs() }
+        archiveDirectory = File(context.filesDir, "igc-archive/test-${System.nanoTime()}").apply { mkdirs() }
         repository = RoomFlightArchiveRepository(
             dao = database.flightDao(),
             archiveDirectory = archiveDirectory,
@@ -42,6 +45,7 @@ class RoomFlightArchiveRepositoryTest {
     fun tearDown() {
         database.close()
         archiveDirectory.deleteRecursively()
+        ApplicationProvider.getApplicationContext<Context>().cacheDir.resolve("igc-share").deleteRecursively()
     }
 
     @Test
@@ -116,6 +120,63 @@ class RoomFlightArchiveRepositoryTest {
         assertEquals(RemoveFlightResult.Removed, repository.removeLocalFlight(imported.flight.id))
         assertTrue(repository.listFlights().isEmpty())
         assertFalse(File(archiveDirectory, imported.flight.file.relativePath).exists())
+    }
+
+    @Test
+    fun shareGatewayPresentsReadOnlyIgcIntent() = runBlocking {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val imported = repository.importIgc("a-partager.igc", testIgc.byteInputStream())
+            as ImportIgcResult.Imported
+        var presented: Intent? = null
+        val gateway = AndroidFlightShareGateway(
+            context = context,
+            repository = repository,
+            archiveDirectory = archiveDirectory,
+            presentIntent = { presented = it },
+        )
+
+        assertEquals(ShareFlightResult.Presented, gateway.share(imported.flight.id))
+        val chooser = requireNotNull(presented)
+        assertEquals(Intent.ACTION_CHOOSER, chooser.action)
+        @Suppress("DEPRECATION")
+        val sendIntent = chooser.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)!!
+        assertEquals(Intent.ACTION_SEND, sendIntent.action)
+        assertEquals("application/vnd.fai.igc", sendIntent.type)
+        assertTrue(sendIntent.flags and Intent.FLAG_GRANT_READ_URI_PERMISSION != 0)
+        @Suppress("DEPRECATION")
+        val streamUri = sendIntent.getParcelableExtra<android.net.Uri>(Intent.EXTRA_STREAM)
+        assertTrue(streamUri.toString()
+            .startsWith("content://${context.packageName}.glidy.flightfiles/"))
+        val sharedName = context.contentResolver.query(
+            requireNotNull(streamUri),
+            arrayOf(OpenableColumns.DISPLAY_NAME),
+            null,
+            null,
+            null,
+        )!!.use { cursor ->
+            cursor.moveToFirst()
+            cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME))
+        }
+        assertEquals("a-partager.igc", sharedName)
+    }
+
+    @Test
+    fun missingFileCannotBeShared() = runBlocking {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val imported = repository.importIgc("partage-manquant.igc", testIgc.byteInputStream())
+            as ImportIgcResult.Imported
+        File(archiveDirectory, imported.flight.file.relativePath).delete()
+        repository.reconcile()
+        var presented = false
+        val gateway = AndroidFlightShareGateway(
+            context = context,
+            repository = repository,
+            archiveDirectory = archiveDirectory,
+            presentIntent = { presented = true },
+        )
+
+        assertEquals(ShareFlightResult.FileUnavailable, gateway.share(imported.flight.id))
+        assertFalse(presented)
     }
 
     private companion object {

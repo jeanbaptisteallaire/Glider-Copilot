@@ -3,12 +3,14 @@ package com.neutronstar.glidy.myflights
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
+import com.neutronstar.glidy.flightarchive.FlightShareGateway
 import com.neutronstar.glidy.flightarchive.FlightSummary
 import com.neutronstar.glidy.flightarchive.IgcFileRef
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.flightarchive.ReconciliationResult
 import com.neutronstar.glidy.flightarchive.RemoveFlightResult
+import com.neutronstar.glidy.flightarchive.ShareFlightResult
 import java.io.InputStream
 import java.time.Instant
 import java.util.UUID
@@ -46,7 +48,7 @@ class MyFlightsViewModelTest {
     fun `loading remains visible until repository responds`() = runTest(dispatcher.scheduler) {
         val gate = CompletableDeferred<Unit>()
         val repository = FakeRepository(flights = listOf(flight(1)), reconciliationGate = gate)
-        val viewModel = MyFlightsViewModel(repository)
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
 
         runCurrent()
         assertEquals(MyFlightsUiState.Loading, viewModel.state.value)
@@ -66,7 +68,7 @@ class MyFlightsViewModelTest {
             ),
             reconciliation = ReconciliationResult(0, 0, 1, 0),
         )
-        val viewModel = MyFlightsViewModel(repository)
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
 
         advanceUntilIdle()
         val ready = viewModel.state.value as MyFlightsUiState.Ready
@@ -78,7 +80,7 @@ class MyFlightsViewModelTest {
     @Test
     fun `selection opens and closes a known flight`() = runTest(dispatcher.scheduler) {
         val selected = flight(8)
-        val viewModel = MyFlightsViewModel(FakeRepository(listOf(selected)))
+        val viewModel = MyFlightsViewModel(FakeRepository(listOf(selected)), FakeShareGateway())
         advanceUntilIdle()
 
         viewModel.selectFlight(selected.id)
@@ -91,7 +93,7 @@ class MyFlightsViewModelTest {
     @Test
     fun `repository failure produces a retryable error state`() = runTest(dispatcher.scheduler) {
         val repository = FakeRepository(emptyList(), failure = IllegalStateException("database unavailable"))
-        val viewModel = MyFlightsViewModel(repository)
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
 
         advanceUntilIdle()
         assertTrue(viewModel.state.value is MyFlightsUiState.Error)
@@ -105,7 +107,7 @@ class MyFlightsViewModelTest {
     @Test
     fun `five hundred flights are prepared without truncation`() = runTest(dispatcher.scheduler) {
         val flights = (0 until 500).map(::flight).reversed()
-        val viewModel = MyFlightsViewModel(FakeRepository(flights))
+        val viewModel = MyFlightsViewModel(FakeRepository(flights), FakeShareGateway())
 
         advanceUntilIdle()
         val ready = viewModel.state.value as MyFlightsUiState.Ready
@@ -117,6 +119,62 @@ class MyFlightsViewModelTest {
         })
     }
 
+    @Test
+    fun `cancelled deletion keeps the selected flight and file`() = runTest(dispatcher.scheduler) {
+        val flight = flight(20)
+        val repository = FakeRepository(listOf(flight))
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
+        advanceUntilIdle()
+        viewModel.selectFlight(flight.id)
+
+        viewModel.requestDelete(flight.id)
+        assertEquals(flight.id, (viewModel.state.value as MyFlightsUiState.Ready).pendingDeleteFlightId)
+        viewModel.cancelDelete()
+        viewModel.confirmDelete()
+        advanceUntilIdle()
+
+        val ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertEquals(listOf(flight), ready.flights)
+        assertEquals(flight.id, ready.selectedFlightId)
+        assertEquals(0, repository.removeCalls)
+    }
+
+    @Test
+    fun `confirmed deletion removes only the requested flight`() = runTest(dispatcher.scheduler) {
+        val deleted = flight(21)
+        val preserved = flight(22)
+        val repository = FakeRepository(listOf(deleted, preserved))
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
+        advanceUntilIdle()
+        viewModel.selectFlight(deleted.id)
+
+        viewModel.requestDelete(deleted.id)
+        viewModel.confirmDelete()
+        advanceUntilIdle()
+
+        val ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertEquals(listOf(preserved), ready.flights)
+        assertNull(ready.selectedFlightId)
+        assertEquals(1, repository.removeCalls)
+    }
+
+    @Test
+    fun `share result is exposed without changing selection`() = runTest(dispatcher.scheduler) {
+        val flight = flight(23)
+        val gateway = FakeShareGateway()
+        val viewModel = MyFlightsViewModel(FakeRepository(listOf(flight)), gateway)
+        advanceUntilIdle()
+        viewModel.selectFlight(flight.id)
+
+        viewModel.shareFlight(flight.id)
+        advanceUntilIdle()
+
+        val ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertEquals(listOf(flight.id), gateway.sharedIds)
+        assertEquals("Le menu de partage est ouvert.", ready.notice)
+        assertEquals(flight.id, ready.selectedFlightId)
+    }
+
     private class FakeRepository(
         flights: List<ArchivedFlight> = emptyList(),
         private val reconciliationGate: CompletableDeferred<Unit>? = null,
@@ -124,6 +182,7 @@ class MyFlightsViewModelTest {
         var failure: Exception? = null,
     ) : FlightArchiveRepository {
         private val storedFlights = flights.toMutableList()
+        var removeCalls = 0
 
         override suspend fun importIgc(fileName: String, source: InputStream): ImportIgcResult =
             ImportIgcResult.Failed("not configured")
@@ -142,7 +201,23 @@ class MyFlightsViewModelTest {
         override suspend fun findFlight(id: FlightId): ArchivedFlight? = storedFlights.firstOrNull { it.id == id }
 
         override suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult =
-            if (storedFlights.removeAll { it.id == id }) RemoveFlightResult.Removed else RemoveFlightResult.NotFound
+            if (storedFlights.removeAll { it.id == id }) {
+                removeCalls += 1
+                RemoveFlightResult.Removed
+            } else {
+                RemoveFlightResult.NotFound
+            }
+    }
+
+    private class FakeShareGateway(
+        private val result: ShareFlightResult = ShareFlightResult.Presented,
+    ) : FlightShareGateway {
+        val sharedIds = mutableListOf<FlightId>()
+
+        override suspend fun share(id: FlightId): ShareFlightResult {
+            sharedIds += id
+            return result
+        }
     }
 }
 

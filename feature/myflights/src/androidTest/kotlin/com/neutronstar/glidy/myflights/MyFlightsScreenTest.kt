@@ -2,12 +2,14 @@ package com.neutronstar.glidy.myflights
 
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.runtime.mutableStateOf
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightId
@@ -140,6 +142,67 @@ class MyFlightsScreenTest {
         composeRule.onNodeWithTag("flight-list")
             .performScrollToNode(hasTestTag("flight-card-${oldest.id.value}"))
         composeRule.onNodeWithTag("flight-card-${oldest.id.value}").assertExists()
+    }
+
+    @Test
+    fun deletionRequiresConfirmationAndCanBeCancelled() {
+        val flight = uiFlight(30)
+        val screenState = mutableStateOf(MyFlightsUiState.Ready(listOf(flight), selectedFlightId = flight.id))
+        var confirmed = false
+        composeRule.setContent {
+            MyFlightsScreen(
+                state = screenState.value,
+                onRetry = {},
+                onImport = {},
+                onFlightSelected = {},
+                onBack = {},
+                onDeleteRequest = { id ->
+                    screenState.value = screenState.value.copy(pendingDeleteFlightId = id)
+                },
+                onDeleteCancel = {
+                    screenState.value = screenState.value.copy(pendingDeleteFlightId = null)
+                },
+                onDeleteConfirm = { confirmed = true },
+            )
+        }
+
+        composeRule.onNodeWithTag("flight-detail")
+            .performScrollToNode(hasTestTag("delete-flight"))
+        composeRule.onNodeWithTag("delete-flight").performClick()
+        composeRule.onNodeWithTag("delete-confirmation").assertExists()
+        composeRule.onNodeWithTag("cancel-delete").performClick()
+        composeRule.onNodeWithTag("delete-confirmation").assertDoesNotExist()
+        composeRule.runOnIdle { assertTrue(!confirmed) }
+
+        composeRule.onNodeWithTag("flight-detail")
+            .performScrollToNode(hasTestTag("delete-flight"))
+        composeRule.onNodeWithTag("delete-flight").performClick()
+        composeRule.onNodeWithTag("confirm-delete").performClick()
+        composeRule.runOnIdle { assertTrue(confirmed) }
+    }
+
+    @Test
+    fun invalidFlightKeepsItsDiagnosticAndShareAction() {
+        val flight = uiFlight(31, LocalFileState.INVALID)
+        var shared: FlightId? = null
+        composeRule.setContent {
+            MyFlightsScreen(
+                state = MyFlightsUiState.Ready(listOf(flight), selectedFlightId = flight.id),
+                onRetry = {},
+                onImport = {},
+                onFlightSelected = {},
+                onBack = {},
+                onShare = { shared = it },
+            )
+        }
+
+        composeRule.onNodeWithTag("flight-detail")
+            .performScrollToNode(hasText("Fichier invalide · diagnostic conservé"))
+        composeRule.onNodeWithText("Fichier invalide · diagnostic conservé").assertExists()
+        composeRule.onNodeWithTag("flight-detail")
+            .performScrollToNode(hasTestTag("share-igc"))
+        composeRule.onNodeWithTag("share-igc").performClick()
+        composeRule.runOnIdle { assertEquals(flight.id, shared) }
     }
 }
 

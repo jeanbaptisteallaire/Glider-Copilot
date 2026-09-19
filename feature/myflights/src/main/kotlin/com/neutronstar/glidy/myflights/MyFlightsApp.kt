@@ -28,13 +28,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,6 +61,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
+import com.neutronstar.glidy.flightarchive.FlightId
+import com.neutronstar.glidy.flightarchive.FlightShareGateway
 import com.neutronstar.glidy.flightarchive.GeoPoint
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import java.time.Duration
@@ -101,11 +106,18 @@ data class FlightCardUi(
     val durationSeconds: Long,
     val distanceMeters: Long?,
     val localState: LocalFileState,
+    val minimumAltitude: String,
+    val fileSize: String,
+    val fingerprint: String,
+    val pilot: String,
 )
 
 @Composable
-fun MyFlightsApp(repository: FlightArchiveRepository) {
-    val factory = remember(repository) { MyFlightsViewModelFactory(repository) }
+fun MyFlightsApp(
+    repository: FlightArchiveRepository,
+    shareGateway: FlightShareGateway,
+) {
+    val factory = remember(repository, shareGateway) { MyFlightsViewModelFactory(repository, shareGateway) }
     val viewModel: MyFlightsViewModel = viewModel(factory = factory)
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -123,6 +135,10 @@ fun MyFlightsApp(repository: FlightArchiveRepository) {
         onImport = { importer.launch(arrayOf("application/octet-stream", "text/plain", "*/*")) },
         onFlightSelected = { viewModel.selectFlight(it.id) },
         onBack = viewModel::closeDetail,
+        onShare = viewModel::shareFlight,
+        onDeleteRequest = viewModel::requestDelete,
+        onDeleteCancel = viewModel::cancelDelete,
+        onDeleteConfirm = viewModel::confirmDelete,
     )
 }
 
@@ -133,6 +149,10 @@ fun MyFlightsScreen(
     onImport: () -> Unit,
     onFlightSelected: (ArchivedFlight) -> Unit,
     onBack: () -> Unit,
+    onShare: (FlightId) -> Unit = {},
+    onDeleteRequest: (FlightId) -> Unit = {},
+    onDeleteCancel: () -> Unit = {},
+    onDeleteConfirm: () -> Unit = {},
 ) {
     MaterialTheme(colorScheme = GlidyLightColors) {
         Surface(modifier = Modifier.fillMaxSize(), color = White) {
@@ -142,7 +162,13 @@ fun MyFlightsScreen(
                 is MyFlightsUiState.Ready -> {
                     val selectedFlight = state.flights.firstOrNull { it.id == state.selectedFlightId }
                     if (selectedFlight != null) {
-                        FlightDetailScreen(flight = selectedFlight.toCardUi(), onBack = onBack)
+                        FlightDetailScreen(
+                            flight = selectedFlight.toCardUi(),
+                            notice = state.notice,
+                            onBack = onBack,
+                            onShare = { onShare(selectedFlight.id) },
+                            onDelete = { onDeleteRequest(selectedFlight.id) },
+                        )
                     } else {
                         FlightsListScreen(
                             flights = state.flights.map(ArchivedFlight::toCardUi),
@@ -151,6 +177,14 @@ fun MyFlightsScreen(
                             onFlightSelected = { card ->
                                 state.flights.firstOrNull { it.id.value == card.id }?.let(onFlightSelected)
                             },
+                        )
+                    }
+                    val pendingDelete = state.flights.firstOrNull { it.id == state.pendingDeleteFlightId }
+                    if (pendingDelete != null) {
+                        DeleteFlightDialog(
+                            fileName = pendingDelete.file.fileName,
+                            onCancel = onDeleteCancel,
+                            onConfirm = onDeleteConfirm,
                         )
                     }
                 }
@@ -439,7 +473,13 @@ private fun SmallMetric(value: String, label: String) {
 }
 
 @Composable
-private fun FlightDetailScreen(flight: FlightCardUi, onBack: () -> Unit) {
+private fun FlightDetailScreen(
+    flight: FlightCardUi,
+    notice: String?,
+    onBack: () -> Unit,
+    onShare: () -> Unit,
+    onDelete: () -> Unit,
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().statusBarsPadding().testTag("flight-detail"),
         contentPadding = PaddingValues(bottom = 36.dp),
@@ -496,6 +536,35 @@ private fun FlightDetailScreen(flight: FlightCardUi, onBack: () -> Unit) {
                 Spacer(Modifier.height(12.dp))
                 InformationPanel(flight)
                 Spacer(Modifier.height(20.dp))
+                if (notice != null) {
+                    Surface(color = CanvasGray, shape = RoundedCornerShape(14.dp)) {
+                        Text(
+                            notice,
+                            modifier = Modifier.fillMaxWidth().padding(14.dp),
+                            color = Graphite,
+                            fontSize = 13.sp,
+                        )
+                    }
+                    Spacer(Modifier.height(14.dp))
+                }
+                Button(
+                    onClick = onShare,
+                    enabled = flight.localState != LocalFileState.MISSING,
+                    modifier = Modifier.fillMaxWidth().height(56.dp).testTag("share-igc"),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Ink, contentColor = White),
+                ) {
+                    Text("PARTAGER LE FICHIER IGC", fontWeight = FontWeight.Bold, letterSpacing = 0.7.sp)
+                }
+                Spacer(Modifier.height(10.dp))
+                OutlinedButton(
+                    onClick = onDelete,
+                    modifier = Modifier.fillMaxWidth().height(56.dp).testTag("delete-flight"),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Text("SUPPRIMER DE CET APPAREIL", color = Color(0xFF8C2E1D), fontWeight = FontWeight.Bold)
+                }
+                Spacer(Modifier.height(10.dp))
                 Button(
                     onClick = {},
                     enabled = false,
@@ -514,6 +583,38 @@ private fun FlightDetailScreen(flight: FlightCardUi, onBack: () -> Unit) {
 }
 
 @Composable
+private fun DeleteFlightDialog(
+    fileName: String,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+) {
+    AlertDialog(
+        modifier = Modifier.testTag("delete-confirmation"),
+        onDismissRequest = onCancel,
+        title = { Text("Supprimer ce vol ?", fontWeight = FontWeight.SemiBold) },
+        text = {
+            Text(
+                "Le fichier $fileName et son index local seront supprimés de cet appareil. " +
+                    "Les autres vols ne seront pas modifiés.",
+                color = Graphite,
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm, modifier = Modifier.testTag("confirm-delete")) {
+                Text("SUPPRIMER", color = Color(0xFF8C2E1D), fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onCancel, modifier = Modifier.testTag("cancel-delete")) {
+                Text("ANNULER", color = Ink, fontWeight = FontWeight.Bold)
+            }
+        },
+        containerColor = White,
+        shape = RoundedCornerShape(22.dp),
+    )
+}
+
+@Composable
 private fun SectionTitle(title: String, qualifier: String) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(title, fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
@@ -527,25 +628,38 @@ private fun InformationPanel(flight: FlightCardUi) {
         Column(Modifier.padding(horizontal = 18.dp)) {
             InfoRow("Planeur", flight.glider)
             HorizontalDivider(color = LineGray)
+            InfoRow("Pilote", flight.pilot)
+            HorizontalDivider(color = LineGray)
+            InfoRow("Altitude minimale", flight.minimumAltitude)
+            HorizontalDivider(color = LineGray)
             InfoRow("Dénivelé positif", flight.gain)
             HorizontalDivider(color = LineGray)
             InfoRow("Points valides", flight.pointCount)
             HorizontalDivider(color = LineGray)
             InfoRow("Fichier source", flight.fileName)
             HorizontalDivider(color = LineGray)
-            InfoRow("Sauvegarde", "Sur cet appareil")
+            InfoRow("Taille", flight.fileSize)
+            HorizontalDivider(color = LineGray)
+            InfoRow("Empreinte", flight.fingerprint)
+            HorizontalDivider(color = LineGray)
+            InfoRow("État local", flight.localState.userLabel())
         }
     }
 }
 
 @Composable
 private fun InfoRow(label: String, value: String) {
-    Row(
+    Column(
         modifier = Modifier.fillMaxWidth().padding(vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(label, color = Graphite, fontSize = 14.sp)
-        Text(value, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+        Text(label.uppercase(), color = Quiet, fontSize = 9.sp, letterSpacing = 0.7.sp)
+        Spacer(Modifier.height(5.dp))
+        Text(
+            value,
+            modifier = Modifier.fillMaxWidth(),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Medium,
+        )
     }
 }
 
@@ -630,6 +744,10 @@ private fun ArchivedFlight.toCardUi(): FlightCardUi {
         durationSeconds = durationSeconds,
         distanceMeters = summary?.distanceMeters,
         localState = localState,
+        minimumAltitude = summary?.minimumAltitudeMeters?.let { formatInteger(it) + " m" } ?: "—",
+        fileSize = formatFileSize(file.sizeBytes),
+        fingerprint = file.sha256.take(10) + "…",
+        pilot = pilot?.takeIf(String::isNotBlank) ?: "Non renseigné",
     )
 }
 
@@ -661,6 +779,19 @@ private fun formatDistance(meters: Long): String = when {
 }
 
 private fun formatInteger(value: Int): String = "%,d".format(Locale.FRANCE, value).replace('\u202f', ' ')
+
+private fun formatFileSize(bytes: Long): String = when {
+    bytes >= 1_048_576 -> "%.1f Mo".format(Locale.FRANCE, bytes / 1_048_576.0)
+    bytes >= 1_024 -> "%.0f Ko".format(Locale.FRANCE, bytes / 1_024.0)
+    else -> "$bytes octets"
+}
+
+private fun LocalFileState.userLabel(): String = when (this) {
+    LocalFileState.AVAILABLE -> "Disponible sur cet appareil"
+    LocalFileState.RECORDING -> "Enregistrement en cours"
+    LocalFileState.MISSING -> "Fichier manquant"
+    LocalFileState.INVALID -> "Fichier invalide · diagnostic conservé"
+}
 
 private fun Context.displayName(uri: Uri): String? = contentResolver.query(
     uri,
