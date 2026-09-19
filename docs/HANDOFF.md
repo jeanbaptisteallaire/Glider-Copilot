@@ -1,5 +1,65 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 7.2 — Charte aéronautique, mode clair, RTE, NOTAM, écran d'accueil (19/09/2026)
+
+### Livré
+- **Couleurs aéronautiques** : nouveau jeton `heading` (mauve) dans `core:designsystem/Theme.kt`, réservé au **cap** (haut droit de la
+  zone de sécurité) et au **vecteur de retour** sur la carte (jamais réutilisé ailleurs — le badge AUTO/MANU, l'onglet actif et la flèche
+  de vent gardent le jeton `route` vert historique). **Distance** passée au jeton `ink` (blanc/quasi-noir).
+- **Mode clair** pour Prévol, Check-lists et Carte (`GlidyLightColors` + `GlidyAdaptiveTheme` dans Theme.kt, préférence `lightMode` dans
+  `UserPreferences`/DataStore) : togle unique, partagé, sous l'en-tête de chaque écran. **Pilotage reste noir, obligatoire** (thème racine
+  `GlidyTheme` inchangé). La carte hors ligne est construite deux fois (`buildFlightMapConfig`/`mapPalette` dans `AppRoot.kt`, désormais
+  des fonctions pures) : palette sombre pour Pilotage, palette qui suit le mode pour Carte.
+- **Mode RTE** (`feature:flight/FlightMap.kt`) : `MapOrientation.TRACK` (déjà étiqueté « RTE », toujours orienté au cap) existait dans le
+  contrôleur depuis une session précédente mais **n'était câblé à aucun bouton** — corrigé, second `RoundTool` à côté du recentrage
+  (AUTO → N↑ → RTE).
+- **NOTAM** (`feature:prevol/OfflineMapCards.kt` → `NotamCard`) : carte en bas de Prévol, lien vers **SOFIA-Briefing** (DGAC). Aucun flux
+  NOTAM interrogé par l'app (sécurité sans dépendance réseau) — accès direct à la source qui fait foi.
+- **Écran d'accueil** (`AppRoot.kt` → `SplashScreen`) : logo écureuil fourni par JB sur fond bleu (~1,6 s), puis l'avertissement habituel.
+- Version 0.7.2.
+
+### Audit lecture seule (demande JB) — terrains de repli
+Candidats = pack openAIP local (filtre `type !in {4,7,8,10}` : héliports, fermé, hydrobase — codes vérifiés contre l'énumération officielle
+openAIP, corrects) + terrain du club. Deux points signalés à JB, **rien changé** : (1) une base militaire, un terrain ULM, une piste
+agricole ou un altiport restent des candidats AUTO comme les autres, sans distinction ; (2) altitude manquante à la fois dans openAIP et
+le relief local → retombe silencieusement à 0 m au lieu de signaler la donnée manquante (marge alors trop optimiste). Pas de terrain
+fantôme à (0°, 0°) possible (géométrie invalide ignorée au chargement).
+
+### Vérifié
+- CI verte (deux corrections trouvées sur les captures CI avant livraison : un oubli de câblage `@Composable`, puis le togle mode clair qui
+  chevauchait le titre de chaque écran).
+- 20 captures émulateur. Livrables : `Planneur APP/Session 7.2/` (APK 0.7.2, captures, LISEZ-MOI).
+
+### Limites / à faire
+- Pas de capture dédiée de l'écran d'accueil ni du mode clair activé (banc de captures inchangé) — à vérifier en vol par JB.
+- Lien NOTAM : recherche générale SOFIA-Briefing, pas de fiche pré-remplie pour le terrain du club.
+- Audit des terrains de repli : en attente de décision de JB.
+
+
+## Session 7.1 — Pilotage allégé, carte au format FLARM, suivi depuis la carte (18/09/2026)
+
+### Livré
+- **Masquage, pas suppression** (`feature:flight/UiMask.kt`) : drapeaux booléens gardant intacts le code et les calculs des éléments
+  masqués (ligne de tendance, titre/légende du profil de retour, historique d'altitude, ancienne pastille de trafic). **Gardé** : le graphe
+  du profil lui-même (seule vue du relief franchi). Toute la place rendue va à la carte (≈ 40 % → 55 % de la hauteur d'écran).
+- **Distance et cap réorganisés** : distance au centre, 34 sp (le double de l'origine). Bug de largeur trouvé sur les captures CI et corrigé
+  avant livraison (calage final : marge 44 sp, distance 34 sp, colonne finesse 128 dp, ALT/SÉCU empilés).
+- **Symbologie FLARM** sur l'onglet Carte : flèche orientée à la route + immatriculation complète, à la place de la pastille à deux lettres
+  (gardée dans le code, masquée par `UiMask`).
+- **Bouton SUIVRE** sur la fiche d'un aéronef (Carte) : bascule en suivi central sur Pilotage et change d'onglet automatiquement
+  (`GliderRepository.followAddress`).
+- Version 0.7.1.
+
+### Vérifié
+- Captures émulateur : trois colonnes complètes sur 360 dp, symbologie FLARM lisible, bouton SUIVRE testé.
+- CI verte. Livrables : `Planneur APP/Session 7.1/` (APK 0.7.1, 23 captures, LISEZ-MOI).
+
+### Limites / à faire
+- Incident de livraison sans rapport avec le code : APK d'abord nommé hors convention (`glidy-0.7.1.apk` au lieu de
+  `glidy-v0.7.1-debug.apk`), corrigé après signalement de JB.
+- Reste ouvert : faut-il aussi masquer le graphe du profil de retour pour gagner encore de la place ?
+
+
 ## Session 7 — Onglet Carte, pistes des terrains, choix du terrain (18/09/2026)
 
 ### Livré
