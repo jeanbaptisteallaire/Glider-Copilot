@@ -192,7 +192,8 @@ private fun MainScaffold(container: AppContainer) {
                 LightModeToggle(
                     lightMode,
                     onToggle = { on -> scope.launch { container.prefs.setLightMode(on) } },
-                    modifier = Modifier.align(Alignment.TopEnd).padding(end = 14.dp, top = 10.dp),
+                    // sous l'en-tête de chaque écran (titre + sélecteur de club / légende) pour ne pas le recouvrir
+                    modifier = Modifier.align(Alignment.TopEnd).padding(end = 10.dp, top = 54.dp),
                 )
             }
         }
