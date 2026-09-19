@@ -1,2 +1,2 @@
-BUILD SUCCESSFUL in 1m 34s
-335 actionable tasks: 186 executed, 149 from cache
+BUILD SUCCESSFUL in 1m 17s
+335 actionable tasks: 177 executed, 158 from cache
