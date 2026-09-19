@@ -278,8 +278,6 @@ private fun Disclaimer(onAccept: () -> Unit) {
     }
 }
 
-/** Couleurs de carte tirées de la charte GLIDY. */
-@Composable
 /**
  * Palette de la carte hors ligne dérivée d'une charte donnée. Fonction pure (pas de dépendance à
  * Gc.colors) : V7.2 a besoin de deux rendus simultanés (Pilotage sombre, Carte claire ou sombre).
