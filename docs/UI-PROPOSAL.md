@@ -1,4 +1,4 @@
-# Proposition d'interface — phases 2 et 3
+# Proposition d'interface — phases 2 à 4
 
 ## Direction retenue
 
@@ -14,12 +14,16 @@ L'interface utilise une palette blanche, gris clair, graphite et noir. Elle évi
 
 Les valeurs, la trace et le profil d'altitude affichés en phase 3 proviennent du fichier IGC importé. Les données de démonstration de la phase 2 ont été retirées.
 
+La phase 4 isole la logique dans un ViewModel et formalise les états chargement, vide, erreur et fichier manquant. Les cartes annoncent leur position dans la liste aux outils d'accessibilité. La liste paresseuse a été parcourue jusqu'au 500e vol dans un test Compose.
+
 ## Captures validées sur Android
 
 - `ui-phase2-mes-vols.png`
 - `ui-phase2-detail-vol.png`
 - `ui-phase3-imported-flight.png`
 - `ui-phase3-flight-detail.png`
+- `ui-phase4-small-screen.png` — 1080 × 1920
+- `ui-phase4-large-screen.png` — 1440 × 2560
 
 ## Principes d'intégration
 

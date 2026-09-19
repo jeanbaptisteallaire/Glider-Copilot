@@ -6,7 +6,7 @@ Le projet est autonome. Il pourra produire son propre APK ou fournir ses modules
 
 ## Phase actuelle
 
-La phase 3 fournit une archive locale fonctionnelle : import IGC depuis le sélecteur Android, copie privée du fichier, index Room, détection des doublons et reconstruction de la base depuis les fichiers. La page **Mes vols** et le détail affichent maintenant les données réellement calculées depuis la trace. Supabase et le moteur de rejeu 3D restent désactivés.
+La phase 4 fournit une page **Mes vols** structurée autour d'un ViewModel testable. Le chargement, la liste, l'état vide, l'erreur récupérable, les fichiers manquants et la navigation vers le détail ont des états explicites. La liste reste paresseuse et a été vérifiée avec 500 vols sans réseau. L'archive locale et l'import IGC de la phase 3 restent actifs. Supabase et le moteur de rejeu 3D restent désactivés.
 
 ## Modules
 
@@ -14,7 +14,7 @@ La phase 3 fournit une archive locale fonctionnelle : import IGC depuis le séle
 - `core:flightarchive` : modèles, contrats, parseur IGC et calculs Kotlin purs.
 - `data:flightarchive` : stockage local Room, fichiers IGC privés, déduplication et reconstruction de l'index.
 - `data:flightcloud` : futur adaptateur Supabase, désactivé par défaut.
-- `feature:myflights` : import, liste Mes vols, détail, aperçu de trace et profil d'altitude.
+- `feature:myflights` : ViewModel, états UI, import, liste Mes vols, détail, aperçu de trace et profil d'altitude.
 - `feature:replay3d` : emplacement réservé à la future expérimentation 3D.
 
 ## Vérification
