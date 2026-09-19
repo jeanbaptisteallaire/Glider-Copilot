@@ -1,17 +1,14 @@
-> Task :app:compileDebugKotlin FAILED
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:150:95 @Composable invocations can only happen from the context of a @Composable function
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:151:96 @Composable invocations can only happen from the context of a @Composable function
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:241:26 Unresolved reference 'contentDescription'.
-
-> Task :app:compileReleaseKotlin
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:150:95 @Composable invocations can only happen from the context of a @Composable function
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:151:96 @Composable invocations can only happen from the context of a @Composable function
-e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:241:26 Unresolved reference 'contentDescription'.
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:151:95 @Composable invocations can only happen from the context of a @Composable function
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:152:96 @Composable invocations can only happen from the context of a @Composable function
 
 > Task :app:compileReleaseKotlin FAILED
-> Task :core:designsystem:lintAnalyzeDebugAndroidTest
-> Task :core:designsystem:lintAnalyzeDebug
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1789779147762.json
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:151:95 @Composable invocations can only happen from the context of a @Composable function
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt:152:96 @Composable invocations can only happen from the context of a @Composable function
+
+> Task :app:compileDebugKotlin FAILED
+> Task :feature:checklist:lintAnalyzeDebug
+> Task :feature:flight:lintAnalyzeDebug
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1789779560969.json
 --
 * What went wrong:
 Execution failed for task ':app:compileDebugKotlin'.
@@ -23,5 +20,5 @@ Execution failed for task ':app:compileReleaseKotlin'.
 > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
    > Compilation error. See log for more details
 --
-BUILD FAILED in 1m 31s
-274 actionable tasks: 152 executed, 122 from cache
+BUILD FAILED in 1m 1s
+258 actionable tasks: 119 executed, 139 from cache
