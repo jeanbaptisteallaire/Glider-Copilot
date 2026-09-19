@@ -1,5 +1,53 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 7.3 — Mode calibration : capture des données brutes baro/accél./GPS (19/09/2026)
+
+### Livré
+- **Demande de JB** : la difficulté à venir n'est pas la fonctionnalité, mais le calibrage de la fusion
+  baromètre + accéléromètre (le GPS et OGN servent surtout de référence indépendante pour vérifier, pas
+  de source à fusionner). Plutôt que de deviner les réglages du filtre, JB veut un mode qui enregistre
+  les données brutes pendant de vrais vols d'essai, pour un réglage hors ligne après coup.
+- **Toggle « calib »** (Pilotage, à côté de « démo », `MapOverlays` dans `FlightScreen.kt`) : bascule
+  manuelle, indépendante du vol détecté (au sol ou en vol). `FlightControls.setCalibration(Boolean)`,
+  état `FlightLive.calibrationOn`/`calibrationSamples`.
+- **Journal de calibration** (`core:domain/flight/CalibrationLog.kt`, nouveau) : CSV compact réutilisant
+  le type `SensorSample` du banc de rejeu existant (`SensorReplay`) — baromètre brut (~25 Hz),
+  accélération verticale **déjà projetée** (l'entrée réelle de `VarioFilter`, pas les 3 axes ni la
+  gravité, pour rester léger), GPS (~1 Hz). `CalibrationRecorder` écrit au fil de l'eau comme
+  `IgcRecorder` ; `CalibrationLog.parse()` relit un journal en `List<SensorSample>`, directement
+  rejouable dans `VarioFilter` — testé (`CalibrationLogTest.replayedLogDrivesTheSameFilterAsLiveCalls`).
+- **FlightEngine.kt** : hooks dans `sensorListener` (baro, accélération verticale déjà calculée) et
+  `onLocation` (GPS). Fichier ouvert/fermé indépendamment de l'IGC (`calib/`, distinct de `igc/`),
+  compressé en **gzip à la fermeture** pour rester léger à transmettre (quelques Mo/heure), vidé (flush)
+  à 4 Hz sur la boucle de publication plutôt qu'à chaque échantillon (baro+accél. tournent jusqu'à 75 Hz
+  combinés). Reprend un enregistrement resté armé après un arrêt/relance du moteur.
+- **Partage** : Prévol → « Capteurs & vols » → « Journaux de calibration » (`SensorsCard.kt`), même
+  mécanisme `share()`/FileProvider que les IGC. **Piège trouvé en relisant `file_paths.xml`** : le
+  fichier ne déclarait que les racines `igc/`/`igc-rejeu/` — sans y ajouter `calib/`, le partage aurait
+  échoué en silence (exception avalée par `getOrNull()`).
+
+### Vérifié
+- CI verte (un aller-retour : `core:domain:compileTestKotlin` a d'abord échoué sur deux erreurs
+  — `VarioFilter.onBaroAltitude` attend une altitude, pas la pression brute, et `assertEquals` sur des
+  `Double?` veut des non-null explicites — corrigées, sans rien changer côté production).
+- Tests JVM nouveaux (`CalibrationLogTest`) : aller-retour écriture/lecture sans perte (baro, accél.,
+  GPS complet et avec champs optionnels absents), en-tête et lignes vides ignorés au parsing, et le test
+  de bout en bout qui rejoue un journal dans `VarioFilter` et vérifie l'identité avec un enregistrement
+  en direct.
+- Captures émulateur : bouton « calib » visible à côté de « démo » sur Pilotage, sans chevauchement.
+  Aucune exception ni avertissement dans le logcat.
+- Livrables : `Planneur APP/Session 7.3/` (APK 0.7.3, captures, LISEZ-MOI).
+
+### Limites / à faire
+- Le banc de captures CI ne simule pas d'appui sur le toggle : aucune capture ne montre la liste
+  « Journaux de calibration » remplie ni le fichier en cours d'écriture — seul le mécanisme est couvert,
+  par les tests automatiques.
+- N'enregistre qu'en mode téléphone (PHONE) : rien en mode démo/rejeu/suivi, qui n'ont pas de vrais
+  capteurs à calibrer.
+- Le prochain pas, quand JB aura transmis un premier journal réel : rejouer le fichier dans
+  `VarioFilter` avec plusieurs réglages (bruit baro/accél., dérive du biais) et comparer au GPS pour
+  affiner les constantes par défaut de `Vario.kt`.
+
 ## Session 7.2 — Charte aéronautique, mode clair, RTE, NOTAM, écran d'accueil (19/09/2026)
 
 ### Livré
