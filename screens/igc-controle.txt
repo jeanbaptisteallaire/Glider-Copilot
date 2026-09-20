@@ -1,2 +1,2 @@
-screens/igc/2026-09-19-XXX-GLY-01.igc : 1914 lignes, 1898 points B, altitude GNSS 183–1609 m
+screens/igc/2026-09-20-XXX-GLY-01.igc : 1914 lignes, 1898 points B, altitude GNSS 183–1609 m
   OK
