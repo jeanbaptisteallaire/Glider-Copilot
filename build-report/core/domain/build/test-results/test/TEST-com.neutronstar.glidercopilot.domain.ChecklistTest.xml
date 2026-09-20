@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.domain.ChecklistTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-09-19T18:23:58" hostname="runnervmlun5p" time="0.043">
+  <properties/>
+  <testcase name="cablePlanRulesFollowJavascript" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.019"/>
+  <testcase name="countsMatchTheMockup" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.013"/>
+  <testcase name="progressAndCompletion" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.008"/>
+  <testcase name="defaultCablePlan" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
