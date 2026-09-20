@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.ArrayDeque
@@ -209,7 +210,10 @@ class OgnLiveRepository(
                     circling = a.circling,
                     id = a.address,
                     shortLabel = a.shortLabel,
-                    fullLabel = a.label ?: a.address.uppercase(),
+                    // S8, correctif : l'adresse radio (ex. « DDB179 ») ressemblait à une fausse immatriculation
+                    // sur la carte — vide plutôt, pour que FlightMap/TrafficMapScreen retombent sur leur repli
+                    // déjà prévu (2 lettres, puis le type d'aéronef) au lieu d'afficher un identifiant trompeur.
+                    fullLabel = a.label ?: "",
                     typeLabel = a.typeLabel,
                     speedKmh = a.last.groundSpeedKmh,
                     climbMs = a.last.climbMs,
@@ -274,7 +278,21 @@ class OgnLiveRepository(
                     st.medianLatencyS?.let { String.format(Locale.FRANCE, "retard %.1f s", it) },
                 ).joinToString(" · ")
             },
+            ddbStatus = ddbStatusLabel(now),
         )
+    }
+
+    /**
+     * S8, correctif : diagnostic visible sans avoir à voler — si la DDB n'est jamais chargée, tout le
+     * trafic environnant s'affiche par son adresse radio au lieu de son immatriculation (l'appairage de
+     * son propre planeur, lui, ne dépend pas de cette copie — voir GliderRepository.pair()).
+     */
+    private fun ddbStatusLabel(now: Instant): String {
+        val st = glider.ddb.status()
+        val at = st.fetchedAt ?: return "Base des immatriculations (DDB) : jamais chargée" + if (replay) " (rejeu, normal)" else " — réessaiera au prochain démarrage"
+        val age = Duration.between(at, now)
+        val ago = if (age.toHours() < 20) "il y a ${age.toMinutes().coerceAtLeast(0)} min" else DDB_FMT.format(at)
+        return "Base des immatriculations (DDB) : ${st.deviceCount} appareils, ${if (st.offline) "copie locale" else "à jour"} $ago"
     }
 
     private fun signed(n: Int) = (if (n >= 0) "+" else "−") + kotlin.math.abs(n)
@@ -291,5 +309,6 @@ class OgnLiveRepository(
         /** Au-delà, seules les dernières positions sont gardées (mémoire). */
         const val DETAIL_KM = 60.0
         const val REPLAY_SPEED = 4L
+        private val DDB_FMT: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM HH:mm", Locale.FRANCE).withZone(ZoneId.of("Europe/Paris"))
     }
 }

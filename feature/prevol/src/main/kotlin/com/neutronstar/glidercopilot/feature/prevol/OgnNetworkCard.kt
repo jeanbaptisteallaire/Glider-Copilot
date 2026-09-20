@@ -49,6 +49,11 @@ data class OgnNetworkUi(
     val lastFrameAgoS: Long? = null,
     /** Message d'alerte quand la connexion est ouverte mais muette (indicatif ou filtre refusé). */
     val warning: String? = null,
+    /**
+     * État de l'annuaire des immatriculations (DDB), à vérifier sans avoir à voler (S8, correctif) :
+     * si absent, tout le trafic autour de toi s'affichera par son adresse radio, pas d'immatriculation.
+     */
+    val ddbStatus: String = "Base des immatriculations (DDB) : jamais chargée",
 )
 
 private fun s1(v: Double?) = v?.let { String.format(Locale.FRANCE, "%.1f s", it) } ?: "—"
@@ -84,6 +89,7 @@ internal fun OgnNetworkCard(ui: OgnNetworkUi) {
                 Text(ui.ownLine ?: "Pas encore reçu depuis la connexion.", style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.dim))
             }
         }
+        Text(ui.ddbStatus, style = TextStyle(fontSize = 10.5.sp, color = c.faint))
         Text(
             (if (ui.replay) "Rejeu d'un enregistrement OGN anonymisé (démonstration). " else "") +
                 "Open Glider Network (ODbL) · furtifs, « no-tracking » et refus DDB ignorés · rien n'est conservé au-delà de 30 min. " +

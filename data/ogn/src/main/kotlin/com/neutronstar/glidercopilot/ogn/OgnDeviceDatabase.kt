@@ -74,6 +74,14 @@ class OgnDeviceDatabase(
 ) {
     @Volatile private var parsed: Pair<Instant, List<DdbDevice>>? = null
 
+    /** État de la copie locale de la DDB, pour diagnostic à l'écran (Prévol) — voir [refresh]/[status]. */
+    data class DdbStatus(val fetchedAt: Instant?, val deviceCount: Int, val offline: Boolean)
+
+    @Volatile private var lastStatus = DdbStatus(fetchedAt = null, deviceCount = 0, offline = false)
+
+    /** Dernier état connu de la copie locale, sans re-toucher le disque — à afficher tel quel. */
+    fun status(): DdbStatus = lastStatus
+
     /**
      * Rafraîchit (ou télécharge) la copie locale de la DDB si besoin (S8, correctif) : sans cet appel,
      * [cachedDevice] ne résout jamais aucune adresse tant qu'aucun appairage ni suivi n'a déclenché [lookup] —
@@ -81,7 +89,11 @@ class OgnDeviceDatabase(
      * démarrage du réseau OGN, avant même que le pilote n'ait appairé son planeur.
      * Renvoie vrai si une copie (fraîche ou mise en cache hors ligne) est disponible après l'appel.
      */
-    fun refresh(): Boolean = load() != null
+    fun refresh(): Boolean {
+        val loaded = load()
+        lastStatus = if (loaded != null) DdbStatus(loaded.fetchedAt, loaded.devices.size, loaded.offline) else lastStatus
+        return loaded != null
+    }
 
     fun lookup(registration: String): PairingLookup {
         val reg = Registration.normalize(registration)
