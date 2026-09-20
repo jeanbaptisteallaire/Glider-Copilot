@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.FollowPipelineTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-09-19T18:23:58" hostname="runnervmlun5p" time="0.626">
-  <properties/>
-  <testcase name="realOgnTrackDrivesFlightAndSafety" classname="com.neutronstar.glidercopilot.ogn.FollowPipelineTest" time="0.626"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

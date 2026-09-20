@@ -1,2 +1,15 @@
-BUILD SUCCESSFUL in 1m 40s
-335 actionable tasks: 206 executed, 129 from cache
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build.gradle.kts:24:14: Unresolved reference: io
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build.gradle.kts:25:13: Unresolved reference: deleteOnExit
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build.gradle.kts:26:13: Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
+public fun File.writeBytes(array: ByteArray): Unit defined in kotlin.io
+e: file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build.gradle.kts:26:29: Unresolved reference: util
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1789891774653.json
+
+FAILURE: Build failed with an exception.
+--
+* What went wrong:
+Script compilation errors:
+
+  Line 24:         java.io.File.createTempFile("glidy-upload", ".jks").apply {
+--
+BUILD FAILED in 17s
