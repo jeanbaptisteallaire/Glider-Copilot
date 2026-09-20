@@ -49,6 +49,45 @@
 - Pas de bannière (feature graphic 1024×500) ni de sélection finale des captures — pas bloquant pour
   une première soumission.
 
+### Correctifs terrain V0.8.1 / V0.8.2 (test live au club, 20/09/2026)
+JB a testé V0.8.0 en vol réel au club (terrain FLNL) et remonté deux bugs observés directement :
+- **« Saut » en Suivi & debug (Pilotage)** : le planeur suivi revenait au terrain toutes les ~2 s
+  avant de repartir en vol. Cause : `FlightLive.gpsFresh` utilisait un seuil unique de 5 s, trop
+  strict pour la cadence normale des trames OGN relayées (2-5 s, parfois plus) — la position
+  repassait « périmée » entre deux trames et `FlightScreen` retombait sur `map.field`. **Corrigé en
+  V0.8.1** : seuil porté à 20 s en mode `FOLLOW`, resté à 5 s en `PHONE` (vraie perte GPS à détecter
+  vite). Confirmé corrigé par JB.
+- **Immatriculations affichées en adresse radio brute** (« DDB179 » au lieu de « F-CGXB ») pour le
+  trafic environnant. Cause : la copie locale de la DDB (annuaire des immatriculations OGN) n'était
+  chargée qu'au premier appairage/suivi — tant que le pilote n'avait rien appairé depuis le dernier
+  lancement, elle restait vide. **V0.8.1** a ajouté un rafraîchissement au démarrage du réseau OGN
+  (`OgnDeviceDatabase.refresh()`). JB a confirmé que le symptôme persistait malgré ça. **V0.8.2** va
+  plus loin :
+  - `OgnDeviceDatabase.status()`/`DdbStatus` : état de la copie locale (âge, nb d'appareils, hors
+    ligne ou non), sans appel réseau.
+  - Nouvelle ligne diagnostic dans Prévol → Réseau OGN (« Base des immatriculations (DDB) : X
+    appareils, à jour il y a Y min »), pour que JB puisse vérifier lui-même au sol si la DDB a bien
+    chargé, sans repasser par une session Claude.
+  - Le repli sur la carte n'est plus l'adresse radio brute (trompeuse, ressemble à une fausse
+    immatriculation) mais une chaîne vide, pour activer le repli déjà prévu dans
+    `FlightMap`/`TrafficMapScreen` (2 lettres, puis le type d'appareil).
+  - Important : un planeur dont le propriétaire a coché « refus d'identification » dans la DDB
+    continuera de s'afficher sans immatriculation — comportement voulu (vie privée OGN, cf.
+    CLAUDE.md), pas un bug. Impossible de distinguer ce cas à distance : `ddb.glidernet.org` est
+    injoignable depuis le sandbox **et** depuis le Mac de JB (403 côté proxy dans les deux cas) —
+    seule la CI (réseau non restreint) a pu confirmer un chargement réel (34 224 appareils).
+- **Vérification appairage / suivi auto (demandée explicitement par JB avant un vol de test)** :
+  tracé dans le code — `GliderRepository.pair()` interroge la DDB directement par immatriculation
+  (`ddb.lookup()`), indépendamment de la copie locale utilisée pour étiqueter le trafic (le bug
+  ci-dessus). Une fois apparié, le filtre APRS-IS (`OwnGlider.aprsFilter`) inclut une clause exacte
+  sur l'adresse du planeur : le suivi démarre automatiquement, sans action supplémentaire. Check au
+  sol donné à JB : « Mon planeur · F-XXXX » visible dans Prévol → Réseau OGN (appairage OK), puis la
+  ligne en dessous passe de « Pas encore reçu » à une ligne de données dès la balise allumée (suivi
+  auto OK) — vérifiable sans voler.
+- V0.8.1 et V0.8.2 vérifiées vertes en CI (build + captures, 0 `FATAL EXCEPTION`, IGC contrôlé),
+  livrées dans `Planneur APP/Session 8/correctif-0.8.1/` et `correctif-0.8.2/` (MD5 vérifié entre CI
+  et le Mac de JB à chaque fois).
+
 ## Session 7.3 — Mode calibration : capture des données brutes baro/accél./GPS (19/09/2026)
 
 ### Livré
