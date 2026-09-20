@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GLIDY — Politique de confidentialité</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; line-height: 1.55; color: #1c1c1e; background: #fff; }
+  h1 { font-size: 26px; margin-bottom: 4px; }
+  .maj { color: #6b7280; font-size: 13px; margin-bottom: 28px; }
+  h2 { font-size: 17px; margin-top: 34px; border-top: 1px solid #e5e7eb; padding-top: 20px; }
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+  .badge { display: inline-block; background: #e8f9ec; color: #166534; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+  footer { margin-top: 48px; font-size: 12px; color: #6b7280; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0b1117; color: #e6edf2; }
+    .maj { color: #9aa4af; }
+    h2 { border-top-color: #1f2937; }
+    code { background: #1c1c1e; color: #e6edf2; }
+    .badge { background: #12321e; color: #6fe08a; }
+    footer { color: #9aa4af; }
+  }
+</style>
+</head>
+<body>
+  <h1>GLIDY — Politique de confidentialité</h1>
+  <p class="maj">Dernière mise à jour : 20 septembre 2026 · version de l'app 0.8.0</p>
+
+  <p>
+    GLIDY (« l'application ») est une aide secondaire au vol à voile, développée par
+    <strong>Neutron Star</strong>. Cette page explique quelles données l'application utilise, où elles
+    vont, et ce qu'elle ne fait jamais.
+  </p>
+
+  <span class="badge">Aucun compte</span>
+  <span class="badge">Aucune publicité</span>
+  <span class="badge">Aucun suivi marketing</span>
+
+  <h2>Ce que l'application ne fait pas</h2>
+  <ul>
+    <li>Pas de création de compte, pas d'identifiant, pas de mot de passe.</li>
+    <li>Pas de publicité ni de SDK publicitaire.</li>
+    <li>Pas de mesure d'audience ni de suivi marketing (aucune bibliothèque d'analytics ou de crash-reporting tiers).</li>
+    <li>Aucune donnée n'est vendue, ni partagée à des fins publicitaires.</li>
+    <li>Aucune fonction de sécurité en vol ne dépend du réseau : altitude, vario, alertes de terrain et de terrain de dégagement fonctionnent hors ligne, avec les cartes et données déjà téléchargées sur le téléphone.</li>
+  </ul>
+
+  <h2>Localisation précise (GPS)</h2>
+  <p>
+    GLIDY utilise la position précise du téléphone pour afficher l'altitude, la vitesse, la trace de vol
+    et les terrains de dégagement, et pour détecter automatiquement le décollage et l'atterrissage.
+  </p>
+  <ul>
+    <li><strong>Pendant un vol enregistré ou l'onglet Pilotage ouvert</strong>, un service de premier plan (notification permanente, « Suivi du vol actif ») garde le GPS et les capteurs actifs même écran éteint — c'est le seul cas où l'app accède à la position en arrière-plan, et il est toujours visible par une notification que le pilote peut arrêter à tout moment.</li>
+    <li>La position n'est <strong>jamais envoyée à un serveur de GLIDY</strong> : il n'existe pas de serveur GLIDY. Aucun compte, donc aucun historique de vols n'est conservé ailleurs que sur le téléphone.</li>
+    <li>Une position approximative (rayon de quelques dizaines de km, dérivée du club sélectionné) est envoyée au réseau public <strong>Open Glider Network</strong> (<code>aprs.glidernet.org</code>) uniquement pour recevoir le trafic planeur proche — connexion en lecture seule, l'app n'émet jamais la position du pilote sur ce réseau.</li>
+    <li>La position du club sélectionné sert aussi à demander la météo du jour auprès de l'API météo (voir ci-dessous).</li>
+  </ul>
+
+  <h2>Services externes utilisés</h2>
+  <table style="width:100%; border-collapse: collapse; font-size: 13px; margin-top: 8px;">
+    <tr><th align="left" style="padding:6px 8px 6px 0;">Service</th><th align="left" style="padding:6px 8px;">Usage</th><th align="left" style="padding:6px 0;">Donnée envoyée</th></tr>
+    <tr><td style="padding:6px 8px 6px 0;">API météo (precog)</td><td style="padding:6px 8px;">Prévisions Météo-France</td><td style="padding:6px 0;">Position du terrain choisi</td></tr>
+    <tr><td style="padding:6px 8px 6px 0;">Open Glider Network<br><code>ddb.glidernet.org</code></td><td style="padding:6px 8px;">Annuaire des immatriculations planeur (ODbL)</td><td style="padding:6px 0;">Aucune (lecture seule, en cache)</td></tr>
+    <tr><td style="padding:6px 8px 6px 0;">Open Glider Network<br><code>aprs.glidernet.org</code></td><td style="padding:6px 8px;">Trafic planeur temps réel</td><td style="padding:6px 0;">Position approximative (filtre de zone)</td></tr>
+    <tr><td style="padding:6px 8px 6px 0;">GitHub Releases</td><td style="padding:6px 8px;">Téléchargement des cartes hors ligne (openAIP, OpenStreetMap, Copernicus)</td><td style="padding:6px 0;">Aucune</td></tr>
+  </table>
+  <p style="font-size:13px; margin-top:10px;">Aucun de ces services ne reçoit d'identifiant publicitaire, de nom, d'e-mail ou de numéro de téléphone : l'app n'en collecte aucun.</p>
+
+  <h2>Données stockées uniquement sur le téléphone</h2>
+  <ul>
+    <li>Traces de vol au format IGC (enregistreur non approuvé, sans valeur pour un badge).</li>
+    <li>Journaux de calibration (mode « calib », optionnel) : baromètre, accélération verticale et GPS bruts d'un vol d'essai — envoyés uniquement si le pilote choisit de les partager lui-même (bouton « Partager »), par le moyen de son choix.</li>
+    <li>Préférences (club, immatriculation, réglages de son et de voix).</li>
+  </ul>
+  <p>Ces fichiers restent dans le dossier privé de l'application. Les désinstaller supprime toutes ces données. Rien n'est envoyé automatiquement nulle part.</p>
+
+  <h2>Permissions Android utilisées</h2>
+  <ul>
+    <li><strong>Position précise / approximative</strong> — altitude, vario, trace de vol, terrains de dégagement (voir ci-dessus).</li>
+    <li><strong>Service de premier plan (localisation)</strong> — garde le suivi actif écran éteint pendant le vol, avec notification visible en permanence.</li>
+    <li><strong>Notifications</strong> — affiche cette notification de suivi de vol.</li>
+    <li><strong>Vibreur</strong> — alertes de sécurité (en complément de la voix).</li>
+    <li><strong>Internet</strong> — météo, annuaire OGN, trafic OGN, téléchargement des cartes (voir ci-dessus) ; jamais requis pour les fonctions de sécurité en vol.</li>
+  </ul>
+
+  <h2>Droits et contact</h2>
+  <p>
+    L'application ne collectant aucune donnée identifiante et ne tenant aucun compte utilisateur, il n'existe
+    pas de profil à consulter, corriger ou supprimer sur un serveur : toutes les données restent sur le
+    téléphone du pilote et sont supprimées avec l'application.
+  </p>
+  <p>
+    Pour toute question sur cette politique, contact : <a href="mailto:jb.allaire91@gmail.com">jb.allaire91@gmail.com</a>.
+  </p>
+
+  <footer>
+    GLIDY est une aide secondaire au vol à voile. L'instrumentation de bord et la veille extérieure priment ;
+    l'application ne remplace ni le vario, ni le calculateur, ni le FLARM, et n'est pas un moyen de navigation
+    certifié. Données météo : Météo-France via precog. Trafic et annuaire planeur : Open Glider Network (ODbL).
+  </footer>
+</body>
+</html>
