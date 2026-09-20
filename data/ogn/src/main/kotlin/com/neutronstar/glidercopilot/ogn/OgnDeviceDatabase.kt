@@ -74,6 +74,15 @@ class OgnDeviceDatabase(
 ) {
     @Volatile private var parsed: Pair<Instant, List<DdbDevice>>? = null
 
+    /**
+     * Rafraîchit (ou télécharge) la copie locale de la DDB si besoin (S8, correctif) : sans cet appel,
+     * [cachedDevice] ne résout jamais aucune adresse tant qu'aucun appairage ni suivi n'a déclenché [lookup] —
+     * le trafic environnant retombait alors sur l'adresse radio brute pour tout le monde. À appeler au
+     * démarrage du réseau OGN, avant même que le pilote n'ait appairé son planeur.
+     * Renvoie vrai si une copie (fraîche ou mise en cache hors ligne) est disponible après l'appel.
+     */
+    fun refresh(): Boolean = load() != null
+
     fun lookup(registration: String): PairingLookup {
         val reg = Registration.normalize(registration)
         if (!Registration.isValid(reg)) return PairingLookup.Unavailable("Immatriculation trop courte")

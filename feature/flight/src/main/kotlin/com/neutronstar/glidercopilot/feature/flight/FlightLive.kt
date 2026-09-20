@@ -39,10 +39,19 @@ data class FlightLive(
             return s.source != VarioSource.NONE || s.altitudeM != null || (s.gpsAgeS ?: 99.0) < 10
         }
 
+    /**
+     * S8, correctif : en Suivi & debug (FOLLOW), la position vient de trames OGN relayées, pas du GPS du
+     * téléphone — leur cadence varie normalement de 2 à 5 s (parfois plus, selon la dynamique de l'appareil
+     * suivi et le réseau de réception). Avec un seuil unique à 5 s, la position repassait « périmée » entre
+     * deux trames et la carte revenait au terrain (voir [FlightScreen] : le planeur affiché retombait sur
+     * `map.field`) avant de repartir dès la trame suivante — un aller-retour visible toutes les quelques
+     * secondes. Le seuil reste strict en PHONE (vraie perte GPS à détecter vite) et large en FOLLOW.
+     */
     val gpsFresh: Boolean
         get() {
             val s = snapshot ?: return false
-            return s.gps != null && (s.gpsAgeS ?: 99.0) < 5
+            val maxAgeS = if (mode == OwnshipMode.FOLLOW) 20.0 else 5.0
+            return s.gps != null && (s.gpsAgeS ?: 99.0) < maxAgeS
         }
     val baroActive: Boolean get() = (snapshot?.baroHz ?: 0.0) > 3
 }

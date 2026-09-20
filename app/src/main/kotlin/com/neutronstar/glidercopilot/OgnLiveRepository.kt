@@ -99,6 +99,10 @@ class OgnLiveRepository(
 
     fun start() {
         if (job?.isActive == true) return
+        // S8, correctif : sans ce rafraîchissement, la DDB n'était chargée que par un appairage/suivi — le
+        // trafic environnant affichait l'adresse radio brute (ex. « DDB179 ») au lieu de l'immatriculation
+        // tant que le pilote n'avait rien appairé depuis le dernier lancement (cache DDB vide ou périmé).
+        if (!replay) scope.launch(Dispatchers.IO) { runCatching { glider.ddb.refresh() } }
         job = scope.launch {
             launch { publishLoop() }
             if (replay) replayLines().collect { handle(it) } else liveLines().collect { handle(it) }
