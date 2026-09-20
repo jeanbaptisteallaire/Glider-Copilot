@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-19T18:23:59" hostname="runnervmlun5p" time="0.009">
+<testsuite name="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-20T12:44:22" hostname="runnervmlun5p" time="0.011">
   <properties/>
-  <testcase name="shortLabelForTheMapTab" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.008"/>
+  <testcase name="shortLabelForTheMapTab" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.001"/>
   <testcase name="farAwayAircraftKeepOnlyTheirLastFixes" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.001"/>
-  <testcase name="anonymousDevicesKeepTheirAddressLabel" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.0"/>
+  <testcase name="anonymousDevicesKeepTheirAddressLabel" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.009"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
