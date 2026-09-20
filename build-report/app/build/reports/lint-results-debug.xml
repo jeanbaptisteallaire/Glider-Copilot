@@ -613,7 +613,7 @@
         errorLine2="         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/OgnLiveRepository.kt"
-            line="283"
+            line="301"
             column="10"/>
     </issue>
 
