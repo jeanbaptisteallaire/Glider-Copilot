@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
+import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
@@ -116,8 +117,12 @@ data class FlightCardUi(
 fun MyFlightsApp(
     repository: FlightArchiveRepository,
     shareGateway: FlightShareGateway,
+    completedFlightGateway: CompletedFlightGateway? = null,
+    onReplay3d: (ArchivedFlight) -> Unit = {},
 ) {
-    val factory = remember(repository, shareGateway) { MyFlightsViewModelFactory(repository, shareGateway) }
+    val factory = remember(repository, shareGateway, completedFlightGateway) {
+        MyFlightsViewModelFactory(repository, shareGateway, completedFlightGateway)
+    }
     val viewModel: MyFlightsViewModel = viewModel(factory = factory)
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
@@ -139,6 +144,7 @@ fun MyFlightsApp(
         onDeleteRequest = viewModel::requestDelete,
         onDeleteCancel = viewModel::cancelDelete,
         onDeleteConfirm = viewModel::confirmDelete,
+        onReplay3d = onReplay3d,
     )
 }
 
@@ -153,6 +159,7 @@ fun MyFlightsScreen(
     onDeleteRequest: (FlightId) -> Unit = {},
     onDeleteCancel: () -> Unit = {},
     onDeleteConfirm: () -> Unit = {},
+    onReplay3d: (ArchivedFlight) -> Unit = {},
 ) {
     MaterialTheme(colorScheme = GlidyLightColors) {
         Surface(modifier = Modifier.fillMaxSize(), color = White) {
@@ -168,6 +175,7 @@ fun MyFlightsScreen(
                             onBack = onBack,
                             onShare = { onShare(selectedFlight.id) },
                             onDelete = { onDeleteRequest(selectedFlight.id) },
+                            onReplay3d = { onReplay3d(selectedFlight) },
                         )
                     } else {
                         FlightsListScreen(
@@ -479,6 +487,7 @@ private fun FlightDetailScreen(
     onBack: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit,
+    onReplay3d: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().statusBarsPadding().testTag("flight-detail"),
@@ -566,16 +575,18 @@ private fun FlightDetailScreen(
                 }
                 Spacer(Modifier.height(10.dp))
                 Button(
-                    onClick = {},
-                    enabled = false,
-                    modifier = Modifier.fillMaxWidth().height(58.dp),
+                    onClick = onReplay3d,
+                    enabled = flight.localState == LocalFileState.AVAILABLE && flight.route.size >= 2,
+                    modifier = Modifier.fillMaxWidth().height(58.dp).testTag("open-replay-3d"),
                     shape = RoundedCornerShape(17.dp),
                     colors = ButtonDefaults.buttonColors(
+                        containerColor = Ink,
+                        contentColor = White,
                         disabledContainerColor = CanvasGray,
-                        disabledContentColor = Graphite,
+                        disabledContentColor = Quiet,
                     ),
                 ) {
-                    Text("REVOIR EN 3D · ÉTUDE À VENIR", fontWeight = FontWeight.Bold, letterSpacing = 0.7.sp)
+                    Text("REVOIR LE VOL EN 3D", fontWeight = FontWeight.Bold, letterSpacing = 0.7.sp)
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
+import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
@@ -11,6 +12,7 @@ import com.neutronstar.glidy.flightarchive.IgcParseError
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.ReconciliationResult
 import com.neutronstar.glidy.flightarchive.RemoveFlightResult
+import com.neutronstar.glidy.flightarchive.PendingFlightRecovery
 import com.neutronstar.glidy.flightarchive.ShareFlightResult
 import java.io.InputStream
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +40,13 @@ internal fun ReconciliationResult.issueNotice(): String? = when {
     else -> null
 }
 
+internal fun PendingFlightRecovery.issueNotice(): String? = when {
+    imported > 0 && rejected > 0 -> "$imported vol(s) Pilotage récupéré(s), $rejected fichier(s) rejeté(s)."
+    imported > 0 -> "$imported vol(s) terminé(s) récupéré(s) depuis Pilotage."
+    rejected > 0 -> "$rejected fichier(s) Pilotage rejeté(s)."
+    else -> null
+}
+
 internal fun ImportIgcResult.userMessage(): String = when (this) {
     is ImportIgcResult.Imported -> "Vol importé et archivé sur cet appareil."
     is ImportIgcResult.Duplicate -> "Ce vol est déjà présent dans le carnet."
@@ -54,6 +63,7 @@ internal fun ImportIgcResult.userMessage(): String = when (this) {
 class MyFlightsViewModel(
     private val repository: FlightArchiveRepository,
     private val shareGateway: FlightShareGateway,
+    private val completedFlightGateway: CompletedFlightGateway? = null,
 ) : ViewModel() {
     private val mutableState = MutableStateFlow<MyFlightsUiState>(MyFlightsUiState.Loading)
     val state: StateFlow<MyFlightsUiState> = mutableState.asStateFlow()
@@ -66,10 +76,13 @@ class MyFlightsViewModel(
         mutableState.value = MyFlightsUiState.Loading
         viewModelScope.launch {
             mutableState.value = try {
+                val recovered = completedFlightGateway?.recoverPending()
                 val reconciliation = repository.reconcile()
                 MyFlightsUiState.Ready(
                     flights = repository.listFlights().sortedForDisplay(),
-                    notice = reconciliation.issueNotice(),
+                    notice = listOfNotNull(recovered?.issueNotice(), reconciliation.issueNotice())
+                        .joinToString(" ")
+                        .takeIf { it.isNotBlank() },
                 )
             } catch (_: Exception) {
                 MyFlightsUiState.Error("Le carnet local ne peut pas être chargé.")
@@ -175,11 +188,12 @@ class MyFlightsViewModel(
 class MyFlightsViewModelFactory(
     private val repository: FlightArchiveRepository,
     private val shareGateway: FlightShareGateway,
+    private val completedFlightGateway: CompletedFlightGateway? = null,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         require(modelClass.isAssignableFrom(MyFlightsViewModel::class.java))
-        return MyFlightsViewModel(repository, shareGateway) as T
+        return MyFlightsViewModel(repository, shareGateway, completedFlightGateway) as T
     }
 }
 

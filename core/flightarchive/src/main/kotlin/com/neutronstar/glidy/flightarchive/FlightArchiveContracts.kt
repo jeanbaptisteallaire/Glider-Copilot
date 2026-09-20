@@ -110,6 +110,34 @@ interface RecordedFlightSource {
     suspend fun listCompletedFiles(): List<CompletedIgcFile>
 }
 
+/**
+ * Frontière avec Pilotage. Pilotage remet uniquement un fichier fermé ; l'implémentation en fait
+ * une copie privée et atomique avant de l'indexer. Elle ne modifie jamais le fichier d'origine.
+ */
+interface CompletedFlightGateway {
+    suspend fun submitCompletedIgc(fileName: String, source: InputStream): CompletedFlightResult
+    suspend fun recoverPending(): PendingFlightRecovery
+}
+
+sealed interface CompletedFlightResult {
+    data class Imported(val flight: ArchivedFlight) : CompletedFlightResult
+    data class Duplicate(val existingFlight: ArchivedFlight) : CompletedFlightResult
+    data object TooLarge : CompletedFlightResult
+    data class Invalid(val error: IgcParseError) : CompletedFlightResult
+    data class Failed(val reason: String) : CompletedFlightResult
+}
+
+data class PendingFlightRecovery(
+    val imported: Int,
+    val duplicates: Int,
+    val rejected: Int,
+    val abandonedPartials: Int,
+) {
+    init {
+        require(listOf(imported, duplicates, rejected, abandonedPartials).all { it >= 0 })
+    }
+}
+
 /** Port central de l'archive locale. */
 interface FlightArchiveRepository {
     /** Copie la source dans l'archive privée. Le dépôt ne ferme pas le flux fourni. */

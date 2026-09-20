@@ -16,6 +16,7 @@ import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightSummary
 import com.neutronstar.glidy.flightarchive.IgcFileRef
 import com.neutronstar.glidy.flightarchive.LocalFileState
+import com.neutronstar.glidy.flightarchive.GeoPoint
 import java.time.Instant
 import java.util.UUID
 import org.junit.Assert.assertEquals
@@ -203,6 +204,30 @@ class MyFlightsScreenTest {
             .performScrollToNode(hasTestTag("share-igc"))
         composeRule.onNodeWithTag("share-igc").performClick()
         composeRule.runOnIdle { assertEquals(flight.id, shared) }
+    }
+
+    @Test
+    fun availableFlightCanOpenInteractive3dReplay() {
+        val flight = uiFlight(32).copy(
+            previewTrack = listOf(GeoPoint(43.80, 3.73), GeoPoint(43.81, 3.75)),
+            altitudeProfileMeters = listOf(190, 540),
+        )
+        var replayed: FlightId? = null
+        composeRule.setContent {
+            MyFlightsScreen(
+                state = MyFlightsUiState.Ready(listOf(flight), selectedFlightId = flight.id),
+                onRetry = {},
+                onImport = {},
+                onFlightSelected = {},
+                onBack = {},
+                onReplay3d = { replayed = it.id },
+            )
+        }
+
+        composeRule.onNodeWithTag("flight-detail")
+            .performScrollToNode(hasTestTag("open-replay-3d"))
+        composeRule.onNodeWithTag("open-replay-3d").performClick()
+        composeRule.runOnIdle { assertEquals(flight.id, replayed) }
     }
 }
 

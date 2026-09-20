@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
+import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
 import java.io.File
 
 object LocalArchiveModule {
@@ -32,6 +33,18 @@ object LocalArchiveModule {
         )
     }
 
+    fun createCompletedFlightGateway(
+        context: Context,
+        repository: FlightArchiveRepository,
+    ): CompletedFlightGateway {
+        val applicationContext = context.applicationContext
+        return AtomicCompletedFlightGateway(
+            repository = repository,
+            inboxDirectory = File(applicationContext.filesDir, COMPLETED_INBOX_DIRECTORY),
+        )
+    }
+
     private const val DATABASE_NAME = "glidy-flight-archive.db"
     private const val ARCHIVE_DIRECTORY = "igc-archive"
+    private const val COMPLETED_INBOX_DIRECTORY = "igc-completed-inbox"
 }

@@ -25,7 +25,9 @@ import org.junit.runner.RunWith
 class RoomFlightArchiveRepositoryTest {
     private lateinit var database: FlightArchiveDatabase
     private lateinit var archiveDirectory: File
+    private lateinit var inboxDirectory: File
     private lateinit var repository: RoomFlightArchiveRepository
+    private lateinit var completedGateway: AtomicCompletedFlightGateway
 
     @Before
     fun setUp() {
@@ -34,17 +36,20 @@ class RoomFlightArchiveRepositoryTest {
             .allowMainThreadQueries()
             .build()
         archiveDirectory = File(context.filesDir, "igc-archive/test-${System.nanoTime()}").apply { mkdirs() }
+        inboxDirectory = File(context.filesDir, "igc-inbox/test-${System.nanoTime()}").apply { mkdirs() }
         repository = RoomFlightArchiveRepository(
             dao = database.flightDao(),
             archiveDirectory = archiveDirectory,
             now = { 1_800_000_000_000L },
         )
+        completedGateway = AtomicCompletedFlightGateway(repository, inboxDirectory)
     }
 
     @After
     fun tearDown() {
         database.close()
         archiveDirectory.deleteRecursively()
+        inboxDirectory.deleteRecursively()
         ApplicationProvider.getApplicationContext<Context>().cacheDir.resolve("igc-share").deleteRecursively()
     }
 
@@ -177,6 +182,41 @@ class RoomFlightArchiveRepositoryTest {
 
         assertEquals(ShareFlightResult.FileUnavailable, gateway.share(imported.flight.id))
         assertFalse(presented)
+    }
+
+    @Test
+    fun completedFlightIsRecoveredAfterProcessStop() = runBlocking {
+        File(inboxDirectory, "session--vol-pilotage.igc").writeText(testIgc)
+
+        val recovery = AtomicCompletedFlightGateway(repository, inboxDirectory).recoverPending()
+
+        assertEquals(1, recovery.imported)
+        assertEquals(0, recovery.duplicates)
+        assertEquals("vol-pilotage.igc", repository.listFlights().single().file.fileName)
+        assertTrue(inboxDirectory.listFiles().orEmpty().isEmpty())
+    }
+
+    @Test
+    fun unfinishedRecordingIsNeverImported() = runBlocking {
+        File(inboxDirectory, "session--vol-incomplet.igc.part").writeText(testIgc.take(80))
+
+        val recovery = completedGateway.recoverPending()
+
+        assertEquals(1, recovery.abandonedPartials)
+        assertTrue(repository.listFlights().isEmpty())
+        assertTrue(inboxDirectory.listFiles().orEmpty().isEmpty())
+    }
+
+    @Test
+    fun recoveredDuplicateIsConsumedWithoutSecondFlight() = runBlocking {
+        repository.importIgc("original.igc", testIgc.byteInputStream())
+        File(inboxDirectory, "session--copie-pilotage.igc").writeText(testIgc)
+
+        val recovery = completedGateway.recoverPending()
+
+        assertEquals(1, recovery.duplicates)
+        assertEquals(1, repository.listFlights().size)
+        assertTrue(inboxDirectory.listFiles().orEmpty().isEmpty())
     }
 
     private companion object {
