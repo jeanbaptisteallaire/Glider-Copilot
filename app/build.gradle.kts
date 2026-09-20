@@ -11,16 +11,36 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.7.3"
+        versionName = "0.8.0"
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
+    }
+    // Clé d'upload Play App Signing (S8) : jamais dans le dépôt (public), lue via 4 secrets d'environnement
+    // (KEYSTORE_BASE64 encodé en base64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD). Tant qu'ils sont absents
+    // (poste local, forks, dépôt tant que JB n'a pas configuré les secrets GitHub), la release reste signée
+    // debug pour ne jamais casser la CI existante — voir docs/PLAY-STORE.md pour la procédure complète.
+    val uploadKeystoreB64 = System.getenv("KEYSTORE_BASE64")
+    val uploadKeystoreFile = uploadKeystoreB64?.let { b64 ->
+        java.io.File.createTempFile("glidy-upload", ".jks").apply {
+            deleteOnExit()
+            writeBytes(java.util.Base64.getDecoder().decode(b64))
+        }
+    }
+    signingConfigs {
+        if (uploadKeystoreFile != null) {
+            create("release") {
+                storeFile = uploadKeystoreFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
     }
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            // Signature de publication ajoutée en session 8 (Play App Signing).
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (uploadKeystoreFile != null) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
     compileOptions {

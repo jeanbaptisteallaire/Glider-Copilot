@@ -143,5 +143,12 @@ internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
                 "IGC d'enregistreur non approuvé : trace indicative, sans valeur pour un badge.",
             style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
         )
+        // S8 : certains téléphones (notamment hors Android « stock ») coupent le suivi en vol long si l'app
+        // reste soumise aux optimisations de batterie, même avec le service de premier plan actif.
+        Text(
+            "Vol long (plusieurs heures) : dans les réglages Android, mets GLIDY en « Sans restriction » côté batterie " +
+                "pour éviter toute coupure du suivi écran éteint.",
+            style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+        )
     }
 }

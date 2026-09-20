@@ -42,10 +42,13 @@
             </intent-filter>
         </activity>
 
+        <!-- stopWithTask=false (S8) : un vol de plusieurs heures survit si le pilote (ou l'OS) swipe
+             l'app hors des tâches récentes ; le service de premier plan garde capteurs et GPS actifs. -->
         <service
             android:name=".FlightService"
             android:exported="false"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="location"
+            android:stopWithTask="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
