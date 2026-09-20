@@ -1,3 +1,6 @@
+import java.io.File
+import java.util.Base64
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,9 +24,9 @@ android {
     // debug pour ne jamais casser la CI existante — voir docs/PLAY-STORE.md pour la procédure complète.
     val uploadKeystoreB64 = System.getenv("KEYSTORE_BASE64")
     val uploadKeystoreFile = uploadKeystoreB64?.let { b64 ->
-        java.io.File.createTempFile("glidy-upload", ".jks").apply {
+        File.createTempFile("glidy-upload", ".jks").apply {
             deleteOnExit()
-            writeBytes(java.util.Base64.getDecoder().decode(b64))
+            writeBytes(Base64.getDecoder().decode(b64))
         }
     }
     signingConfigs {
