@@ -1,5 +1,54 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 8 — Robustesse vol long + préparatifs Play Store (20/09/2026)
+
+### Livré
+- **Robustesse vol long** (demande du plan S8 : « tenir 4 h de vol ») — analyse complète de
+  `FlightService`/`FlightEngine`/`AndroidManifest.xml` :
+  - **Vraie faille trouvée et corrigée** : sans `android:stopWithTask="false"` sur `<service
+    android:name=".FlightService">`, l'OS arrêtait le service (donc tout le suivi : capteurs, GPS,
+    IGC) dès que le pilote — ou une appli de nettoyage OEM — swipait GLIDY hors des tâches récentes,
+    même avec le service de premier plan actif. C'est le risque réel identifié pour un vol de
+    plusieurs heures, pas la reprise après un simple kill mémoire du process : celle-ci fonctionnait
+    déjà correctement (`START_STICKY`, `TakeoffDetector` se ré-arme en ~3 s de vitesse GPS soutenue,
+    ouvre un nouveau fichier IGC en continuation).
+  - Conseil batterie ajouté dans Prévol (« Capteurs & vols ») : suggérer « Sans restriction » côté
+    optimisation de batterie pour un vol long, sans utiliser l'API `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`
+    (usage restreint par les règles Play Store, risque de rejet pour une app de ce type — le service de
+    premier plan `FOREGROUND_SERVICE_LOCATION` suffit et est déjà largement exempté du Doze).
+  - **Audit hors ligne des fonctions de sécurité** : `grep` confirmant zéro référence réseau dans
+    `core/domain` (dont `domain/safety/Safety.kt`) — conforme à la règle CLAUDE.md, rien à changer.
+- **Signature de release câblée** (`app/build.gradle.kts`) : `signingConfig` "release" lu depuis 4
+  secrets d'environnement (`KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`), repli
+  sûr sur la signature debug tant qu'ils sont absents — CI existante inchangée. Génération réelle du
+  keystore **volontairement non faite par Claude** (le mode auto de ce sandbox bloque la création
+  autonome de secrets cryptographiques) : procédure complète pour JB dans `docs/PLAY-STORE.md`.
+- **Politique de confidentialité** : `docs/privacy/index.html`, autonome, prête pour GitHub Pages
+  (activation manuelle nécessaire, `api.github.com` bloquée depuis le sandbox — voir `docs/PLAY-STORE.md`).
+- **Brouillon fiche Play Store + formulaire Sécurité des données** (FR) : `claude/play-store-listing.md`
+  dans le projet claude.ai — textes courts/longs, tableau Data Safety, justification du service de
+  premier plan, icône 512×512 générée depuis l'icône adaptative existante.
+- Version 0.8.0.
+
+### Vérifié
+- CI verte (un aller-retour : erreur de compilation Gradle Kotlin DSL — `java.io.File`/`java.util.Base64`
+  en référence qualifiée ne résolvaient pas dans `build.gradle.kts`, corrigé par imports explicites en
+  tête de fichier).
+- Aucune régression visible sur les captures émulateur (mêmes écrans que V7.3, aucun élément UI modifié
+  visuellement à part le texte batterie ajouté dans Prévol).
+
+### Limites / bloquant côté JB
+- Compte Google Play Console **organisation** Neutron Star (D-U-N-S) : pas créé, hors du champ possible
+  pour cette session (nécessite une action de JB, potentiellement des documents d'entreprise).
+- Keystore d'upload : pas généré (cf. ci-dessus) — JB (ou une session future avec son accord explicite)
+  doit exécuter la commande `keytool` donnée dans `docs/PLAY-STORE.md` §1 et configurer les 4 secrets
+  GitHub.
+- GitHub Pages : pas activé (toggle Settings, impossible depuis le sandbox).
+- Fiche Play Store et Data Safety : brouillon prêt, **à valider par JB** avant toute soumission —
+  rien n'a été soumis à Google.
+- Pas de bannière (feature graphic 1024×500) ni de sélection finale des captures — pas bloquant pour
+  une première soumission.
+
 ## Session 7.3 — Mode calibration : capture des données brutes baro/accél./GPS (19/09/2026)
 
 ### Livré
