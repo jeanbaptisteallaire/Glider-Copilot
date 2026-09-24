@@ -21,11 +21,18 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
-      - name: Tests unitaires, lint, APK
+      - name: Tests unitaires, lint, APK debug + release (R8), AAB Play Store
         id: gradle
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           set -o pipefail
-          ./gradlew --no-daemon --stacktrace test lintDebug assembleDebug 2>&1 | tee build.log
+          # secrets absents (tant que JB ne les a pas créés) : variables vides → build.gradle.kts retombe sur la clé debug
+          [ -n "$KEYSTORE_BASE64" ] || unset KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD
+          ./gradlew --no-daemon --stacktrace test lintDebug assembleDebug assembleRelease bundleRelease 2>&1 | tee build.log
       - name: Rapport (ci-data)
         if: always()
         run: |
@@ -36,6 +43,13 @@ jobs:
           find . -path '*/build/reports/lint-results-debug.xml' -exec cp --parents {} report/ \; 2>/dev/null || true
           APK=$(ls app/build/outputs/apk/debug/*.apk 2>/dev/null | head -1)
           if [ -n "$APK" ]; then mkdir -p report/apk && cp "$APK" report/apk/glider-copilot-debug.apk; fi
+          AAB=$(ls app/build/outputs/bundle/release/*.aab 2>/dev/null | head -1)
+          if [ -n "$AAB" ]; then mkdir -p report/release && cp "$AAB" report/release/glidy-release.aab; fi
+          RAPK=$(ls app/build/outputs/apk/release/*.apk 2>/dev/null | head -1)
+          if [ -n "$RAPK" ]; then mkdir -p report/release && cp "$RAPK" report/release/glidy-release.apk; fi
+          MAP=app/build/outputs/mapping/release/mapping.txt
+          if [ -f "$MAP" ]; then mkdir -p report/release && gzip -c "$MAP" > report/release/mapping.txt.gz; fi
+          [ -f app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt ] && cp app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt report/ || true
           echo "${{ github.sha }} ${{ job.status }} $(date -u +%FT%TZ)" > report/STATUS.txt
           cd /tmp && rm -rf cidata && mkdir cidata && cd cidata
           R="https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
@@ -49,6 +63,11 @@ jobs:
         with:
           name: glider-copilot-debug-apk
           path: app/build/outputs/apk/debug/*.apk
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: glidy-release-apk
+          path: app/build/outputs/apk/release/*.apk
 
   screens:
     needs: build
@@ -60,6 +79,10 @@ jobs:
         with:
           name: glider-copilot-debug-apk
           path: apk
+      - uses: actions/download-artifact@v4
+        with:
+          name: glidy-release-apk
+          path: apk-release
       - name: Activer KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -69,7 +92,8 @@ jobs:
         timeout-minutes: 34
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          # S9 : Android 16 (API 36) = la version ciblée (targetSdk 36), pour y voir ses changements de comportement
+          api-level: 36
           target: google_apis
           arch: x86_64
           profile: pixel_6
@@ -77,7 +101,9 @@ jobs:
           heap-size: 512M
           disable-animations: true
           emulator-options: -no-window -gpu swangle_indirect -noaudio -no-boot-anim
-          script: bash tools/screens.sh screens
+          script: |
+            bash tools/screens.sh screens
+            bash tools/smoke-release.sh screens
       - name: Publier les captures (ci-data)
         if: always()
         run: |

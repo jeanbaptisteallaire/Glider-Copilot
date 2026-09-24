@@ -8,13 +8,13 @@ plugins {
 }
 android {
     namespace = "com.neutronstar.glidercopilot"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.neutronstar.glidercopilot"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.8.2"
+        versionName = "0.8.3"
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
     }
@@ -41,7 +41,10 @@ android {
     }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // R8 (S9) : code réduit et obscurci pour la version publiée ; ressources inutilisées retirées.
+            // Un test de fumée CI installe l'APK release sur émulateur pour vérifier qu'aucune règle ne manque.
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = if (uploadKeystoreFile != null) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
@@ -55,8 +58,9 @@ android {
         buildConfig = true
     }
     lint {
-        abortOnError = false
-        checkReleaseBuilds = false
+        // S9 : toute erreur lint bloque la CI (0 erreur à ce jour) ; les avertissements restent consignés.
+        abortOnError = true
+        checkReleaseBuilds = true
         xmlReport = true
     }
 }

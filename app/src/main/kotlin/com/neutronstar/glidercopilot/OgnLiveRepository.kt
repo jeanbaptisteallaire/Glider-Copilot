@@ -1,7 +1,7 @@
 package com.neutronstar.glidercopilot
 
 import android.content.Context
-import android.provider.Settings
+import androidx.core.content.edit
 import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.feature.flight.FlightTraffic
@@ -297,8 +297,19 @@ class OgnLiveRepository(
 
     private fun signed(n: Int) = (if (n >= 0) "+" else "−") + kotlin.math.abs(n)
 
-    private fun installId(): Long =
-        (Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) ?: "glidy").hashCode().toLong().let { if (it < 0) -it else it }
+    /**
+     * Numéro aléatoire tiré au premier lancement et gardé localement (S9) : sert seulement à composer
+     * l'indicatif APRS en lecture seule « GLIDYnnnn ». Plus d'ANDROID_ID (identifiant matériel
+     * déconseillé par la Play Store, et à déclarer dans le formulaire Sécurité des données).
+     */
+    private fun installId(): Long {
+        val sp = context.getSharedPreferences("glidy_install", Context.MODE_PRIVATE)
+        val known = sp.getLong("install_id", -1L)
+        if (known >= 0) return known
+        val fresh = java.security.SecureRandom().nextInt(Int.MAX_VALUE).toLong()
+        sp.edit { putLong("install_id", fresh) }
+        return fresh
+    }
 
     @Suppress("unused")
     private fun near(a: LatLon, b: LatLon) = Geo.distanceKm(a, b)

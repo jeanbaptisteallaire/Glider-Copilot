@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 12+ (S9). Même comportement qu'avant, rendu explicite :
+  - aucune sauvegarde vers le cloud Google (cohérent avec la politique de confidentialité : rien ne quitte le téléphone) ;
+  - transfert direct d'un téléphone à l'autre (câble / Wi-Fi local, à l'initiative du pilote) autorisé,
+    pour ne pas perdre les traces IGC et les réglages en changeant de téléphone.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <exclude domain="root" path="." />
+        <exclude domain="file" path="." />
+        <exclude domain="database" path="." />
+        <exclude domain="sharedpref" path="." />
+        <exclude domain="external" path="." />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="." />
+        <include domain="sharedpref" path="." />
+    </device-transfer>
+</data-extraction-rules>

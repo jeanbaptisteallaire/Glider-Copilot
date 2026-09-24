@@ -79,7 +79,6 @@ class FlightService : Service() {
     }
 
     private fun createChannel() {
-        if (Build.VERSION.SDK_INT < 26) return
         val nm = getSystemService(NotificationManager::class.java) ?: return
         nm.createNotificationChannel(
             NotificationChannel(CHANNEL, "Vol en cours", NotificationManager.IMPORTANCE_LOW).apply {
