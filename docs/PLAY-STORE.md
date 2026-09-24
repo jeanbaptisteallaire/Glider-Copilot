@@ -61,9 +61,13 @@ export KEYSTORE_PASSWORD=... KEY_ALIAS=glidy-upload KEY_PASSWORD=...
 # app/build/outputs/bundle/release/app-release.aab
 ```
 
-Aucun job CI dédié n'a été ajouté cette session : générer l'AAB à la demande (localement ou via
-`workflow_dispatch` à ajouter plus tard) évite de dépenser du temps de build à chaque commit alors
-que la soumission Play Console est encore bloquante côté compte.
+**Depuis S9, la CI construit l'AAB à chaque push** (`ci-data/build-report/release/glidy-release.aab`,
+avec `mapping.txt.gz` à téléverser dans Play Console pour lire les plantages). Dès que les 4 secrets
+GitHub existent, cet AAB est signé avec la clé d'upload et directement soumissible ; sinon il est signé
+debug (refusé par Play, mais utile pour vérifier la construction).
+
+Exigences techniques Play vérifiées en S9 : targetSdk 36 (obligatoire depuis le 31/08/2026), pages
+mémoire 16 Ko (bibliothèques natives alignées), format AAB, 64 bits (arm64-v8a).
 
 ## 4. Politique de confidentialité
 

@@ -1,5 +1,47 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 9 — Audit de conformité Play Store, V0.8.3 (24/09/2026)
+
+### Audit (état V0.8.2, rapport lint CI build 54)
+- **Bloquant trouvé : targetSdk 35.** Depuis le 31/08/2026, Google Play exige targetSdk 36 (Android 16)
+  pour toute nouvelle app et toute mise à jour. → corrigé (compileSdk/targetSdk 36, AGP 8.10.1, qui gère
+  l'API 36 et corrige un plantage R8 avec Kotlin 2.1.20).
+- **Pages mémoire 16 Ko** (exigé depuis nov. 2025 pour le code natif) : vérifié sur l'APK, les 3 .so
+  (MapLibre, graphics.path, datastore) sont alignés 16 Ko en ELF et dans le zip. Rien à faire.
+- **Format AAB** exigé par Play : la CI ne produisait qu'un APK debug. → `bundleRelease` ajouté.
+- Lint : 0 erreur, 43 avertissements (surtout versions de dépendances). Traités : `HardwareIds`
+  (ANDROID_ID remplacé par un numéro aléatoire local — l'indicatif APRS « GLIDYnnnn » n'en utilisait
+  que 4 chiffres), `DataExtractionRules`, `MonochromeLauncherIcon`, `ObsoleteSdkInt` (×2),
+  `UnusedResources`. Laissés volontairement : orientation portrait verrouillée (Android 16 l'ignore sur
+  tablette, sans gravité), `LogNotTimber`, montées de versions.
+- Aucun secret, aucun TODO/FIXME dans le code. Aucune dépendance d'analytics/publicité/crash reporting.
+- **Données** : tracé dans le code, la position GPS du pilote ne quitte jamais le téléphone. Météo
+  (precog) et filtre OGN reçoivent la position **du club choisi**, pas celle du téléphone. →
+  le formulaire Sécurité des données doit déclarer « Position précise : non collectée » (le brouillon S8
+  disait « collectée », à tort au sens de Google : un traitement local seul n'est pas une collecte).
+
+### Livré (V0.8.3, commit « S9, V0.8.3 »)
+- targetSdk/compileSdk 36, AGP 8.10.1.
+- Release minifiée : R8 + `isShrinkResources`, `proguard-rules.pro` (numéros de ligne conservés),
+  `mapping.txt` publié (gzip) dans `ci-data/build-report/release/` avec l'AAB et l'APK release.
+- Lint bloquant (`abortOnError = true`, `checkReleaseBuilds = true`).
+- CI : secrets de signature passés à Gradle s'ils existent (sinon clé debug, comme avant) ; émulateur
+  des captures passé en **API 36** ; nouveau `tools/smoke-release.sh` qui installe l'APK release (R8),
+  parcourt les 4 onglets en vol rejoué et fait échouer la CI en cas de `FATAL EXCEPTION`.
+- `res/xml/data_extraction_rules.xml` : pas de sauvegarde cloud, transfert d'appareil autorisé
+  (garder ses vols IGC en changeant de téléphone).
+
+### Non vérifié — à faire en premier en S10
+- **Le commit n'a pas pu être poussé depuis le bac à sable** (le proxy git de cette session n'avait
+  pas le dépôt dans ses sources autorisées). Il est livré en patch + bundle git dans
+  `Planneur APP/Session 9/`. Tant qu'il n'est pas poussé et que la CI n'est pas verte (build + captures
+  API 36 + test de fumée release), **V0.8.3 n'est pas validée**. Points de vigilance CI : image
+  émulateur API 36 (repli possible en 35), temps de build (R8 ×2), règles R8.
+
+### Login + sauvegarde des vols (conseil, non implémenté)
+Recommandation : **Supabase** (offre gratuite, région UE) — Auth + Postgres + Storage. Détail, schéma
+et points RGPD/Play Store dans le document de projet `claude/handoff-session-9.md`.
+
 ## Session 8 — Robustesse vol long + préparatifs Play Store (20/09/2026)
 
 ### Livré
