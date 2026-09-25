@@ -1,1 +1,1 @@
-OK : version release (R8) lancée, 4 onglets parcourus, aucun plantage, pid 7201
+OK : version release (R8) lancée, 5 onglets parcourus, aucun plantage, pid 7428
