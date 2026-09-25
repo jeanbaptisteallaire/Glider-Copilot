@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.flightarchive.IgcParserTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-25T17:27:48" hostname="runnervmtr4k5" time="0.252">
+<testsuite name="com.neutronstar.glidy.flightarchive.IgcParserTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-09-25T18:32:14" hostname="runnervmtr4k5" time="0.209">
   <properties/>
-  <testcase name="une date absente retourne une erreur typee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.003"/>
-  <testcase name="une altitude negative est acceptee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.03"/>
+  <testcase name="une date absente retourne une erreur typee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.006"/>
+  <testcase name="une altitude negative est acceptee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.027"/>
   <testcase name="des coordonnees invalides ne produisent aucun point" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.001"/>
   <testcase name="un recul horaire court est ignore et signale" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.001"/>
-  <testcase name="une ligne tronquee devient un avertissement sans annuler le vol" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.0"/>
-  <testcase name="le vol synthetique realiste alimente toute la pile graphique" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.188"/>
-  <testcase name="une date impossible retourne son numero de ligne" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.006"/>
+  <testcase name="une ligne tronquee devient un avertissement sans annuler le vol" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.001"/>
+  <testcase name="le vol synthetique realiste alimente toute la pile graphique" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.151"/>
+  <testcase name="une date impossible retourne son numero de ligne" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.0"/>
   <testcase name="un point V est compte mais exclu des points valides" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.0"/>
   <testcase name="un echantillon externe peut etre controle sans entrer dans le depot" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.0"/>
   <testcase name="le passage de minuit avance la date" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.0"/>
-  <testcase name="un fichier vide retourne une erreur typee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.01"/>
-  <testcase name="une altitude absente conserve la trace sans inventer de valeur" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.001"/>
-  <testcase name="un vol valide produit metadonnees points et resume stables" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.004"/>
+  <testcase name="un fichier vide retourne une erreur typee" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.012"/>
+  <testcase name="une altitude absente conserve la trace sans inventer de valeur" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.003"/>
+  <testcase name="un vol valide produit metadonnees points et resume stables" classname="com.neutronstar.glidy.flightarchive.IgcParserTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

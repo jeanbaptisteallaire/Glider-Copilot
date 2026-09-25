@@ -13,7 +13,7 @@
         errorLine2="                                                   ~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/replay3d/src/main/kotlin/com/neutronstar/glidy/replay3d/Replay3dScreen.kt"
-            line="140"
+            line="164"
             column="52"/>
     </issue>
 
@@ -29,7 +29,7 @@
         errorLine2="                                                   ~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/replay3d/src/main/kotlin/com/neutronstar/glidy/replay3d/Replay3dScreen.kt"
-            line="140"
+            line="164"
             column="52"/>
     </issue>
 

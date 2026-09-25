@@ -353,7 +353,7 @@
         errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="41"
+            line="44"
             column="34"/>
     </issue>
 
@@ -369,7 +369,7 @@
         errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="42"
+            line="45"
             column="34"/>
     </issue>
 
@@ -385,7 +385,7 @@
         errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="64"
+            line="67"
             column="38"/>
     </issue>
 
@@ -401,7 +401,7 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="66"
+            line="69"
             column="17"/>
     </issue>
 
@@ -417,7 +417,7 @@
         errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="77"
+            line="80"
             column="31"/>
     </issue>
 

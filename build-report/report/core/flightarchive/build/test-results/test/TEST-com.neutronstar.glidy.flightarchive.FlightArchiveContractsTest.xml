@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T17:27:48" hostname="runnervmtr4k5" time="0.062">
+<testsuite name="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T18:32:14" hostname="runnervmtr4k5" time="0.056">
   <properties/>
   <testcase name="fileReferenceRequiresIgcAndSha256" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.031"/>
-  <testcase name="summaryRejectsEndBeforeStart" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.028"/>
-  <testcase name="flightIdRejectsNonUuidValue" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.002"/>
+  <testcase name="summaryRejectsEndBeforeStart" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.018"/>
+  <testcase name="flightIdRejectsNonUuidValue" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.006"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
