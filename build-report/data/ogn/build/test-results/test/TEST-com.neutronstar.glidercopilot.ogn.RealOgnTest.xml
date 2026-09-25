@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.RealOgnTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T00:53:49" hostname="runnervmtr4k5" time="0.194">
+<testsuite name="com.neutronstar.glidercopilot.ogn.RealOgnTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T17:27:59" hostname="runnervmtr4k5" time="0.218">
   <properties/>
-  <testcase name="parsesEveryGliderFrame" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.05"/>
-  <testcase name="findsRealThermalsOnly" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.086"/>
-  <testcase name="realCadenceIsAFewSeconds" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.057"/>
+  <testcase name="parsesEveryGliderFrame" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.076"/>
+  <testcase name="findsRealThermalsOnly" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.079"/>
+  <testcase name="realCadenceIsAFewSeconds" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.06"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[Exception in thread "Thread-7" java.net.SocketException: Socket is closed
+  <system-err><![CDATA[Exception in thread "Thread-8" java.net.SocketException: Socket is closed
 	at java.base/java.net.ServerSocket.accept(ServerSocket.java:528)
 	at com.neutronstar.glidercopilot.ogn.OgnLiveTest$serverRefusalIsTreatedAsAFailure$1.invokeSuspend$lambda$2(OgnLiveTest.kt:204)
 	at java.base/java.lang.Thread.run(Thread.java:840)
