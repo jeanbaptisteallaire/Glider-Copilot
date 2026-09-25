@@ -1,7 +1,7 @@
 + date -u
-Fri Sep 25 00:06:49 UTC 2026
-++ ls apk/app-debug.apk
+Fri Sep 25 00:58:29 UTC 2026
 ++ head -1
+++ ls apk/app-debug.apk
 + APK=apk/app-debug.apk
 + timeout 180 adb install -r apk/app-debug.apk
 Performing Streamed Install
@@ -9,8 +9,8 @@ Success
 + adb shell pm clear com.neutronstar.glidercopilot
 Success
 + adb logcat -c
-+ adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
 + adb logcat -v time
++ adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION
 + adb emu geo fix 3.78167 43.80028 183
 OK
@@ -142,10 +142,20 @@ téléchargement lancé (essai 1)
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
 + P='965 1016'
 + '[' -n '965 1016' ']'
-+ echo 'pack installé après 12 s'
-pack installé après 12 s
++ echo 'pack installé après 18 s'
+pack installé après 18 s
 + break
 + timeout 20 adb exec-out screencap -p
 + adb shell input swipe 540 1500 540 700 400
@@ -196,7 +206,7 @@ pack installé après 12 s
 + timeout 20 adb exec-out screencap -p
 + adb shell am force-stop com.neutronstar.glidercopilot
 ++ date +%s
-+ T0=1790294995
++ T0=1790298150
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
 Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) }
 + sleep 8
@@ -210,49 +220,49 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 + '[' -n '669 2292' ']'
 + timeout 10 adb shell input tap 669 2292
 ++ date +%s
-+ '[' 10 -lt 105 ']'
++ '[' 11 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 12 -lt 105 ']'
++ '[' 13 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 14 -lt 105 ']'
++ '[' 15 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 16 -lt 105 ']'
++ '[' 17 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 18 -lt 105 ']'
++ '[' 19 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 20 -lt 105 ']'
++ '[' 21 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 22 -lt 105 ']'
++ '[' 23 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 24 -lt 105 ']'
++ '[' 25 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 26 -lt 105 ']'
++ '[' 27 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 28 -lt 105 ']'
++ '[' 29 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 30 -lt 105 ']'
++ '[' 31 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 32 -lt 105 ']'
++ '[' 33 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 34 -lt 105 ']'
++ '[' 35 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 36 -lt 105 ']'
++ '[' 37 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 38 -lt 105 ']'
++ '[' 39 -lt 105 ']'
 + sleep 2
 ++ date +%s
 + '[' 41 -lt 105 ']'
@@ -413,167 +423,163 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Essai du son'
-+ P='285 2148'
-+ '[' -n '285 2148' ']'
++ P=
++ '[' -n '' ']'
++ adb shell input swipe 540 1600 540 900 300
++ sleep 1
++ for i in 1 2 3 4 5 6 7 8 9 10
+++ tap_text 'Essai du son'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Essai du son'
++ P='285 1783'
++ '[' -n '285 1783' ']'
 + break
 + adb shell input swipe 540 1500 540 1150 300
 + sleep 2
 + timeout 20 adb exec-out screencap -p
 ++ date +%s
-+ '[' 149 -lt 390 ']'
++ '[' 170 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 154 -lt 390 ']'
++ '[' 175 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 159 -lt 390 ']'
++ '[' 180 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 164 -lt 390 ']'
++ '[' 185 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 169 -lt 390 ']'
++ '[' 190 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 174 -lt 390 ']'
++ '[' 195 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 179 -lt 390 ']'
++ '[' 200 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 184 -lt 390 ']'
++ '[' 205 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 189 -lt 390 ']'
++ '[' 210 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 194 -lt 390 ']'
++ '[' 215 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 199 -lt 390 ']'
++ '[' 220 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 204 -lt 390 ']'
++ '[' 225 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 209 -lt 390 ']'
++ '[' 230 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 214 -lt 390 ']'
++ '[' 235 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 219 -lt 390 ']'
++ '[' 240 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 224 -lt 390 ']'
++ '[' 245 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 229 -lt 390 ']'
++ '[' 250 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 234 -lt 390 ']'
++ '[' 255 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 239 -lt 390 ']'
++ '[' 260 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 244 -lt 390 ']'
++ '[' 265 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 249 -lt 390 ']'
++ '[' 270 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 254 -lt 390 ']'
++ '[' 275 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 259 -lt 390 ']'
++ '[' 280 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 264 -lt 390 ']'
++ '[' 285 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 269 -lt 390 ']'
++ '[' 290 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 274 -lt 390 ']'
++ '[' 295 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 279 -lt 390 ']'
++ '[' 300 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 284 -lt 390 ']'
++ '[' 305 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 289 -lt 390 ']'
++ '[' 310 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 294 -lt 390 ']'
++ '[' 315 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 299 -lt 390 ']'
++ '[' 320 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 304 -lt 390 ']'
++ '[' 325 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 309 -lt 390 ']'
++ '[' 330 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 314 -lt 390 ']'
++ '[' 335 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 319 -lt 390 ']'
++ '[' 340 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 324 -lt 390 ']'
++ '[' 345 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 329 -lt 390 ']'
++ '[' 350 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 334 -lt 390 ']'
++ '[' 355 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 339 -lt 390 ']'
++ '[' 360 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 344 -lt 390 ']'
++ '[' 365 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 349 -lt 390 ']'
++ '[' 370 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 354 -lt 390 ']'
++ '[' 375 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 359 -lt 390 ']'
++ '[' 380 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 364 -lt 390 ']'
++ '[' 385 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 369 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 374 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 379 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 384 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 389 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 394 -lt 390 ']'
++ '[' 390 -lt 390 ']'
 + adb shell input swipe 540 1150 540 1400 300
 + sleep 3
 + timeout 20 adb exec-out screencap -p
 + mkdir -p screens/igc
 + timeout 30 adb pull /sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/. screens/igc/
-/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/./: 1 file pulled, 0 skipped. 1.6 MB/s (70684 bytes in 0.042s)
+/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/./: 1 file pulled, 0 skipped. 1.5 MB/s (70684 bytes in 0.044s)
 + ls screens/igc/2026-09-25-XXX-GLY-01.igc
 + python3 tools/flight/check_igc.py screens/igc/2026-09-25-XXX-GLY-01.igc
 + cat screens/igc-controle.txt
@@ -810,39 +816,51 @@ fiche aéronef ouverte en
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Zoom avant'
-+ P=
-+ '[' -n '' ']'
++ P='988 1935'
++ '[' -n '988 1935' ']'
++ for i in 1 2 3 4
++ timeout 10 adb shell input tap 988 1935
++ sleep 3
++ for i in 1 2 3 4
++ timeout 10 adb shell input tap 988 1935
++ sleep 3
++ for i in 1 2 3 4
++ timeout 10 adb shell input tap 988 1935
++ sleep 3
++ for i in 1 2 3 4
++ timeout 10 adb shell input tap 988 1935
++ sleep 3
 + sleep 8
 + timeout 20 adb exec-out screencap -p
 + timeout 30 adb logcat -d -t 600
 + ls -la screens
-total 26668
-drwxr-xr-x  3 runner runner     4096 Sep 25 00:21 .
-drwxr-xr-x 15 runner runner     4096 Sep 25 00:06 ..
--rw-r--r--  1 runner runner   100284 Sep 25 00:07 01-avertissement.png
--rw-r--r--  1 runner runner   286055 Sep 25 00:07 02-prevol.png
--rw-r--r--  1 runner runner   244875 Sep 25 00:08 03-prevol-appairage.png
--rw-r--r--  1 runner runner   264818 Sep 25 00:09 04-prevol-carte.png
--rw-r--r--  1 runner runner   271132 Sep 25 00:09 05-prevol-ogn-direct.png
--rw-r--r--  1 runner runner   267230 Sep 25 00:09 06-prevol-espaces.png
--rw-r--r--  1 runner runner   267206 Sep 25 00:09 07-checklists.png
--rw-r--r--  1 runner runner   267066 Sep 25 00:09 07b-checklists-suite.png
--rw-r--r--  1 runner runner  1258083 Sep 25 00:11 08-pilotage-vol-rejeu.png
--rw-r--r--  1 runner runner  1387019 Sep 25 00:11 09-pilotage-vol-large.png
--rw-r--r--  1 runner runner  1445088 Sep 25 00:12 10-pilotage-vol-plein.png
--rw-r--r--  1 runner runner   301220 Sep 25 00:12 11-prevol-capteurs-en-vol.png
--rw-r--r--  1 runner runner   290742 Sep 25 00:16 12-prevol-vol-enregistre.png
--rw-r--r--  1 runner runner   760726 Sep 25 00:16 12b-pilotage-terrain-au-sol.png
--rw-r--r--  1 runner runner  1272863 Sep 25 00:18 13-pilotage-mode-demo.png
--rw-r--r--  1 runner runner   766095 Sep 25 00:18 14-pilotage-choix-terrain.png
--rw-r--r--  1 runner runner  1275070 Sep 25 00:18 15-pilotage-demo-f10.png
--rw-r--r--  1 runner runner   291223 Sep 25 00:19 16-prevol-suivi-debug.png
--rw-r--r--  1 runner runner  1202841 Sep 25 00:19 17-pilotage-suivi.png
--rw-r--r--  1 runner runner  1375989 Sep 25 00:20 18-carte-sud-france.png
--rw-r--r--  1 runner runner  1376031 Sep 25 00:20 19-carte-fiche-aeronef.png
--rw-r--r--  1 runner runner  1375537 Sep 25 00:21 20-carte-pistes.png
-drwxr-xr-x  2 runner runner     4096 Sep 25 00:16 igc
--rw-r--r--  1 runner runner      100 Sep 25 00:16 igc-controle.txt
--rw-r--r--  1 runner runner 10807045 Sep 25 00:21 logcat-live.txt
--rw-r--r--  1 runner runner    68701 Sep 25 00:21 logcat.txt
--rw-r--r--  1 runner runner    20413 Sep 25 00:21 trace.txt
+total 26420
+drwxr-xr-x  3 runner runner     4096 Sep 25 01:14 .
+drwxr-xr-x 15 runner runner     4096 Sep 25 00:58 ..
+-rw-r--r--  1 runner runner   103867 Sep 25 00:58 01-avertissement.png
+-rw-r--r--  1 runner runner   284830 Sep 25 00:59 02-prevol.png
+-rw-r--r--  1 runner runner   240856 Sep 25 01:00 03-prevol-appairage.png
+-rw-r--r--  1 runner runner   259847 Sep 25 01:01 04-prevol-carte.png
+-rw-r--r--  1 runner runner   270304 Sep 25 01:02 05-prevol-ogn-direct.png
+-rw-r--r--  1 runner runner   273175 Sep 25 01:02 06-prevol-espaces.png
+-rw-r--r--  1 runner runner   273178 Sep 25 01:02 07-checklists.png
+-rw-r--r--  1 runner runner   272026 Sep 25 01:02 07b-checklists-suite.png
+-rw-r--r--  1 runner runner  1264234 Sep 25 01:04 08-pilotage-vol-rejeu.png
+-rw-r--r--  1 runner runner  1329872 Sep 25 01:04 09-pilotage-vol-large.png
+-rw-r--r--  1 runner runner  1351992 Sep 25 01:04 10-pilotage-vol-plein.png
+-rw-r--r--  1 runner runner   302459 Sep 25 01:05 11-prevol-capteurs-en-vol.png
+-rw-r--r--  1 runner runner   297948 Sep 25 01:09 12-prevol-vol-enregistre.png
+-rw-r--r--  1 runner runner   759881 Sep 25 01:09 12b-pilotage-terrain-au-sol.png
+-rw-r--r--  1 runner runner  1278633 Sep 25 01:10 13-pilotage-mode-demo.png
+-rw-r--r--  1 runner runner   764787 Sep 25 01:10 14-pilotage-choix-terrain.png
+-rw-r--r--  1 runner runner  1272005 Sep 25 01:11 15-pilotage-demo-f10.png
+-rw-r--r--  1 runner runner   290550 Sep 25 01:11 16-prevol-suivi-debug.png
+-rw-r--r--  1 runner runner  1202496 Sep 25 01:12 17-pilotage-suivi.png
+-rw-r--r--  1 runner runner   725760 Sep 25 01:13 18-carte-sud-france.png
+-rw-r--r--  1 runner runner   726066 Sep 25 01:13 19-carte-fiche-aeronef.png
+-rw-r--r--  1 runner runner  2046578 Sep 25 01:14 20-carte-pistes.png
+drwxr-xr-x  2 runner runner     4096 Sep 25 01:09 igc
+-rw-r--r--  1 runner runner      100 Sep 25 01:09 igc-controle.txt
+-rw-r--r--  1 runner runner 11299082 Sep 25 01:14 logcat-live.txt
+-rw-r--r--  1 runner runner    74200 Sep 25 01:14 logcat.txt
+-rw-r--r--  1 runner runner    21065 Sep 25 01:14 trace.txt
