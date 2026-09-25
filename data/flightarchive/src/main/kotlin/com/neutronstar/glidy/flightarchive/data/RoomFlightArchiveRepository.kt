@@ -150,6 +150,16 @@ class RoomFlightArchiveRepository(
         }
     }
 
+    override suspend fun readIgc(id: FlightId): ByteArray? = withContext(ioDispatcher) {
+        val entity = dao.findById(id.value) ?: return@withContext null
+        val root = archiveDirectory.canonicalFile
+        val file = File(root, entity.relativePath).canonicalFile
+        if (!file.path.startsWith(root.path + File.separator) || !file.isFile) null else file.readBytes()
+    }
+
+    override suspend fun updateSyncState(id: FlightId, state: SyncState, remoteId: String?): Boolean =
+        withContext(ioDispatcher) { dao.updateSync(id.value, state.name, remoteId, System.currentTimeMillis()) > 0 }
+
     override suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult = mutex.withLock {
         withContext(ioDispatcher) {
             val entity = dao.findById(id.value) ?: return@withContext RemoveFlightResult.NotFound

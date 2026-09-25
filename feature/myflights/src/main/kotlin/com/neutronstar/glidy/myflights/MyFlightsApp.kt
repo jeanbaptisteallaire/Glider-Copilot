@@ -119,6 +119,10 @@ fun MyFlightsApp(
     completedFlightGateway: CompletedFlightGateway? = null,
     onReplay3d: (ArchivedFlight) -> Unit = {},
     demoFlight: (() -> Pair<String, InputStream>)? = null,
+    account: AccountCardState? = null,
+    accountActions: AccountActions? = null,
+    /** Incrémenté par l'hôte quand le carnet a changé hors de cet écran (vol archivé, restauration cloud). */
+    refreshSignal: Int = 0,
 ) {
     val factory = remember(repository, shareGateway, completedFlightGateway) {
         MyFlightsViewModelFactory(repository, shareGateway, completedFlightGateway)
@@ -127,7 +131,7 @@ fun MyFlightsApp(
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
     // S10 (GLIDY) : l'onglet peut rester ouvert pendant qu'un vol est archivé en tâche de fond → relire à chaque affichage
-    LaunchedEffect(Unit) { viewModel.reload() }
+    LaunchedEffect(refreshSignal) { viewModel.reload() }
     // retour système depuis le détail d'un vol → liste du carnet (et non sortie de l'app)
     BackHandler(enabled = (state as? MyFlightsUiState.Ready)?.selectedFlightId != null) { viewModel.closeDetail() }
 
@@ -149,6 +153,8 @@ fun MyFlightsApp(
         onDeleteCancel = viewModel::cancelDelete,
         onDeleteConfirm = viewModel::confirmDelete,
         onReplay3d = onReplay3d,
+        account = account,
+        accountActions = accountActions,
         onLoadDemo = demoFlight?.let { open ->
             {
                 val (name, stream) = runCatching(open).getOrNull() ?: ("" to null)
@@ -171,6 +177,8 @@ fun MyFlightsScreen(
     onDeleteConfirm: () -> Unit = {},
     onReplay3d: (ArchivedFlight) -> Unit = {},
     onLoadDemo: (() -> Unit)? = null,
+    account: AccountCardState? = null,
+    accountActions: AccountActions? = null,
 ) {
     Box(Modifier.fillMaxSize().background(Gc.colors.background)) {
         when (state) {
@@ -193,6 +201,8 @@ fun MyFlightsScreen(
                         notice = state.notice,
                         onImport = onImport,
                         onLoadDemo = onLoadDemo,
+                        account = account,
+                        accountActions = accountActions,
                         onFlightSelected = { card ->
                             state.flights.firstOrNull { it.id.value == card.id }?.let(onFlightSelected)
                         },
@@ -251,6 +261,8 @@ private fun FlightsListScreen(
     notice: String?,
     onImport: () -> Unit,
     onLoadDemo: (() -> Unit)?,
+    account: AccountCardState?,
+    accountActions: AccountActions?,
     onFlightSelected: (FlightCardUi) -> Unit,
 ) {
     val c = Gc.colors
@@ -262,6 +274,7 @@ private fun FlightsListScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item { SeasonCard(flights) }
+            if (account != null) item { AccountCard(account, accountActions) }
             if (notice != null) {
                 item { Text(notice, style = Gc.type.bodySmall.copy(color = c.warn)) }
             }

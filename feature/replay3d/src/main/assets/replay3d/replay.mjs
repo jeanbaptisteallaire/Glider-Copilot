@@ -472,6 +472,9 @@ async function loadFlight(payload) {
         const built = createFlightLayer(map, state.points);
         map.addLayer(built.customLayer);
         state.customLayer = {layer: built.customLayer, originMercator: built.originMercator};
+        // l'attribution compacte s'ouvre d'elle-même au chargement : on la replie (le « i » reste disponible)
+        document.querySelectorAll('.maplibregl-ctrl-attrib.maplibregl-compact-show').forEach(el => el.classList.remove('maplibregl-compact-show'));
+        document.querySelectorAll('.maplibregl-ctrl-attrib details[open]').forEach(el => el.removeAttribute('open'));
         state.ready = true;
         state.playing = true;
         ui.play.textContent = 'Ⅱ';

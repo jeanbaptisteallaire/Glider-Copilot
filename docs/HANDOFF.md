@@ -1,5 +1,54 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 12 — Préparation de la sauvegarde cloud Supabase, V0.9.2 (25/09/2026)
+
+### Livré
+- `docs/supabase/schema.sql` : tables `profiles` et `flights` (clé unique pilote + empreinte SHA-256), RLS
+  « chacun ses lignes », bucket privé `igc` (un dossier par pilote), `delete_my_account()` (Google Play).
+- `docs/supabase/SETUP.md` : pas-à-pas pour JB (projet en UE, SQL, modèle d'e-mail avec `{{ .Token }}`,
+  2 secrets GitHub `SUPABASE_URL` / `SUPABASE_ANON_KEY`, tests).
+- `data:flightcloud` (JVM pur, sans dépendance) : `SupabaseClient` en HTTP direct (connexion par code
+  e-mail à 6 chiffres, rafraîchissement de session, Storage, PostgREST, suppression de compte), `MiniJson`,
+  `FlightSyncService` (envoi idempotent des vrais vols, jamais le vol d'exemple, restauration des vols
+  absents du téléphone, états `SyncState` dans l'index Room). 8 tests contre un faux serveur Supabase.
+- Carnet : `readIgc`, `updateSyncState` (requête Room, sans changement de schéma).
+- App : `CloudHost` (session en préférences privées, exclue du cloud Google et du transfert d'appareil),
+  carte « Compte · sauvegarde en ligne » dans Mes vols (« bientôt disponible » tant que les secrets
+  n'existent pas), jamais d'envoi pendant un vol enregistré.
+- Rejeu 3D : l'attribution des cartes se replie après le chargement.
+
+### À faire par JB
+Suivre `docs/supabase/SETUP.md` (15 min), puis relancer la CI. Ensuite : politique de confidentialité et
+formulaire Sécurité des données à mettre à jour avant la publication (liste dans SETUP.md), et page web de
+suppression de compte (exigence Play).
+
+## Session 11 — Mes vols à la charte GLIDY, rejeu 3D sur toute la trace, V0.9.1 (25/09/2026)
+- Écrans Mes vols réécrits avec `core/designsystem` (plus aucune couleur codée). Profil d'altitude
+  coloré à l'échelle vario GLIDY. Vol d'exemple marqué EXEMPLE.
+- Rejeu 3D :
+  - trace complète relue dans l'IGC (`FlightArchiveRepository.loadTrack`), avec les vrais horodatages ;
+  - simplification Douglas-Peucker à 2,5 m au-delà de 20 000 points ;
+  - trace colorée au vario ; vario, vitesse et inclinaison physique calculés ;
+  - tableau de bord et commandes calés sur les marges système ; charte noir/vert.
+- Imagerie EOX s2cloudless **2017** (CC BY 4.0) au lieu de 2020 (non commercial). Politique de
+  confidentialité mise à jour.
+- CI verte (build 59 / captures 59) : rejeu 3D rendu sur l'émulateur Android 16, 0 plantage, test de
+  fumée release OK sur les 5 onglets.
+
+## Session 10 — Intégration de l'app Mes vols, onglet « Mes vols », V0.9.0 (25/09/2026)
+- App autonome « GLIDY Mes vols » (ChatGPT, 6 phases) fusionnée avec son historique : modules
+  `core:flightarchive`, `data:flightarchive` (Room), `data:flightcloud`, `feature:myflights` et
+  `feature:replay3d`. Docs dans `docs/mes-vols/`.
+- Un seul FileProvider (autorité `.files`). `FlightArchiveHost` : chaque IGC fermé par le moteur de vol
+  est archivé en tâche de fond. Reprise des IGC existants à chaque lancement (dédoublonnés).
+- 5e onglet « Mes vols ». Rejeu 3D plein écran, bloqué pendant un vol enregistré. Option CI
+  `--ez glidy.flights.demo true` (vol d'exemple) et `--ez glidy.flights.replay3d true`.
+- Frontières contrôlées en CI (`tools/mes-vols/verify_module_boundaries.py`).
+- CI verte (build 58) : le vol rejoué en CI a été archivé tout seul (« vol archivé : Imported »), 150 tests,
+  0 plantage.
+- Reste : la liste « derniers vols » de la carte Prévol « Capteurs & vols » est gardée telle quelle
+  (doublon mineur avec Mes vols).
+
 ## Session 9 — Audit de conformité Play Store, V0.8.3 (24/09/2026)
 
 ### Audit (état V0.8.2, rapport lint CI build 54)

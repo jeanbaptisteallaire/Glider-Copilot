@@ -217,7 +217,13 @@ private fun MainScaffold(container: AppContainer) {
                     )
                 }
                 Tab.MES_VOLS -> GlidyAdaptiveTheme(lightMode) {
+                    val account by container.cloud.state.collectAsState()
+                    val cloudChanges by container.cloud.changes.collectAsState()
+                    LaunchedEffect(Unit) { container.cloud.onShown() }
                     MyFlightsApp(
+                        account = account,
+                        accountActions = container.cloud,
+                        refreshSignal = cloudChanges,
                         repository = container.flights.repository,
                         shareGateway = container.flights.shareGateway,
                         completedFlightGateway = container.flights.completedGateway,

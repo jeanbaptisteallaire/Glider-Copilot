@@ -16,5 +16,7 @@
     <device-transfer>
         <include domain="file" path="." />
         <include domain="sharedpref" path="." />
+        <!-- S12 : la session du compte GLIDY ne suit pas le téléphone (reconnexion par code sur le nouveau) -->
+        <exclude domain="sharedpref" path="glidy_cloud_session.xml" />
     </device-transfer>
 </data-extraction-rules>

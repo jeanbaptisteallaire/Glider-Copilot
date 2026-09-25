@@ -152,6 +152,12 @@ interface FlightArchiveRepository {
      * 512 points d'aperçu de l'index). null si le vol ou son fichier n'est plus disponible.
      */
     suspend fun loadTrack(id: FlightId): List<IgcTrackPoint>? = null
+
+    /** Octets du fichier IGC archivé (S12 : envoi vers la sauvegarde cloud). null si indisponible. */
+    suspend fun readIgc(id: FlightId): ByteArray? = null
+
+    /** État de synchronisation cloud d'un vol (S12). Renvoie faux si le vol n'existe plus. */
+    suspend fun updateSyncState(id: FlightId, state: SyncState, remoteId: String?): Boolean = false
 }
 
 sealed interface ImportIgcResult {

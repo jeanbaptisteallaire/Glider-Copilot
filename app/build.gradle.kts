@@ -14,9 +14,13 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.9.1"
+        versionName = "0.9.2"
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
+        // S12 — sauvegarde cloud (Supabase) : URL + clé publique « anon » lues dans les secrets GitHub
+        // SUPABASE_URL / SUPABASE_ANON_KEY. Vides (dépôt public, forks, poste local) = cloud inactif.
+        buildConfigField("String", "SUPABASE_URL", "\"${System.getenv("SUPABASE_URL").orEmpty().trim()}\"")
+        buildConfigField("String", "SUPABASE_ANON_KEY", "\"${System.getenv("SUPABASE_ANON_KEY").orEmpty().trim()}\"")
     }
     // Clé d'upload Play App Signing (S8) : jamais dans le dépôt (public), lue via 4 secrets d'environnement
     // (KEYSTORE_BASE64 encodé en base64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD). Tant qu'ils sont absents
@@ -80,6 +84,7 @@ dependencies {
     implementation(project(":data:flightarchive"))
     implementation(project(":feature:myflights"))
     implementation(project(":feature:replay3d"))
+    implementation(project(":data:flightcloud"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

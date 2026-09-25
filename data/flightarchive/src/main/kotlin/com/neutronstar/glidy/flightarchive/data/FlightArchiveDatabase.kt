@@ -61,6 +61,9 @@ interface FlightDao {
     @Upsert
     suspend fun upsert(entity: FlightEntity)
 
+    @Query("UPDATE flights SET syncState = :syncState, remoteId = :remoteId, updatedAtEpochMillis = :now WHERE id = :id")
+    suspend fun updateSync(id: String, syncState: String, remoteId: String?, now: Long): Int
+
     @Query("DELETE FROM flights WHERE id = :id")
     suspend fun deleteById(id: String): Int
 
