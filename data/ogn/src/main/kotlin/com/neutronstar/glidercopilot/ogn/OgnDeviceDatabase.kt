@@ -3,7 +3,6 @@ package com.neutronstar.glidercopilot.ogn
 import com.neutronstar.glidercopilot.domain.flarm.Registration
 import com.neutronstar.glidercopilot.precog.CachedResponse
 import com.neutronstar.glidercopilot.precog.HttpClient
-import com.neutronstar.glidercopilot.precog.Json
 import com.neutronstar.glidercopilot.precog.ResponseCache
 import java.io.IOException
 import java.time.Duration
@@ -32,26 +31,85 @@ sealed interface PairingLookup {
 }
 
 object DdbParser {
-    fun parse(text: String): List<DdbDevice> = Json.parse(text)["devices"]?.arr.orEmpty().mapNotNull { j ->
-        val id = j["device_id"]?.str?.uppercase() ?: return@mapNotNull null
-        val reg = j["registration"]?.str?.trim().orEmpty()
-        if (reg.isEmpty()) return@mapNotNull null
-        DdbDevice(
-            deviceType = j["device_type"]?.str ?: "?",
-            deviceId = id,
-            aircraftModel = j["aircraft_model"]?.str?.takeIf { it.isNotBlank() },
-            registration = reg.uppercase(),
-            competitionNumber = j["cn"]?.str?.takeIf { it.isNotBlank() },
-            tracked = !yesNoIsNo(j["tracked"]),
-            identified = !yesNoIsNo(j["identified"]),
-        )
+    /**
+     * Lecture directe de la DDB (S9) : ~35 000 fiches à plat, valeurs scalaires uniquement. L'ancien passage par
+     * l'arbre JSON générique allouait plusieurs dizaines de Mo par lecture ; lu en parallèle au démarrage (trames
+     * OGN + rafraîchissement), il saturait le tas d'Android 16 (192 Mo) — plantage OutOfMemoryError vu en CI.
+     * Ce lecteur ne crée que les chaînes utiles, une fiche à la fois.
+     */
+    fun parse(text: String): List<DdbDevice> {
+        val out = ArrayList<DdbDevice>(40_000)
+        val arr = text.indexOf("\"devices\"")
+        if (arr < 0) return out
+        var i = text.indexOf('[', arr)
+        if (i < 0) return out
+        val fields = HashMap<String, String>(16)
+        val types = HashMap<String, String>()
+        val n = text.length
+        while (i < n) {
+            // prochain objet, ou fin du tableau
+            while (i < n && text[i] != '{' && text[i] != ']') i++
+            if (i >= n || text[i] == ']') break
+            i++
+            fields.clear()
+            while (i < n) {
+                while (i < n && text[i] != '"' && text[i] != '}') i++
+                if (i >= n || text[i] == '}') { i++; break }
+                val (key, afterKey) = readString(text, i)
+                i = afterKey
+                while (i < n && text[i] != ':') i++
+                i++
+                while (i < n && text[i].isWhitespace()) i++
+                if (i >= n) break
+                if (text[i] == '"') {
+                    val (value, after) = readString(text, i)
+                    fields[key] = value
+                    i = after
+                } else {
+                    val s0 = i
+                    while (i < n && text[i] != ',' && text[i] != '}' && !text[i].isWhitespace()) i++
+                    fields[key] = text.substring(s0, i)
+                }
+            }
+            val id = fields["device_id"]?.uppercase() ?: continue
+            val reg = fields["registration"]?.trim().orEmpty()
+            if (reg.isEmpty()) continue
+            val type = fields["device_type"] ?: "?"
+            out += DdbDevice(
+                deviceType = types.getOrPut(type) { type },
+                deviceId = id,
+                aircraftModel = fields["aircraft_model"]?.takeIf { it.isNotBlank() }?.let { m -> types.getOrPut(m) { m } },
+                registration = reg.uppercase(),
+                competitionNumber = fields["cn"]?.takeIf { it.isNotBlank() },
+                tracked = !isNo(fields["tracked"]),
+                identified = !isNo(fields["identified"]),
+            )
+        }
+        return out
     }
 
-    private fun yesNoIsNo(j: Json?): Boolean = when (j) {
-        is Json.Str -> j.value.equals("N", ignoreCase = true) || j.value == "0" || j.value.equals("false", ignoreCase = true)
-        is Json.Bool -> !j.value
-        is Json.Num -> j.value == 0.0
-        else -> false
+    private fun isNo(v: String?): Boolean =
+        v != null && (v.equals("N", ignoreCase = true) || v == "0" || v.equals("false", ignoreCase = true))
+
+    /** Chaîne JSON commençant au guillemet [start] ; renvoie sa valeur décodée et l'index après le guillemet fermant. */
+    private fun readString(t: String, start: Int): Pair<String, Int> {
+        var i = start + 1
+        val s0 = i
+        while (i < t.length && t[i] != '"' && t[i] != '\\') i++
+        if (i < t.length && t[i] == '"') return t.substring(s0, i) to i + 1
+        val b = StringBuilder(t, s0, i)
+        while (i < t.length && t[i] != '"') {
+            val ch = t[i]
+            if (ch == '\\' && i + 1 < t.length) {
+                when (val e = t[i + 1]) {
+                    'n' -> b.append('\n'); 't' -> b.append('\t'); 'r' -> b.append('\r'); 'b' -> b.append('\b'); 'f' -> b.append('\u000c')
+                    'u' -> if (i + 5 < t.length) { b.append(t.substring(i + 2, i + 6).toIntOrNull(16)?.toChar() ?: '?'); i += 4 }
+                    else -> b.append(e)
+                }
+                i += 2
+            } else { b.append(ch); i++ }
+        }
+        return b.toString() to (i + 1).coerceAtMost(t.length)
     }
 
     /** Toutes les fiches de l'immatriculation (un planeur peut porter FLARM et balise OGN). FLARM en tête. */
@@ -149,22 +207,34 @@ class OgnDeviceDatabase(
         val nowMs = clock().toEpochMilli()
         var idx = index?.second
         if (idx == null || nowMs - indexCheckedAt > 600_000) {
-            indexCheckedAt = nowMs
-            val cached = cache.read(url)
-            idx = if (cached == null) emptyMap()
-            else index?.takeIf { it.first == cached.fetchedAt }?.second
-                ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
-            if (cached == null) index = Instant.EPOCH to idx
+            // une seule reconstruction à la fois : les trames arrivées pendant ce temps restent sans nom (adresse brute)
+            if (!indexBuilding.compareAndSet(false, true)) return idx?.get(address.uppercase())
+            try {
+                indexCheckedAt = nowMs
+                val cached = cache.read(url)
+                idx = if (cached == null) emptyMap()
+                else index?.takeIf { it.first == cached.fetchedAt }?.second
+                    ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
+                if (cached == null) index = Instant.EPOCH to idx
+            } finally { indexBuilding.set(false) }
         }
-        return idx[address.uppercase()]
+        return idx?.get(address.uppercase())
     }
 
     @Volatile private var indexCheckedAt = 0L
 
+    private val parseLock = Any()
+
+    /** Une seule lecture à la fois (S9) : les appels concurrents attendent et réutilisent le résultat. */
     private fun devicesOf(c: CachedResponse): List<DdbDevice> {
         parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }
-        return DdbParser.parse(c.body).also { parsed = c.fetchedAt to it }
+        synchronized(parseLock) {
+            parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }
+            return DdbParser.parse(c.body).also { parsed = c.fetchedAt to it }
+        }
     }
+
+    private val indexBuilding = java.util.concurrent.atomic.AtomicBoolean(false)
 
     companion object {
         const val DDB_URL = "https://ddb.glidernet.org/download/?j=1&t=1"

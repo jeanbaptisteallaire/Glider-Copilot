@@ -29,6 +29,30 @@ class OgnDdbTest {
         assertFalse(list.first { it.registration == "F-CPSL" }.identified)
     }
 
+    @Test fun leanParserHandlesEscapesNumbersAndCompactJson() {
+        val json = """{"devices":[{"device_type":"F","device_id":"00abcd","aircraft_model":"Duo \"Discus\" \u00e9","registration":"f-cxyz","cn":"","tracked":"N","identified":"Y","aircraft_type":1},""" +
+            """{"device_type":"O","device_id":"0ABCDE","aircraft_model":"","registration":"","cn":"X","tracked":"Y","identified":"Y","aircraft_type":2},""" +
+            """{"device_type":"I","device_id":"3a1234","aircraft_model":"LS8","registration":"D-1234","cn":"Z9","tracked":"Y","identified":"0","aircraft_type":1}]}"""
+        val list = DdbParser.parse(json)
+        assertEquals(2, list.size)
+        assertEquals("00ABCD", list[0].deviceId)
+        assertEquals("Duo \"Discus\" é", list[0].aircraftModel)
+        assertEquals("F-CXYZ", list[0].registration)
+        assertFalse(list[0].tracked)
+        assertEquals("Z9", list[1].competitionNumber)
+        assertFalse(list[1].identified)
+    }
+
+    @Test fun leanParserReadsLargeBaseQuickly() {
+        val one = """{"device_type":"F","device_id":"%06X","aircraft_model":"ASK 21","registration":"F-C%03d","cn":"","tracked":"Y","identified":"Y","aircraft_type":1}"""
+        val json = (0 until 40_000).joinToString(",", prefix = "{\"devices\":[", postfix = "]}") { one.format(it, it % 1000) }
+        val t0 = System.nanoTime()
+        val list = DdbParser.parse(json)
+        val ms = (System.nanoTime() - t0) / 1_000_000
+        assertEquals(40_000, list.size)
+        assertTrue("lecture trop lente : $ms ms", ms < 3_000)
+    }
+
     @Test fun findsFlarmFirstWithTolerantKey() {
         val list = DdbParser.parse(text("ddb_synth.json"))
         val hits = DdbParser.find(list, "fcjab")
