@@ -21,15 +21,21 @@ object LocalArchiveModule {
         )
     }
 
+    /**
+     * [authority] : autorité du FileProvider de l'application hôte (GLIDY n'en déclare qu'un seul, S10) ;
+     * ses chemins doivent couvrir `files/igc-archive/` et `cache/igc-share/`.
+     */
     fun createShareGateway(
         context: Context,
         repository: FlightArchiveRepository,
+        authority: String = "${context.applicationContext.packageName}.glidy.flightfiles",
     ): FlightShareGateway {
         val applicationContext = context.applicationContext
         return AndroidFlightShareGateway(
             context = applicationContext,
             repository = repository,
             archiveDirectory = File(applicationContext.filesDir, ARCHIVE_DIRECTORY),
+            authority = authority,
         )
     }
 

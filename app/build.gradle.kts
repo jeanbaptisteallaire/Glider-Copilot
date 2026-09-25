@@ -14,7 +14,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.8.3"
+        versionName = "0.9.0"
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
     }
@@ -75,6 +75,11 @@ dependencies {
     implementation(project(":feature:checklist"))
     implementation(project(":feature:prevol"))
     implementation(project(":feature:flight"))
+    // S10 — Mes vols
+    implementation(project(":core:flightarchive"))
+    implementation(project(":data:flightarchive"))
+    implementation(project(":feature:myflights"))
+    implementation(project(":feature:replay3d"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

@@ -7,4 +7,7 @@
     <files-path name="igc-interne" path="igc/" />
     <files-path name="igc-rejeu-interne" path="igc-rejeu/" />
     <files-path name="calib-interne" path="calib/" />
+    <!-- S10 — Mes vols : archive privée des vols et copies temporaires partagées -->
+    <files-path name="igc_archive" path="igc-archive/" />
+    <cache-path name="igc_share" path="igc-share/" />
 </paths>

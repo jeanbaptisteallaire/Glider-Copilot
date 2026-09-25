@@ -34,7 +34,9 @@ class AppContainer(app: Application) {
     val checklist = ChecklistRepository(prefs)
     val carto = CartoRepository(app, UrlConnectionHttpClient(userAgent = userAgent), clubs, userAgent)
     val ogn = OgnLiveRepository(app, clubs, glider, prefs)
-    val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn, weather)
+    /** S10 — carnet Mes vols (archive IGC locale + rejeu 3D). */
+    val flights = FlightArchiveHost(app)
+    val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn, weather, onIgcClosed = flights::submitClosedIgc)
 }
 
 class GliderApp : Application() {
@@ -48,5 +50,7 @@ class GliderApp : Application() {
         container.location.refresh()
         val appScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Default)
         appScope.launch { container.glider.restoreFollow(appScope) }
+        // vols enregistrés avant la V0.9 ou interrompus : repris une fois par lancement (dédoublonnés)
+        container.flights.importExistingIgc()
     }
 }

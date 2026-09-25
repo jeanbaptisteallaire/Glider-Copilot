@@ -21,6 +21,8 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Frontières des modules Mes vols
+        run: python3 tools/mes-vols/verify_module_boundaries.py
       - name: Tests unitaires, lint, APK debug + release (R8), AAB Play Store
         id: gradle
         env:

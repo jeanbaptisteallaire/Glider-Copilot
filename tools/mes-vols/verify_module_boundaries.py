@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Vérifie que le projet autonome ne dépend pas des moteurs protégés de GLIDY."""
+"""Vérifie que les modules Mes vols ne dépendent pas des moteurs protégés de GLIDY (vol, OGN, cartes, sécurité).
+
+S10 : les modules vivent désormais dans le dépôt GLIDY ; seuls les dossiers Mes vols sont inspectés.
+Dépendance autorisée en plus : core:designsystem (jetons de la charte)."""
 
 from pathlib import Path
 import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
+MODULES = ["core/flightarchive", "data/flightarchive", "data/flightcloud", "feature/myflights", "feature/replay3d"]
 FORBIDDEN = {
     "feature:flight",
     "data:ogn",
@@ -20,7 +24,8 @@ FORBIDDEN = {
 
 files = [
     path
-    for path in ROOT.rglob("*")
+    for module in MODULES
+    for path in (ROOT / module).rglob("*")
     if path.is_file()
     and path.suffix in {".kt", ".kts"}
     and "build" not in path.parts

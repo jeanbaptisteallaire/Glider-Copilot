@@ -188,5 +188,25 @@ P=$(tap_text "Zoom avant")
 if [ -n "$P" ]; then for i in 1 2 3 4; do timeout 10 adb shell input tap $P; sleep 3; done; fi
 sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/20-carte-pistes.png"
+# S10 — Mes vols : vol synthétique d'exemple importé au lancement, liste, détail, rejeu 3D
+adb shell am force-stop com.neutronstar.glidercopilot || true
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flights.demo true
+sleep 14
+dismiss_anr
+P=$(tap_text "Mes vols"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 8
+timeout 20 adb exec-out screencap -p > "$OUT/21-mes-vols-liste.png"
+P=$(tap_text "19 septembre 2026"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 4
+timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
+for k in 1 2 3; do
+  P=$(tap_text "REVOIR LE VOL EN 3D"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; break; }
+  timeout 10 adb shell input swipe 540 1600 540 700 300; sleep 2
+done
+sleep 30
+timeout 20 adb exec-out screencap -p > "$OUT/23-rejeu-3d.png"
+adb shell input keyevent 4 || true
+sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/24-mes-vols-retour.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

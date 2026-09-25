@@ -126,6 +126,10 @@ fun MyFlightsApp(
     val viewModel: MyFlightsViewModel = viewModel(factory = factory)
     val state by viewModel.state.collectAsState()
     val context = LocalContext.current
+    // S10 (GLIDY) : l'onglet peut rester ouvert pendant qu'un vol est archivé en tâche de fond → relire à chaque affichage
+    androidx.compose.runtime.LaunchedEffect(Unit) { viewModel.reload() }
+    // retour système depuis le détail d'un vol → liste du carnet (et non sortie de l'app)
+    androidx.activity.compose.BackHandler(enabled = (state as? MyFlightsUiState.Ready)?.selectedFlightId != null) { viewModel.closeDetail() }
 
     val importer = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri != null) {

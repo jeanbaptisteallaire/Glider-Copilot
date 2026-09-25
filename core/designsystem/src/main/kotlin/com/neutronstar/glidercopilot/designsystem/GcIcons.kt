@@ -41,6 +41,12 @@ object GcIcons {
     val WindArrow = stroke("wind", 2.4f, "M12 20V5M6 10l6-6 6 6")
     /** Onglet Carte : carte pliée, trait au trait comme les autres onglets. */
     val Carte = stroke("carte", 1.8f, "M9 4.5 3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z", "M9 4.5v12.7M15 6.8v12.7")
+    /** Onglet Mes vols (S10) : trace de vol qui spirale vers le haut, départ marqué d'un point. */
+    val MesVols = stroke(
+        "mesVols", 1.8f,
+        "M4 20c3-1 4.5-3.5 4.5-6 0-2 1.6-3.2 3.3-2.8 1.8.4 2.2 2.6.7 3.4-1.6.8-3.3-.6-2.8-2.4.7-2.6 3.8-4.2 6.5-3.6 2.5.6 4 2.8 3.8 5.4",
+        "M3.6 20.4h.01",
+    )
     /** Interrupteur de mode clair/sombre (V7.2). */
     val LightMode = stroke(
         "lightMode", 1.8f,

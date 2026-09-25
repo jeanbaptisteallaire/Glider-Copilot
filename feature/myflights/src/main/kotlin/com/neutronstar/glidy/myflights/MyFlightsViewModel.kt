@@ -90,6 +90,24 @@ class MyFlightsViewModel(
         }
     }
 
+    /**
+     * Relecture silencieuse (GLIDY S10) : garde le vol ouvert et n'affiche pas d'écran de chargement —
+     * utilisée au retour sur l'onglet ou du rejeu 3D, quand un vol a pu être archivé entre-temps.
+     */
+    fun reload() {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return refresh()
+        viewModelScope.launch {
+            val recovered = runCatching { completedFlightGateway?.recoverPending() }.getOrNull()
+            val flights = runCatching { repository.listFlights().sortedForDisplay() }.getOrNull() ?: return@launch
+            val latest = mutableState.value as? MyFlightsUiState.Ready ?: current
+            mutableState.value = latest.copy(
+                flights = flights,
+                selectedFlightId = latest.selectedFlightId?.takeIf { id -> flights.any { it.id == id } },
+                notice = recovered?.issueNotice() ?: latest.notice,
+            )
+        }
+    }
+
     fun importIgc(fileName: String, source: InputStream?) {
         if (source == null) {
             showNotice("Le fichier ne peut pas être ouvert.")

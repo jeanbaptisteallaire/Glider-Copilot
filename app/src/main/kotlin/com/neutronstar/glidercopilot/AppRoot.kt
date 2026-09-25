@@ -1,6 +1,8 @@
 package com.neutronstar.glidercopilot
 
 import android.Manifest
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -62,12 +64,15 @@ import com.neutronstar.glidercopilot.feature.flight.FlightScreen
 import com.neutronstar.glidercopilot.feature.flight.TrafficMapScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolScreen
 import com.neutronstar.glidercopilot.feature.prevol.PrevolViewModel
+import com.neutronstar.glidy.flightarchive.ArchivedFlight
+import com.neutronstar.glidy.myflights.MyFlightsApp
+import com.neutronstar.glidy.replay3d.Replay3dScreen
 import kotlinx.coroutines.launch
 
 private const val DISCLAIMER_VERSION = 1
 
 /** Onglets de la maquette v8, dans l'ordre du vol : préparer, vérifier, piloter. */
-private enum class Tab(val label: String) { PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte") }
+private enum class Tab(val label: String) { PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
 
 @Composable
 fun AppRoot(container: AppContainer) {
@@ -170,6 +175,15 @@ private fun MainScaffold(container: AppContainer) {
         }
     }
 
+    // S10 — rejeu 3D d'un vol du carnet : plein écran, barre d'onglets masquée, retour système = retour au carnet
+    var replayed by remember { mutableStateOf<ArchivedFlight?>(null) }
+    val replay = replayed
+    if (replay != null) {
+        BackHandler { replayed = null }
+        Replay3dScreen(flight = replay, onBack = { replayed = null }, modifier = Modifier.fillMaxSize())
+        return
+    }
+
     Column(Modifier.fillMaxSize().background(c.background).statusBarsPadding()) {
         Box(Modifier.weight(1f)) {
             when (tab) {
@@ -183,6 +197,18 @@ private fun MainScaffold(container: AppContainer) {
                         onFollow = { a ->
                             scope.launch { container.glider.followAddress(a.id, a.fullLabel) }
                             tab = Tab.PILOTAGE
+                        },
+                    )
+                }
+                Tab.MES_VOLS -> GlidyAdaptiveTheme(lightMode) {
+                    MyFlightsApp(
+                        repository = container.flights.repository,
+                        shareGateway = container.flights.shareGateway,
+                        completedFlightGateway = container.flights.completedGateway,
+                        onReplay3d = { f ->
+                            // pas de rejeu 3D pendant un vol enregistré : GPU et batterie restent au pilotage
+                            if (recording) Toast.makeText(context, "Rejeu 3D disponible après l'atterrissage", Toast.LENGTH_LONG).show()
+                            else replayed = f
                         },
                     )
                 }
@@ -214,6 +240,7 @@ private fun icon(t: Tab): ImageVector = when (t) {
     Tab.CHECKLIST -> GcIcons.Checklist
     Tab.PILOTAGE -> GcIcons.Pilotage
     Tab.CARTE -> GcIcons.Carte
+    Tab.MES_VOLS -> GcIcons.MesVols
 }
 
 @Composable

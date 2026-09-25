@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
             container.flight.replaySpeed = intent.getFloatExtra("glidy.flight.speed", 1f).toDouble().coerceIn(0.5, 20.0)
             container.ogn.replay = true
         }
+        // S10 : vol synthétique d'exemple dans Mes vols (captures CI) : --ez glidy.flights.demo true
+        if (intent?.getBooleanExtra("glidy.flights.demo", false) == true) container.flights.importDemoFlight()
         setContent {
             GlidyTheme {
                 AppRoot(container)

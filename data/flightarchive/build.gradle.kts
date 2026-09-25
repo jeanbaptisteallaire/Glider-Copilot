@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.neutronstar.glidy.flightarchive.data"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         minSdk = 26
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

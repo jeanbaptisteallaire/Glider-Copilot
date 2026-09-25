@@ -31,7 +31,7 @@ PY
 )
   [ -n "$P" ] && timeout 10 adb shell input tap $P
 }
-adb shell am start -n $PKG/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
+adb shell am start -n $PKG/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6 --ez glidy.flights.demo true
 sleep 15
 tap "Wait"; tap "J'ai compris"
 sleep 20
@@ -42,6 +42,8 @@ tap "Pilotage"; sleep 25
 timeout 20 adb exec-out screencap -p > "$OUT/92-release-pilotage.png"
 tap "Carte"; sleep 15
 timeout 20 adb exec-out screencap -p > "$OUT/93-release-carte.png"
+tap "Mes vols"; sleep 8
+timeout 20 adb exec-out screencap -p > "$OUT/94-release-mes-vols.png"
 tap "Prévol"; sleep 8
 timeout 30 adb logcat -d > "$OUT/release-logcat.txt" || true
 ALIVE=$(adb shell pidof $PKG | tr -d '\r')
@@ -49,4 +51,4 @@ if grep -q "FATAL EXCEPTION" "$OUT/release-logcat.txt" || [ -z "$ALIVE" ]; then
   { echo "ECHEC : plantage de la version release (R8)"; grep -A25 "FATAL EXCEPTION" "$OUT/release-logcat.txt" | head -60; } | tee "$OUT/release-smoke.txt"
   exit 1
 fi
-echo "OK : version release (R8) lancée, 4 onglets parcourus, aucun plantage, pid $ALIVE" | tee "$OUT/release-smoke.txt"
+echo "OK : version release (R8) lancée, 5 onglets parcourus, aucun plantage, pid $ALIVE" | tee "$OUT/release-smoke.txt"

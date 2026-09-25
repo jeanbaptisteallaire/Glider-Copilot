@@ -90,6 +90,8 @@ class FlightEngine(
     private val glider: GliderRepository,
     private val ogn: OgnLiveRepository,
     private val weather: com.neutronstar.glidercopilot.precog.WeatherRepository,
+    /** S10 : reçoit chaque fichier IGC une fois fermé (carnet Mes vols). Ne doit jamais bloquer ni lever. */
+    private val onIgcClosed: (File) -> Unit = {},
 ) : FlightControls, SensorsSource {
     private val thread = HandlerThread("glidy-flight").apply { start() }
     private val handler = Handler(thread.looper)
@@ -530,7 +532,13 @@ class FlightEngine(
     private fun closeIgc() {
         runCatching { igcWriter?.close() }
         igcWriter = null
-        if (igcFile != null) { igcFile = null; scope.launch { refreshFlights() } }
+        val closed = igcFile
+        if (closed != null) {
+            igcFile = null
+            scope.launch { refreshFlights() }
+            // S10 : remise au carnet Mes vols, après fermeture complète ; aucune erreur ne remonte ici
+            runCatching { onIgcClosed(closed) }.onFailure { Log.w(TAG, "carnet Mes vols indisponible", it) }
+        }
     }
 
     private fun refreshFlights() {
