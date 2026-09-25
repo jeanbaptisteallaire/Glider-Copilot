@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
         }
         // S10 : vol synthétique d'exemple dans Mes vols (captures CI) : --ez glidy.flights.demo true
         if (intent?.getBooleanExtra("glidy.flights.demo", false) == true) container.flights.importDemoFlight()
+        if (intent?.getBooleanExtra("glidy.flights.replay3d", false) == true) container.flights.openReplayOnStart = true
         setContent {
             GlidyTheme {
                 AppRoot(container)

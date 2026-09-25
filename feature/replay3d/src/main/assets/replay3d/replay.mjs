@@ -8,6 +8,7 @@ const ui = {
     loadingTitle: document.getElementById('loading-title'),
     loadingDetail: document.getElementById('loading-detail'),
     altitude: document.getElementById('altitude'),
+    vario: document.getElementById('vario'),
     speed: document.getElementById('speed'),
     time: document.getElementById('time'),
     play: document.getElementById('play'),
@@ -32,6 +33,7 @@ const state = {
     customLayer: null,
     flight: null,
     points: [],
+    duration: 1,
     playing: false,
     elapsed: 0,
     lastFrame: 0,
@@ -72,10 +74,10 @@ function satelliteTerrainStyle() {
         sources: {
             satellite: {
                 type: 'raster',
-                tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg'],
+                tiles: ['https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2017_3857/default/g/{z}/{y}/{x}.jpg'],
                 tileSize: 256,
                 maxzoom: 14,
-                attribution: 'Images Sentinel-2 cloudless · EOX · données Copernicus 2020',
+                attribution: 'Sentinel-2 cloudless 2017 · s2maps.eu · EOX IT Services (CC BY 4.0, données Copernicus Sentinel modifiées 2017)',
             },
             terrain: {
                 type: 'raster-dem',
@@ -204,6 +206,46 @@ function localCoordinates(originMercator, point) {
     );
 }
 
+// Échelle vario de la charte GLIDY (core/designsystem Theme.kt, varioStops) — mêmes valeurs.
+const VARIO_STOPS = [
+    [-3.0, [0x2d, 0x70, 0x43]],
+    [-1.0, [0x7d, 0xc7, 0x7e]],
+    [0.0, [0xbe, 0xbe, 0xbe]],
+    [0.6, [0xff, 0xbd, 0x70]],
+    [1.8, [0xff, 0x91, 0x30]],
+    [3.5, [0xff, 0x80, 0x78]],
+];
+
+function varioRgb(ms) {
+    if (!Number.isFinite(ms) || ms <= VARIO_STOPS[0][0]) return VARIO_STOPS[0][1];
+    for (let k = 1; k < VARIO_STOPS.length; k++) {
+        const [v1, c1] = VARIO_STOPS[k];
+        const [v0, c0] = VARIO_STOPS[k - 1];
+        if (ms <= v1) {
+            const f = (ms - v0) / (v1 - v0);
+            return [0, 1, 2].map(i => Math.round(c0[i] + (c1[i] - c0[i]) * f));
+        }
+    }
+    return VARIO_STOPS[VARIO_STOPS.length - 1][1];
+}
+
+/** Vario lissé (≈5 s) et vitesse sol (≈4 s) de chaque point, à partir des temps réels du fichier IGC. */
+function computeKinematics(points) {
+    const n = points.length;
+    let lo = 0, hi = 0, sLo = 0, sHi = 0;
+    for (let i = 0; i < n; i++) {
+        const t = points[i].t;
+        while (points[lo].t < t - 2.5 && lo < i) lo++;
+        while (hi < n - 1 && points[hi + 1].t <= t + 2.5) hi++;
+        const dt = points[hi].t - points[lo].t;
+        points[i].vario = dt > 0.5 ? (points[hi].alt - points[lo].alt) / dt : 0;
+        while (points[sLo].t < t - 2 && sLo < i) sLo++;
+        while (sHi < n - 1 && points[sHi + 1].t <= t + 2) sHi++;
+        const ds = points[sHi].t - points[sLo].t;
+        points[i].speed = ds > 0.5 ? distanceMeters(points[sLo], points[sHi]) / ds * 3.6 : 0;
+    }
+}
+
 function createFlightLayer(map, points) {
     const origin = points[0];
     const originMercator = maplibregl.MercatorCoordinate.fromLngLat([origin.lon, origin.lat], 0);
@@ -227,7 +269,15 @@ function createFlightLayer(map, points) {
             const halo = new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({color: 0x192023, transparent: true, opacity: .5}));
             halo.position.y = -1;
             this.scene.add(halo);
-            const path = new THREE.Line(lineGeometry, new THREE.LineBasicMaterial({color: 0xf5f7f6, transparent: true, opacity: .92}));
+            // trace colorée au vario (échelle GLIDY) : les thermiques ressortent en orange
+            const colors = new Float32Array(points.length * 3);
+            points.forEach((point, i) => {
+                const [r, g, b] = varioRgb(point.vario);
+                colors[i * 3] = r / 255; colors[i * 3 + 1] = g / 255; colors[i * 3 + 2] = b / 255;
+            });
+            const coloured = lineGeometry.clone();
+            coloured.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const path = new THREE.Line(coloured, new THREE.LineBasicMaterial({vertexColors: true, transparent: true, opacity: .96}));
             this.scene.add(path);
 
             this.glider = makeGlider();
@@ -262,27 +312,40 @@ function createFlightLayer(map, points) {
     return {customLayer, originMercator};
 }
 
+/** Position à l'instant [elapsed] (s depuis le décollage), par recherche dans les temps réels du fichier. */
 function flightPosition(elapsed) {
     const points = state.points;
-    if (points.length === 1) return {...points[0], heading: 0, speed: 0, bank: 0, progress: 0};
-    const duration = Math.max(1, state.flight.durationSeconds);
-    const progress = clamp(elapsed / duration, 0, 1);
-    const scaled = progress * (points.length - 1);
-    const index = Math.min(points.length - 2, Math.floor(scaled));
-    const fraction = scaled - index;
-    const a = points[index];
-    const b = points[index + 1];
-    const heading = headingDegrees(a, b);
-    const previousHeading = index > 0 ? headingDegrees(points[index - 1], a) : heading;
-    const pointSeconds = duration / (points.length - 1);
+    if (points.length === 1) return {...points[0], heading: 0, speed: 0, bank: 0, vario: 0, progress: 0};
+    const duration = Math.max(1, state.duration);
+    const t = clamp(elapsed, 0, duration);
+    let lo = 0, hi = points.length - 1;
+    while (hi - lo > 1) {
+        const mid = (lo + hi) >> 1;
+        if (points[mid].t <= t) lo = mid; else hi = mid;
+    }
+    const a = points[lo];
+    const b = points[hi];
+    const span = Math.max(1e-6, b.t - a.t);
+    const fraction = clamp((t - a.t) / span, 0, 1);
+    // cap lissé sur quelques points pour que le planeur ne tremble pas à 1 Hz
+    const back = points[Math.max(0, lo - 3)];
+    const ahead = points[Math.min(points.length - 1, hi + 3)];
+    const heading = headingDegrees(back, ahead);
+    // inclinaison physique : tan(φ) = v·ω / g, ω = taux de virage mesuré sur ±5 points
+    const i0 = Math.max(0, lo - 5), i1 = Math.min(points.length - 1, lo + 5);
+    const turn = shortestAngle(headingDegrees(points[i0], a), headingDegrees(a, points[i1]));
+    const turnSeconds = Math.max(1, (points[i1].t - points[i0].t) / 2);
+    const omega = toRadians(turn) / turnSeconds;
+    const bank = toDegrees(Math.atan((a.speed / 3.6) * omega / 9.81));
     return {
         lat: a.lat + (b.lat - a.lat) * fraction,
         lon: a.lon + (b.lon - a.lon) * fraction,
         alt: a.alt + (b.alt - a.alt) * fraction,
         heading,
-        speed: distanceMeters(a, b) / pointSeconds * 3.6,
-        bank: clamp(shortestAngle(previousHeading, heading) * 2.4, -38, 38),
-        progress,
+        speed: a.speed + (b.speed - a.speed) * fraction,
+        vario: a.vario + (b.vario - a.vario) * fraction,
+        bank: clamp(Number.isFinite(bank) ? bank : 0, -55, 55),
+        progress: t / duration,
     };
 }
 
@@ -302,8 +365,8 @@ function updateFrame(timestamp) {
     state.lastFrame = timestamp;
     if (state.playing) {
         state.elapsed += delta * state.rates[state.rateIndex];
-        if (state.elapsed >= state.flight.durationSeconds) {
-            state.elapsed = state.flight.durationSeconds;
+        if (state.elapsed >= state.duration) {
+            state.elapsed = state.duration;
             state.playing = false;
             ui.play.textContent = '▶';
         }
@@ -314,6 +377,12 @@ function updateFrame(timestamp) {
     state.customLayer.layer.setPose(local, pose.heading, pose.bank);
     ui.altitude.textContent = `${Math.round(pose.alt)} m`;
     ui.speed.textContent = `${Math.round(pose.speed)} km/h`;
+    if (ui.vario) {
+        const v = pose.vario;
+        ui.vario.textContent = `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1).replace('.', ',')}`;
+        const [r, g, b] = varioRgb(v);
+        ui.vario.style.color = `rgb(${r}, ${g}, ${b})`;
+    }
     ui.time.textContent = formatTime(state.elapsed);
     ui.timeline.value = String(Math.round(pose.progress * 1000));
 
@@ -331,19 +400,43 @@ function updateFrame(timestamp) {
     setTimeout(() => requestAnimationFrame(updateFrame), 34);
 }
 
+/**
+ * Charge de rejeu : format colonnes (S11, toute la trace) {lat:[], lon:[], alt:[], t:[]} ou ancien format
+ * {points:[{lat,lon,alt}], durationSeconds} (512 points d'aperçu, temps supposés réguliers).
+ */
+function readPoints(payload) {
+    if (!payload) return [];
+    let points = [];
+    if (Array.isArray(payload.lat)) {
+        for (let i = 0; i < payload.lat.length; i++) {
+            points.push({lat: Number(payload.lat[i]), lon: Number(payload.lon[i]), alt: Number(payload.alt[i]), t: Number(payload.t[i])});
+        }
+    } else if (Array.isArray(payload.points)) {
+        const n = payload.points.length;
+        const duration = Math.max(1, Number(payload.durationSeconds) || n);
+        points = payload.points.map((p, i) => ({lat: Number(p.lat), lon: Number(p.lon), alt: Number(p.alt), t: n > 1 ? i / (n - 1) * duration : 0}));
+    }
+    return points.filter(p => [p.lat, p.lon, p.alt, p.t].every(Number.isFinite));
+}
+
+/** Marges système (barre d'état, barre de navigation) transmises par Android, en px CSS. */
+function applyInsets(insets) {
+    const root = document.documentElement.style;
+    root.setProperty('--inset-top', `${Math.max(0, Number(insets && insets.top) || 0)}px`);
+    root.setProperty('--inset-bottom', `${Math.max(0, Number(insets && insets.bottom) || 0)}px`);
+}
+
 async function loadFlight(payload) {
     try {
         sizeSceneToViewport();
-        if (!payload || !Array.isArray(payload.points) || payload.points.length < 2) {
-            throw new Error('La trace IGC ne contient pas assez de points pour le rejeu 3D.');
-        }
-        state.flight = payload;
-        state.points = payload.points.map(point => ({
-            lat: Number(point.lat),
-            lon: Number(point.lon),
-            alt: Number(point.alt),
-        })).filter(point => Number.isFinite(point.lat) && Number.isFinite(point.lon) && Number.isFinite(point.alt));
-        if (state.points.length < 2) throw new Error('Les coordonnées de la trace sont invalides.');
+        applyInsets(payload && payload.insets);
+        state.flight = payload || {};
+        state.points = readPoints(payload);
+        if (state.points.length < 2) throw new Error('La trace IGC ne contient pas assez de points pour le rejeu 3D.');
+        state.duration = Math.max(1, state.points[state.points.length - 1].t - state.points[0].t);
+        const t0 = state.points[0].t;
+        state.points.forEach(point => { point.t -= t0; });
+        computeKinematics(state.points);
 
         const start = state.points[0];
         const map = new maplibregl.Map({
@@ -358,7 +451,7 @@ async function loadFlight(payload) {
             minZoom: 11,
             maxZoom: 18,
             pixelRatio: 1,
-            attributionControl: true,
+            attributionControl: false,
             canvasContextAttributes: {antialias: true},
         });
         state.map = map;
@@ -373,6 +466,8 @@ async function loadFlight(payload) {
             if (event && event.error) notifyAndroid('onMapWarning', event.error.message || 'Tuile indisponible');
         });
 
+        // attribution repliée derrière un « i », sous le tableau de bord (plus sous les commandes de lecture)
+        map.addControl(new maplibregl.AttributionControl({compact: true}), 'top-right');
         await map.once('load');
         const built = createFlightLayer(map, state.points);
         map.addLayer(built.customLayer);
@@ -393,7 +488,7 @@ async function loadFlight(payload) {
 
 ui.play.addEventListener('click', () => {
     if (!state.ready) return;
-    if (state.elapsed >= state.flight.durationSeconds) state.elapsed = 0;
+    if (state.elapsed >= state.duration) state.elapsed = 0;
     state.playing = !state.playing;
     ui.play.textContent = state.playing ? 'Ⅱ' : '▶';
 });
@@ -411,7 +506,7 @@ ui.camera.addEventListener('click', () => {
 
 ui.timeline.addEventListener('input', event => {
     if (!state.ready) return;
-    state.elapsed = Number(event.target.value) / 1000 * state.flight.durationSeconds;
+    state.elapsed = Number(event.target.value) / 1000 * state.duration;
 });
 
 function pointerDistance() {

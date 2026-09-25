@@ -8,6 +8,7 @@ import com.neutronstar.glidy.flightarchive.GeoBounds
 import com.neutronstar.glidy.flightarchive.GeoPoint
 import com.neutronstar.glidy.flightarchive.IgcFileRef
 import com.neutronstar.glidy.flightarchive.IgcParseResult
+import com.neutronstar.glidy.flightarchive.IgcTrackPoint
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.flightarchive.ParsedIgcFlight
@@ -136,6 +137,17 @@ class RoomFlightArchiveRepository(
 
     override suspend fun findFlight(id: FlightId): ArchivedFlight? = withContext(ioDispatcher) {
         dao.findById(id.value)?.toDomain()
+    }
+
+    override suspend fun loadTrack(id: FlightId): List<IgcTrackPoint>? = withContext(ioDispatcher) {
+        val entity = dao.findById(id.value) ?: return@withContext null
+        val root = archiveDirectory.canonicalFile
+        val file = File(root, entity.relativePath).canonicalFile
+        if (!file.path.startsWith(root.path + File.separator) || !file.isFile) return@withContext null
+        when (val parsed = file.bufferedReader(Charsets.ISO_8859_1).use(parser::parse)) {
+            is IgcParseResult.Success -> parsed.flight.points
+            else -> null
+        }
     }
 
     override suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult = mutex.withLock {

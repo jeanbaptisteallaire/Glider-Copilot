@@ -10,16 +10,30 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalDensity
+import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcIcons
+import com.neutronstar.glidy.flightarchive.FlightId
+import com.neutronstar.glidy.flightarchive.IgcTrackPoint
+import kotlin.math.cos
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -29,11 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.webkit.WebViewAssetLoader
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
@@ -43,15 +54,33 @@ import org.json.JSONObject
 
 private const val REPLAY_URL = "https://appassets.androidplatform.net/assets/replay3d/index.html"
 
+/**
+ * Rejeu 3D d'un vol du carnet. [loadTrack] relit la trace complète du fichier IGC (GLIDY S11) ; à défaut,
+ * l'aperçu de 512 points de l'index sert de repli. Charte : noir, vert, police système (jetons GLIDY).
+ */
 @Composable
 fun Replay3dScreen(
     flight: ArchivedFlight,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    loadTrack: suspend (FlightId) -> List<IgcTrackPoint>? = { null },
 ) {
-    val payload = remember(flight) { Replay3dPayload.from(flight).toJson().toString() }
+    val c = Gc.colors
+    val density = LocalDensity.current
+    val insetTop = with(density) { WindowInsets.statusBars.getTop(this).toDp().value }
+    val insetBottom = with(density) { WindowInsets.navigationBars.getBottom(this).toDp().value }
+    val payload by produceState<String?>(initialValue = null, flight.id) {
+        value = withContext(Dispatchers.Default) {
+            val track = runCatching { loadTrack(flight.id) }.getOrNull()
+            val full = track?.takeIf { it.size >= 2 }
+                ?.let { runCatching { Replay3dTrackPayload.from(flight, it).takeIf { p -> p.latitudes.size >= 2 }?.toJson() }.getOrNull() }
+            val json = full ?: Replay3dPayload.from(flight).toJson()
+            json.put("insets", JSONObject().put("top", insetTop).put("bottom", insetBottom))
+            json.toString()
+        }
+    }
     var webView: WebView? by remember { mutableStateOf(null) }
-    var engineMessage by remember { mutableStateOf("Initialisation du moteur 3D") }
+    var engineMessage by remember { mutableStateOf("Lecture de la trace IGC…") }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -65,46 +94,41 @@ fun Replay3dScreen(
         }
     }
 
-    Box(modifier.fillMaxSize().background(ComposeColor(0xFFE3E7E6))) {
-        AndroidView(
-            modifier = Modifier.fillMaxSize().testTag("replay-3d-webview"),
-            factory = { context ->
-                createReplayWebView(
-                    context = context,
-                    payload = payload,
-                    onStatus = { engineMessage = it },
-                ).also { created -> webView = created }
-            },
-        )
+    Box(modifier.fillMaxSize().background(c.background)) {
+        val json = payload
+        if (json != null) {
+            AndroidView(
+                modifier = Modifier.fillMaxSize().testTag("replay-3d-webview"),
+                factory = { context ->
+                    createReplayWebView(
+                        context = context,
+                        payload = json,
+                        onStatus = { engineMessage = it },
+                    ).also { created -> webView = created }
+                },
+            )
+        }
 
-        Row(
-            modifier = Modifier.statusBarsPadding().padding(start = 12.dp, top = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Box(
+            modifier = Modifier.statusBarsPadding().padding(start = 12.dp, top = 8.dp)
+                .size(48.dp)
+                .background(c.overlay, CircleShape)
+                .border(1.dp, c.line, CircleShape)
+                .testTag("close-replay-3d")
+                .clickable(onClickLabel = "Fermer le rejeu 3D", onClick = onBack),
+            contentAlignment = Alignment.Center,
         ) {
-            Surface(
-                modifier = Modifier.size(48.dp).testTag("close-replay-3d").clickable(onClick = onBack),
-                shape = CircleShape,
-                color = ComposeColor(0xCC111719),
-                shadowElevation = 6.dp,
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Text("‹", color = ComposeColor.White, fontSize = 32.sp, fontWeight = FontWeight.Light)
-                }
-            }
-            Surface(
-                modifier = Modifier.padding(start = 8.dp),
-                shape = RoundedCornerShape(14.dp),
-                color = ComposeColor(0xBB111719),
-            ) {
-                Text(
-                    text = engineMessage,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    color = ComposeColor.White,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = .5.sp,
-                )
-            }
+            Icon(GcIcons.ChevronDown, contentDescription = "Retour", tint = c.ink, modifier = Modifier.size(22.dp).rotate(90f))
+        }
+
+        // état du moteur : affiché seulement tant qu'il n'est pas prêt, ou en cas d'erreur
+        if (!engineMessage.startsWith("REJEU 3D")) {
+            Text(
+                text = engineMessage,
+                style = Gc.type.bodySmall.copy(color = if (engineMessage.startsWith("ERREUR")) c.warn else c.dim),
+                modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 96.dp)
+                    .background(c.overlay, RoundedCornerShape(10.dp)).padding(horizontal = 12.dp, vertical = 7.dp),
+            )
         }
     }
 }
@@ -119,7 +143,7 @@ private fun createReplayWebView(
         .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(context))
         .build()
     return WebView(context).apply {
-        setBackgroundColor(Color.rgb(223, 229, 228))
+        setBackgroundColor(Color.BLACK)
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.cacheMode = WebSettings.LOAD_DEFAULT
@@ -170,6 +194,73 @@ private class ReplayJavascriptBridge(
 
     @JavascriptInterface
     fun onMapWarning(@Suppress("UNUSED_PARAMETER") value: String) = Unit
+}
+
+/**
+ * Charge du rejeu à pleine résolution (S11) : colonnes lat/lon/alt/t (s depuis le premier point), altitude
+ * GNSS (baro en repli). Au-delà de [MAX_POINTS], simplification de Douglas-Peucker à 2,5 m qui garde les virages.
+ */
+internal data class Replay3dTrackPayload(
+    val title: String,
+    val latitudes: DoubleArray,
+    val longitudes: DoubleArray,
+    val altitudes: IntArray,
+    val seconds: LongArray,
+) {
+    fun toJson(): JSONObject = JSONObject().apply {
+        put("title", title)
+        put("lat", JSONArray().apply { latitudes.forEach { put(Math.round(it * 1e6) / 1e6) } })
+        put("lon", JSONArray().apply { longitudes.forEach { put(Math.round(it * 1e6) / 1e6) } })
+        put("alt", JSONArray().apply { altitudes.forEach { put(it) } })
+        put("t", JSONArray().apply { seconds.forEach { put(it) } })
+    }
+
+    companion object {
+        const val MAX_POINTS = 20_000
+
+        fun from(flight: ArchivedFlight, track: List<IgcTrackPoint>): Replay3dTrackPayload {
+            val usable = track.filter { (it.gpsAltitudeMeters ?: it.pressureAltitudeMeters) != null }
+            val kept = if (usable.size > MAX_POINTS) simplify(usable, 2.5) else usable
+            val t0 = kept.firstOrNull()?.timestamp?.epochSecond ?: 0L
+            return Replay3dTrackPayload(
+                title = flight.file.fileName,
+                latitudes = DoubleArray(kept.size) { kept[it].latitude },
+                longitudes = DoubleArray(kept.size) { kept[it].longitude },
+                altitudes = IntArray(kept.size) { kept[it].gpsAltitudeMeters ?: kept[it].pressureAltitudeMeters ?: 0 },
+                seconds = LongArray(kept.size) { kept[it].timestamp.epochSecond - t0 },
+            )
+        }
+
+        /** Douglas-Peucker itératif en mètres (projection locale + altitude). */
+        internal fun simplify(points: List<IgcTrackPoint>, toleranceM: Double): List<IgcTrackPoint> {
+            if (points.size < 3) return points
+            val lat0 = Math.toRadians(points.first().latitude)
+            val x = DoubleArray(points.size) { Math.toRadians(points[it].longitude) * 6_371_000.0 * cos(lat0) }
+            val y = DoubleArray(points.size) { Math.toRadians(points[it].latitude) * 6_371_000.0 }
+            val z = DoubleArray(points.size) { (points[it].gpsAltitudeMeters ?: points[it].pressureAltitudeMeters ?: 0).toDouble() }
+            val keep = BooleanArray(points.size).also { it[0] = true; it[points.size - 1] = true }
+            val stack = ArrayDeque<Pair<Int, Int>>().apply { add(0 to points.size - 1) }
+            while (stack.isNotEmpty()) {
+                val (a, b) = stack.removeLast()
+                if (b - a < 2) continue
+                val dx = x[b] - x[a]; val dy = y[b] - y[a]; val dz = z[b] - z[a]
+                val len2 = dx * dx + dy * dy + dz * dz
+                var worst = -1.0; var index = -1
+                for (i in a + 1 until b) {
+                    val px = x[i] - x[a]; val py = y[i] - y[a]; val pz = z[i] - z[a]
+                    val u = if (len2 > 0) ((px * dx + py * dy + pz * dz) / len2).coerceIn(0.0, 1.0) else 0.0
+                    val ex = px - u * dx; val ey = py - u * dy; val ez = pz - u * dz
+                    val d = ex * ex + ey * ey + ez * ez
+                    if (d > worst) { worst = d; index = i }
+                }
+                if (index >= 0 && worst > toleranceM * toleranceM) {
+                    keep[index] = true
+                    stack.add(a to index); stack.add(index to b)
+                }
+            }
+            return points.filterIndexed { i, _ -> keep[i] }
+        }
+    }
 }
 
 internal data class ReplayPointPayload(val latitude: Double, val longitude: Double, val altitudeMeters: Int)

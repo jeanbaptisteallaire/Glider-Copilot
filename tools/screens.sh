@@ -199,12 +199,22 @@ timeout 20 adb exec-out screencap -p > "$OUT/21-mes-vols-liste.png"
 P=$(tap_text "19 septembre 2026"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
+opened=""
 for k in 1 2 3; do
-  P=$(tap_text "REVOIR LE VOL EN 3D"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; break; }
-  timeout 10 adb shell input swipe 540 1600 540 700 300; sleep 2
+  P=$(tap_text "REVOIR LE VOL EN 3D"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; opened=1; break; }
+  timeout 10 adb shell input swipe 540 1500 540 900 400; sleep 3
 done
+# repli : ouverture directe du rejeu du vol le plus récent (option CI)
+if [ -z "$opened" ]; then
+  echo "bouton rejeu introuvable : ouverture directe"
+  adb shell am force-stop com.neutronstar.glidercopilot || true
+  adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flights.replay3d true
+  sleep 14
+fi
 sleep 30
 timeout 20 adb exec-out screencap -p > "$OUT/23-rejeu-3d.png"
+sleep 20
+timeout 20 adb exec-out screencap -p > "$OUT/23b-rejeu-3d-suite.png"
 adb shell input keyevent 4 || true
 sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/24-mes-vols-retour.png"

@@ -177,10 +177,26 @@ private fun MainScaffold(container: AppContainer) {
 
     // S10 — rejeu 3D d'un vol du carnet : plein écran, barre d'onglets masquée, retour système = retour au carnet
     var replayed by remember { mutableStateOf<ArchivedFlight?>(null) }
+    LaunchedEffect(Unit) {
+        if (!container.flights.openReplayOnStart) return@LaunchedEffect
+        container.flights.openReplayOnStart = false
+        tab = Tab.MES_VOLS
+        repeat(20) {
+            val newest = runCatching { container.flights.repository.listFlights() }.getOrNull()
+                ?.maxByOrNull { it.summary?.startedAt?.toEpochMilli() ?: Long.MIN_VALUE }
+            if (newest != null) { replayed = newest; return@LaunchedEffect }
+            kotlinx.coroutines.delay(500)
+        }
+    }
     val replay = replayed
     if (replay != null) {
         BackHandler { replayed = null }
-        Replay3dScreen(flight = replay, onBack = { replayed = null }, modifier = Modifier.fillMaxSize())
+        Replay3dScreen(
+            flight = replay,
+            onBack = { replayed = null },
+            modifier = Modifier.fillMaxSize(),
+            loadTrack = { id -> container.flights.repository.loadTrack(id) },
+        )
         return
     }
 
@@ -205,6 +221,7 @@ private fun MainScaffold(container: AppContainer) {
                         repository = container.flights.repository,
                         shareGateway = container.flights.shareGateway,
                         completedFlightGateway = container.flights.completedGateway,
+                        demoFlight = { FlightArchiveHost.DEMO_NAME to context.assets.open(FlightArchiveHost.DEMO_ASSET) },
                         onReplay3d = { f ->
                             // pas de rejeu 3D pendant un vol enregistré : GPU et batterie restent au pilotage
                             if (recording) Toast.makeText(context, "Rejeu 3D disponible après l'atterrissage", Toast.LENGTH_LONG).show()

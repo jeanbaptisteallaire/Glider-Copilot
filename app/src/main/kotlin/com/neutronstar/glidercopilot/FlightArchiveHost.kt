@@ -26,6 +26,9 @@ class FlightArchiveHost(context: Context) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val lock = Mutex()
 
+    /** CI (S11) : --ez glidy.flights.replay3d true ouvre directement le rejeu 3D du vol le plus récent. */
+    @Volatile var openReplayOnStart = false
+
     val repository: FlightArchiveRepository by lazy { LocalArchiveModule.create(app) }
     val shareGateway: FlightShareGateway by lazy {
         // un seul FileProvider dans l'app (autorité « .files », chemins dans res/xml/file_paths.xml)

@@ -27,7 +27,7 @@
 </head>
 <body>
   <h1>GLIDY — Politique de confidentialité</h1>
-  <p class="maj">Dernière mise à jour : 24 septembre 2026 · version de l'app 0.8.3</p>
+  <p class="maj">Dernière mise à jour : 24 septembre 2026 · version de l'app 0.9.1</p>
 
   <p>
     GLIDY (« l'application ») est une aide secondaire au vol à voile, développée par
@@ -66,13 +66,14 @@
     <tr><td style="padding:6px 8px 6px 0;">API météo (precog)</td><td style="padding:6px 8px;">Prévisions Météo-France</td><td style="padding:6px 0;">Position du terrain choisi</td></tr>
     <tr><td style="padding:6px 8px 6px 0;">Open Glider Network<br><code>ddb.glidernet.org</code></td><td style="padding:6px 8px;">Annuaire des immatriculations planeur (ODbL)</td><td style="padding:6px 0;">Aucune (lecture seule, en cache)</td></tr>
     <tr><td style="padding:6px 8px 6px 0;">Open Glider Network<br><code>aprs.glidernet.org</code></td><td style="padding:6px 8px;">Trafic planeur temps réel</td><td style="padding:6px 0;">Position approximative (filtre de zone)</td></tr>
+    <tr><td style="padding:6px 8px 6px 0;">EOX (Sentinel-2 cloudless)<br>AWS Open Data (relief)</td><td style="padding:6px 8px;">Images satellite et relief du rejeu 3D d'un vol (onglet Mes vols), uniquement quand le pilote ouvre un rejeu</td><td style="padding:6px 0;">Les tuiles de la zone affichée (comme toute carte en ligne) ; jamais la trace ni le fichier du vol</td></tr>
     <tr><td style="padding:6px 8px 6px 0;">GitHub Releases</td><td style="padding:6px 8px;">Téléchargement des cartes hors ligne (openAIP, OpenStreetMap, Copernicus)</td><td style="padding:6px 0;">Aucune</td></tr>
   </table>
   <p style="font-size:13px; margin-top:10px;">Aucun de ces services ne reçoit d'identifiant publicitaire, de nom, d'e-mail ou de numéro de téléphone : l'app n'en collecte aucun.</p>
 
   <h2>Données stockées uniquement sur le téléphone</h2>
   <ul>
-    <li>Traces de vol au format IGC (enregistreur non approuvé, sans valeur pour un badge).</li>
+    <li>Traces de vol au format IGC (enregistreur non approuvé, sans valeur pour un badge), et le carnet « Mes vols » qui les indexe (date, durée, distance, altitudes) : copie privée de l'application, jamais envoyée ailleurs.</li>
     <li>Journaux de calibration (mode « calib », optionnel) : baromètre, accélération verticale et GPS bruts d'un vol d'essai — envoyés uniquement si le pilote choisit de les partager lui-même (bouton « Partager »), par le moyen de son choix.</li>
     <li>Préférences (club, immatriculation, réglages de son et de voix).</li>
   </ul>

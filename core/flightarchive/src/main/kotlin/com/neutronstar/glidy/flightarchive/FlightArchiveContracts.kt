@@ -146,6 +146,12 @@ interface FlightArchiveRepository {
     suspend fun listFlights(): List<ArchivedFlight>
     suspend fun findFlight(id: FlightId): ArchivedFlight?
     suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult
+
+    /**
+     * Trace complète relue depuis le fichier IGC (GLIDY S11 : rejeu 3D à pleine résolution, au lieu des
+     * 512 points d'aperçu de l'index). null si le vol ou son fichier n'est plus disponible.
+     */
+    suspend fun loadTrack(id: FlightId): List<IgcTrackPoint>? = null
 }
 
 sealed interface ImportIgcResult {
