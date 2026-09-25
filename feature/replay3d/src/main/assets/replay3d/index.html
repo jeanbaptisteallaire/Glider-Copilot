@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>GLIDY Rejeu 3D</title>
+    <link rel="stylesheet" href="vendor/maplibre-gl-5.15.0.css">
+    <link rel="stylesheet" href="replay.css">
+</head>
+<body>
+<main id="scene" aria-label="Rejeu du vol en trois dimensions">
+    <div id="map"></div>
+    <div id="gesture-layer" aria-label="Zone tactile pour tourner autour du planeur"></div>
+    <div id="loading">
+        <div class="spinner"></div>
+        <div id="loading-title">Préparation du relief 3D</div>
+        <div id="loading-detail">Le premier affichage peut prendre quelques secondes.</div>
+    </div>
+    <section id="telemetry" class="glass">
+        <div><strong id="altitude">—</strong><span>ALTITUDE</span></div>
+        <div><strong id="speed">—</strong><span>VITESSE SOL</span></div>
+        <div><strong id="time">00:00</strong><span>TEMPS DE VOL</span></div>
+    </section>
+    <section id="hint" class="glass">Glissez avec un doigt pour tourner autour du planeur · pincez pour zoomer</section>
+    <section id="controls" class="glass">
+        <button id="play" type="button" aria-label="Lecture ou pause">▶</button>
+        <input id="timeline" type="range" min="0" max="1000" value="0" aria-label="Position dans le vol">
+        <button id="rate" type="button" aria-label="Vitesse de lecture">32×</button>
+        <button id="camera" type="button" aria-label="Recentrer la caméra">◎</button>
+    </section>
+    <div id="status" role="status"></div>
+</main>
+<script src="vendor/maplibre-gl-5.15.0.js"></script>
+<script type="module" src="replay.mjs"></script>
+</body>
+</html>
