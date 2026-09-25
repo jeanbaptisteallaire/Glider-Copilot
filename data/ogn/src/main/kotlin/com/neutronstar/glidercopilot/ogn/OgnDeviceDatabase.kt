@@ -97,7 +97,7 @@ object DdbParser {
         val s0 = i
         while (i < t.length && t[i] != '"' && t[i] != '\\') i++
         if (i < t.length && t[i] == '"') return t.substring(s0, i) to i + 1
-        val b = StringBuilder(t, s0, i)
+        val b = StringBuilder().append(t, s0, i)
         while (i < t.length && t[i] != '"') {
             val ch = t[i]
             if (ch == '\\' && i + 1 < t.length) {
