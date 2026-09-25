@@ -349,6 +349,22 @@
         priority="5"
         summary="Logging call to Log instead of Timber"
         explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
+        errorLine1="        val report = runCatching { sync.sync() }.onFailure { Log.w(TAG, &quot;sauvegarde impossible&quot;, it) }.getOrNull()"
+        errorLine2="                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/CloudHost.kt"
+            line="91"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="LogNotTimber"
+        severity="Warning"
+        message="Using &apos;Log&apos; instead of &apos;Timber&apos;"
+        category="Correctness:Messages"
+        priority="5"
+        summary="Logging call to Log instead of Timber"
+        explanation="Since Timber is included in the project, it is likely that calls to Log should instead be going to Timber."
         errorLine1="                    .onSuccess { Log.i(TAG, &quot;vol archivé : ${file.name} → $it&quot;) }"
         errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-25T18:32:20" hostname="runnervmtr4k5" time="0.673">
+<testsuite name="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-09-25T22:22:18" hostname="runnervmtr4k5" time="0.71">
   <properties/>
-  <testcase name="cancelled deletion keeps the selected flight and file" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.377"/>
-  <testcase name="share result is exposed without changing selection" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.013"/>
-  <testcase name="loading remains visible until repository responds" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.009"/>
-  <testcase name="selection opens and closes a known flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.002"/>
-  <testcase name="confirmed deletion removes only the requested flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.016"/>
-  <testcase name="five hundred flights are prepared without truncation" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.223"/>
-  <testcase name="repository failure produces a retryable error state" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.013"/>
-  <testcase name="flights are ordered from newest to oldest and missing files remain visible" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.007"/>
+  <testcase name="cancelled deletion keeps the selected flight and file" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.412"/>
+  <testcase name="share result is exposed without changing selection" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.011"/>
+  <testcase name="loading remains visible until repository responds" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.008"/>
+  <testcase name="selection opens and closes a known flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.007"/>
+  <testcase name="confirmed deletion removes only the requested flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.012"/>
+  <testcase name="five hundred flights are prepared without truncation" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.22"/>
+  <testcase name="repository failure produces a retryable error state" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.014"/>
+  <testcase name="flights are ordered from newest to oldest and missing files remain visible" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.021"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

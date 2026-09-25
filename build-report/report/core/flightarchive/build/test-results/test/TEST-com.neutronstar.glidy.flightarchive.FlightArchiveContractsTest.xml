@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T18:32:14" hostname="runnervmtr4k5" time="0.056">
+<testsuite name="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-09-25T22:22:08" hostname="runnervmtr4k5" time="0.036">
   <properties/>
-  <testcase name="fileReferenceRequiresIgcAndSha256" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.031"/>
-  <testcase name="summaryRejectsEndBeforeStart" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.018"/>
-  <testcase name="flightIdRejectsNonUuidValue" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.006"/>
+  <testcase name="fileReferenceRequiresIgcAndSha256" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.015"/>
+  <testcase name="summaryRejectsEndBeforeStart" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.011"/>
+  <testcase name="flightIdRejectsNonUuidValue" classname="com.neutronstar.glidy.flightarchive.FlightArchiveContractsTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
