@@ -1,5 +1,5 @@
 + date -u
-Sat Sep 26 13:57:57 UTC 2026
+Sat Sep 26 15:37:42 UTC 2026
 ++ ls apk/app-debug.apk
 ++ head -1
 + APK=apk/app-debug.apk
@@ -9,8 +9,8 @@ Success
 + adb shell pm clear com.neutronstar.glidercopilot
 Success
 + adb logcat -c
-+ adb logcat -v time
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
++ adb logcat -v time
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION
 + adb emu geo fix 3.78167 43.80028 183
 OK
@@ -63,9 +63,9 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Immatriculation du planeur'
-+ P='357 474'
-+ '[' -n '357 474' ']'
-+ timeout 10 adb shell input tap 357 474
++ P='321 492'
++ '[' -n '321 492' ']'
++ timeout 10 adb shell input tap 321 492
 + sleep 1
 + adb shell input text F-CPHI
 + sleep 1
@@ -77,9 +77,9 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - Valider
-+ P='769 474'
-+ '[' -n '769 474' ']'
-+ timeout 10 adb shell input tap 769 474
++ P='715 492'
++ '[' -n '715 492' ']'
++ timeout 10 adb shell input tap 715 492
 + sleep 40
 + timeout 20 adb exec-out screencap -p
 + dismiss_anr
@@ -117,12 +117,107 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Télécharger*'
-+ P='217 1327'
-+ '[' -n '217 1327' ']'
-+ timeout 10 adb shell input tap 217 1327
-+ echo 'téléchargement lancé (essai 1)'
-téléchargement lancé (essai 1)
-+ break
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
++ for t in 1 2 3 4 5 6
+++ tap_text 'Télécharger*'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Télécharger*'
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
++ for t in 1 2 3 4 5 6
+++ tap_text 'Télécharger*'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Télécharger*'
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
++ for t in 1 2 3 4 5 6
+++ tap_text 'Télécharger*'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Télécharger*'
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
++ for t in 1 2 3 4 5 6
+++ tap_text 'Télécharger*'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Télécharger*'
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
++ for t in 1 2 3 4 5 6
+++ tap_text 'Télécharger*'
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - 'Télécharger*'
++ P=
++ '[' -n '' ']'
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ sleep 8
 ++ seq 1 60
 + for i in $(seq 1 60)
 + sleep 6
@@ -162,11 +257,568 @@ téléchargement lancé (essai 1)
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - Installée
-+ P='965 1052'
-+ '[' -n '965 1052' ']'
-+ echo 'pack installé après 24 s'
-pack installé après 24 s
-+ break
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
++ for i in $(seq 1 60)
++ sleep 6
+++ tap_text Installée
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - Installée
++ P=
++ '[' -n '' ']'
 + timeout 20 adb exec-out screencap -p
 + adb shell input swipe 540 1500 540 700 400
 + sleep 20
@@ -216,7 +868,7 @@ pack installé après 24 s
 + timeout 20 adb exec-out screencap -p
 + adb shell am force-stop com.neutronstar.glidercopilot
 ++ date +%s
-+ T0=1790431367
++ T0=1790437833
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
 Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) }
 + sleep 8
@@ -230,46 +882,49 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 + '[' -n '539 2292' ']'
 + timeout 10 adb shell input tap 539 2292
 ++ date +%s
-+ '[' 12 -lt 105 ']'
++ '[' 11 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 14 -lt 105 ']'
++ '[' 13 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 16 -lt 105 ']'
++ '[' 15 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 18 -lt 105 ']'
++ '[' 17 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 20 -lt 105 ']'
++ '[' 19 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 22 -lt 105 ']'
++ '[' 21 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 24 -lt 105 ']'
++ '[' 23 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 26 -lt 105 ']'
++ '[' 25 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 28 -lt 105 ']'
++ '[' 27 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 30 -lt 105 ']'
++ '[' 29 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 32 -lt 105 ']'
++ '[' 31 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 34 -lt 105 ']'
++ '[' 33 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 36 -lt 105 ']'
++ '[' 35 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 38 -lt 105 ']'
++ '[' 37 -lt 105 ']'
++ sleep 2
+++ date +%s
++ '[' 39 -lt 105 ']'
 + sleep 2
 ++ date +%s
 + '[' 41 -lt 105 ']'
@@ -375,11 +1030,12 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 ++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
-++ echo 'uiautomator indisponible pour: Zoom arrière'
-uiautomator indisponible pour: Zoom arrière
-++ return 0
-+ P=
-+ '[' -n '' ']'
+++ python3 - 'Zoom arrière'
++ P='988 1840'
++ '[' -n '988 1840' ']'
++ timeout 10 adb shell input tap 988 1840
++ sleep 1
++ timeout 10 adb shell input tap 988 1840
 + sleep 6
 + timeout 20 adb exec-out screencap -p
 ++ tap_text Réduire
@@ -387,9 +1043,7 @@ uiautomator indisponible pour: Zoom arrière
 ++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
-++ echo 'uiautomator indisponible pour: Réduire'
-uiautomator indisponible pour: Réduire
-++ return 0
+++ python3 - Réduire
 + P=
 + '[' -n '' ']'
 ++ tap_text 'Masquer le vario'
@@ -398,8 +1052,9 @@ uiautomator indisponible pour: Réduire
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Masquer le vario'
-+ P=
-+ '[' -n '' ']'
++ P='986 2098'
++ '[' -n '986 2098' ']'
++ timeout 10 adb shell input tap 986 2098
 + sleep 5
 + timeout 20 adb exec-out screencap -p
 ++ tap_text Prévol
@@ -408,8 +1063,9 @@ uiautomator indisponible pour: Réduire
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - Prévol
-+ P=
-+ '[' -n '' ']'
++ P='124 2292'
++ '[' -n '124 2292' ']'
++ timeout 10 adb shell input tap 124 2292
 + sleep 3
 + for i in 1 2 3 4 5 6 7 8 9 10
 ++ tap_text 'Essai du son'
@@ -440,210 +1096,174 @@ uiautomator indisponible pour: Réduire
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
-+ for i in 1 2 3 4 5 6 7 8 9 10
-++ tap_text 'Essai du son'
-++ rm -f /tmp/ui.xml
-++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
-++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
-++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'Essai du son'
-+ P=
-+ '[' -n '' ']'
-+ adb shell input swipe 540 1600 540 900 300
-+ sleep 1
++ P='285 1870'
++ '[' -n '285 1870' ']'
++ break
 + adb shell input swipe 540 1500 540 1150 300
 + sleep 2
 + timeout 20 adb exec-out screencap -p
 ++ date +%s
-+ '[' 213 -lt 390 ']'
++ '[' 144 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 218 -lt 390 ']'
++ '[' 149 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 223 -lt 390 ']'
++ '[' 154 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 228 -lt 390 ']'
++ '[' 159 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 233 -lt 390 ']'
++ '[' 164 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 238 -lt 390 ']'
++ '[' 169 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 243 -lt 390 ']'
++ '[' 174 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 248 -lt 390 ']'
++ '[' 179 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 253 -lt 390 ']'
++ '[' 184 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 258 -lt 390 ']'
++ '[' 189 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 263 -lt 390 ']'
++ '[' 194 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 268 -lt 390 ']'
++ '[' 199 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 273 -lt 390 ']'
++ '[' 204 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 278 -lt 390 ']'
++ '[' 209 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 283 -lt 390 ']'
++ '[' 214 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 288 -lt 390 ']'
++ '[' 219 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 293 -lt 390 ']'
++ '[' 224 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 298 -lt 390 ']'
++ '[' 229 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 303 -lt 390 ']'
++ '[' 234 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 308 -lt 390 ']'
++ '[' 239 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 313 -lt 390 ']'
++ '[' 244 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 318 -lt 390 ']'
++ '[' 249 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 323 -lt 390 ']'
++ '[' 254 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 328 -lt 390 ']'
++ '[' 259 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 333 -lt 390 ']'
++ '[' 264 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 338 -lt 390 ']'
++ '[' 269 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 343 -lt 390 ']'
++ '[' 274 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 348 -lt 390 ']'
++ '[' 279 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 353 -lt 390 ']'
++ '[' 284 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 358 -lt 390 ']'
++ '[' 289 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 363 -lt 390 ']'
++ '[' 294 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 368 -lt 390 ']'
++ '[' 299 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 373 -lt 390 ']'
++ '[' 304 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 378 -lt 390 ']'
++ '[' 309 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 383 -lt 390 ']'
++ '[' 314 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 388 -lt 390 ']'
++ '[' 319 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 393 -lt 390 ']'
++ '[' 324 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 329 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 334 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 339 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 344 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 349 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 354 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 359 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 364 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 369 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 374 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 379 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 384 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 389 -lt 390 ']'
++ sleep 5
+++ date +%s
++ '[' 394 -lt 390 ']'
 + adb shell input swipe 540 1150 540 1400 300
 + sleep 3
 + timeout 20 adb exec-out screencap -p
 + mkdir -p screens/igc
 + timeout 30 adb pull /sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/. screens/igc/
-/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/./: 1 file pulled, 0 skipped. 0.4 MB/s (19164 bytes in 0.044s)
+/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/./: 1 file pulled, 0 skipped. 1.6 MB/s (70685 bytes in 0.043s)
 + ls screens/igc/2026-09-26-XXX-GLY-01.igc
 + python3 tools/flight/check_igc.py screens/igc/2026-09-26-XXX-GLY-01.igc
 + cat screens/igc-controle.txt
-screens/igc/2026-09-26-XXX-GLY-01.igc : 522 lignes, 506 points B, altitude GNSS 183–1574 m
+screens/igc/2026-09-26-XXX-GLY-01.igc : 1914 lignes, 1898 points B, altitude GNSS 183–1609 m
   OK
 + adb shell am force-stop com.neutronstar.glidercopilot
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
@@ -754,9 +1374,9 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Suivi et debug d'\''un planeur en vol'
-+ P='969 868'
-+ '[' -n '969 868' ']'
-+ timeout 10 adb shell input tap 969 868
++ P='969 856'
++ '[' -n '969 856' ']'
++ timeout 10 adb shell input tap 969 856
 + sleep 2
 ++ tap_text F-CGXB
 ++ rm -f /tmp/ui.xml
@@ -764,9 +1384,9 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - F-CGXB
-+ P='217 1152'
-+ '[' -n '217 1152' ']'
-+ timeout 10 adb shell input tap 217 1152
++ P='217 1142'
++ '[' -n '217 1142' ']'
++ timeout 10 adb shell input tap 217 1142
 + sleep 30
 + timeout 20 adb exec-out screencap -p
 ++ tap_text Pilotage
@@ -805,12 +1425,54 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - VITESSE
-+ P='399 1855'
-+ '[' -n '399 1855' ']'
-+ found='540 1150'
-+ break
-+ echo 'fiche aéronef ouverte en 540 1150'
-fiche aéronef ouverte en 540 1150
++ P=
++ '[' -n '' ']'
++ for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"
++ timeout 10 adb shell input tap 540 900
++ sleep 2
+++ tap_text VITESSE
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - VITESSE
++ P=
++ '[' -n '' ']'
++ for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"
++ timeout 10 adb shell input tap 400 1000
++ sleep 2
+++ tap_text VITESSE
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - VITESSE
++ P=
++ '[' -n '' ']'
++ for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"
++ timeout 10 adb shell input tap 680 1250
++ sleep 2
+++ tap_text VITESSE
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - VITESSE
++ P=
++ '[' -n '' ']'
++ for p in "540 1150" "540 900" "400 1000" "680 1250" "540 1400"
++ timeout 10 adb shell input tap 540 1400
++ sleep 2
+++ tap_text VITESSE
+++ rm -f /tmp/ui.xml
+++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
+++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
+++ '[' -f /tmp/ui.xml ']'
+++ python3 - VITESSE
++ P=
++ '[' -n '' ']'
++ echo 'fiche aéronef ouverte en '
+fiche aéronef ouverte en 
 + timeout 20 adb exec-out screencap -p
 ++ tap_text SUIVRE
 ++ rm -f /tmp/ui.xml
@@ -818,40 +1480,35 @@ fiche aéronef ouverte en 540 1150
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - SUIVRE
-+ P='799 1784'
-+ '[' -n '799 1784' ']'
-+ timeout 10 adb shell input tap 799 1784
-+ sleep 25
-+ timeout 20 adb exec-out screencap -p
-++ tap_text Carte
++ P=
++ '[' -n '' ']'
+++ tap_text VITESSE
 ++ rm -f /tmp/ui.xml
 ++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
-++ python3 - Carte
-+ P='747 2292'
-+ '[' -n '747 2292' ']'
-+ timeout 10 adb shell input tap 747 2292
-+ sleep 12
+++ python3 - VITESSE
++ P=
++ '[' -n '' ']'
 ++ tap_text 'Zoom avant'
 ++ rm -f /tmp/ui.xml
 ++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Zoom avant'
-+ P='988 1935'
-+ '[' -n '988 1935' ']'
++ P='988 1934'
++ '[' -n '988 1934' ']'
 + for i in 1 2 3 4
-+ timeout 10 adb shell input tap 988 1935
++ timeout 10 adb shell input tap 988 1934
 + sleep 3
 + for i in 1 2 3 4
-+ timeout 10 adb shell input tap 988 1935
++ timeout 10 adb shell input tap 988 1934
 + sleep 3
 + for i in 1 2 3 4
-+ timeout 10 adb shell input tap 988 1935
++ timeout 10 adb shell input tap 988 1934
 + sleep 3
 + for i in 1 2 3 4
-+ timeout 10 adb shell input tap 988 1935
++ timeout 10 adb shell input tap 988 1934
 + sleep 3
 + sleep 8
 + timeout 20 adb exec-out screencap -p
@@ -904,22 +1561,23 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - '21 juin 2024'
-+ P='401 1318'
-+ '[' -n '401 1318' ']'
-+ timeout 10 adb shell input tap 401 1318
++ P='401 1411'
++ '[' -n '401 1411' ']'
++ timeout 10 adb shell input tap 401 1411
 + sleep 4
 + timeout 20 adb exec-out screencap -p
 + opened=
 + for k in 1 2 3
-++ tap_text 'REVOIR LE VOL EN 3D'
+++ tap_text 'Revoir le vol en 3D'
 ++ rm -f /tmp/ui.xml
 ++ timeout 25 adb shell uiautomator dump /sdcard/ui.xml
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
-++ python3 - 'REVOIR LE VOL EN 3D'
-+ P='540 1362'
-+ '[' -n '540 1362' ']'
-+ timeout 10 adb shell input tap 540 1362
+++ python3 - 'Revoir le vol en 3D'
++ P='540 1386'
++ '[' -z '540 1386' ']'
++ '[' -n '540 1386' ']'
++ timeout 10 adb shell input tap 540 1386
 + opened=1
 + break
 + '[' -z 1 ']'
@@ -934,47 +1592,55 @@ Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) 
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Position dans le vol' 0.235
 + P=
-+ echo 'frise : '
-frise : 
-+ '[' -n '' ']'
++ '[' -z '' ']'
++ P='339 2226'
++ echo 'frise : 339 2226'
+frise : 339 2226
++ '[' -n '339 2226' ']'
++ timeout 10 adb shell input tap 339 2226
++ sleep 6
++ timeout 20 adb exec-out screencap -p
++ sleep 3
++ timeout 20 adb exec-out screencap -p
 + adb shell input keyevent 4
 + sleep 3
 + timeout 20 adb exec-out screencap -p
 + timeout 30 adb logcat -d -t 600
 + ls -la screens
-total 35812
-drwxr-xr-x  3 runner runner     4096 Sep 26 14:17 .
-drwxr-xr-x 16 runner runner     4096 Sep 26 13:57 ..
--rw-r--r--  1 runner runner   102681 Sep 26 13:58 01-avertissement.png
--rw-r--r--  1 runner runner   285860 Sep 26 13:59 02-prevol.png
--rw-r--r--  1 runner runner   240899 Sep 26 14:00 03-prevol-appairage.png
--rw-r--r--  1 runner runner   250551 Sep 26 14:01 04-prevol-carte.png
--rw-r--r--  1 runner runner   267797 Sep 26 14:02 05-prevol-ogn-direct.png
--rw-r--r--  1 runner runner   269008 Sep 26 14:02 06-prevol-espaces.png
--rw-r--r--  1 runner runner   269336 Sep 26 14:02 07-checklists.png
--rw-r--r--  1 runner runner   269422 Sep 26 14:02 07b-checklists-suite.png
--rw-r--r--  1 runner runner    15580 Sep 26 14:04 08-pilotage-vol-rejeu.png
--rw-r--r--  1 runner runner    15584 Sep 26 14:04 09-pilotage-vol-large.png
--rw-r--r--  1 runner runner   439958 Sep 26 14:05 10-pilotage-vol-plein.png
--rw-r--r--  1 runner runner   299611 Sep 26 14:06 11-prevol-capteurs-en-vol.png
--rw-r--r--  1 runner runner   299130 Sep 26 14:09 12-prevol-vol-enregistre.png
--rw-r--r--  1 runner runner   745719 Sep 26 14:09 12b-pilotage-terrain-au-sol.png
--rw-r--r--  1 runner runner  1299030 Sep 26 14:11 13-pilotage-mode-demo.png
--rw-r--r--  1 runner runner   769049 Sep 26 14:11 14-pilotage-choix-terrain.png
--rw-r--r--  1 runner runner  1285481 Sep 26 14:11 15-pilotage-demo-f10.png
--rw-r--r--  1 runner runner   292977 Sep 26 14:12 16-prevol-suivi-debug.png
--rw-r--r--  1 runner runner  1308413 Sep 26 14:12 17-pilotage-suivi.png
--rw-r--r--  1 runner runner   842862 Sep 26 14:13 18-carte-sud-france.png
--rw-r--r--  1 runner runner   853879 Sep 26 14:13 19-carte-fiche-aeronef.png
--rw-r--r--  1 runner runner  1275603 Sep 26 14:14 19b-pilotage-suivi-depuis-carte.png
--rw-r--r--  1 runner runner  2056457 Sep 26 14:15 20-carte-pistes.png
--rw-r--r--  1 runner runner   233946 Sep 26 14:15 21-mes-vols-liste.png
--rw-r--r--  1 runner runner   176198 Sep 26 14:15 22-mes-vols-detail.png
--rw-r--r--  1 runner runner    51753 Sep 26 14:16 23-rejeu-3d.png
--rw-r--r--  1 runner runner   513620 Sep 26 14:16 23b-rejeu-3d-suite.png
--rw-r--r--  1 runner runner   160935 Sep 26 14:17 24-mes-vols-retour.png
-drwxr-xr-x  2 runner runner     4096 Sep 26 14:09 igc
--rw-r--r--  1 runner runner       98 Sep 26 14:09 igc-controle.txt
--rw-r--r--  1 runner runner 21580679 Sep 26 14:17 logcat-live.txt
--rw-r--r--  1 runner runner    86590 Sep 26 14:17 logcat.txt
--rw-r--r--  1 runner runner    24535 Sep 26 14:17 trace.txt
+total 20244
+drwxr-xr-x  3 runner runner     4096 Sep 26 16:03 .
+drwxr-xr-x 16 runner runner     4096 Sep 26 15:37 ..
+-rw-r--r--  1 runner runner   100284 Sep 26 15:38 01-avertissement.png
+-rw-r--r--  1 runner runner   273690 Sep 26 15:39 02-prevol.png
+-rw-r--r--  1 runner runner   240248 Sep 26 15:40 03-prevol-appairage.png
+-rw-r--r--  1 runner runner   240521 Sep 26 15:49 04-prevol-carte.png
+-rw-r--r--  1 runner runner   253658 Sep 26 15:50 05-prevol-ogn-direct.png
+-rw-r--r--  1 runner runner   254834 Sep 26 15:50 06-prevol-espaces.png
+-rw-r--r--  1 runner runner   254945 Sep 26 15:50 07-checklists.png
+-rw-r--r--  1 runner runner   255367 Sep 26 15:50 07b-checklists-suite.png
+-rw-r--r--  1 runner runner   214303 Sep 26 15:52 08-pilotage-vol-rejeu.png
+-rw-r--r--  1 runner runner   214059 Sep 26 15:52 09-pilotage-vol-large.png
+-rw-r--r--  1 runner runner   168889 Sep 26 15:52 10-pilotage-vol-plein.png
+-rw-r--r--  1 runner runner   287875 Sep 26 15:52 11-prevol-capteurs-en-vol.png
+-rw-r--r--  1 runner runner   291616 Sep 26 15:57 12-prevol-vol-enregistre.png
+-rw-r--r--  1 runner runner   175227 Sep 26 15:57 12b-pilotage-terrain-au-sol.png
+-rw-r--r--  1 runner runner   175497 Sep 26 15:58 13-pilotage-mode-demo.png
+-rw-r--r--  1 runner runner   193237 Sep 26 15:58 14-pilotage-choix-terrain.png
+-rw-r--r--  1 runner runner   181665 Sep 26 15:59 15-pilotage-demo-f10.png
+-rw-r--r--  1 runner runner   273711 Sep 26 15:59 16-prevol-suivi-debug.png
+-rw-r--r--  1 runner runner   133076 Sep 26 16:00 17-pilotage-suivi.png
+-rw-r--r--  1 runner runner    71415 Sep 26 16:01 18-carte-sud-france.png
+-rw-r--r--  1 runner runner    71542 Sep 26 16:01 19-carte-fiche-aeronef.png
+-rw-r--r--  1 runner runner    71290 Sep 26 16:01 20-carte-pistes.png
+-rw-r--r--  1 runner runner   244273 Sep 26 16:02 21-mes-vols-liste.png
+-rw-r--r--  1 runner runner   171719 Sep 26 16:02 22-mes-vols-detail.png
+-rw-r--r--  1 runner runner    51780 Sep 26 16:03 23-rejeu-3d.png
+-rw-r--r--  1 runner runner    51662 Sep 26 16:03 23b-rejeu-3d-suite.png
+-rw-r--r--  1 runner runner    51673 Sep 26 16:03 23c-rejeu-3d-spirale.png
+-rw-r--r--  1 runner runner    50467 Sep 26 16:03 23d-rejeu-3d-spirale-suite.png
+-rw-r--r--  1 runner runner   171859 Sep 26 16:03 24-mes-vols-retour.png
+drwxr-xr-x  2 runner runner     4096 Sep 26 15:57 igc
+-rw-r--r--  1 runner runner      100 Sep 26 15:57 igc-controle.txt
+-rw-r--r--  1 runner runner 15334047 Sep 26 16:03 logcat-live.txt
+-rw-r--r--  1 runner runner    80552 Sep 26 16:03 logcat.txt
+-rw-r--r--  1 runner runner    40988 Sep 26 16:03 trace.txt
