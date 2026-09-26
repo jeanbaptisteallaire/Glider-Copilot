@@ -19,7 +19,7 @@
 html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 body { background: var(--bg); color: var(--ink); }
 #scene { position: fixed; inset: 0; width: 100vw; height: 100vh; overflow: hidden; touch-action: none; }
-#map { position: absolute; inset: 0; }
+#map { position: absolute; inset: 0; background: var(--bg); }
 #gesture-layer { position: absolute; inset: 0; z-index: 2; touch-action: none; }
 
 .glass {
@@ -40,8 +40,8 @@ body { background: var(--bg); color: var(--ink); }
 }
 #telemetry div { flex: 1; text-align: center; border-right: 1px solid var(--line); }
 #telemetry div:last-child { border-right: 0; }
-#telemetry strong { display: block; font-size: 18px; line-height: 22px; font-weight: 600; letter-spacing: -.3px; font-variant-numeric: tabular-nums; color: var(--ink); }
-#telemetry span { display: block; margin-top: 2px; color: var(--dim); font-size: 8px; font-weight: 500; letter-spacing: .9px; }
+#telemetry strong { display: block; white-space: nowrap; font-size: clamp(14px, 4.6vw, 18px); line-height: 22px; font-weight: 600; letter-spacing: -.3px; font-variant-numeric: tabular-nums; color: var(--ink); }
+#telemetry span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; color: var(--dim); font-size: 8px; font-weight: 500; letter-spacing: .9px; }
 #altitude { color: var(--ok) !important; }
 
 #hint {

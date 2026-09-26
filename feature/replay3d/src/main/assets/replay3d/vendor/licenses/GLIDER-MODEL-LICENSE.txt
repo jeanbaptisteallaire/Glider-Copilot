@@ -1,0 +1,60 @@
+Modèle 3D du planeur (rejeu 3D) — licence et attribution
+=========================================================
+
+Fichiers concernés (assets/replay3d/) :
+  glider.bin, glider.json, glider-livery.png, glider-palette.png
+  (chargés par glider-model.mjs)
+
+Œuvre d'origine
+---------------
+  Titre   : « UNDERPOLY: Free Sailplane Glider »
+  Auteur  : UNDERPOLY Project (Sketchfab : @underpolyproject)
+  Source  : https://sketchfab.com/3d-models/underpoly-free-sailplane-glider-45ffefc38fcf4e76a9d0c2a4e76262ef
+  Publié  : 10/10/2023 sur Sketchfab ; le paquet fourni (dossier « UNDERPOLY - Free
+            Sailplane Glider », avec 0_Sketchfab_DemoScene.fbx) est le téléchargement
+            Sketchfab de ce modèle.
+  Licence : Creative Commons Attribution 4.0 International (CC BY 4.0)
+            https://creativecommons.org/licenses/by/4.0/
+            (métadonnées Sketchfab vérifiées le 26/09/2026 via
+             https://api.sketchfab.com/v3/models/45ffefc38fcf4e76a9d0c2a4e76262ef :
+             license.label = "CC Attribution", slug "by",
+             requirements = "Author must be credited. Commercial use is allowed.")
+
+Le même modèle est aussi distribué gratuitement sur l'Unity Asset Store
+(https://assetstore.unity.com/packages/3d/vehicles/air/underpoly-free-sailplane-glider-264253,
+« Extension Asset », Standard Unity Asset Store EULA). Nous nous appuyons sur la
+licence CC BY 4.0 de la version Sketchfab, plus permissive et indépendante de Unity.
+Aucune page itch.io de ce modèle n'a été trouvée.
+
+Conclusion
+----------
+Usage dans GLIDY (application Android commerciale, gratuite ou payante) : AUTORISÉ.
+CC BY 4.0 permet l'usage commercial, la modification et la redistribution, à condition de :
+  1. créditer l'auteur (nom, titre, lien vers la source) ;
+  2. donner le lien vers la licence CC BY 4.0 ;
+  3. indiquer que l'œuvre a été modifiée ;
+  4. ne pas ajouter de restriction juridique ou technique empêchant autrui d'exercer
+     les droits accordés par la licence (sur le modèle lui-même) ;
+  5. ne pas laisser entendre que l'auteur cautionne GLIDY.
+Le crédit doit être visible par l'utilisateur de l'app (écran « À propos / Licences »
+ou crédits du rejeu 3D), pas seulement dans ce fichier.
+
+Attribution à afficher (texte exact recommandé)
+-----------------------------------------------
+  Modèle 3D du planeur : « UNDERPOLY: Free Sailplane Glider » par UNDERPOLY Project
+  (https://sketchfab.com/underpolyproject), sous licence CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/). Modifié : converti au format web,
+  recentré et mis à l'échelle, textures réduites.
+
+Version courte (EN) :
+  "UNDERPOLY: Free Sailplane Glider" by UNDERPOLY Project, licensed under CC BY 4.0
+  (https://creativecommons.org/licenses/by/4.0/) — converted and resized.
+
+Modifications apportées
+-----------------------
+  - V1_SailplaneGlider_1_Standard.fbx converti (FBX2glTF puis format binaire maison
+    « glidy-mesh ») ; géométrie intégrale (8 032 triangles), transforms appliqués,
+    origine déplacée au centre de gravité approché, unités en mètres.
+  - Texture de livrée V1_SailplaneGlider_1_Livery_2.png réduite de 2048² à 1024²
+    (palette 64 couleurs) ; VehiclesGenericTexture.png quantifiée (palette 64 couleurs).
+  - Matériau verrière remplacé par une couleur unie semi-transparente.

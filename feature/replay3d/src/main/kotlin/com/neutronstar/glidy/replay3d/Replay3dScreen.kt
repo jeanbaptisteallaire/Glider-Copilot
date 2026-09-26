@@ -3,6 +3,7 @@ package com.neutronstar.glidy.replay3d
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
+import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -154,6 +155,9 @@ private fun createReplayWebView(
         settings.setSupportZoom(false)
         isVerticalScrollBarEnabled = false
         isHorizontalScrollBarEnabled = false
+        overScrollMode = View.OVER_SCROLL_NEVER
+        // rendu WebGL continu (60 i/s visé) : le processus de rendu ne doit pas être dépriorisé tant que l'écran est visible
+        setRendererPriorityPolicy(WebView.RENDERER_PRIORITY_IMPORTANT, true)
         addJavascriptInterface(ReplayJavascriptBridge(this, onStatus), "AndroidReplay")
         webViewClient = object : WebViewClient() {
             override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? =

@@ -1,0 +1,245 @@
+{
+ "format": "glidy-mesh",
+ "version": 1,
+ "source": "UNDERPOLY: Free Sailplane Glider (V1_SailplaneGlider_1_Standard.fbx) by UNDERPOLY Project, CC BY 4.0 - see vendor/licenses/GLIDER-MODEL-LICENSE.txt",
+ "units": "m",
+ "axes": {
+  "nose": "+Z",
+  "up": "+Y",
+  "rightWing": "-X"
+ },
+ "origin": "approx. CG: 25% of wing root chord (x=0, z), mid fuselage height (y)",
+ "wingRootChord": 0.942,
+ "wingSpan": 14.985,
+ "length": 6.417,
+ "height": 2.133,
+ "bbox": {
+  "min": [
+   -7.493,
+   -0.592,
+   -4.344
+  ],
+  "max": [
+   7.493,
+   1.54,
+   2.073
+  ]
+ },
+ "triangles": 8032,
+ "binByteLength": 194460,
+ "attributes": {
+  "position": "float32x3",
+  "normal": "int8x3 normalized",
+  "uv": "uint16x2 normalized (glTF convention, texture flipY=false)",
+  "index": "uint16"
+ },
+ "materials": {
+  "livery": {
+   "map": "glider-livery.png",
+   "color": "#ffffff",
+   "roughness": 0.35,
+   "metalness": 0.05
+  },
+  "palette": {
+   "map": "glider-palette.png",
+   "color": "#ffffff",
+   "roughness": 0.6,
+   "metalness": 0.1,
+   "nearest": true
+  },
+  "glass": {
+   "color": "#1d2d38",
+   "roughness": 0.08,
+   "metalness": 0.3,
+   "opacity": 0.72
+  }
+ },
+ "parts": [
+  {
+   "name": "Door",
+   "vertexCount": 884,
+   "indexCount": 2592,
+   "position": 0,
+   "normal": 10608,
+   "uv": 13260,
+   "index": 16796,
+   "groups": [
+    {
+     "start": 0,
+     "count": 1440,
+     "material": "livery"
+    },
+    {
+     "start": 1440,
+     "count": 1152,
+     "material": "glass"
+    }
+   ]
+  },
+  {
+   "name": "Body",
+   "vertexCount": 4690,
+   "indexCount": 15048,
+   "position": 21980,
+   "normal": 78260,
+   "uv": 92332,
+   "index": 111092,
+   "groups": [
+    {
+     "start": 0,
+     "count": 6012,
+     "material": "livery"
+    },
+    {
+     "start": 6012,
+     "count": 9036,
+     "material": "palette"
+    }
+   ]
+  },
+  {
+   "name": "Aileron_R",
+   "vertexCount": 40,
+   "indexCount": 96,
+   "position": 141188,
+   "normal": 141668,
+   "uv": 141788,
+   "index": 141948,
+   "groups": [
+    {
+     "start": 0,
+     "count": 96,
+     "material": "livery"
+    }
+   ]
+  },
+  {
+   "name": "Aileron_L",
+   "vertexCount": 40,
+   "indexCount": 96,
+   "position": 142140,
+   "normal": 142620,
+   "uv": 142740,
+   "index": 142900,
+   "groups": [
+    {
+     "start": 0,
+     "count": 96,
+     "material": "livery"
+    }
+   ]
+  },
+  {
+   "name": "Rudder",
+   "vertexCount": 252,
+   "indexCount": 972,
+   "position": 143092,
+   "normal": 146116,
+   "uv": 146872,
+   "index": 147880,
+   "groups": [
+    {
+     "start": 0,
+     "count": 972,
+     "material": "livery"
+    }
+   ]
+  },
+  {
+   "name": "LandingGear_Door_R",
+   "vertexCount": 80,
+   "indexCount": 192,
+   "position": 149824,
+   "normal": 150784,
+   "uv": 151024,
+   "index": 151344,
+   "groups": [
+    {
+     "start": 0,
+     "count": 192,
+     "material": "livery"
+    }
+   ]
+  },
+  {
+   "name": "LandingGear_Door_L",
+   "vertexCount": 80,
+   "indexCount": 192,
+   "position": 151728,
+   "normal": 152688,
+   "uv": 152928,
+   "index": 153248,
+   "groups": [
+    {
+     "start": 0,
+     "count": 192,
+     "material": "livery"
+    }
+   ]
+  },
+  {
+   "name": "Wheel_R",
+   "vertexCount": 444,
+   "indexCount": 1536,
+   "position": 153632,
+   "normal": 158960,
+   "uv": 160292,
+   "index": 162068,
+   "groups": [
+    {
+     "start": 0,
+     "count": 1536,
+     "material": "palette"
+    }
+   ]
+  },
+  {
+   "name": "LandingGear_Cable",
+   "vertexCount": 157,
+   "indexCount": 396,
+   "position": 165140,
+   "normal": 167024,
+   "uv": 167496,
+   "index": 168124,
+   "groups": [
+    {
+     "start": 0,
+     "count": 396,
+     "material": "palette"
+    }
+   ]
+  },
+  {
+   "name": "LandingGear",
+   "vertexCount": 530,
+   "indexCount": 1248,
+   "position": 168916,
+   "normal": 175276,
+   "uv": 176868,
+   "index": 178988,
+   "groups": [
+    {
+     "start": 0,
+     "count": 1248,
+     "material": "palette"
+    }
+   ]
+  },
+  {
+   "name": "Wheel_F",
+   "vertexCount": 501,
+   "indexCount": 1728,
+   "position": 181484,
+   "normal": 187496,
+   "uv": 189000,
+   "index": 191004,
+   "groups": [
+    {
+     "start": 0,
+     "count": 1728,
+     "material": "palette"
+    }
+   ]
+  }
+ ]
+}

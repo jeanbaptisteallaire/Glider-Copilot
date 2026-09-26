@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>GLIDY Rejeu 3D</title>
+    <!-- tuiles : connexions ouvertes pendant le chargement de la trace (orthophoto IGN, Sentinel-2 EOX, relief AWS) -->
+    <link rel="preconnect" href="https://data.geopf.fr" crossorigin>
+    <link rel="preconnect" href="https://tiles.maps.eox.at" crossorigin>
+    <link rel="preconnect" href="https://s3.amazonaws.com" crossorigin>
     <link rel="stylesheet" href="vendor/maplibre-gl-5.15.0.css">
     <link rel="stylesheet" href="replay.css">
 </head>
@@ -22,7 +26,7 @@
         <div><strong id="speed">—</strong><span>VITESSE SOL</span></div>
         <div><strong id="time">00:00</strong><span>TEMPS DE VOL</span></div>
     </section>
-    <section id="hint" class="glass">Glissez avec un doigt pour tourner autour du planeur · pincez pour zoomer</section>
+    <section id="hint" class="glass">Glissez pour tourner autour du planeur · pincez pour rapprocher · ◎ recentre</section>
     <section id="controls" class="glass">
         <button id="play" type="button" aria-label="Lecture ou pause">▶</button>
         <input id="timeline" type="range" min="0" max="1000" value="0" aria-label="Position dans le vol">

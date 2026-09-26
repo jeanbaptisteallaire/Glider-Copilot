@@ -1,5 +1,29 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 13 — Rejeu 3D refondu (équipe de 3 agents), V0.9.3 (26/09/2026)
+Demande de JB : graphisme qui saute et tremble, clipping, faible portée visuelle, vrai modèle de planeur,
+inclinaison réaliste déduite du tracé, meilleures cartes. Travail réparti en 3 lots puis intégré et relu.
+- **Modèle 3D** : « UNDERPOLY: Free Sailplane Glider » (Sketchfab, **CC BY 4.0**, usage commercial permis,
+  crédit affiché dans l'attribution de la carte 3D). Converti en format maison sans dépendance
+  (`glider.bin` + `glider.json` + 2 PNG, 218 Ko, 8 032 triangles, 1:1 m, envergure 15 m) chargé par
+  `glider-model.mjs`, repli procédural. Train sorti au sol, rentré au-dessus de 55 km/h.
+  Licence : `vendor/licenses/GLIDER-MODEL-LICENSE.txt`.
+- **Dynamique** (`flight-dynamics.mjs`) : trace rééchantillonnée, lissage Savitzky-Golay zéro-phase, spline
+  Hermite C1, cap tangent lissé (figé au sol), inclinaison en virage coordonné atan(V·ω/g) avec filtre de
+  roulis du 2e ordre aller-retour (anticipation, 30 °/s max, ±60°), tangage = pente de trajectoire.
+  7 tests `node --test` (spirale bruitée 22,8° pour 23,0° attendus, ligne droite < 0,5°, trous, doublons),
+  jitter du cap ÷10 000 par rapport à l'ancienne méthode. Hypothèse : vitesse air ≈ vitesse sol (pas de vent).
+- **Rendu** (`replay.mjs` réécrit) : une seule boucle requestAnimationFrame, caméra de poursuite amortie
+  (ressorts critiques) qui suit la route de fond et non les spirales, matrices en float64 ré-ancrées sur le
+  planeur (fin du tremblement float32 de 5 à 8 px), trace en ruban 5 px colorée au vario et visible en
+  transparence derrière le relief, silhouette du planeur quand il est masqué, fil + anneau au sol, caméra
+  toujours au-dessus du relief, relief ×1,15 appliqué aussi à la trace, pixelRatio jusqu'à 2 avec qualité
+  adaptative, brouillard repoussé à l'horizon.
+- **Cartes** : orthophoto **IGN** 20 cm (Géoplateforme, Licence Ouverte Etalab 2.0) sur la France,
+  EOX s2cloudless 2017 ailleurs, relief AWS Terrain Tiles. Non vérifié en réel dans le bac à sable (proxy) :
+  à valider sur téléphone (tuiles IGN hors France/frontières, `TILEMATRIXSET=PM`).
+- CI : tests JS ajoutés au workflow.
+
 ## Session 12 — Préparation de la sauvegarde cloud Supabase, V0.9.2 (25/09/2026)
 
 ### Livré
