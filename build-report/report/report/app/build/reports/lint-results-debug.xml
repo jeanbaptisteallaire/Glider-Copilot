@@ -433,7 +433,7 @@
         errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightArchiveHost.kt"
-            line="80"
+            line="83"
             column="31"/>
     </issue>
 
