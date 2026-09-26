@@ -27,7 +27,7 @@ jobs:
         run: |
           node --version
           node --check feature/replay3d/src/main/assets/replay3d/replay.mjs
-          node --test feature/replay3d/src/test/js/flight-dynamics.test.mjs
+          node --test feature/replay3d/src/test/js/*.test.mjs
       - name: Tests unitaires, lint, APK debug + release (R8), AAB Play Store
         id: gradle
         env:

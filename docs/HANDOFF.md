@@ -1,5 +1,21 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 14 — Rejeu 3D corrigé (retours de JB sur téléphone), V0.9.4 (26/09/2026)
+Première étape du plan « réseau social » (`claude/plan-reseau-social.md` dans le projet claude.ai ; décisions
+de JB : 6 onglets avec Feed en premier, « En vol » = Pilotage seul, vols publiés visibles par tout inscrit,
+connexion par code e-mail). **Pilotage non modifié.**
+- **Inclinaison du mauvais côté** : le repère local du rejeu (x est, y haut, z nord) est main gauche ; le
+  modèle (main droite) y apparaissait en miroir, d'où l'aile basse à l'extérieur du virage. Correction dans
+  `attitude-frame.mjs` (modèle symétrisé en X + signe du roulis inversé), test `attitude-frame.test.mjs`
+  qui échoue avec l'ancienne convention et vérifie « aile basse côté intérieur » pour tous les caps.
+- **≈ 40° en spirale stabilisée** : `bankGain` 2,05 appliqué progressivement à tan φ (≈ 1 près de 0 : lignes
+  droites et bruit inchangés). Spirale r 150 m à 90 km/h : 39,3° ; vol Condor de JB : 42,5° en thermique ;
+  roulis ≤ 25 °/s, ±55° max. Test dédié ; les tests de physique pure passent `bankGain: 1`.
+- **Vitesses 1×, 2×, 4×**, 4× à l'ouverture. Zoom à deux doigts : plage élargie (caméra 35 m → ×10).
+- **Vol d'exemple** = trace de JB (Condor, Antares 18S, Biella-Cerrione → Chavez-Marini, 21/06/2024, 1 h 09),
+  badge « EXEMPLE · SIMULATEUR CONDOR ». Hors France → imagerie EOX. Le vol synthétique reste dans `samples/`.
+- CI : tous les tests JS (`*.test.mjs`) ; nouvelles captures 23c/23d (saut à 23,5 % du vol, dans une spirale à droite).
+
 ## Session 13 — Rejeu 3D refondu (équipe de 3 agents), V0.9.3 (26/09/2026)
 Demande de JB : graphisme qui saute et tremble, clipping, faible portée visuelle, vrai modèle de planeur,
 inclinaison réaliste déduite du tracé, meilleures cartes. Travail réparti en 3 lots puis intégré et relu.

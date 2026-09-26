@@ -37,6 +37,24 @@ for m in re.finditer(r'<node [^>]*>',x):
             x1,y1,x2,y2=map(int,b.groups()); print((x1+x2)//2,(y1+y2)//2); break
 PY
 }
+# S14 : point à une fraction horizontale d'un élément (ex. la frise du rejeu 3D) : « tap_fraction <libellé> 0.24 »
+tap_fraction() {
+  rm -f /tmp/ui.xml
+  timeout 25 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+  timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+  [ -f /tmp/ui.xml ] || return 0
+  python3 - "$1" "$2" <<'PY'
+import re,sys
+x=open('/tmp/ui.xml',encoding='utf-8').read()
+t,f=sys.argv[1],float(sys.argv[2])
+for m in re.finditer(r'<node [^>]*>',x):
+    n=m.group(0)
+    if f'text="{t}"' in n or f'content-desc="{t}"' in n:
+        b=re.search(r'bounds="\[(\d+),(\d+)\]\[(\d+),(\d+)\]"',n)
+        if b:
+            x1,y1,x2,y2=map(int,b.groups()); print(int(x1+(x2-x1)*f),(y1+y2)//2); break
+PY
+}
 # l'émulateur de la CI plante parfois son propre lanceur : la boîte « isn't responding » bloque tout
 dismiss_anr() {
   for t in "Wait" "Close app" "Attendre"; do
@@ -196,7 +214,8 @@ dismiss_anr
 P=$(tap_text "Mes vols"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/21-mes-vols-liste.png"
-P=$(tap_text "19 septembre 2026"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "21 juin 2024")
+[ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
 opened=""
@@ -215,6 +234,9 @@ sleep 30
 timeout 20 adb exec-out screencap -p > "$OUT/23-rejeu-3d.png"
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/23b-rejeu-3d-suite.png"
+# S14 : saut dans un thermique spiralé à droite (≈ 24 % du vol d'exemple) → l'aile droite doit être basse, côté intérieur
+P=$(tap_fraction "Position dans le vol" 0.235); echo "frise : $P"
+[ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 6; timeout 20 adb exec-out screencap -p > "$OUT/23c-rejeu-3d-spirale.png"; sleep 3; timeout 20 adb exec-out screencap -p > "$OUT/23d-rejeu-3d-spirale-suite.png"; }
 adb shell input keyevent 4 || true
 sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/24-mes-vols-retour.png"

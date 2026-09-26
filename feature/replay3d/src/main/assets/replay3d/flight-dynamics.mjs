@@ -27,7 +27,7 @@
  *     vitesse sol passe sous ~25 km/h (transition douce 21→29 km/h) ; puis lissage gaussien σ 1 s
  *     (préserve exactement une rampe = virage établi), limiteur de taux à phase nulle (≤ 45 °/s).
  *     Taux de virage ω = dérivée du cap lissé.
- *  7. Inclinaison : virage coordonné φc = atan(V·ω/g).
+ *  7. Inclinaison : virage coordonné φc = atan(k·V·ω/g), k → `bankGain` (2,05, progressif : recalage visuel, spirale ≈ 40°).
  *     HYPOTHÈSE : V = vitesse AIR ≈ vitesse SOL lissée (le vent est inconnu). Par vent fort, la vitesse
  *     sol varie le long du cercle (vent arrière / vent de face) → l'inclinaison déduite oscille
  *     légèrement autour de la vraie valeur (±~15 % pour 20 km/h de vent à 90 km/h).
@@ -57,9 +57,14 @@ export const DEFAULT_OPTIONS = Object.freeze({
     altSpikeM: 25,             // écart à la médiane (7 pts) au-delà duquel une altitude est un pic
     groundSpeedKmh: 25,        // sous cette vitesse sol : au sol (cap figé, inclinaison 0)
     groundBlendKmh: 4,         // demi-largeur de la transition douce autour de groundSpeedKmh
-    rollTimeConstantS: 1.0,    // constante du filtre de roulis (2e ordre critique)
-    maxRollRateDegS: 30,       // taux de roulis max (planeur : 25–35 °/s)
-    maxBankDeg: 60,
+    rollTimeConstantS: 1.2,    // constante du filtre de roulis (2e ordre critique)
+    maxRollRateDegS: 25,       // taux de roulis max (planeur : 25–35 °/s)
+    maxBankDeg: 55,
+    // S14 — recalage visuel demandé par JB : spirale stabilisée ≈ 40° en moyenne. La physique seule
+    // (vitesse SOL lissée, trace IGC 1 Hz) sous-estime nettement l'inclinaison (≈ 22–27° mesurés sur des
+    // thermiques réels). On multiplie tan φ (≡ facteur de charge latéral) : la forme reste physique
+    // (entrée/sortie progressives, ligne droite à 0°), seule l'amplitude est recalée.
+    bankGain: 2.05,
     bankDeadbandDeg: 2.5,      // bande morte douce autour de 0
     maxTurnRateDegS: 45,       // taux de virage max (limiteur du cap, borne de ω)
     pitchTrimDeg: 2,           // assiette de croisière ajoutée à la pente
@@ -203,7 +208,10 @@ export function buildAttitudeTrack(points, options) {
     const d2 = o.bankDeadbandDeg * o.bankDeadbandDeg;
     for (let k = 0; k < N; k++) {
         const w = clamp(omega[k], -maxOmega, maxOmega);
-        let phi = Math.atan(speed[k] * w / G) * DEG * air[k];
+        const T = speed[k] * w / G;                        // tan φ physique
+        const T2 = T * T;                                   // recalage progressif : ~1 près de 0 (bruit, lignes droites)
+        const gain = 1 + (o.bankGain - 1) * T2 / (T2 + 0.0225); // → bankGain en spirale (tan φ ≳ 0,3)
+        let phi = Math.atan(gain * T) * DEG * air[k];
         phi = d2 > 0 ? phi * phi * phi / (phi * phi + d2) : phi;
         target[k] = clamp(phi, -o.maxBankDeg, o.maxBankDeg);
     }

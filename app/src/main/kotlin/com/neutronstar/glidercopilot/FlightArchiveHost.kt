@@ -71,7 +71,10 @@ class FlightArchiveHost(context: Context) {
         }
     }
 
-    /** Vol synthétique d'exemple (Saint-Martin-de-Londres) embarqué dans les assets. */
+    /**
+     * Vol d'exemple embarqué dans les assets. S14 : trace fournie par JB (Antares 18S, Biella-Cerrione →
+     * Chavez-Marini, Italie, 1 h 09) — vol du simulateur Condor exporté en IGC, affiché comme tel.
+     */
     fun importDemoFlight(onDone: (Boolean) -> Unit = {}) {
         scope.launch {
             val ok = lock.withLock {
@@ -85,7 +88,7 @@ class FlightArchiveHost(context: Context) {
 
     companion object {
         private const val TAG = "GlidyFlights"
-        const val DEMO_ASSET = "flights/saint-martin-de-londres-vol-synthetique.igc"
-        const val DEMO_NAME = "exemple-saint-martin-de-londres-vol-synthetique.igc"
+        const val DEMO_ASSET = "flights/exemple-condor-biella-chavez-antares18s.igc"
+        const val DEMO_NAME = "exemple-simulateur-condor-biella-chavez.igc"
     }
 }

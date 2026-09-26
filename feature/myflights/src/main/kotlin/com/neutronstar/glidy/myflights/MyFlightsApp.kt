@@ -106,6 +106,8 @@ data class FlightCardUi(
 ) {
     /** Vol synthétique fourni avec l'app (jamais un vrai vol). */
     val isExample: Boolean get() = fileName.startsWith("exemple-", ignoreCase = true)
+    /** S14 : vol d'exemple issu d'un simulateur (Condor) — la vraie détection par en-tête IGC arrive en S16. */
+    val isSimulator: Boolean get() = fileName.contains("simulateur", ignoreCase = true)
 }
 
 /**
@@ -430,7 +432,7 @@ private fun FlightDetailScreen(
                 }
             }
             item {
-                GcCard(title = "Trace", trailing = { GcPill(if (flight.isExample) "EXEMPLE SYNTHÉTIQUE" else "IGC TÉLÉPHONE", if (flight.isExample) c.warn else c.dim) }) {
+                GcCard(title = "Trace", trailing = { GcPill(when { flight.isSimulator -> "EXEMPLE · SIMULATEUR CONDOR"; flight.isExample -> "EXEMPLE SYNTHÉTIQUE"; else -> "IGC TÉLÉPHONE" }, if (flight.isExample) c.warn else c.dim) }) {
                     RoutePreview(route = flight.route, modifier = Modifier.fillMaxWidth().aspectRatio(1.6f))
                     Row(Modifier.fillMaxWidth()) {
                         GcKpi(flight.duration, "Durée", Modifier.weight(1f), color = c.ok)

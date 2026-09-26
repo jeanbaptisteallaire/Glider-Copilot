@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.min.js';
+import {MODEL_MIRROR_X, rigEuler} from './attitude-frame.mjs';
 
 const maplibregl = window.maplibregl;
 
@@ -22,7 +23,7 @@ const RENDER = {
     minUserPitch: 25,
     maxUserPitch: 82,
     cameraClearance: 45,           // m au-dessus du sol mini pour la caméra
-    minDistance: 70,               // m caméra → planeur (bien au-delà du plan proche MapLibre ≈ 2–3 m)
+    minDistance: 35,               // m caméra → planeur (bien au-delà du plan proche MapLibre ≈ 2–3 m)
     maxDistance: 6000,
     trackMaxSegments: 20000,
     trailWidthPx: 5,               // largeur de la trace (px CSS) ; la bordure sombre est incluse
@@ -59,8 +60,8 @@ const state = {
     playing: false,
     elapsed: 0,
     lastFrame: 0,
-    rateIndex: 1,
-    rates: [8, 32, 128],
+    rateIndex: 2,            // S14 : 4× à l'ouverture (demande JB)
+    rates: [1, 2, 4],
     ready: false,
     pointers: new Map(),
     pinchDistance: null,
@@ -632,14 +633,18 @@ function createFlightLayer(map, points, gliderModel) {
 
             // planeur : rig (position/attitude/échelle d'affichage) → modèle 1:1
             this.rig = new THREE.Group();
-            this.rig.add(gliderModel);
+            // S14 : le modèle (main droite) est symétrisé pour le repère local main gauche (voir attitude-frame.mjs)
+            this.body = new THREE.Group();
+            this.body.scale.x = MODEL_MIRROR_X;
+            this.body.add(gliderModel);
+            this.rig.add(this.body);
             this.scene.add(this.rig);
             // silhouette verte quand le relief masque le planeur (dessinée avant, test de profondeur inversé)
             this.ghost = gliderModel.clone(true);
             const ghostMaterial = new THREE.MeshBasicMaterial({color: 0xb7f7a5, depthWrite: false, depthFunc: THREE.GreaterDepth, toneMapped: false,
                 transparent: false, blending: THREE.CustomBlending, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneMinusSrcAlphaFactor, opacity: .45});
             this.ghost.traverse(o => { if (o.isMesh) { o.material = ghostMaterial; o.renderOrder = -1; } });
-            this.rig.add(this.ghost);
+            this.body.add(this.ghost);
             this.rig.traverse(o => { o.frustumCulled = false; });
 
             this.renderer = new THREE.WebGLRenderer({canvas: currentMap.getCanvas(), context: gl, antialias: true});
@@ -654,7 +659,8 @@ function createFlightLayer(map, points, gliderModel) {
             this.gliderLocal.copy(local);
             this.anchor.copy(local); // ré-ancrage : l'origine de rendu suit le planeur
             this.rig.position.set(0, 0, 0);
-            this.rig.rotation.set(toRadians(-pitch), toRadians(heading), toRadians(bank), 'YXZ');
+            const e = rigEuler(heading, pitch, bank);
+            this.rig.rotation.set(e.x, e.y, e.z, e.order);
             this.rig.scale.setScalar(visualScale);
             const pos = this.pylon.geometry.attributes.position;
             const hasGround = Number.isFinite(groundY) && groundY < local.y - 2;
@@ -1148,7 +1154,7 @@ ui.gesture.addEventListener('pointermove', event => {
     } else {
         const distance = pointerDistance();
         if (distance && state.pinchDistance) {
-            state.user.distanceFactor = clamp(state.user.distanceFactor * state.pinchDistance / distance, .35, 8);
+            state.user.distanceFactor = clamp(state.user.distanceFactor * state.pinchDistance / distance, .2, 10);
         }
         state.pinchDistance = distance;
     }
@@ -1162,7 +1168,7 @@ ui.gesture.addEventListener('pointerup', releasePointer);
 ui.gesture.addEventListener('pointercancel', releasePointer);
 ui.gesture.addEventListener('wheel', event => {
     event.preventDefault();
-    state.user.distanceFactor = clamp(state.user.distanceFactor * Math.exp(event.deltaY * .0015), .35, 8);
+    state.user.distanceFactor = clamp(state.user.distanceFactor * Math.exp(event.deltaY * .0015), .2, 10);
 }, {passive: false});
 
 /** Mesures pour les tests (fps, précision, caméra) — sans effet sur le rendu. */

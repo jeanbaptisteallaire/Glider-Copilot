@@ -167,7 +167,7 @@ test('trace IGC réelle : pré-calcul rapide, continuité à 60 Hz, écart aux p
 
 test('spirale bruitée (r 150 m, 90 km/h, +1,5 m/s, σ 4 m) → bank ≈ atan(V²/gr) stable', () => {
     const pts = synth(spiral, 300, 4, 7);
-    const track = buildAttitudeTrack(pts);
+    const track = buildAttitudeTrack(pts, {bankGain: 1}); // physique pure (sans recalage visuel)
     const s = sampleSeries(track, 30, 270);
     const expected = Math.atan(V * V / (G * R)) * DEG;
     const m = mean(s.bank), sd = std(s.bank);
@@ -214,7 +214,7 @@ test('entrée en virage brutale → taux de roulis ≤ limite, anticipation, sat
     const r = 60, w = V / r;
     const fn = t => t <= 60 ? {x: 0, y: V * t, z: 1000}
         : {x: r - r * Math.cos(w * (t - 60)), y: V * 60 + r * Math.sin(w * (t - 60)), z: 1000};
-    const track = buildAttitudeTrack(synth(fn, 180, 3, 5));
+    const track = buildAttitudeTrack(synth(fn, 180, 3, 5), {bankGain: 1, maxRollRateDegS: 30, maxBankDeg: 60});
     const dt = 1 / 60;
     const s = sampleSeries(track, 0, 180, dt);
     let maxRate = 0;
@@ -271,7 +271,7 @@ test('cas limites : 0, 1, 2 points, doublons, trou de 60 s, désordre, NaN', () 
     const dup = synth(spiral, 120, 4, 9);
     const messy = [...dup, ...dup.slice(20, 40).map(p => ({...p})), {lat: NaN, lon: 3, alt: 1, t: 5}, {lat: 43, lon: 3, alt: 1, t: NaN}];
     messy.reverse();
-    const tr = buildAttitudeTrack(messy);
+    const tr = buildAttitudeTrack(messy, {bankGain: 1});
     const s = sampleSeries(tr, 20, 100);
     for (const k of ['lat', 'lon', 'alt', 'heading', 'bank', 'pitch']) assert.ok(s[k].every(Number.isFinite), k);
     assert.ok(Math.abs(mean(s.bank) - Math.atan(V * V / (G * R)) * DEG) < 5);
@@ -314,4 +314,22 @@ test('20 000 points : pré-calcul et échantillonnage rapides', () => {
     assert.ok(Number.isFinite(acc));
     assert.ok(buildMs < 1000);
     assert.ok(perSampleUs < 5);
+});
+
+test('S14 — réglage par défaut : spirale stabilisée ≈ 40°, progressive, toujours vers l\'intérieur', () => {
+    for (const dir of [1, -1]) {
+        // spirale type thermique : r 150 m à 90 km/h, sens horaire (dir 1) ou anti-horaire (dir −1)
+        const fn = t => { const p = spiral(t); return {x: dir * p.x, y: p.y, z: p.z}; };
+        const track = buildAttitudeTrack(synth(fn, 300, 4, 7));
+        const s = sampleSeries(track, 30, 270);
+        const m = mean(s.bank);
+        const dt = s.t[1] - s.t[0];
+        let maxRate = 0;
+        for (let i = 1; i < s.t.length; i++) maxRate = Math.max(maxRate, Math.abs(s.bank[i] - s.bank[i - 1]) / dt);
+        console.log('[défaut S14]', JSON.stringify({sens: dir > 0 ? 'droite' : 'gauche', bankMoyen: +m.toFixed(1), tauxRoulisMax: +maxRate.toFixed(1)}));
+        assert.ok(Math.abs(Math.abs(m) - 40) < 4, `bank moyen ${m.toFixed(1)}`);
+        assert.ok(Math.sign(m) === dir, 'virage à droite → bank > 0 (aile droite basse, côté intérieur)');
+        assert.ok(maxRate <= 25.0001);
+        assert.ok(maxAbs(s.bank) <= 55);
+    }
 });
