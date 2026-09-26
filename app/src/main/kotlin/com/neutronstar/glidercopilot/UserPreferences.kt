@@ -64,7 +64,8 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kVoice = booleanPreferencesKey("voice_announcements")
     private val kFollow = booleanPreferencesKey("follow_enabled")
     private val kFollowReg = stringPreferencesKey("follow_registration")
-    private val kLightMode = booleanPreferencesKey("light_mode")
+    // S15 : thème clair « social » par défaut pour tous (nouvelle clé : l'ancien choix V7.2 n'est pas repris)
+    private val kLightMode = booleanPreferencesKey("light_mode_social")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
@@ -82,7 +83,7 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val voiceAnnouncements: Flow<Boolean> = store.data.map { it[kVoice] ?: true }
     override val followEnabled: Flow<Boolean> = store.data.map { it[kFollow] ?: false }
     override val followRegistration: Flow<String?> = store.data.map { it[kFollowReg] }
-    override val lightMode: Flow<Boolean> = store.data.map { it[kLightMode] ?: false }
+    override val lightMode: Flow<Boolean> = store.data.map { it[kLightMode] ?: true }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }

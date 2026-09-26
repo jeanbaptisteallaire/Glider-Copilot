@@ -63,6 +63,9 @@ data class GcColors(
     /** Échelle vario v8 : vert en descente, gris à zéro, orange puis rouge en montée (m/s → couleur). */
     val varioStops: List<Pair<Double, Color>>,
     val windLayer: Color,
+    /** S15 — aplat de la couleur de marque (boutons principaux, sélection). Sombre : identique à [ok]. */
+    val accentFill: Color = ok,
+    val onAccentFill: Color = onAccent,
 )
 
 val GlidyColors = GcColors(
@@ -111,39 +114,40 @@ val GlidyColors = GcColors(
 )
 
 /*
- * Mode clair (V7.2) — Prévol, Check-lists et Carte uniquement ; Pilotage reste noir, obligatoire (demande JB).
- * Fond gris/blanc doux, texte quasi noir, style « Apple » (cf. system gray palette iOS).
+ * Thème clair « social » (S15, demande JB) — tous les onglets sauf Pilotage, qui reste noir et inchangé.
+ * Fond blanc, texte presque noir, gris neutres, vert GLIDY #b7f7a5 en aplat de marque (boutons, sélection),
+ * vert foncé lisible pour les chiffres et le texte d'accent. Contrastes texte ≥ 4,5:1 sur blanc.
  */
 val GlidyLightColors = GcColors(
-    background = Color(0xFFF2F2F7),
+    background = Color(0xFFFFFFFF),
     panel = Color(0xFFFFFFFF),
-    control = Color(0xFFEDEDF2),
-    controlOn = Color(0xFFE0E0E8),
-    line = Color(0xFFD8D8DE),
-    lineSoft = Color(0xFFE4E4EA),
-    lineFaint = Color(0xFFEDEDF2),
-    sunken = Color(0xFFF7F7FA),
+    control = Color(0xFFF2F2F2),
+    controlOn = Color(0xFFE6E6E6),
+    line = Color(0xFFDFDFDF),
+    lineSoft = Color(0xFFEBEBEB),
+    lineFaint = Color(0xFFF3F3F3),
+    sunken = Color(0xFFF8F8F8),
     sunkenField = Color(0xFFFFFFFF),
-    sunkenPlan = Color(0xFFF0F0F5),
-    inkSoft = Color(0xFF1C1C1E),
+    sunkenPlan = Color(0xFFF3F3F3),
+    inkSoft = Color(0xFF1A1A1A),
     planText = Color(0xFF3A3A3C),
-    inputLine = Color(0xFFC7C7CC),
-    ink = Color(0xFF1C1C1E),
-    dim = Color(0xFF6E6E73),
-    faint = Color(0xFF8E8E93),
-    cardTitle = Color(0xFF3A3A3C),
-    ok = Color(0xFF2E9E44),
-    warn = Color(0xFFE07E00),
-    bad = Color(0xFFE07E00),
-    danger = Color(0xFFE0342A),
+    inputLine = Color(0xFFCFCFCF),
+    ink = Color(0xFF0F0F0F),
+    dim = Color(0xFF636366),
+    faint = Color(0xFF8A8A8E),
+    cardTitle = Color(0xFF0F0F0F),
+    ok = Color(0xFF1A7F37),
+    warn = Color(0xFFC25E00),
+    bad = Color(0xFFC25E00),
+    danger = Color(0xFFD1242F),
     onAccent = Color(0xFFFFFFFF),
-    route = Color(0xFF2E9E44),
+    route = Color(0xFF1A7F37),
     heading = Color(0xFF8A3FFC),
     air = Color(0xFF0A6ED8),
     finesseIdle = Color(0xFF8E8E93),
-    statusOn = Color(0xFF2E9E44),
-    statusOff = Color(0xFFE0342A),
-    overlay = Color(0xE6FFFFFF),
+    statusOn = Color(0xFF1A7F37),
+    statusOff = Color(0xFFD1242F),
+    overlay = Color(0xF2FFFFFF),
     terrainTop = Color(0xFFBFE3C4),
     terrainBottom = Color(0xFF8FCB98),
     mapLow = Color(0xFFEDEDF2),
@@ -156,7 +160,9 @@ val GlidyLightColors = GcColors(
         1.8 to Color(0xFFFF9130),
         3.5 to Color(0xFFFF8078),
     ),
-    windLayer = Color(0xFF2E9E44),
+    windLayer = Color(0xFF1A7F37),
+    accentFill = Color(0xFFB7F7A5),
+    onAccentFill = Color(0xFF0B2410),
 )
 
 /** Couleur interpolée sur l'échelle vario de la charte. */
@@ -190,7 +196,7 @@ data class GcType(
     val giant: TextStyle,
 )
 
-private fun gcType(c: GcColors) = GcType(
+private fun gcType(c: GcColors, social: Boolean = false) = if (social) socialType(c) else GcType(
     eyebrow = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 10.sp, letterSpacing = 0.15.sp, color = c.dim),
     body = TextStyle(fontFamily = GcFonts.ui, fontSize = 14.sp, color = c.ink),
     bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, color = c.dim),
@@ -201,13 +207,32 @@ private fun gcType(c: GcColors) = GcType(
     giant = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Medium, fontSize = 50.sp, letterSpacing = (-2.2).sp, color = c.ok, fontFeatureSettings = "tnum"),
 )
 
+/** S15 — typographie du thème social : mêmes jetons, titres en casse normale, plus gras et plus grands. */
+private fun socialType(c: GcColors) = GcType(
+    eyebrow = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 11.sp, letterSpacing = 0.2.sp, color = c.dim),
+    body = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp, color = c.ink),
+    bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, color = c.dim),
+    mono = TextStyle(fontFamily = GcFonts.mono, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = c.ink, fontFeatureSettings = "tnum"),
+    monoSmall = TextStyle(fontFamily = GcFonts.mono, fontSize = 12.sp, color = c.dim, fontFeatureSettings = "tnum"),
+    title = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 28.sp, letterSpacing = (-0.8).sp, color = c.ink),
+    kpi = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Bold, fontSize = 22.sp, letterSpacing = (-0.3).sp, color = c.ink, fontFeatureSettings = "tnum"),
+    giant = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Bold, fontSize = 48.sp, letterSpacing = (-2).sp, color = c.ok, fontFeatureSettings = "tnum"),
+)
+
 val LocalGcColors = staticCompositionLocalOf { GlidyColors }
+/** S15 — vrai dans le thème clair « social » (tous les onglets sauf Pilotage). */
+val LocalGcSocial = staticCompositionLocalOf { false }
 val LocalGcType = staticCompositionLocalOf { gcType(GlidyColors) }
 
 object Gc {
     val colors: GcColors @Composable get() = LocalGcColors.current
     val type: GcType @Composable get() = LocalGcType.current
+    val social: Boolean @Composable get() = LocalGcSocial.current
 }
+
+/** Titre d'écran : en capitales dans la charte sombre v8, en casse normale dans le thème social. */
+@Composable
+fun gcHeading(text: String): String = if (Gc.social) text else text.uppercase()
 
 @Composable
 fun GlidyTheme(content: @Composable () -> Unit) {
@@ -240,8 +265,9 @@ fun GlidyTheme(content: @Composable () -> Unit) {
 }
 
 /**
- * Sous-thème appliqué à une partie de l'écran (V7.2 : Prévol, Check-lists, Carte — jamais Pilotage,
- * qui reste noir). [light] bascule vers [GlidyLightColors] ; sinon la charte sombre habituelle.
+ * Sous-thème appliqué à une partie de l'écran (Prévol, Check-lists, Carte, Mes vols — jamais Pilotage,
+ * qui reste noir). [light] bascule vers le thème social blanc [GlidyLightColors] (S15, par défaut) ;
+ * sinon la charte sombre habituelle, strictement inchangée.
  */
 @Composable
 fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
@@ -259,7 +285,7 @@ fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
             surfaceVariant = c.control, onSurfaceVariant = c.dim, outline = c.line, error = c.bad,
         )
     }
-    CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c)) {
+    CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c, social = light), LocalGcSocial provides light) {
         MaterialTheme(colorScheme = scheme, content = content)
     }
 }

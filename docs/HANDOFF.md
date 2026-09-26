@@ -1,5 +1,22 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 15 — Thème clair « social », V0.10.0 (26/09/2026)
+Étape 2 du plan réseau social. **Pilotage (« En vol ») strictement inchangé**, garanti par la CI.
+- **Thème social blanc par défaut** (nouvelle préférence `light_mode_social`, vraie par défaut ; le bouton
+  Clair/Sombre reste) sur Prévol, Check-lists, Carte et Mes vols.
+  - Palette : fond blanc, gris neutres, texte #0F0F0F, vert foncé #1A7F37 pour les chiffres (contraste ≥ 4,5:1),
+    vert GLIDY #b7f7a5 en aplat de marque (`accentFill`).
+  - Typographie : titres en casse normale, plus gras (`gcHeading`, `socialType`).
+  - Composants (`GcCard`, `GcPill`, `GcKpi`, `GcButton`) : variante sociale (titres de section en gras, pastilles
+    pleines pâles, boutons pleins à coins de 12 dp). La variante sombre est identique à la V0.9.x.
+- **Barre d'onglets** blanche (sélection noire, style réseau social) ; sous Pilotage, exactement la barre noire
+  d'avant. Icônes de la barre d'état foncées sur les onglets blancs, réglage d'origine sous Pilotage et en rejeu 3D.
+- **Garde-fou « En vol »** (`tools/en-vol/check_en_vol.py`, étape CI) : empreintes SHA-256 de la S13 pour
+  FlightScreen, FlightLive, FlightMap, VarioTone, UiMask, la charte sombre (couleurs, typographie, GlidyTheme) et
+  l'appel de Pilotage dans AppRoot. Toute modification fait échouer la CI. Évolution voulue par JB :
+  `--update`.
+- CI : bouton du rejeu en « Revoir le vol en 3D » (casse sociale) ou capitales ; repli de position de la frise (23c).
+
 ## Session 14 — Rejeu 3D corrigé (retours de JB sur téléphone), V0.9.4 (26/09/2026)
 Première étape du plan « réseau social » (`claude/plan-reseau-social.md` dans le projet claude.ai ; décisions
 de JB : 6 onglets avec Feed en premier, « En vol » = Pilotage seul, vols publiés visibles par tout inscrit,

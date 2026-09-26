@@ -1,6 +1,10 @@
 package com.neutronstar.glidercopilot
 
 import android.Manifest
+import android.app.Activity
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -57,6 +61,7 @@ import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.designsystem.GlidyColors
 import com.neutronstar.glidercopilot.designsystem.GlidyLightColors
+import androidx.compose.material3.HorizontalDivider
 import com.neutronstar.glidercopilot.feature.checklist.ChecklistScreen
 import com.neutronstar.glidercopilot.carto.MapStyle
 import com.neutronstar.glidercopilot.feature.flight.FlightMapConfig
@@ -151,7 +156,7 @@ private fun MainScaffold(container: AppContainer) {
     }
     val activeMap by container.carto.active.collectAsState()
     val club by container.clubs.selectedClub.collectAsState(initial = null)
-    val lightMode by container.prefs.lightMode.collectAsState(initial = false)
+    val lightMode by container.prefs.lightMode.collectAsState(initial = true)
     // Pilotage reste toujours sombre ; la Carte suit le mode clair (V7.2). Deux rendus du même pack.
     val flightMapDark = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyColors)) }
     val flightMapLight = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyLightColors)) }
@@ -188,6 +193,9 @@ private fun MainScaffold(container: AppContainer) {
             kotlinx.coroutines.delay(500)
         }
     }
+    // S15 — thème social blanc sur tous les onglets sauf Pilotage (« En vol » : noir, strictement inchangé)
+    val social = lightMode && tab != Tab.PILOTAGE && replayed == null
+    SystemBarsFor(social)
     val replay = replayed
     if (replay != null) {
         BackHandler { replayed = null }
@@ -200,7 +208,7 @@ private fun MainScaffold(container: AppContainer) {
         return
     }
 
-    Column(Modifier.fillMaxSize().background(c.background).statusBarsPadding()) {
+    Column(Modifier.fillMaxSize().background(if (social) GlidyLightColors.background else c.background).statusBarsPadding()) {
         Box(Modifier.weight(1f)) {
             when (tab) {
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight) }
@@ -246,13 +254,20 @@ private fun MainScaffold(container: AppContainer) {
                 )
             }
         }
-        Row(
-            Modifier.fillMaxWidth().background(c.background).navigationBarsPadding().padding(top = 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Tab.entries.forEach { t ->
-                TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { tab = t }
+        // barre d'onglets : sous Pilotage, exactement la barre noire d'avant (thème sombre) ; ailleurs, blanche
+        GlidyAdaptiveTheme(social) {
+            val bar = Gc.colors
+            Column(Modifier.fillMaxWidth().background(bar.background)) {
+                if (social) HorizontalDivider(thickness = 0.5.dp, color = bar.line)
+                Row(
+                    Modifier.fillMaxWidth().background(bar.background).navigationBarsPadding().padding(top = 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Tab.entries.forEach { t ->
+                        TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { tab = t }
+                    }
+                }
             }
         }
     }
@@ -269,14 +284,16 @@ private fun icon(t: Tab): ImageVector = when (t) {
 @Composable
 private fun TabButton(label: String, icon: ImageVector, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val c = Gc.colors
-    val color = if (selected) c.route else c.dim
+    val social = Gc.social
+    // social (S15) : noir sélectionné / gris sinon, comme les réseaux sociaux ; sombre : vert / gris (inchangé)
+    val color = if (social) (if (selected) c.ink else c.faint) else if (selected) c.route else c.dim
     Column(
         modifier.fillMaxHeight().clickable(role = Role.Tab, onClick = onClick).semantics { this.selected = selected },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
     ) {
         Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(23.dp))
-        Text(label, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium, color = color))
+        Text(label, style = TextStyle(fontSize = 10.sp, fontWeight = if (social && selected) FontWeight.SemiBold else FontWeight.Medium, color = color))
     }
 }
 
@@ -286,16 +303,35 @@ private fun TabButton(label: String, icon: ImageVector, selected: Boolean, modif
  */
 @Composable
 private fun LightModeToggle(on: Boolean, onToggle: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+    // S15 : pastille aux couleurs du thème affiché (blanche en mode clair, sombre sinon)
+    val t = if (on) GlidyLightColors else GlidyColors
     Row(
-        modifier.background(Color(0xCC1C1C1E), RoundedCornerShape(50)).border(1.dp, Color.White.copy(alpha = 0.12f), RoundedCornerShape(50))
+        modifier.background(if (on) t.panel else t.control.copy(alpha = 0.9f), RoundedCornerShape(50)).border(1.dp, t.line, RoundedCornerShape(50))
             .clickable(role = Role.Switch, onClickLabel = if (on) "Mode sombre" else "Mode clair") { onToggle(!on) }
             .padding(horizontal = 10.dp, vertical = 6.dp)
             .semantics { contentDescription = "Mode clair"; stateDescription = if (on) "activé" else "désactivé" },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Icon(if (on) GcIcons.LightMode else GcIcons.DarkMode, contentDescription = null, tint = Color.White, modifier = Modifier.size(15.dp))
-        Text(if (on) "Clair" else "Sombre", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = Color.White))
+        Icon(if (on) GcIcons.LightMode else GcIcons.DarkMode, contentDescription = null, tint = t.ink, modifier = Modifier.size(15.dp))
+        Text(if (on) "Clair" else "Sombre", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = t.ink))
+    }
+}
+
+/**
+ * S15 — icônes de la barre d'état foncées sur les onglets blancs. Ailleurs (Pilotage, rejeu 3D) : le réglage
+ * d'origine de la fenêtre est rétabli, pour que « En vol » reste exactement comme avant.
+ */
+@Composable
+private fun SystemBarsFor(light: Boolean) {
+    val view = LocalView.current
+    val window = (view.context as? Activity)?.window ?: return
+    val controller = remember(window) { WindowCompat.getInsetsController(window, view) }
+    val initialStatus = remember(window) { controller.isAppearanceLightStatusBars }
+    val initialNav = remember(window) { controller.isAppearanceLightNavigationBars }
+    SideEffect {
+        controller.isAppearanceLightStatusBars = if (light) true else initialStatus
+        controller.isAppearanceLightNavigationBars = if (light) true else initialNav
     }
 }
 

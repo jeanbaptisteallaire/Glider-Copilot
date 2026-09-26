@@ -49,6 +49,7 @@ import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
+import com.neutronstar.glidercopilot.designsystem.gcHeading
 import com.neutronstar.glidercopilot.domain.DayQuality
 import com.neutronstar.glidercopilot.domain.LiftType
 import com.neutronstar.glidercopilot.precog.DayWeather
@@ -130,7 +131,7 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
         Modifier.fillMaxWidth().background(c.background).padding(start = 16.dp, end = 4.dp, top = 10.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text("PRÉVOL", style = Gc.type.title, modifier = Modifier.weight(1f))
+        Text(gcHeading("Prévol"), style = Gc.type.title, modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             Text(state.day?.let { Fmt.day.format(it.date) } ?: " ", style = Gc.type.bodySmall.copy(fontSize = 10.sp), maxLines = 1)
             Row(Modifier.clickable(onClickLabel = "Changer de club", onClick = onPickClub), verticalAlignment = Alignment.CenterVertically) {

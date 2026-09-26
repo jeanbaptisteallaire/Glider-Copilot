@@ -1,0 +1,10 @@
+{
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightScreen.kt": "ca0564f6ceb88c67971ef2600b90e1f0a9221d3b7ea1bd10e7e3b082a98eb2ab",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightLive.kt": "8631e1e630e17b31119ddc58858b8b778eee94874746ab0592eebf652b426882",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt": "26a2693bea418dee4056700c08905bf4f26d31dd83f9a418b9e422d3371e63df",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/VarioTone.kt": "e0f865fb3ec9c24208438577ea91942fc65db0d8aef8172fcd274b161227cca6",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/UiMask.kt": "996d3297d48d0e71ca14764ca29c34073f91138c0732f517dc813701428f5dd7",
+  "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyColors": "c94892f20a7672b55b6bc42643f9bdf9356fcf498749618d3b133db9a3004c10",
+  "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#gcTypeSombre": "6a13df2d23f31c6411628704a82f6268ec3b8270c2456c7a3a5cc0d975a729e4",
+  "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyTheme": "5e851094f1ddf91670d658a57f31bda4d3bbbf9f3e777a3601c29575fc9cde08"
+}

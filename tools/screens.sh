@@ -220,7 +220,7 @@ sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
 opened=""
 for k in 1 2 3; do
-  P=$(tap_text "REVOIR LE VOL EN 3D"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; opened=1; break; }
+  P=$(tap_text "Revoir le vol en 3D"); [ -z "$P" ] && P=$(tap_text "REVOIR LE VOL EN 3D"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; opened=1; break; }
   timeout 10 adb shell input swipe 540 1500 540 900 400; sleep 3
 done
 # repli : ouverture directe du rejeu du vol le plus récent (option CI)

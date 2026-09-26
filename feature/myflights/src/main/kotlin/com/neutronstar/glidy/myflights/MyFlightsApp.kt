@@ -61,6 +61,7 @@ import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
+import com.neutronstar.glidercopilot.designsystem.gcHeading
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
@@ -269,7 +270,7 @@ private fun FlightsListScreen(
 ) {
     val c = Gc.colors
     Column(Modifier.fillMaxSize()) {
-        ScreenHeader("MES VOLS", "${flights.size} VOLS")
+        ScreenHeader(gcHeading("Mes vols"), if (Gc.social) "${flights.size} vols" else "${flights.size} VOLS")
         LazyColumn(
             modifier = Modifier.fillMaxSize().testTag("flight-list"),
             contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 28.dp),
@@ -427,7 +428,7 @@ private fun FlightDetailScreen(
         ) {
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(flight.date.uppercase(), style = Gc.type.title.copy(fontSize = 24.sp))
+                    Text(if (Gc.social) flight.date else flight.date.uppercase(), style = Gc.type.title.copy(fontSize = 24.sp))
                     Text("${flight.day} · ${flight.place}", style = Gc.type.bodySmall)
                 }
             }
