@@ -235,7 +235,9 @@ timeout 20 adb exec-out screencap -p > "$OUT/23-rejeu-3d.png"
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/23b-rejeu-3d-suite.png"
 # S14 : saut dans un thermique spiralé à droite (≈ 24 % du vol d'exemple) → l'aile droite doit être basse, côté intérieur
-P=$(tap_fraction "Position dans le vol" 0.235); echo "frise : $P"
+P=$(tap_fraction "Position dans le vol" 0.235)
+# la WebView n'expose pas toujours la frise à uiautomator : repli sur sa position mesurée (1080×2400, V0.9.4)
+[ -z "$P" ] && P="339 2226"; echo "frise : $P"
 [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 6; timeout 20 adb exec-out screencap -p > "$OUT/23c-rejeu-3d-spirale.png"; sleep 3; timeout 20 adb exec-out screencap -p > "$OUT/23d-rejeu-3d-spirale-suite.png"; }
 adb shell input keyevent 4 || true
 sleep 3
