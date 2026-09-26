@@ -1,6 +1,18 @@
 package com.neutronstar.glidercopilot.designsystem
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -164,4 +176,31 @@ fun GcSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Mod
             uncheckedBorderColor = c.line,
         ),
     )
+}
+
+/**
+ * S15 — interrupteur clair/sombre intégré à l'en-tête de chaque écran (Prévol, Check-lists, Carte, Mes vols),
+ * au lieu d'une pastille flottante qui recouvrait le contenu. Fourni par l'app via [LocalGcThemeToggle] ;
+ * absent (null) → rien n'est affiché (tests, aperçus, Pilotage).
+ */
+@Immutable
+data class GcThemeToggle(val light: Boolean, val onToggle: (Boolean) -> Unit)
+
+val LocalGcThemeToggle = staticCompositionLocalOf<GcThemeToggle?> { null }
+
+@Composable
+fun GcThemeToggleButton(modifier: Modifier = Modifier) {
+    val toggle = LocalGcThemeToggle.current ?: return
+    val c = Gc.colors
+    Box(
+        modifier
+            .size(34.dp)
+            .clip(CircleShape)
+            .background(c.control)
+            .clickable(role = Role.Switch, onClickLabel = if (toggle.light) "Mode sombre" else "Mode clair") { toggle.onToggle(!toggle.light) }
+            .semantics { contentDescription = "Mode clair"; stateDescription = if (toggle.light) "activé" else "désactivé" },
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(if (toggle.light) GcIcons.DarkMode else GcIcons.LightMode, contentDescription = null, tint = c.ink, modifier = Modifier.size(17.dp))
+    }
 }

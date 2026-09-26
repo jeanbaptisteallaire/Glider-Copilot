@@ -61,6 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
+import com.neutronstar.glidercopilot.designsystem.gcHeading
 import com.neutronstar.glidercopilot.domain.checklist.Block
 import com.neutronstar.glidercopilot.domain.checklist.CableBriefInput
 import com.neutronstar.glidercopilot.domain.checklist.CablePlan
@@ -106,13 +108,17 @@ fun ChecklistScreen(store: ChecklistStore, modifier: Modifier = Modifier) {
         // En-tête de page
         Row(Modifier.fillMaxWidth().padding(horizontal = 2.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(
-                Checklists.PAGE_TITLE.uppercase(),
-                style = TextStyle(fontSize = fs(30f), fontWeight = FontWeight.SemiBold, letterSpacing = 0.02.em, color = c.ink, lineHeight = fs(30f)),
+                gcHeading(Checklists.PAGE_TITLE),
+                style = if (Gc.social) Gc.type.title.copy(lineHeight = fs(30f))
+                else TextStyle(fontSize = fs(30f), fontWeight = FontWeight.SemiBold, letterSpacing = 0.02.em, color = c.ink, lineHeight = fs(30f)),
             )
-            Text(
-                Checklists.PAGE_TAG,
-                style = TextStyle(fontSize = fs(10f), color = c.dim, textAlign = TextAlign.End, lineHeight = fs(13f)),
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    Checklists.PAGE_TAG,
+                    style = TextStyle(fontSize = fs(10f), color = c.dim, textAlign = TextAlign.End, lineHeight = fs(13f)),
+                )
+                GcThemeToggleButton(Modifier.padding(start = 10.dp))
+            }
         }
         Spacer(Modifier.height(12.dp))
         // Encadré d'introduction

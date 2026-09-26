@@ -50,6 +50,7 @@ import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.gcHeading
+import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.domain.DayQuality
 import com.neutronstar.glidercopilot.domain.LiftType
 import com.neutronstar.glidercopilot.precog.DayWeather
@@ -143,6 +144,7 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
                 Icon(GcIcons.ChevronDown, contentDescription = "Changer de club", tint = c.route, modifier = Modifier.padding(start = 3.dp).size(12.dp))
             }
         }
+        GcThemeToggleButton(Modifier.padding(start = 8.dp))
         IconButton(onClick = onRefresh, enabled = !state.loading) {
             if (state.loading) CircularProgressIndicator(Modifier.size(18.dp), color = c.ok, strokeWidth = 2.dp)
             else Icon(Icons.Filled.Refresh, contentDescription = "Actualiser", tint = c.ink)

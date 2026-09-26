@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidercopilot.domain.Geo
 import java.util.Locale
@@ -62,13 +63,15 @@ fun TrafficMapScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f)) {
-                Text("CARTE · AÉRONEFS EN VOL", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, color = c.dim))
+                if (Gc.social) Text("Carte · aéronefs en vol", style = Gc.type.title.copy(fontSize = 22.sp))
+                else Text("CARTE · AÉRONEFS EN VOL", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, color = c.dim))
                 Text(networkLabel, style = TextStyle(fontSize = 10.5.sp, color = c.faint), maxLines = 1)
             }
             Text(
                 "${traffic.aircraft.size}",
                 style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Medium, color = if (traffic.aircraft.isEmpty()) c.dim else c.ok),
             )
+            GcThemeToggleButton(Modifier.padding(start = 10.dp))
         }
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (map != null) {

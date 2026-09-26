@@ -10,7 +10,6 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,10 +46,8 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -58,6 +55,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcIcons
+import com.neutronstar.glidercopilot.designsystem.GcThemeToggle
+import com.neutronstar.glidercopilot.designsystem.LocalGcThemeToggle
+import androidx.compose.runtime.CompositionLocalProvider
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.designsystem.GlidyColors
 import com.neutronstar.glidercopilot.designsystem.GlidyLightColors
@@ -209,7 +209,9 @@ private fun MainScaffold(container: AppContainer) {
     }
 
     Column(Modifier.fillMaxSize().background(if (social) GlidyLightColors.background else c.background).statusBarsPadding()) {
-        Box(Modifier.weight(1f)) {
+        // S15 : l'interrupteur clair/sombre est dans l'en-tête de chaque écran (jamais sur Pilotage)
+        val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
+        Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
@@ -244,16 +246,7 @@ private fun MainScaffold(container: AppContainer) {
                     )
                 }
             }
-            // mode clair : un seul interrupteur, partagé par Prévol/Check-lists/Carte (V7.2). Jamais sur Pilotage.
-            if (tab != Tab.PILOTAGE) {
-                LightModeToggle(
-                    lightMode,
-                    onToggle = { on -> scope.launch { container.prefs.setLightMode(on) } },
-                    // sous l'en-tête de chaque écran (titre + sélecteur de club / légende) pour ne pas le recouvrir
-                    modifier = Modifier.align(Alignment.TopEnd).padding(end = 10.dp, top = 54.dp),
-                )
-            }
-        }
+        } }
         // barre d'onglets : sous Pilotage, exactement la barre noire d'avant (thème sombre) ; ailleurs, blanche
         GlidyAdaptiveTheme(social) {
             val bar = Gc.colors
@@ -294,27 +287,6 @@ private fun TabButton(label: String, icon: ImageVector, selected: Boolean, modif
     ) {
         Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(23.dp))
         Text(label, style = TextStyle(fontSize = 10.sp, fontWeight = if (social && selected) FontWeight.SemiBold else FontWeight.Medium, color = color))
-    }
-}
-
-/**
- * Interrupteur de mode clair (V7.2), commun à Prévol/Check-lists/Carte. Rendu en dehors du sous-thème
- * de l'onglet (pastille sombre fixe) pour rester lisible que le fond soit clair ou sombre.
- */
-@Composable
-private fun LightModeToggle(on: Boolean, onToggle: (Boolean) -> Unit, modifier: Modifier = Modifier) {
-    // S15 : pastille aux couleurs du thème affiché (blanche en mode clair, sombre sinon)
-    val t = if (on) GlidyLightColors else GlidyColors
-    Row(
-        modifier.background(if (on) t.panel else t.control.copy(alpha = 0.9f), RoundedCornerShape(50)).border(1.dp, t.line, RoundedCornerShape(50))
-            .clickable(role = Role.Switch, onClickLabel = if (on) "Mode sombre" else "Mode clair") { onToggle(!on) }
-            .padding(horizontal = 10.dp, vertical = 6.dp)
-            .semantics { contentDescription = "Mode clair"; stateDescription = if (on) "activé" else "désactivé" },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-    ) {
-        Icon(if (on) GcIcons.LightMode else GcIcons.DarkMode, contentDescription = null, tint = t.ink, modifier = Modifier.size(15.dp))
-        Text(if (on) "Clair" else "Sombre", style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.SemiBold, color = t.ink))
     }
 }
 

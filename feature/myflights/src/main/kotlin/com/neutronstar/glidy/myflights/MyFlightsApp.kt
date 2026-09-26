@@ -62,6 +62,7 @@ import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.gcHeading
+import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
@@ -255,6 +256,7 @@ private fun ScreenHeader(title: String, trailing: String) {
     ) {
         Text(title, style = Gc.type.title, modifier = Modifier.weight(1f))
         Text(trailing, style = Gc.type.bodySmall.copy(fontSize = 11.sp, color = Gc.colors.route, fontWeight = FontWeight.SemiBold))
+        GcThemeToggleButton(Modifier.padding(start = 10.dp))
     }
 }
 
