@@ -214,7 +214,7 @@ dismiss_anr
 P=$(tap_text "Mes vols"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/21-mes-vols-liste.png"
-P=$(tap_text "21 juin 2024")
+P=$(tap_text "19 septembre 2026")
 [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
@@ -234,10 +234,10 @@ sleep 30
 timeout 20 adb exec-out screencap -p > "$OUT/23-rejeu-3d.png"
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/23b-rejeu-3d-suite.png"
-# S14 : saut dans un thermique spiralé à droite (≈ 24 % du vol d'exemple) → l'aile droite doit être basse, côté intérieur
-P=$(tap_fraction "Position dans le vol" 0.235)
+# saut dans une spirale à gauche (12 % du vol d exemple Saint-Martin) → aile GAUCHE basse, côté intérieur
+P=$(tap_fraction "Position dans le vol" 0.12)
 # la WebView n'expose pas toujours la frise à uiautomator : repli sur sa position mesurée (1080×2400, V0.9.4)
-[ -z "$P" ] && P="339 2226"; echo "frise : $P"
+[ -z "$P" ] && P="279 2226"; echo "frise : $P"
 [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 6; timeout 20 adb exec-out screencap -p > "$OUT/23c-rejeu-3d-spirale.png"; sleep 3; timeout 20 adb exec-out screencap -p > "$OUT/23d-rejeu-3d-spirale-suite.png"; }
 adb shell input keyevent 4 || true
 sleep 3

@@ -1,5 +1,9 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Vol d'exemple : retour au vol synthétique de Saint-Martin-de-Londres (27/09/2026)
+Demande de JB : la trace Condor (Italie) ne fonctionnait pas bien sur son téléphone → le vol synthétique LFNL
+(identique à la S13) redevient le vol d'exemple. Capture CI 23c : saut à 12 % du vol (spirale à gauche).
+
 ## Correctif météo — clé d'API precog (27/09/2026)
 precog-api.com exige désormais une clé (préfixe `pcg_`). La clé n'est **jamais dans le dépôt** : secret GitHub
 `PRECOG_API_KEY` → `BuildConfig.PRECOG_API_KEY` → `UrlConnectionHttpClient(apiKey)`, qui l'envoie en
