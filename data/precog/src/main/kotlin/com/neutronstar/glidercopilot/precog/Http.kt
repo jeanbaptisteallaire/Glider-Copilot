@@ -20,7 +20,7 @@ class UrlConnectionHttpClient(
     private val timeoutMs: Int = 20_000,
     /**
      * Clé d'API precog (préfixe `pcg_`), injectée au build depuis le secret GitHub PRECOG_API_KEY — jamais
-     * dans le dépôt. Envoyée en `Authorization: Bearer` et en `X-API-Key` (les deux conventions usuelles).
+     * dans le dépôt. Envoyée en en-tête `X-API-Key`, comme l'exige precog (réponse 401 : « clé d'API (X-API-Key) requis »).
      * Vide = aucune en-tête (autres services : OGN, cartes).
      */
     private val apiKey: String = "",
@@ -33,10 +33,7 @@ class UrlConnectionHttpClient(
             c.setRequestProperty("User-Agent", userAgent)
             c.setRequestProperty("Accept", "application/json")
             if (ifNoneMatch != null) c.setRequestProperty("If-None-Match", ifNoneMatch)
-            if (apiKey.isNotBlank()) {
-                c.setRequestProperty("Authorization", "Bearer $apiKey")
-                c.setRequestProperty("X-API-Key", apiKey)
-            }
+            if (apiKey.isNotBlank()) c.setRequestProperty("X-API-Key", apiKey)
             val code = c.responseCode
             val body = if (code in 200..299) c.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() } else null
             return HttpResult(code, body, c.getHeaderField("ETag"))

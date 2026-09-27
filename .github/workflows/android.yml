@@ -56,8 +56,7 @@ jobs:
             echo "secret PRECOG_API_KEY présent : $([ -n "$PRECOG_API_KEY" ] && echo oui || echo NON)"
             echo "sans clé              : $(curl -s -o /dev/null -m 30 -w '%{http_code}' "$U")"
             echo "Authorization: Bearer : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "Authorization: Bearer $PRECOG_API_KEY" "$U")"
-            echo "X-API-Key             : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "X-API-Key: $PRECOG_API_KEY" "$U")"
-            echo "les deux (comme l'app): $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "Authorization: Bearer $PRECOG_API_KEY" -H "X-API-Key: $PRECOG_API_KEY" "$U")"
+            echo "X-API-Key (comme l'app): $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "X-API-Key: $PRECOG_API_KEY" "$U")"
           } > report/precog-auth.txt
           cat report/precog-auth.txt
       - name: Rapport (ci-data)

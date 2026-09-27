@@ -7,7 +7,7 @@ LAT=43.80028; LON=3.78167   # LFNL, CVV Montpellier Pic Saint-Loup
 B=https://precog-api.com/v1
 # clé precog (secret PRECOG_API_KEY) : ajoutée aux seules requêtes precog, jamais écrite dans les fichiers
 PK=()
-[ -n "${PRECOG_API_KEY:-}" ] && PK=(-H "Authorization: Bearer $PRECOG_API_KEY" -H "X-API-Key: $PRECOG_API_KEY")
+[ -n "${PRECOG_API_KEY:-}" ] && PK=(-H "X-API-Key: $PRECOG_API_KEY")
 get() { # name url [extra curl args]
   local name=$1 url=$2; shift 2
   local code
