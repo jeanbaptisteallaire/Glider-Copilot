@@ -1,0 +1,5 @@
+secret PRECOG_API_KEY présent : NON
+sans clé              : 401
+Authorization: Bearer : 401
+X-API-Key             : 401
+les deux (comme l'app): 401
