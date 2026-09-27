@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.precog.PrecogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-27T13:19:16" hostname="runnervmtr4k5" time="0.371">
+<testsuite name="com.neutronstar.glidercopilot.precog.PrecogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-09-27T13:38:12" hostname="runnervmtr4k5" time="0.897">
   <properties/>
-  <testcase name="repositoryBuildsDay" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.341"/>
-  <testcase name="unknownUnitIsNeverGuessed" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.0"/>
-  <testcase name="parsesJsonEdgeCases" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.0"/>
-  <testcase name="vigilanceForDepartement" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.006"/>
+  <testcase name="repositoryBuildsDay" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.832"/>
+  <testcase name="unknownUnitIsNeverGuessed" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.003"/>
+  <testcase name="parsesJsonEdgeCases" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.001"/>
+  <testcase name="vigilanceForDepartement" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.01"/>
   <testcase name="etagRevalidationAndOfflineFallback" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.001"/>
-  <testcase name="differentiatesAccumulatedFlux" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.011"/>
-  <testcase name="mapsProfileAndAnalyses" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.002"/>
+  <testcase name="differentiatesAccumulatedFlux" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.036"/>
+  <testcase name="mapsProfileAndAnalyses" classname="com.neutronstar.glidercopilot.precog.PrecogTest" time="0.011"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
