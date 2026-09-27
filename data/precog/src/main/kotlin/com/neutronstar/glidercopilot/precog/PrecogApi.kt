@@ -36,6 +36,9 @@ class PrecogApi(
                     Fetch.Ok(json, now, offline = false)
                 }
                 r.code == 404 -> Fetch.NotAvailable
+                // 401/403 : clé absente, invalide ou révoquée — dit clairement, copie locale servie si elle existe
+                r.code == 401 || r.code == 403 -> cached?.let { Fetch.Ok(Json.parse(it.body), it.fetchedAt, offline = true) }
+                    ?: Fetch.Failed("clé d'API météo refusée (HTTP ${r.code})")
                 else -> cached?.let { Fetch.Ok(Json.parse(it.body), it.fetchedAt, offline = true) }
                     ?: Fetch.Failed("HTTP ${r.code}")
             }

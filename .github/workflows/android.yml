@@ -39,11 +39,27 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          PRECOG_API_KEY: ${{ secrets.PRECOG_API_KEY }}
         run: |
           set -o pipefail
           # secrets absents (tant que JB ne les a pas créés) : variables vides → build.gradle.kts retombe sur la clé debug
           [ -n "$KEYSTORE_BASE64" ] || unset KEYSTORE_BASE64 KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD
           ./gradlew --no-daemon --stacktrace test lintDebug assembleDebug assembleRelease bundleRelease 2>&1 | tee build.log
+      - name: Diagnostic clé météo precog (codes HTTP seulement, jamais la clé)
+        if: always()
+        env:
+          PRECOG_API_KEY: ${{ secrets.PRECOG_API_KEY }}
+        run: |
+          mkdir -p report
+          U="https://precog-api.com/v1/arpege/forecast?lat=43.80028&lon=3.78167"
+          {
+            echo "secret PRECOG_API_KEY présent : $([ -n "$PRECOG_API_KEY" ] && echo oui || echo NON)"
+            echo "sans clé              : $(curl -s -o /dev/null -m 30 -w '%{http_code}' "$U")"
+            echo "Authorization: Bearer : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "Authorization: Bearer $PRECOG_API_KEY" "$U")"
+            echo "X-API-Key             : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "X-API-Key: $PRECOG_API_KEY" "$U")"
+            echo "les deux (comme l'app): $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "Authorization: Bearer $PRECOG_API_KEY" -H "X-API-Key: $PRECOG_API_KEY" "$U")"
+          } > report/precog-auth.txt
+          cat report/precog-auth.txt
       - name: Rapport (ci-data)
         if: always()
         run: |

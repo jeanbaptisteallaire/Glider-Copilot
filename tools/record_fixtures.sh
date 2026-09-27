@@ -5,10 +5,15 @@ OUT=${1:-fixtures}
 mkdir -p "$OUT/precog" "$OUT/openaip"
 LAT=43.80028; LON=3.78167   # LFNL, CVV Montpellier Pic Saint-Loup
 B=https://precog-api.com/v1
+# clé precog (secret PRECOG_API_KEY) : ajoutée aux seules requêtes precog, jamais écrite dans les fichiers
+PK=()
+[ -n "${PRECOG_API_KEY:-}" ] && PK=(-H "Authorization: Bearer $PRECOG_API_KEY" -H "X-API-Key: $PRECOG_API_KEY")
 get() { # name url [extra curl args]
   local name=$1 url=$2; shift 2
   local code
-  code=$(curl -sS -m 90 -D "$OUT/$name.headers" -o "$OUT/$name.json" -w '%{http_code}' "$@" "$url") || code=ERR
+  local auth=()
+  case "$url" in "$B"*) auth=("${PK[@]}");; esac
+  code=$(curl -sS -m 90 -D "$OUT/$name.headers" -o "$OUT/$name.json" -w '%{http_code}' "${auth[@]}" "$@" "$url") || code=ERR
   echo "$name $code $(stat -c %s "$OUT/$name.json" 2>/dev/null) $url" | tee -a "$OUT/index.txt"
 }
 get precog/health "$B/health"

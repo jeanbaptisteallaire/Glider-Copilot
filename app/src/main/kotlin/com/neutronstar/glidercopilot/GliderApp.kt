@@ -23,7 +23,7 @@ class AppContainer(app: Application) {
     val clubs: ClubRepository = ClubRepository(app, prefs, location)
     val weather: WeatherRepository = WeatherRepository(
         PrecogApi(
-            UrlConnectionHttpClient(userAgent = userAgent),
+            UrlConnectionHttpClient(userAgent = userAgent, apiKey = BuildConfig.PRECOG_API_KEY),
             FileResponseCache(File(app.cacheDir, "precog")),
         ),
     )

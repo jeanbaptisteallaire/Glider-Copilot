@@ -21,6 +21,8 @@ android {
         // SUPABASE_URL / SUPABASE_ANON_KEY. Vides (dépôt public, forks, poste local) = cloud inactif.
         buildConfigField("String", "SUPABASE_URL", "\"${System.getenv("SUPABASE_URL").orEmpty().trim()}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${System.getenv("SUPABASE_ANON_KEY").orEmpty().trim()}\"")
+        // Clé d'API météo precog (secret GitHub PRECOG_API_KEY ; poste local : variable d'environnement). Jamais dans le dépôt.
+        buildConfigField("String", "PRECOG_API_KEY", "\"${System.getenv("PRECOG_API_KEY").orEmpty().trim()}\"")
     }
     // Clé d'upload Play App Signing (S8) : jamais dans le dépôt (public), lue via 4 secrets d'environnement
     // (KEYSTORE_BASE64 encodé en base64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD). Tant qu'ils sont absents

@@ -14,6 +14,7 @@ jobs:
       - name: Enregistrer les réponses
         env:
           OPENAIP_KEY: ${{ secrets.OPENAIP_KEY }}
+          PRECOG_API_KEY: ${{ secrets.PRECOG_API_KEY }}
         run: tools/record_fixtures.sh out
       - name: Publier sur la branche ci-data
         env:
@@ -31,5 +32,6 @@ jobs:
           rm -rf fixtures && mkdir -p fixtures && cp -r "$GITHUB_WORKSPACE/out/." fixtures/
           # jamais de clé dans les fichiers
           if [ -n "$OPENAIP_KEY" ] && grep -rlF "$OPENAIP_KEY" fixtures; then echo "clé trouvée dans les fixtures"; exit 1; fi
+          if [ -n "$PRECOG_API_KEY" ] && grep -rlF "$PRECOG_API_KEY" fixtures; then echo "clé precog trouvée dans les fixtures"; exit 1; fi
           git add -A && git commit -qm "fixtures $(date -u +%FT%TZ)" || true
           for i in 1 2 3 4; do git push -q origin ci-data && break; git pull -q --rebase origin ci-data || true; sleep 3; done

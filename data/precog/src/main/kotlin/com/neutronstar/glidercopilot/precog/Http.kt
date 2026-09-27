@@ -18,6 +18,12 @@ fun interface HttpClient {
 class UrlConnectionHttpClient(
     private val userAgent: String = "GliderCopilot/0.1 (Android)",
     private val timeoutMs: Int = 20_000,
+    /**
+     * Clé d'API precog (préfixe `pcg_`), injectée au build depuis le secret GitHub PRECOG_API_KEY — jamais
+     * dans le dépôt. Envoyée en `Authorization: Bearer` et en `X-API-Key` (les deux conventions usuelles).
+     * Vide = aucune en-tête (autres services : OGN, cartes).
+     */
+    private val apiKey: String = "",
 ) : HttpClient {
     override fun get(url: String, ifNoneMatch: String?): HttpResult {
         val c = URL(url).openConnection() as HttpURLConnection
@@ -27,6 +33,10 @@ class UrlConnectionHttpClient(
             c.setRequestProperty("User-Agent", userAgent)
             c.setRequestProperty("Accept", "application/json")
             if (ifNoneMatch != null) c.setRequestProperty("If-None-Match", ifNoneMatch)
+            if (apiKey.isNotBlank()) {
+                c.setRequestProperty("Authorization", "Bearer $apiKey")
+                c.setRequestProperty("X-API-Key", apiKey)
+            }
             val code = c.responseCode
             val body = if (code in 200..299) c.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() } else null
             return HttpResult(code, body, c.getHeaderField("ETag"))

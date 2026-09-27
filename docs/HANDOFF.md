@@ -1,5 +1,14 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Correctif météo — clé d'API precog (27/09/2026)
+precog-api.com exige désormais une clé (préfixe `pcg_`). La clé n'est **jamais dans le dépôt** : secret GitHub
+`PRECOG_API_KEY` → `BuildConfig.PRECOG_API_KEY` → `UrlConnectionHttpClient(apiKey)`, qui l'envoie en
+`Authorization: Bearer` et `X-API-Key` (précog seulement ; OGN et cartes sans clé). HTTP 401/403 → message
+« clé d'API météo refusée », copie locale servie si elle existe. La CI écrit `build-report/precog-auth.txt`
+(codes HTTP par variante d'en-tête, jamais la clé) pour confirmer la bonne convention. `record_fixtures.sh` et
+son workflow utilisent aussi le secret (avec contrôle anti-fuite dans les fixtures).
+Note : une clé embarquée dans un APK reste extractable ; à terme, passer par un relais serveur (Supabase Edge Function).
+
 ## Session 15 — Thème clair « social », V0.10.0 (26/09/2026)
 Étape 2 du plan réseau social. **Pilotage (« En vol ») strictement inchangé**, garanti par la CI.
 - **Thème social blanc par défaut** (nouvelle préférence `light_mode_social`, vraie par défaut ; le bouton
