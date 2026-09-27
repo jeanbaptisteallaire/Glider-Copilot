@@ -1,11 +1,9 @@
-HTTP/2 200 
+HTTP/2 401 
 alt-svc: h3=":443"; ma=2592000
-cache-control: no-cache
+cache-control: no-store
 content-type: application/json
-date: Wed, 16 Sep 2026 20:31:53 GMT
-etag: "423050db320ee9392529def5d7798eed4115dcff864343f9946175a015d1c179"
-server: uvicorn
-vary: Accept-Encoding
-via: 1.1 Caddy
-content-length: 3883
+date: Sun, 27 Sep 2026 13:18:15 GMT
+strict-transport-security: max-age=31536000
+x-content-type-options: nosniff
+content-length: 99
 
