@@ -5,6 +5,9 @@ import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
 import com.neutronstar.glidy.flightarchive.FlightSummary
+import com.neutronstar.glidy.flightarchive.FlightVisibility
+import com.neutronstar.glidy.social.PilotProfile
+import com.neutronstar.glidy.social.ProfileStore
 import com.neutronstar.glidy.flightarchive.IgcFileRef
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.LocalFileState
@@ -175,6 +178,64 @@ class MyFlightsViewModelTest {
         assertEquals(flight.id, ready.selectedFlightId)
     }
 
+    @Test
+    fun `share icon publishes then unpublishes a real flight`() = runTest(dispatcher.scheduler) {
+        val flight = flight(31)
+        val repository = FakeRepository(listOf(flight))
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
+        advanceUntilIdle()
+
+        viewModel.toggleShare(flight.id)
+        advanceUntilIdle()
+        var ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertTrue(ready.flights.single().isPublic)
+        assertEquals(listOf(flight.id to FlightVisibility.PUBLIC), repository.visibilityCalls)
+
+        viewModel.toggleShare(flight.id)
+        advanceUntilIdle()
+        ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertTrue(!ready.flights.single().isPublic)
+        assertEquals(FlightVisibility.PRIVATE, repository.visibilityCalls.last().second)
+    }
+
+    @Test
+    fun `example flight is never shared`() = runTest(dispatcher.scheduler) {
+        val example = flight(32).let { it.copy(file = it.file.copy(fileName = "exemple-saint-martin.igc")) }
+        val repository = FakeRepository(listOf(example))
+        val viewModel = MyFlightsViewModel(repository, FakeShareGateway())
+        advanceUntilIdle()
+
+        viewModel.toggleShare(example.id)
+        advanceUntilIdle()
+
+        val ready = viewModel.state.value as MyFlightsUiState.Ready
+        assertTrue(repository.visibilityCalls.isEmpty())
+        assertEquals("Le vol d'exemple ne peut pas être partagé.", ready.notice)
+    }
+
+    @Test
+    fun `profile is loaded, saved and cleared through the store`() = runTest(dispatcher.scheduler) {
+        val store = MemoryProfileStore(PilotProfile(displayName = "JB", username = "jb_allaire"))
+        val viewModel = MyFlightsViewModel(FakeRepository(), FakeShareGateway(), profileStore = store)
+        advanceUntilIdle()
+        assertEquals("jb_allaire", viewModel.profile.value.username)
+
+        viewModel.saveProfile(store.value.copy(bio = "Pilote à LFNL"))
+        advanceUntilIdle()
+        assertEquals("Pilote à LFNL", store.value.bio)
+
+        viewModel.deleteProfile()
+        advanceUntilIdle()
+        assertTrue(store.value.isEmpty)
+        assertTrue(viewModel.profile.value.isEmpty)
+    }
+
+    private class MemoryProfileStore(var value: PilotProfile) : ProfileStore {
+        override suspend fun load() = value
+        override suspend fun save(profile: PilotProfile) { value = profile }
+        override suspend fun clear() { value = PilotProfile() }
+    }
+
     private class FakeRepository(
         flights: List<ArchivedFlight> = emptyList(),
         private val reconciliationGate: CompletableDeferred<Unit>? = null,
@@ -199,6 +260,12 @@ class MyFlightsViewModelTest {
         }
 
         override suspend fun findFlight(id: FlightId): ArchivedFlight? = storedFlights.firstOrNull { it.id == id }
+
+        val visibilityCalls = mutableListOf<Pair<FlightId, FlightVisibility>>()
+        override suspend fun setVisibility(id: FlightId, visibility: FlightVisibility): Boolean {
+            visibilityCalls += id to visibility
+            return storedFlights.any { it.id == id }
+        }
 
         override suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult =
             if (storedFlights.removeAll { it.id == id }) {

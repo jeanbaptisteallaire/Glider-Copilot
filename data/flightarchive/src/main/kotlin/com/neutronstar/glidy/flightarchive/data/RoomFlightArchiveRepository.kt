@@ -4,6 +4,7 @@ import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightSummary
+import com.neutronstar.glidy.flightarchive.FlightVisibility
 import com.neutronstar.glidy.flightarchive.GeoBounds
 import com.neutronstar.glidy.flightarchive.GeoPoint
 import com.neutronstar.glidy.flightarchive.IgcFileRef
@@ -160,6 +161,12 @@ class RoomFlightArchiveRepository(
     override suspend fun updateSyncState(id: FlightId, state: SyncState, remoteId: String?): Boolean =
         withContext(ioDispatcher) { dao.updateSync(id.value, state.name, remoteId, System.currentTimeMillis()) > 0 }
 
+    override suspend fun setVisibility(id: FlightId, visibility: FlightVisibility): Boolean =
+        withContext(ioDispatcher) {
+            val now = System.currentTimeMillis()
+            dao.updateVisibility(id.value, visibility.name, if (visibility == FlightVisibility.PUBLIC) now else null, now) > 0
+        }
+
     override suspend fun removeLocalFlight(id: FlightId): RemoveFlightResult = mutex.withLock {
         withContext(ioDispatcher) {
             val entity = dao.findById(id.value) ?: return@withContext RemoveFlightResult.NotFound
@@ -298,6 +305,8 @@ class RoomFlightArchiveRepository(
                 if (latitude == null || longitude == null) null else GeoPoint(latitude, longitude)
             },
             altitudeProfileMeters = altitudeProfile.split(',').mapNotNull(String::toIntOrNull),
+            visibility = runCatching { FlightVisibility.valueOf(visibility) }.getOrDefault(FlightVisibility.PRIVATE),
+            publishedAt = publishedAtEpochMillis?.let(Instant::ofEpochMilli),
         )
     }
 

@@ -54,4 +54,12 @@ object GcIcons {
         "M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4",
     )
     val DarkMode = stroke("darkMode", 1.8f, "M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5")
+    /** S16 — partager / publier sur le fil (flèche sortant d'un plateau). */
+    val Share = stroke("share", 2f, "M12 15V3.5M7.5 8 12 3.5 16.5 8", "M5 12.5v6a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-6")
+    /** S16 — coche « déjà partagé ». */
+    val Check = stroke("check", 2.4f, "M5 12.5l4.5 4.5L19 7.5")
+    /** S16 — menu du profil (trois points). */
+    val More = stroke("more", 2.6f, "M5 12h.01M12 12h.01M19 12h.01")
+    /** S16 — importer un fichier (flèche entrant dans un plateau). */
+    val Import = stroke("import", 2f, "M12 3.5V15M7.5 10.5 12 15l4.5-4.5", "M5 12.5v6a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-6")
 }

@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.flightarchive.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -8,6 +9,8 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RoomDatabase
 import androidx.room.Upsert
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Entity(
     tableName = "flights",
@@ -45,6 +48,9 @@ data class FlightEntity(
     val altitudeProfile: String,
     val createdAtEpochMillis: Long,
     val updatedAtEpochMillis: Long,
+    /** S16 (schéma v2) : PRIVATE / PUBLIC — privé par défaut, y compris pour les vols existants. */
+    @ColumnInfo(defaultValue = "PRIVATE") val visibility: String = "PRIVATE",
+    val publishedAtEpochMillis: Long? = null,
 )
 
 @Dao
@@ -64,6 +70,9 @@ interface FlightDao {
     @Query("UPDATE flights SET syncState = :syncState, remoteId = :remoteId, updatedAtEpochMillis = :now WHERE id = :id")
     suspend fun updateSync(id: String, syncState: String, remoteId: String?, now: Long): Int
 
+    @Query("UPDATE flights SET visibility = :visibility, publishedAtEpochMillis = :publishedAt, updatedAtEpochMillis = :now WHERE id = :id")
+    suspend fun updateVisibility(id: String, visibility: String, publishedAt: Long?, now: Long): Int
+
     @Query("DELETE FROM flights WHERE id = :id")
     suspend fun deleteById(id: String): Int
 
@@ -71,7 +80,15 @@ interface FlightDao {
     suspend fun deleteAll()
 }
 
-@Database(entities = [FlightEntity::class], version = 1, exportSchema = true)
+@Database(entities = [FlightEntity::class], version = 2, exportSchema = true)
 abstract class FlightArchiveDatabase : RoomDatabase() {
     abstract fun flightDao(): FlightDao
+}
+
+/** v1 → v2 (S16) : visibilité des vols. Non destructive : les vols existants restent privés. */
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE flights ADD COLUMN visibility TEXT NOT NULL DEFAULT 'PRIVATE'")
+        db.execSQL("ALTER TABLE flights ADD COLUMN publishedAtEpochMillis INTEGER")
+    }
 }

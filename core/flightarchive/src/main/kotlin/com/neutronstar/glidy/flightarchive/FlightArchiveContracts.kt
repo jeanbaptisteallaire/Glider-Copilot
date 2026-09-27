@@ -84,6 +84,12 @@ enum class SyncState {
     CONFLICT,
 }
 
+/**
+ * S16 — visibilité d'un vol sur le fil GLIDY. Toujours PRIVATE par défaut : un vol n'est publié que par une
+ * action explicite du pilote (icône de partage sur sa tuile). La mise en ligne réelle arrive avec Supabase (S18).
+ */
+enum class FlightVisibility { PRIVATE, PUBLIC }
+
 data class ArchivedFlight(
     val id: FlightId,
     val file: IgcFileRef,
@@ -96,7 +102,12 @@ data class ArchivedFlight(
     val remoteId: String? = null,
     val previewTrack: List<GeoPoint> = emptyList(),
     val altitudeProfileMeters: List<Int> = emptyList(),
-)
+    val visibility: FlightVisibility = FlightVisibility.PRIVATE,
+    /** Date de la dernière publication (null si jamais publié ou dépublié). */
+    val publishedAt: Instant? = null,
+) {
+    val isPublic: Boolean get() = visibility == FlightVisibility.PUBLIC
+}
 
 /** Fichier terminé produit par Pilotage, importé manuellement ou fourni à l'app autonome. */
 data class CompletedIgcFile(
@@ -158,6 +169,9 @@ interface FlightArchiveRepository {
 
     /** État de synchronisation cloud d'un vol (S12). Renvoie faux si le vol n'existe plus. */
     suspend fun updateSyncState(id: FlightId, state: SyncState, remoteId: String?): Boolean = false
+
+    /** S16 — publie (PUBLIC) ou dépublie (PRIVATE) un vol. Renvoie faux si le vol n'existe plus. */
+    suspend fun setVisibility(id: FlightId, visibility: FlightVisibility): Boolean = false
 }
 
 sealed interface ImportIgcResult {

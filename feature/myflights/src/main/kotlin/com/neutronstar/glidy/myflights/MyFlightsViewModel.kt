@@ -8,6 +8,9 @@ import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
+import com.neutronstar.glidy.flightarchive.FlightVisibility
+import com.neutronstar.glidy.social.PilotProfile
+import com.neutronstar.glidy.social.ProfileStore
 import com.neutronstar.glidy.flightarchive.IgcParseError
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.ReconciliationResult
@@ -64,12 +67,66 @@ class MyFlightsViewModel(
     private val repository: FlightArchiveRepository,
     private val shareGateway: FlightShareGateway,
     private val completedFlightGateway: CompletedFlightGateway? = null,
+    /** S16 — profil pilote ; null = profil en mémoire seulement (tests, app autonome). */
+    private val profileStore: ProfileStore? = null,
 ) : ViewModel() {
     private val mutableState = MutableStateFlow<MyFlightsUiState>(MyFlightsUiState.Loading)
     val state: StateFlow<MyFlightsUiState> = mutableState.asStateFlow()
 
+    private val mutableProfile = MutableStateFlow(PilotProfile())
+    val profile: StateFlow<PilotProfile> = mutableProfile.asStateFlow()
+
     init {
         refresh()
+        viewModelScope.launch { profileStore?.let { store -> runCatching { store.load() }.getOrNull()?.let { mutableProfile.value = it } } }
+    }
+
+    /** S16 — enregistre le profil (validé par l'écran). */
+    fun saveProfile(profile: PilotProfile) {
+        mutableProfile.value = profile
+        viewModelScope.launch {
+            val ok = runCatching { profileStore?.save(profile) }.isSuccess
+            showNotice(if (ok) "Profil enregistré sur ce téléphone." else "Le profil n'a pas pu être enregistré.")
+        }
+    }
+
+    /** S16 — efface le profil de ce téléphone. Les vols ne sont pas touchés. */
+    fun deleteProfile() {
+        mutableProfile.value = PilotProfile()
+        viewModelScope.launch {
+            runCatching { profileStore?.clear() }
+            showNotice("Profil supprimé de ce téléphone. Vos vols sont conservés.")
+        }
+    }
+
+    /**
+     * S16 — icône de partage d'une tuile : publie ou dépublie le vol sur le fil GLIDY. Le vol d'exemple ne se
+     * publie pas. Sans compte en ligne, le choix est gardé et appliqué dès que la sauvegarde sera active (S18).
+     */
+    fun toggleShare(id: FlightId) {
+        val current = mutableState.value as? MyFlightsUiState.Ready ?: return
+        val flight = current.flights.firstOrNull { it.id == id } ?: return
+        if (flight.file.fileName.startsWith("exemple-", ignoreCase = true)) {
+            showNotice("Le vol d'exemple ne peut pas être partagé.")
+            return
+        }
+        val target = if (flight.isPublic) FlightVisibility.PRIVATE else FlightVisibility.PUBLIC
+        viewModelScope.launch {
+            val ok = runCatching { repository.setVisibility(id, target) }.getOrDefault(false)
+            val latest = mutableState.value as? MyFlightsUiState.Ready ?: return@launch
+            if (!ok) {
+                mutableState.value = latest.copy(notice = "Le partage n'a pas pu être modifié.")
+                return@launch
+            }
+            val now = java.time.Instant.now()
+            mutableState.value = latest.copy(
+                flights = latest.flights.map {
+                    if (it.id == id) it.copy(visibility = target, publishedAt = if (target == FlightVisibility.PUBLIC) now else null) else it
+                },
+                notice = if (target == FlightVisibility.PUBLIC) "Vol partagé : il sera visible sur le fil des pilotes GLIDY."
+                else "Vol retiré du fil : il redevient privé.",
+            )
+        }
     }
 
     fun refresh() {
@@ -207,11 +264,12 @@ class MyFlightsViewModelFactory(
     private val repository: FlightArchiveRepository,
     private val shareGateway: FlightShareGateway,
     private val completedFlightGateway: CompletedFlightGateway? = null,
+    private val profileStore: ProfileStore? = null,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         require(modelClass.isAssignableFrom(MyFlightsViewModel::class.java))
-        return MyFlightsViewModel(repository, shareGateway, completedFlightGateway) as T
+        return MyFlightsViewModel(repository, shareGateway, completedFlightGateway, profileStore) as T
     }
 }
 

@@ -36,6 +36,8 @@ class AppContainer(app: Application) {
     val ogn = OgnLiveRepository(app, clubs, glider, prefs)
     /** S10 — carnet Mes vols (archive IGC locale + rejeu 3D). */
     val flights = FlightArchiveHost(app)
+    /** S16 — profil pilote local (page profil de Mes vols). */
+    val profile = ProfileHost(app)
     val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn, weather, onIgcClosed = flights::submitClosedIgc)
     /** S12 — compte optionnel + sauvegarde des vols (Supabase), jamais pendant un vol enregistré. */
     val cloud = CloudHost(app, flights) { flight.live.value.snapshot?.recording == true }

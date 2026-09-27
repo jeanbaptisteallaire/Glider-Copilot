@@ -14,7 +14,7 @@ object LocalArchiveModule {
             applicationContext,
             FlightArchiveDatabase::class.java,
             DATABASE_NAME,
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
         return RoomFlightArchiveRepository(
             dao = database.flightDao(),
             archiveDirectory = File(applicationContext.filesDir, ARCHIVE_DIRECTORY),

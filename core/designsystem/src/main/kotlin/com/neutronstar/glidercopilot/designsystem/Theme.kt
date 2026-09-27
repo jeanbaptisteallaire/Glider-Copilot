@@ -66,6 +66,8 @@ data class GcColors(
     /** S15 — aplat de la couleur de marque (boutons principaux, sélection). Sombre : identique à [ok]. */
     val accentFill: Color = ok,
     val onAccentFill: Color = onAccent,
+    /** S16 — trait des traces de vol dans les vignettes du profil et du fil (rouge demandé par JB). */
+    val trace: Color = Color(0xFFE5383B),
 )
 
 val GlidyColors = GcColors(

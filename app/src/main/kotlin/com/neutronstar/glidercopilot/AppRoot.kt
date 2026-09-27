@@ -234,6 +234,7 @@ private fun MainScaffold(container: AppContainer) {
                         account = account,
                         accountActions = container.cloud,
                         refreshSignal = cloudChanges,
+                        profileStore = container.profile,
                         repository = container.flights.repository,
                         shareGateway = container.flights.shareGateway,
                         completedFlightGateway = container.flights.completedGateway,

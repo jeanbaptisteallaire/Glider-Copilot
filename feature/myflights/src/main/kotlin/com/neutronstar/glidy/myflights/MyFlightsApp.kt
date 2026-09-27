@@ -22,10 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
@@ -38,21 +35,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -61,8 +57,6 @@ import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
-import com.neutronstar.glidercopilot.designsystem.gcHeading
-import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
@@ -72,6 +66,8 @@ import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.FlightShareGateway
 import com.neutronstar.glidy.flightarchive.GeoPoint
 import com.neutronstar.glidy.flightarchive.LocalFileState
+import com.neutronstar.glidy.social.PilotProfile
+import com.neutronstar.glidy.social.ProfileStore
 import java.io.InputStream
 import java.time.Duration
 import java.time.ZoneId
@@ -105,11 +101,13 @@ data class FlightCardUi(
     val fingerprint: String,
     val pilot: String,
     val maxAltitudeMeters: Int? = null,
+    /** S16 : date courte des tuiles (« 19 sept. 2026 »). */
+    val shortDate: String = date,
+    /** S16 : vol partagé sur le fil (icône cochée). */
+    val isPublic: Boolean = false,
 ) {
     /** Vol synthétique fourni avec l'app (jamais un vrai vol). */
     val isExample: Boolean get() = fileName.startsWith("exemple-", ignoreCase = true)
-    /** S14 : vol d'exemple issu d'un simulateur (Condor) — la vraie détection par en-tête IGC arrive en S16. */
-    val isSimulator: Boolean get() = fileName.contains("simulateur", ignoreCase = true)
 }
 
 /**
@@ -127,12 +125,15 @@ fun MyFlightsApp(
     accountActions: AccountActions? = null,
     /** Incrémenté par l'hôte quand le carnet a changé hors de cet écran (vol archivé, restauration cloud). */
     refreshSignal: Int = 0,
+    /** S16 — stockage du profil pilote fourni par l'hôte (null = profil en mémoire). */
+    profileStore: ProfileStore? = null,
 ) {
-    val factory = remember(repository, shareGateway, completedFlightGateway) {
-        MyFlightsViewModelFactory(repository, shareGateway, completedFlightGateway)
+    val factory = remember(repository, shareGateway, completedFlightGateway, profileStore) {
+        MyFlightsViewModelFactory(repository, shareGateway, completedFlightGateway, profileStore)
     }
     val viewModel: MyFlightsViewModel = viewModel(factory = factory)
     val state by viewModel.state.collectAsState()
+    val profile by viewModel.profile.collectAsState()
     val context = LocalContext.current
     // S10 (GLIDY) : l'onglet peut rester ouvert pendant qu'un vol est archivé en tâche de fond → relire à chaque affichage
     LaunchedEffect(refreshSignal) { viewModel.reload() }
@@ -165,8 +166,19 @@ fun MyFlightsApp(
                 viewModel.importIgc(name, stream)
             }
         },
+        profile = profile,
+        onToggleShare = viewModel::toggleShare,
+        onSaveProfile = viewModel::saveProfile,
+        onDeleteAccount = {
+            viewModel.deleteProfile()
+            // compte en ligne connecté : il est supprimé aussi (S12 : fichiers, lignes et compte Supabase)
+            if (account?.email != null) accountActions?.deleteAccount()
+        },
     )
 }
+
+/** S16 — écran d'édition ouvert au-dessus de la page profil. */
+private enum class ProfileEdit { FULL, IDENTITY }
 
 @Composable
 fun MyFlightsScreen(
@@ -183,7 +195,13 @@ fun MyFlightsScreen(
     onLoadDemo: (() -> Unit)? = null,
     account: AccountCardState? = null,
     accountActions: AccountActions? = null,
+    profile: PilotProfile = PilotProfile(),
+    onToggleShare: (FlightId) -> Unit = {},
+    onSaveProfile: (PilotProfile) -> Unit = {},
+    onDeleteAccount: () -> Unit = {},
 ) {
+    var editing by rememberSaveable { mutableStateOf<ProfileEdit?>(null) }
+    var confirmDeleteAccount by rememberSaveable { mutableStateOf(false) }
     Box(Modifier.fillMaxSize().background(Gc.colors.background)) {
         when (state) {
             MyFlightsUiState.Loading -> LoadingScreen()
@@ -194,22 +212,42 @@ fun MyFlightsScreen(
                     FlightDetailScreen(
                         flight = selectedFlight.toCardUi(),
                         notice = state.notice,
+                        onToggleShare = { onToggleShare(selectedFlight.id) },
                         onBack = onBack,
                         onShare = { onShare(selectedFlight.id) },
                         onDelete = { onDeleteRequest(selectedFlight.id) },
                         onReplay3d = { onReplay3d(selectedFlight) },
                     )
+                } else if (editing != null) {
+                    ProfileEditScreen(
+                        initial = profile,
+                        identityOnly = editing == ProfileEdit.IDENTITY,
+                        onCancel = { editing = null },
+                        onSave = { onSaveProfile(it); editing = null },
+                    )
                 } else {
-                    FlightsListScreen(
+                    ProfileScreen(
+                        profile = profile,
                         flights = state.flights.map(ArchivedFlight::toCardUi),
                         notice = state.notice,
-                        onImport = onImport,
-                        onLoadDemo = onLoadDemo,
                         account = account,
                         accountActions = accountActions,
+                        onImport = onImport,
+                        onLoadDemo = onLoadDemo,
                         onFlightSelected = { card ->
                             state.flights.firstOrNull { it.id.value == card.id }?.let(onFlightSelected)
                         },
+                        onToggleShare = { card -> onToggleShare(FlightId(card.id)) },
+                        onEditProfile = { editing = ProfileEdit.FULL },
+                        onEditIdentity = { editing = ProfileEdit.IDENTITY },
+                        onDeleteAccount = { confirmDeleteAccount = true },
+                    )
+                }
+                if (confirmDeleteAccount) {
+                    DeleteAccountDialog(
+                        hasOnlineAccount = account?.email != null,
+                        onCancel = { confirmDeleteAccount = false },
+                        onConfirm = { confirmDeleteAccount = false; onDeleteAccount() },
                     )
                 }
                 val pendingDelete = state.flights.firstOrNull { it.id == state.pendingDeleteFlightId }
@@ -247,140 +285,6 @@ private fun ErrorScreen(message: String, onRetry: () -> Unit) {
     }
 }
 
-/** En-tête d'écran GLIDY : titre en capitales à gauche (comme PRÉVOL), compteur à droite. */
-@Composable
-private fun ScreenHeader(title: String, trailing: String) {
-    Row(
-        Modifier.fillMaxWidth().background(Gc.colors.background).padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(title, style = Gc.type.title, modifier = Modifier.weight(1f))
-        Text(trailing, style = Gc.type.bodySmall.copy(fontSize = 11.sp, color = Gc.colors.route, fontWeight = FontWeight.SemiBold))
-        GcThemeToggleButton(Modifier.padding(start = 10.dp))
-    }
-}
-
-@Composable
-private fun FlightsListScreen(
-    flights: List<FlightCardUi>,
-    notice: String?,
-    onImport: () -> Unit,
-    onLoadDemo: (() -> Unit)?,
-    account: AccountCardState?,
-    accountActions: AccountActions?,
-    onFlightSelected: (FlightCardUi) -> Unit,
-) {
-    val c = Gc.colors
-    Column(Modifier.fillMaxSize()) {
-        ScreenHeader(gcHeading("Mes vols"), if (Gc.social) "${flights.size} vols" else "${flights.size} VOLS")
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().testTag("flight-list"),
-            contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 28.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            item { SeasonCard(flights) }
-            if (account != null) item { AccountCard(account, accountActions) }
-            if (notice != null) {
-                item { Text(notice, style = Gc.type.bodySmall.copy(color = c.warn)) }
-            }
-            if (flights.isEmpty()) {
-                item { EmptyArchive(onLoadDemo) }
-            }
-            itemsIndexed(items = flights, key = { _, flight -> flight.id }) { index, flight ->
-                FlightCard(
-                    flight = flight,
-                    position = index,
-                    totalFlights = flights.size,
-                    onClick = { onFlightSelected(flight) },
-                )
-            }
-            item {
-                GcButton(
-                    "Importer un fichier IGC",
-                    onClick = onImport,
-                    modifier = Modifier.fillMaxWidth().testTag("import-igc"),
-                    fontSize = 13f,
-                )
-            }
-            item {
-                Text(
-                    "Carnet local : les fichiers IGC restent sur ce téléphone. Chaque vol enregistré par GLIDY " +
-                        "y arrive seul à l'atterrissage (enregistreur non approuvé, sans valeur pour un badge).",
-                    style = Gc.type.bodySmall.copy(color = c.faint),
-                )
-            }
-        }
-    }
-}
-
-/** Bilan de la saison sur ce téléphone : heures, km, nombre de vols, plafond. */
-@Composable
-private fun SeasonCard(flights: List<FlightCardUi>) {
-    val c = Gc.colors
-    val real = flights.filterNot { it.isExample }.ifEmpty { flights }
-    GcCard(title = "Carnet · ce téléphone") {
-        Row(Modifier.fillMaxWidth()) {
-            GcKpi(formatDuration(real.sumOf { it.durationSeconds }), "Temps de vol", Modifier.weight(1f), color = c.ok)
-            GcKpi(formatDistance(real.sumOf { it.distanceMeters ?: 0L }), "Distance", Modifier.weight(1f))
-            GcKpi(real.size.toString(), "Vols", Modifier.weight(0.6f))
-            GcKpi(real.mapNotNull { it.maxAltitudeMeters }.maxOrNull()?.let { formatInteger(it) + " m" } ?: "—", "Plafond", Modifier.weight(1f))
-        }
-    }
-}
-
-@Composable
-private fun EmptyArchive(onLoadDemo: (() -> Unit)?) {
-    GcCard(title = "Carnet vide") {
-        Text("Votre carnet est vide", style = Gc.type.body.copy(fontWeight = FontWeight.SemiBold))
-        Text(
-            "Vos vols enregistrés par GLIDY apparaîtront ici après l'atterrissage. Vous pouvez aussi importer une trace IGC.",
-            style = Gc.type.bodySmall,
-        )
-        if (onLoadDemo != null) {
-            GcButton("Charger le vol d'exemple", onClick = onLoadDemo, primary = true, modifier = Modifier.testTag("load-demo"))
-        }
-    }
-}
-
-@Composable
-private fun FlightCard(
-    flight: FlightCardUi,
-    position: Int,
-    totalFlights: Int,
-    onClick: () -> Unit,
-) {
-    val c = Gc.colors
-    GcCard(
-        modifier = Modifier
-            .testTag("flight-card-${flight.id}")
-            .semantics { contentDescription = "Vol ${position + 1} sur $totalFlights : ${flight.fileName}" }
-            .clickable(role = Role.Button, onClick = onClick),
-        title = flight.day,
-        trailing = {
-            when {
-                flight.localState != LocalFileState.AVAILABLE -> FileStateBadge(flight.localState)
-                flight.isExample -> GcPill("EXEMPLE", c.warn)
-                else -> GcPill(flight.glider, c.dim)
-            }
-        },
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            RoutePreview(route = flight.route, modifier = Modifier.size(78.dp))
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(flight.date, style = Gc.type.body.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold))
-                Text(flight.place, style = Gc.type.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Row(Modifier.fillMaxWidth()) {
-                    SmallMetric(flight.duration, "Durée", Modifier.weight(1f), highlight = true)
-                    SmallMetric(flight.distance, "Distance", Modifier.weight(1f))
-                    SmallMetric(flight.maxAltitude, "Alt. max", Modifier.weight(1f))
-                }
-            }
-            Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.dim, modifier = Modifier.size(16.dp).rotate(-90f))
-        }
-    }
-}
-
 @Composable
 private fun FileStateBadge(state: LocalFileState) {
     val label = when (state) {
@@ -393,17 +297,10 @@ private fun FileStateBadge(state: LocalFileState) {
 }
 
 @Composable
-private fun SmallMetric(value: String, label: String, modifier: Modifier = Modifier, highlight: Boolean = false) {
-    Column(modifier) {
-        Text(value, style = Gc.type.mono.copy(color = if (highlight) Gc.colors.ok else Gc.colors.ink))
-        Text(label.uppercase(), style = Gc.type.eyebrow.copy(fontSize = 9.sp, letterSpacing = 0.6.sp))
-    }
-}
-
-@Composable
 private fun FlightDetailScreen(
     flight: FlightCardUi,
     notice: String?,
+    onToggleShare: () -> Unit,
     onBack: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit,
@@ -435,7 +332,7 @@ private fun FlightDetailScreen(
                 }
             }
             item {
-                GcCard(title = "Trace", trailing = { GcPill(when { flight.isSimulator -> "EXEMPLE · SIMULATEUR CONDOR"; flight.isExample -> "EXEMPLE SYNTHÉTIQUE"; else -> "IGC TÉLÉPHONE" }, if (flight.isExample) c.warn else c.dim) }) {
+                GcCard(title = "Trace", trailing = { GcPill(if (flight.isExample) "EXEMPLE SYNTHÉTIQUE" else "IGC TÉLÉPHONE", if (flight.isExample) c.warn else c.dim) }) {
                     RoutePreview(route = flight.route, modifier = Modifier.fillMaxWidth().aspectRatio(1.6f))
                     Row(Modifier.fillMaxWidth()) {
                         GcKpi(flight.duration, "Durée", Modifier.weight(1f), color = c.ok)
@@ -467,6 +364,15 @@ private fun FlightDetailScreen(
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    if (!flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
+                        GcButton(
+                            if (flight.isPublic) "Partagé sur le fil ✓ · retirer" else "Partager sur le fil GLIDY",
+                            onClick = onToggleShare,
+                            primary = !flight.isPublic,
+                            modifier = Modifier.fillMaxWidth().testTag("share-feed"),
+                            fontSize = 13f,
+                        )
+                    }
                     GcButton(
                         "Partager le fichier IGC",
                         onClick = onShare,
@@ -644,6 +550,8 @@ private fun ArchivedFlight.toCardUi(): FlightCardUi {
         fingerprint = file.sha256.take(10) + "…",
         pilot = pilot?.takeIf(String::isNotBlank) ?: "Non renseigné",
         maxAltitudeMeters = summary?.maximumAltitudeMeters,
+        shortDate = startedAt?.format(SHORT_DATE_FORMATTER) ?: "À vérifier",
+        isPublic = isPublic,
     )
 }
 
@@ -702,3 +610,4 @@ private fun Context.displayName(uri: Uri): String? = contentResolver.query(
 
 private val DAY_FORMATTER = DateTimeFormatter.ofPattern("EEEE", Locale.FRANCE)
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.FRANCE)
+private val SHORT_DATE_FORMATTER = DateTimeFormatter.ofPattern("d MMM yyyy", Locale.FRANCE)

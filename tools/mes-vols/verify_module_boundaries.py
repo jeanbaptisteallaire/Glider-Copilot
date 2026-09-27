@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[2]
-MODULES = ["core/flightarchive", "data/flightarchive", "data/flightcloud", "feature/myflights", "feature/replay3d"]
+MODULES = ["core/social", "core/flightarchive", "data/flightarchive", "data/flightcloud", "feature/myflights", "feature/replay3d"]
 FORBIDDEN = {
     "feature:flight",
     "data:ogn",

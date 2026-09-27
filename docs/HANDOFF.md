@@ -1,5 +1,27 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 16 — Mes vols devient la page profil du pilote, V0.10.1 (27/09/2026)
+Étape 3 du plan réseau social. Pilotage inchangé (garde-fou CI).
+- **Nouveau module `core:social`** (Kotlin pur, 5 tests) : `PilotProfile` (nom, pseudo, bio, club, niveau
+  Élève / Breveté / Autorisé emport passager / Formateur, heures antérieures), règles du pseudo (`Usernames` :
+  3 à 20 caractères a-z 0-9 _ ., suggestion depuis le nom), `ProfileStore`, total d'heures.
+- **Profil local** : `ProfileHost` (préférences privées `glidy_pilot_profile`). Unicité du pseudo : S18 (serveur).
+- **Page profil** (`ProfileScreen.kt`) :
+  - en-tête : @pseudo, interrupteur de thème, menu ⋯ (Voir le compte, Modifier nom et pseudo, Modifier le
+    profil, Supprimer le compte) ;
+  - avatar à initiales, chiffres Vols / Heures / Km, nom, bio, club, niveau ;
+  - boutons Modifier (ou Créer mon profil) et Importer un IGC.
+- **Grille des vols, 3 par ligne** : vignette claire (quadrillage façon carte) + trace **rouge** (jeton `trace`),
+  date courte, durée · distance.
+  - Icône de partage sur chaque tuile, cochée (aplat vert) une fois partagé.
+  - Le vol d'exemple ne se partage pas. Même bascule dans le détail (« Partager sur le fil GLIDY »).
+- **Room v2** : colonnes `visibility` (PRIVATE par défaut) et `publishedAtEpochMillis`, migration 1→2 non
+  destructive ; `FlightArchiveRepository.setVisibility`. La mise en ligne réelle viendra avec Supabase (S18).
+- Supprimer le compte : efface le profil local et, si connecté, le compte en ligne (S12). Les vols restent.
+- Écran d'édition plein écran (nom, pseudo avec @ et contrôle en direct, bio 160, club, niveau, heures).
+- Tests VM : partage/départage, vol d'exemple jamais partagé, profil chargé/enregistré/effacé.
+- CI : captures 21b (vol partagé) et 21c (édition du profil).
+
 ## Vol d'exemple : retour au vol synthétique de Saint-Martin-de-Londres (27/09/2026)
 Demande de JB : la trace Condor (Italie) ne fonctionnait pas bien sur son téléphone → le vol synthétique LFNL
 (identique à la S13) redevient le vol d'exemple. Capture CI 23c : saut à 12 % du vol (spirale à gauche).

@@ -214,7 +214,12 @@ dismiss_anr
 P=$(tap_text "Mes vols"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/21-mes-vols-liste.png"
-P=$(tap_text "19 septembre 2026")
+# S16 — page profil : partage d'un vrai vol (icône de la tuile), puis écran « Créer mon profil »
+P=$(tap_text "Partage sur le fil"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+timeout 20 adb exec-out screencap -p > "$OUT/21b-profil-vol-partage.png"
+P=$(tap_text "Créer mon profil"); [ -z "$P" ] && P=$(tap_text "Modifier")
+[ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; timeout 20 adb exec-out screencap -p > "$OUT/21c-profil-edition.png"; adb shell input keyevent 4; sleep 3; }
+P=$(tap_text "Vol du 19 septembre 2026*"); [ -z "$P" ] && P=$(tap_text "19 sept. 2026")
 [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/22-mes-vols-detail.png"
