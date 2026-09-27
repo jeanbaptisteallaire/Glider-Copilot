@@ -1,5 +1,5 @@
 HTTP/2 429 
-date: Sun, 27 Sep 2026 13:19:13 GMT
+date: Sun, 27 Sep 2026 13:37:08 GMT
 content-type: text/html; charset=UTF-8
 via: 1.1 google
 alt-svc: h3=":443"; ma=86400
@@ -7,11 +7,11 @@ cf-cache-status: DYNAMIC
 x-xss-protection: 1; mode=block
 strict-transport-security: max-age=2592000; includeSubDomains; preload
 x-content-type-options: nosniff
-report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=owEYmOopJwOzBFxdcvSBN8Y76WnW7ezLqqo%2FZRBXp4qzJmjLXBXlhPQ0UwHyH1mybFC1AfxVP%2BE9tcoifoVJxTy%2BWQl6v66%2FsO4l0KYBpjdR9C43QYshZ07BBoCmzZluXoCVYIx%2F"}]}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=oMzmw6MOvTH9gQW0EdMhUYVqGRzT2jqOT7hjxS4QdsUemEEMjvNOn3G3IdrcoqRMKpiN4uqg7Xhst9mUMgemy7%2BZxkIuvecikcVmf2bM7rIXCj0WxS4Jee5hOKUKgphTEYeP%2B9aD"}]}
 nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
 expect-ct: max-age=86400, enforce
 referrer-policy: same-origin
 x-frame-options: SAMEORIGIN
 server: cloudflare
-cf-ray: a41acc7c19f3fbb3-IAD
+cf-ray: a41ae6ba8dab15c2-SJC
 

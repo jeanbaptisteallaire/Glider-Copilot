@@ -1,9 +1,10 @@
-HTTP/2 401 
+HTTP/2 200 
 alt-svc: h3=":443"; ma=2592000
-cache-control: no-store
+cache-control: no-cache
 content-type: application/json
-date: Sun, 27 Sep 2026 13:18:12 GMT
+date: Sun, 27 Sep 2026 13:36:00 GMT
+etag: "e7e46f9181991cfabd88e4bc82d3179b9bdb9c12ea35c20bd12fcb114b2148f2-gzip"
 strict-transport-security: max-age=31536000
+vary: Accept-Encoding
 x-content-type-options: nosniff
-content-length: 99
 

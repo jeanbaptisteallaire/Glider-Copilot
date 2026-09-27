@@ -1,11 +1,11 @@
 HTTP/2 404 
-date: Sun, 27 Sep 2026 13:18:23 GMT
+date: Sun, 27 Sep 2026 13:36:16 GMT
 content-type: text/plain; charset=utf-8
 content-length: 9
 vary: Origin, Accept-Encoding
 access-control-allow-credentials: true
 etag: W/"9-0gXL1ngzMqISxa6S1zx3F4wtLyg"
-x-cloud-trace-context: 7d88fb4525154349e2797ffde11dcb5a
+x-cloud-trace-context: 4f409281e112416037696b73b3f7e3b1
 server: cloudflare
 via: 1.1 google
 alt-svc: h3=":443"; ma=86400
@@ -13,10 +13,10 @@ cf-cache-status: DYNAMIC
 x-xss-protection: 1; mode=block
 strict-transport-security: max-age=2592000; includeSubDomains; preload
 x-content-type-options: nosniff
-report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=T4KY%2FLtqcNEmbEjXfMuaeM1M8EyKkGBZtVxElv2%2B7qpzimRbRq2MKR5XGDWn4K7FdFM91NbC8NP26QC1QJBDOpWH2dOHUQUICqZ%2FyUtgbRDdOur2HaHNDI0jTzJE5hemw0pA%2FOru"}]}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=rktoWFeb2sCB9rct8c6imIM4UbJwje%2FUu7%2B7t5b%2Fmg9KC6vurSg7acgBGTIEjqBti%2BiBn98vagpAi8Oht8qFi6yGmPx9PdqknbfPjsxrUw1gAbtk5PtiUFzoSrRQOk6lUd%2B7Aczh"}]}
 nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
 expect-ct: max-age=86400, enforce
 referrer-policy: same-origin
 x-frame-options: SAMEORIGIN
-cf-ray: a41acb42bd959172-IAD
+cf-ray: a41ae57178dee8c2-SJC
 
