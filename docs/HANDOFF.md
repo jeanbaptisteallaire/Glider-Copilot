@@ -1,5 +1,25 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 17 — Onglet Feed (premier onglet), V0.10.2 (27/09/2026)
+Étape 4 du plan réseau social. Pilotage inchangé (garde-fou CI) ; onglet d'ouverture toujours Prévol.
+- **6 onglets** : Feed · Prévol · Check-lists · Pilotage · Carte · Mes vols (icône grille `GcIcons.Feed`).
+- **`core:social`** (Kotlin pur, 10 tests) :
+  - `FeedPilot`, `FeedFlight`, `FeedPage` (curseur), `SocialRepository`, `FollowStore` ;
+  - recherche sans accents sur le début des mots du nom et du pseudo ;
+  - `DemoSocialRepository` : 14 pilotes fictifs marqués « exemple », clubs « Club exemple · … », 6 à 15 vols
+    chacun, traces synthétiques déterministes (transitions + spirales), normalisées pour les vignettes.
+- **`feature:feed`** (nouveau module, 3 tests VM) :
+  - barre de recherche (délai de frappe 250 ms), résultats avec Suivre / Suivi ;
+  - grille 3 colonnes des vols des pilotes suivis : vignette claire + trace rouge (`GcTraceThumbnail`,
+    maintenant dans le design system), puis « distance · durée » et @pseudo ;
+  - défilement infini par pages de 18 (curseur, sans doublon) ; suggestions « Pilotes à suivre » en tête tant
+    qu'on suit moins de 3 pilotes, puis en fin de fil ;
+  - détail d'un vol : pilote + Suivre, grande vignette, durée, distance, altitude max, date. Pas de rejeu 3D
+    pour les vols d'exemple (pas de fichier IGC).
+- `FollowHost` (app) : suivis dans les préférences `glidy_follows`. S18 : tables `follows`, vue `feed`.
+- CI : captures 25 à 25d (fil vide, grille après 3 abonnements, défilement, recherche « lea ») ; test de fumée
+  release sur 6 onglets.
+
 ## Session 16 — Mes vols devient la page profil du pilote, V0.10.1 (27/09/2026)
 Étape 3 du plan réseau social. Pilotage inchangé (garde-fou CI).
 - **Nouveau module `core:social`** (Kotlin pur, 5 tests) : `PilotProfile` (nom, pseudo, bio, club, niveau

@@ -62,4 +62,15 @@ object GcIcons {
     val More = stroke("more", 2.6f, "M5 12h.01M12 12h.01M19 12h.01")
     /** S16 — importer un fichier (flèche entrant dans un plateau). */
     val Import = stroke("import", 2f, "M12 3.5V15M7.5 10.5 12 15l4.5-4.5", "M5 12.5v6a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5v-6")
+    /** S17 — onglet Feed : grille 3 × 3 façon réseau social. */
+    val Feed = stroke(
+        "feed", 1.8f,
+        "M4 4h4.5v4.5H4zM9.75 4h4.5v4.5h-4.5zM15.5 4H20v4.5h-4.5z",
+        "M4 9.75h4.5v4.5H4zM9.75 9.75h4.5v4.5h-4.5zM15.5 9.75H20v4.5h-4.5z",
+        "M4 15.5h4.5V20H4zM9.75 15.5h4.5V20h-4.5zM15.5 15.5H20V20h-4.5z",
+    )
+    /** S17 — loupe de la barre de recherche. */
+    val Search = stroke("search", 2f, "M10.5 17a6.5 6.5 0 1 0 0-13a6.5 6.5 0 1 0 0 13", "M15.3 15.3 20 20")
+    /** S17 — effacer la recherche. */
+    val Close = stroke("close", 2f, "M6 6l12 12M18 6 6 18")
 }

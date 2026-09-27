@@ -1,7 +1,6 @@
 package com.neutronstar.glidy.myflights
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,11 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -66,6 +60,7 @@ import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
+import com.neutronstar.glidercopilot.designsystem.GcTraceThumbnail
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.social.ExperienceLevel
 import com.neutronstar.glidy.social.PilotProfile
@@ -290,7 +285,7 @@ private fun FlightTile(flight: FlightCardUi, onClick: () -> Unit, onToggleShare:
             .clickable(role = Role.Button, onClick = onClick),
     ) {
         Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
-            TraceThumbnail(flight.route, Modifier.fillMaxSize())
+            GcTraceThumbnail(flight.route, Modifier.fillMaxSize())
             if (!flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
                 ShareBadge(flight.isPublic, onToggleShare, Modifier.align(Alignment.TopEnd).padding(5.dp))
             } else if (flight.isExample) {
@@ -333,35 +328,6 @@ private fun ShareBadge(shared: Boolean, onToggle: () -> Unit, modifier: Modifier
             tint = if (shared) c.onAccentFill else c.ink,
             modifier = Modifier.size(15.dp),
         )
-    }
-}
-
-/**
- * Vignette « carte claire vue de dessus » dessinée sur le téléphone, sans réseau : fond papier, quadrillage
- * léger façon carte, trace rouge [trace], départ marqué. (Fond de carte réel OpenFreeMap : avec le fil, S17.)
- */
-@Composable
-internal fun TraceThumbnail(route: List<Pair<Float, Float>>, modifier: Modifier) {
-    val c = Gc.colors
-    Canvas(modifier.clip(RoundedCornerShape(8.dp)).background(c.sunken)) {
-        val step = size.minDimension / 6f
-        var x = step
-        while (x < size.width) { drawLine(c.lineFaint, Offset(x, 0f), Offset(x, size.height), 1f); x += step }
-        var y = step
-        while (y < size.height) { drawLine(c.lineFaint, Offset(0f, y), Offset(size.width, y), 1f); y += step }
-        if (route.size > 1) {
-            val path = Path()
-            route.forEachIndexed { i, p ->
-                val px = p.first * size.width
-                val py = p.second * size.height
-                if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
-            }
-            val w = (size.minDimension / 55f).coerceIn(2f, 5f)
-            drawPath(path, c.trace, style = Stroke(width = w, cap = StrokeCap.Round, join = StrokeJoin.Round))
-            val s = route.first()
-            drawCircle(c.panel, radius = w * 1.9f, center = Offset(s.first * size.width, s.second * size.height))
-            drawCircle(c.trace, radius = w * 1.2f, center = Offset(s.first * size.width, s.second * size.height))
-        }
     }
 }
 

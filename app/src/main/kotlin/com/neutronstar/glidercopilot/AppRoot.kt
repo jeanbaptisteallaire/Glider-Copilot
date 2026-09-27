@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcIcons
+import com.neutronstar.glidy.feed.FeedApp
 import com.neutronstar.glidercopilot.designsystem.GcThemeToggle
 import com.neutronstar.glidercopilot.designsystem.LocalGcThemeToggle
 import androidx.compose.runtime.CompositionLocalProvider
@@ -77,7 +78,7 @@ import kotlinx.coroutines.launch
 private const val DISCLAIMER_VERSION = 1
 
 /** Onglets de la maquette v8, dans l'ordre du vol : préparer, vérifier, piloter. */
-private enum class Tab(val label: String) { PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
+private enum class Tab(val label: String) { FEED("Feed"), PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
 
 @Composable
 fun AppRoot(container: AppContainer) {
@@ -213,6 +214,7 @@ private fun MainScaffold(container: AppContainer) {
         val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
+                Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
@@ -268,6 +270,7 @@ private fun MainScaffold(container: AppContainer) {
 }
 
 private fun icon(t: Tab): ImageVector = when (t) {
+    Tab.FEED -> GcIcons.Feed
     Tab.PREVOL -> GcIcons.Prevol
     Tab.CHECKLIST -> GcIcons.Checklist
     Tab.PILOTAGE -> GcIcons.Pilotage

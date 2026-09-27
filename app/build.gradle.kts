@@ -14,7 +14,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.10.1"
+        versionName = "0.10.2"
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
         // S12 — sauvegarde cloud (Supabase) : URL + clé publique « anon » lues dans les secrets GitHub
@@ -86,6 +86,7 @@ dependencies {
     implementation(project(":data:flightarchive"))
     implementation(project(":feature:myflights"))
     implementation(project(":core:social"))
+    implementation(project(":feature:feed"))
     implementation(project(":feature:replay3d"))
     implementation(project(":data:flightcloud"))
     implementation(libs.androidx.core.ktx)

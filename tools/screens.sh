@@ -247,5 +247,16 @@ P=$(tap_fraction "Position dans le vol" 0.12)
 adb shell input keyevent 4 || true
 sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/24-mes-vols-retour.png"
+# S17 — onglet Feed : fil vide + suggestions, suivre 3 pilotes, grille, défilement, recherche
+P=$(tap_text "Feed"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 5
+timeout 20 adb exec-out screencap -p > "$OUT/25-feed-vide.png"
+for k in 1 2 3; do P=$(tap_text "Suivre"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }; done
+timeout 20 adb exec-out screencap -p > "$OUT/25b-feed-grille.png"
+for k in 1 2 3; do timeout 10 adb shell input swipe 540 1900 540 600 350; sleep 2; done
+timeout 20 adb exec-out screencap -p > "$OUT/25c-feed-defilement.png"
+P=$(tap_text "Rechercher un pilote"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 1; adb shell input text "lea"; sleep 3; }
+timeout 20 adb exec-out screencap -p > "$OUT/25d-feed-recherche.png"
+adb shell input keyevent 4 || true
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"
