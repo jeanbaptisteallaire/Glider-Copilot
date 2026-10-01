@@ -1,5 +1,23 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18 Lite — édition allégée pour un lancement Play Store rapide, V1.0.0-lite (01/10/2026)
+Changement de stratégie demandé par JB : une V1 « Lite » avec trois onglets. Tout le code de l'édition complète
+reste dans le dépôt ; elle se construit avec `./gradlew -Pglidy.edition=full …`.
+- **Drapeau d'édition** : `BuildConfig.LITE` (propriété Gradle `glidy.edition`, « lite » par défaut).
+  versionName `1.0.0-lite` (complète : 0.10.2).
+- **Onglets** : Prévol · Pilotage · Mes vols. Pas de Feed, Check-lists ni Carte. L'app s'ouvre sur Prévol.
+- **Prévol Lite** (décision JB) : météo + cartes hors ligne + espaces aériens + NOTAM. Pas de planeur FLARM, OGN,
+  capteurs, ni suivi.
+- **Pilotage** : seule modification, demandée explicitement par JB, un **interrupteur discret « REC »** à droite du
+  chrono (bas de l'écran) qui lance ou arrête l'enregistrement IGC.
+  - Il apparaît dès que la détection automatique du décollage est coupée.
+  - En Lite elle l'est toujours (enregistrement manuel seulement, décision JB) ; le rejeu CI garde l'auto.
+  - Empreintes du garde-fou « En vol » régénérées (`--update`) avec cet accord.
+- **Mes vols Lite** : page profil sans partage (pas d'icônes, pas de bouton fil) ; carte Compte visible d'emblée.
+- **Compte** : optionnel (décision JB), connexion par code e-mail Supabase déjà codée (S12).
+  - S'active dès que les secrets `SUPABASE_URL` et `SUPABASE_ANON_KEY` existent (guide `docs/supabase/SETUP.md`).
+- CI : captures 26 (Pilotage hors démo avec REC), 26b (REC activé), 26c (Mes vols Lite).
+
 ## Session 17 — Onglet Feed (premier onglet), V0.10.2 (27/09/2026)
 Étape 4 du plan réseau social. Pilotage inchangé (garde-fou CI) ; onglet d'ouverture toujours Prévol.
 - **6 onglets** : Feed · Prévol · Check-lists · Pilotage · Carte · Mes vols (icône grille `GcIcons.Feed`).

@@ -78,6 +78,9 @@ import kotlinx.coroutines.launch
 private const val DISCLAIMER_VERSION = 1
 
 /** Onglets de la maquette v8, dans l'ordre du vol : préparer, vérifier, piloter. */
+/** S18 Lite : seuls Prévol (météo + cartes), Pilotage et Mes vols. Édition complète : tous les onglets. */
+private val visibleTabs: List<Tab> get() = if (BuildConfig.LITE) listOf(Tab.PREVOL, Tab.PILOTAGE, Tab.MES_VOLS) else Tab.entries
+
 private enum class Tab(val label: String) { FEED("Feed"), PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
 
 @Composable
@@ -215,7 +218,7 @@ private fun MainScaffold(container: AppContainer) {
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
-                Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight) }
+                Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
                 Tab.CARTE -> GlidyAdaptiveTheme(lightMode) {
@@ -237,6 +240,7 @@ private fun MainScaffold(container: AppContainer) {
                         accountActions = container.cloud,
                         refreshSignal = cloudChanges,
                         profileStore = container.profile,
+                        sharingEnabled = !BuildConfig.LITE,
                         repository = container.flights.repository,
                         shareGateway = container.flights.shareGateway,
                         completedFlightGateway = container.flights.completedGateway,
@@ -260,7 +264,7 @@ private fun MainScaffold(container: AppContainer) {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Tab.entries.forEach { t ->
+                    visibleTabs.forEach { t ->
                         TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { tab = t }
                     }
                 }

@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
+/** Édition construite : « lite » par défaut (S18), « full » avec -Pglidy.edition=full. */
+val lite = (findProperty("glidy.edition")?.toString() ?: "lite") != "full"
+
 android {
     namespace = "com.neutronstar.glidercopilot"
     compileSdk = 36
@@ -14,7 +17,10 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
-        versionName = "0.10.2"
+        // S18 Lite (lancement Play Store rapide) : Prévol (météo + cartes), Pilotage, Mes vols. Édition complète :
+        // ./gradlew -Pglidy.edition=full …  (Feed, Check-lists, Carte, planeur FLARM/OGN dans Prévol).
+        versionName = if (lite) "1.0.0-lite" else "0.10.2"
+        buildConfigField("boolean", "LITE", lite.toString())
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
         // S12 — sauvegarde cloud (Supabase) : URL + clé publique « anon » lues dans les secrets GitHub

@@ -258,5 +258,18 @@ timeout 20 adb exec-out screencap -p > "$OUT/25c-feed-defilement.png"
 P=$(tap_text "Rechercher un pilote"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 1; adb shell input text "lea"; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/25d-feed-recherche.png"
 adb shell input keyevent 4 || true
+# S18 Lite — Pilotage hors démo : interrupteur discret « REC » (enregistrement manuel), avant puis après appui
+adb shell am force-stop com.neutronstar.glidercopilot || true
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+sleep 12
+dismiss_anr
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 10
+timeout 20 adb exec-out screencap -p > "$OUT/26-lite-pilotage-rec.png"
+P=$(tap_text "Enregistrer le vol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 6; }
+timeout 20 adb exec-out screencap -p > "$OUT/26b-lite-pilotage-rec-on.png"
+P=$(tap_text "Enregistrer le vol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 4; }
+P=$(tap_text "Mes vols"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 8; }
+timeout 20 adb exec-out screencap -p > "$OUT/26c-lite-mes-vols.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

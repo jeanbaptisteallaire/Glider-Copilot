@@ -85,12 +85,14 @@ internal fun ProfileScreen(
     onLoadDemo: (() -> Unit)?,
     onFlightSelected: (FlightCardUi) -> Unit,
     onToggleShare: (FlightCardUi) -> Unit,
+    sharingEnabled: Boolean = true,
     onEditProfile: () -> Unit,
     onEditIdentity: () -> Unit,
     onDeleteAccount: () -> Unit,
 ) {
     val c = Gc.colors
-    var showAccount by rememberSaveable { mutableStateOf(false) }
+    // Lite : le compte (sauvegarde en ligne) est visible d'emblée sous l'en-tête
+    var showAccount by rememberSaveable { mutableStateOf(!sharingEnabled) }
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize().testTag("flight-list"),
@@ -122,7 +124,11 @@ internal fun ProfileScreen(
                 Text("Vols", style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp), modifier = Modifier.weight(1f))
                 val shared = flights.count { it.isPublic }
                 Text(
-                    if (shared > 0) "$shared partagé${if (shared > 1) "s" else ""} sur le fil" else "Rien de partagé",
+                    when {
+                        !sharingEnabled -> "${flights.size} vol${if (flights.size > 1) "s" else ""}"
+                        shared > 0 -> "$shared partagé${if (shared > 1) "s" else ""} sur le fil"
+                        else -> "Rien de partagé"
+                    },
                     style = Gc.type.bodySmall,
                 )
             }
@@ -131,12 +137,14 @@ internal fun ProfileScreen(
             item(span = { GridItemSpan(maxLineSpan) }) { EmptyGrid(onLoadDemo, onImport) }
         }
         items(flights, key = { it.id }) { flight ->
-            FlightTile(flight, onClick = { onFlightSelected(flight) }, onToggleShare = { onToggleShare(flight) })
+            FlightTile(flight, sharingEnabled, onClick = { onFlightSelected(flight) }, onToggleShare = { onToggleShare(flight) })
         }
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
-                "Carnet local : les fichiers IGC restent sur ce téléphone. Un vol n'apparaît sur le fil que si vous " +
-                    "touchez son icône de partage. Enregistreur non approuvé, sans valeur pour un badge.",
+                if (sharingEnabled) "Carnet local : les fichiers IGC restent sur ce téléphone. Un vol n'apparaît sur le fil que si vous " +
+                    "touchez son icône de partage. Enregistreur non approuvé, sans valeur pour un badge."
+                else "Carnet local : les fichiers IGC restent sur ce téléphone (sauvegarde en ligne avec un compte, facultatif). " +
+                    "Enregistreur non approuvé, sans valeur pour un badge.",
                 style = Gc.type.bodySmall.copy(color = c.faint),
                 modifier = Modifier.padding(top = 6.dp),
             )
@@ -276,7 +284,7 @@ private fun EmptyGrid(onLoadDemo: (() -> Unit)?, onImport: () -> Unit) {
 
 /** Tuile de la grille : vignette carrée (fond clair, trace rouge), date, durée · distance, icône de partage. */
 @Composable
-private fun FlightTile(flight: FlightCardUi, onClick: () -> Unit, onToggleShare: () -> Unit) {
+private fun FlightTile(flight: FlightCardUi, sharingEnabled: Boolean, onClick: () -> Unit, onToggleShare: () -> Unit) {
     val c = Gc.colors
     Column(
         Modifier
@@ -286,7 +294,7 @@ private fun FlightTile(flight: FlightCardUi, onClick: () -> Unit, onToggleShare:
     ) {
         Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
             GcTraceThumbnail(flight.route, Modifier.fillMaxSize())
-            if (!flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
+            if (sharingEnabled && !flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
                 ShareBadge(flight.isPublic, onToggleShare, Modifier.align(Alignment.TopEnd).padding(5.dp))
             } else if (flight.isExample) {
                 Text(

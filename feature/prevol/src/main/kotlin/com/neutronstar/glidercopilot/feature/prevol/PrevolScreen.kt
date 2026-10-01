@@ -57,7 +57,15 @@ import com.neutronstar.glidercopilot.precog.DayWeather
 import com.neutronstar.glidercopilot.precog.HourWeather
 
 @Composable
-fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSource: OgnNetworkSource, sensorsSource: SensorsSource, modifier: Modifier = Modifier) {
+fun PrevolScreen(
+    viewModel: PrevolViewModel,
+    mapSource: OfflineMapSource,
+    ognSource: OgnNetworkSource,
+    sensorsSource: SensorsSource,
+    modifier: Modifier = Modifier,
+    /** S18 Lite : seulement météo + cartes hors ligne (sans planeur FLARM, OGN, capteurs). */
+    lite: Boolean = false,
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val map by mapSource.state.collectAsStateWithLifecycle()
     val ogn by ognSource.network.collectAsStateWithLifecycle()
@@ -72,7 +80,7 @@ fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSou
             contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 4.dp, bottom = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            item {
+            if (!lite) item {
                 PairingCard(
                     ui = state.pairing,
                     onInput = viewModel::onRegistrationInput,
@@ -87,8 +95,8 @@ fun PrevolScreen(viewModel: PrevolViewModel, mapSource: OfflineMapSource, ognSou
                 )
             }
             item { OfflineMapCard(map, mapSource::download, mapSource::cancel, mapSource::refreshCatalog) }
-            item { OgnNetworkCard(ogn) }
-            item { SensorsCard(sensors, sensorsSource) }
+            if (!lite) item { OgnNetworkCard(ogn) }
+            if (!lite) item { SensorsCard(sensors, sensorsSource) }
             val day = state.day
             when {
                 day != null -> dayItems(day, state, viewModel::selectHour)

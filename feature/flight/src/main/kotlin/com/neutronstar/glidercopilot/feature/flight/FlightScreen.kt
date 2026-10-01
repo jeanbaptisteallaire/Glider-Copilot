@@ -269,6 +269,7 @@ fun FlightScreen(
             val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
             MapOverlays(
                 shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls),
+                recording = snap?.recording == true,
                 wind = safety?.wind?.let { it.fromDeg to it.speedKmh },
                 capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 1.5 || (result.distanceKm < 3.0 && result.arrivalAglM > -50 && result.relief == null) || (snap?.gps?.groundSpeedKmh ?: 99.0) < 30)) "CAP TERRAIN · ${result.field.code} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
                 demoOn = live.demo,
@@ -689,6 +690,8 @@ private fun BoxScope.MapOverlays(
     controller: MapController,
     traffic: FlightTraffic,
     onChrono: (() -> Unit)?,
+    /** S18 Lite : état de l'enregistrement IGC, pour l'interrupteur discret « REC » à côté du chrono. */
+    recording: Boolean = false,
     wind: Pair<Double, Double>? = 300.0 to 18.0,
     capBanner: String? = null,
     demoOn: Boolean = false,
@@ -830,7 +833,31 @@ private fun BoxScope.MapOverlays(
             .padding(horizontal = 8.dp)
             .semantics { contentDescription = "Chronomètre de vol ${chrono(flightSeconds)}" },
         contentAlignment = Alignment.Center,
-    ) { Text(chrono(flightSeconds) + if (onChrono != null) " ⏯" else "", style = TextStyle(fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
+    ) { Text(chrono(flightSeconds), style = TextStyle(fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
+    // S18 Lite — interrupteur discret d'enregistrement du vol (mode manuel : détection auto du décollage coupée)
+    if (onChrono != null) RecordSwitch(recording, onChrono, Modifier.align(Alignment.BottomCenter).padding(start = 140.dp, bottom = 10.dp))
+}
+
+/** Petit interrupteur « REC » : rouge quand l'IGC s'enregistre. Un appui lance ou arrête l'enregistrement. */
+@Composable
+private fun RecordSwitch(recording: Boolean, onToggle: () -> Unit, modifier: Modifier) {
+    val c = Gc.colors
+    Row(
+        modifier.height(21.dp)
+            .background(c.overlay, RoundedCornerShape(7.dp))
+            .clickable(role = Role.Switch, onClickLabel = if (recording) "Arrêter l'enregistrement" else "Enregistrer le vol", onClick = onToggle)
+            .padding(start = 7.dp, end = 4.dp)
+            .semantics { contentDescription = "Enregistrer le vol"; stateDescription = if (recording) "enregistrement en cours" else "arrêté" },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Text("REC", style = TextStyle(fontSize = 9.sp, color = if (recording) c.danger else c.faint, letterSpacing = 0.18.sp, fontWeight = FontWeight.Bold))
+        // mini interrupteur dessiné (piste 22 × 12 dp, curseur 9 dp)
+        Box(
+            Modifier.size(width = 22.dp, height = 12.dp).background(if (recording) c.danger else c.control, RoundedCornerShape(6.dp)),
+            contentAlignment = if (recording) Alignment.CenterEnd else Alignment.CenterStart,
+        ) { Box(Modifier.padding(horizontal = 1.5.dp).size(9.dp).background(Color.White, RoundedCornerShape(50))) }
+    }
 }
 
 private fun onOff(b: Boolean) = if (b) "actif" else "inactif"

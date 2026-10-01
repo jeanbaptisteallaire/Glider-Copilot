@@ -211,7 +211,8 @@ class FlightEngine(
 
     /** Abonnements aux réglages ; appelé en fin de construction (toutes les propriétés initialisées). */
     private fun wire() {
-        scope.launch { prefs.autoTakeoff.collect { autoTakeoff = it; publish() } }
+        // S18 Lite : enregistrement manuel seulement (interrupteur REC de Pilotage) ; le rejeu CI garde l'auto
+        scope.launch { prefs.autoTakeoff.collect { autoTakeoff = (it && !BuildConfig.LITE) || replay; publish() } }
         scope.launch { prefs.varioSound.collect { soundOn = it; applySound() } }
         scope.launch { prefs.voiceAnnouncements.collect { voiceOn = it; publish() } }
         scope.launch { clubs.selectedClub.collect { club = it; fieldPosition = it?.position; updateField() } }

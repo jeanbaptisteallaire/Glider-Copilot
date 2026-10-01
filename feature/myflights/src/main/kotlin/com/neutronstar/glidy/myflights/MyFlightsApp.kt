@@ -127,6 +127,8 @@ fun MyFlightsApp(
     refreshSignal: Int = 0,
     /** S16 — stockage du profil pilote fourni par l'hôte (null = profil en mémoire). */
     profileStore: ProfileStore? = null,
+    /** S18 Lite : faux = pas de fil, donc pas d'icône de partage sur les vols. */
+    sharingEnabled: Boolean = true,
 ) {
     val factory = remember(repository, shareGateway, completedFlightGateway, profileStore) {
         MyFlightsViewModelFactory(repository, shareGateway, completedFlightGateway, profileStore)
@@ -167,6 +169,7 @@ fun MyFlightsApp(
             }
         },
         profile = profile,
+        sharingEnabled = sharingEnabled,
         onToggleShare = viewModel::toggleShare,
         onSaveProfile = viewModel::saveProfile,
         onDeleteAccount = {
@@ -196,6 +199,7 @@ fun MyFlightsScreen(
     account: AccountCardState? = null,
     accountActions: AccountActions? = null,
     profile: PilotProfile = PilotProfile(),
+    sharingEnabled: Boolean = true,
     onToggleShare: (FlightId) -> Unit = {},
     onSaveProfile: (PilotProfile) -> Unit = {},
     onDeleteAccount: () -> Unit = {},
@@ -213,6 +217,7 @@ fun MyFlightsScreen(
                         flight = selectedFlight.toCardUi(),
                         notice = state.notice,
                         onToggleShare = { onToggleShare(selectedFlight.id) },
+                        sharingEnabled = sharingEnabled,
                         onBack = onBack,
                         onShare = { onShare(selectedFlight.id) },
                         onDelete = { onDeleteRequest(selectedFlight.id) },
@@ -238,6 +243,7 @@ fun MyFlightsScreen(
                             state.flights.firstOrNull { it.id.value == card.id }?.let(onFlightSelected)
                         },
                         onToggleShare = { card -> onToggleShare(FlightId(card.id)) },
+                        sharingEnabled = sharingEnabled,
                         onEditProfile = { editing = ProfileEdit.FULL },
                         onEditIdentity = { editing = ProfileEdit.IDENTITY },
                         onDeleteAccount = { confirmDeleteAccount = true },
@@ -301,6 +307,7 @@ private fun FlightDetailScreen(
     flight: FlightCardUi,
     notice: String?,
     onToggleShare: () -> Unit,
+    sharingEnabled: Boolean,
     onBack: () -> Unit,
     onShare: () -> Unit,
     onDelete: () -> Unit,
@@ -364,7 +371,7 @@ private fun FlightDetailScreen(
             }
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    if (!flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
+                    if (sharingEnabled && !flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
                         GcButton(
                             if (flight.isPublic) "Partagé sur le fil ✓ · retirer" else "Partager sur le fil GLIDY",
                             onClick = onToggleShare,

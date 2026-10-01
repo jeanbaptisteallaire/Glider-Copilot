@@ -53,4 +53,4 @@ if grep -q "FATAL EXCEPTION" "$OUT/release-logcat.txt" || [ -z "$ALIVE" ]; then
   { echo "ECHEC : plantage de la version release (R8)"; grep -A25 "FATAL EXCEPTION" "$OUT/release-logcat.txt" | head -60; } | tee "$OUT/release-smoke.txt"
   exit 1
 fi
-echo "OK : version release (R8) lancée, 6 onglets parcourus, aucun plantage, pid $ALIVE" | tee "$OUT/release-smoke.txt"
+echo "OK : version release (R8) lancée, onglets de l'édition parcourus, aucun plantage, pid $ALIVE" | tee "$OUT/release-smoke.txt"

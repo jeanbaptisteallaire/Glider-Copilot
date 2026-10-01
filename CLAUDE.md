@@ -2,6 +2,7 @@
 
 - Lire d'abord `docs/HANDOFF.md` (état, décisions, prochaine session) et le plan dans le projet claude.ai « Planneur App ».
 - Onglets : **Feed** (S17, premier onglet : fil des pilotes suivis, recherche, suivre — démo jusqu'à Supabase), **Prévol** (météo + planeur FLARM + club), **Check-lists**, **Pilotage**, **Carte** et **Mes vols** (S10, carnet IGC + rejeu 3D ; S16 : page profil du pilote + grille 3 colonnes + partage par vol). Pas d’Annexes.
+- **S18 Lite (édition par défaut)** : `BuildConfig.LITE` → onglets Prévol (météo + cartes), Pilotage (+ interrupteur REC, enregistrement manuel), Mes vols (sans partage). Édition complète : `-Pglidy.edition=full`.
 - Mes vols (`core/data:flightarchive`, `data:flightcloud`, `feature:myflights`, `feature:replay3d`) ne dépend jamais de `feature:flight`, `data:ogn`, `data:carto` ni du moteur de vol : il ne reçoit que des IGC fermés (`FlightArchiveHost`). Vérifié en CI par `tools/mes-vols/verify_module_boundaries.py`.
 - Charte de référence : maquette `planeur-pilotage-prevol-v8` (noir, vert #b7f7a5, orange #ff9f43, police système).
 - S15 : thème clair « social » (blanc) par défaut sur tous les onglets **sauf Pilotage** (« En vol »), via `GlidyAdaptiveTheme(light)` et `Gc.social`. **Pilotage ne change jamais** sans accord explicite de JB : garde-fou CI `tools/en-vol/check_en_vol.py` (empreintes des fichiers Pilotage et de la charte sombre).
