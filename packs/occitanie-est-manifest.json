@@ -2,8 +2,8 @@
  "format": 1,
  "id": "occitanie-est",
  "name": "Occitanie est · Cévennes",
- "version": "202609162126",
- "created": "2026-09-16T21:29:47Z",
+ "version": "202610011016",
+ "created": "2026-10-01T10:20:22Z",
  "bbox": [
   2.55,
   42.95,
@@ -15,47 +15,47 @@
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-14T21:29:47Z",
+ "aeroValidUntil": "2026-10-29T10:20:22Z",
  "aeroCounts": {
-  "airspace": 215,
+  "airspace": 231,
   "airport": 88,
   "navaid": 14,
   "reporting": 72
  },
  "sources": {
-  "protomaps": "20260916.pmtiles",
+  "protomaps": "20261001.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-09-16T21:29:47Z"
+  "openaip": "2026-10-01T10:20:22Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
   {
    "role": "fond",
-   "name": "occitanie-est-202609162126-fond.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-fond.pmtiles",
-   "size": 40884559,
-   "sha256": "9e9d22e22f3e227b8ab60da06d9ed03d34b7187ecc2a3c35cbf572206a34d4cf"
+   "name": "occitanie-est-202610011016-fond.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202610011016-fond.pmtiles",
+   "size": 40951412,
+   "sha256": "41a952e5777c2d6b2e43bcb05b813014630aa6cf023ef290cd7fbdb6511eb3d3"
   },
   {
    "role": "relief",
-   "name": "occitanie-est-202609162126-relief.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-relief.pmtiles",
+   "name": "occitanie-est-202610011016-relief.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202610011016-relief.pmtiles",
    "size": 22974281,
    "sha256": "c69302d20b077a9468b4011d1c58cbfbccd6bf938a03c8a4a9b2c061974db732"
   },
   {
    "role": "courbes",
-   "name": "occitanie-est-202609162126-courbes.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-courbes.pmtiles",
+   "name": "occitanie-est-202610011016-courbes.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202610011016-courbes.pmtiles",
    "size": 3440500,
-   "sha256": "70299b8745fff0a7fa5b4e7e08523e3a5d12326773bd2090a339a015548da4d9"
+   "sha256": "5a5d97e3d533118a75f8b3cc89b3db42b7f93165632a63639eb0358167bedd8f"
   },
   {
    "role": "aero",
-   "name": "occitanie-est-202609162126-aero.geojson",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202609162126-aero.geojson",
-   "size": 468101,
-   "sha256": "ee2b58839dfcad0897c11a32f74d0eb1c7893a00a2c6f86297e7853fd2485cb3"
+   "name": "occitanie-est-202610011016-aero.geojson",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/occitanie-est-202610011016-aero.geojson",
+   "size": 503637,
+   "sha256": "9d481ef20490a7a880d191f2d5a6f95c9974f0231e35f34c494da81dfa236908"
   }
  ]
 }
