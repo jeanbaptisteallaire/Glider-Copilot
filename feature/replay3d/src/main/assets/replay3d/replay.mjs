@@ -114,7 +114,7 @@ function notifyAndroid(method, value = '') {
 
 function reportError(error) {
     const message = error instanceof Error ? error.message : String(error);
-    ui.loadingTitle.textContent = 'Le rendu 3D ne peut pas démarrer';
+    ui.loadingTitle.textContent = 'Rejeu 3D indisponible';
     ui.loadingDetail.textContent = message;
     ui.status.textContent = message;
     notifyAndroid('onError', message);
@@ -883,11 +883,21 @@ function updateCamera(pose, dt, snap) {
     return cam.distance.value;
 }
 
+/** V18.1 — chiffre en grand, unité en petit gris (style Apple Santé). Valeurs numériques uniquement. */
+function setMetric(el, value, unit) {
+    el.innerHTML = `${Number(value)}<small>${unit}</small>`;
+}
+
+/** V18.1 — progression bleu ciel de la frise (variable CSS --p lue par replay.css). */
+function paintTimeline() {
+    ui.timeline.style.setProperty('--p', `${Number(ui.timeline.value) / 10}%`);
+}
+
 function updateHud(pose, now) {
     if (now - state.lastHud < RENDER.hudIntervalMs) return;
     state.lastHud = now;
-    ui.altitude.textContent = `${Math.round(pose.alt)} m`;
-    ui.speed.textContent = `${Math.round(pose.speed)} km/h`;
+    setMetric(ui.altitude, Math.round(pose.alt), 'm');
+    setMetric(ui.speed, Math.round(pose.speed), 'km/h');
     if (ui.vario) {
         const v = pose.vario;
         ui.vario.textContent = `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1).replace('.', ',')}`;
@@ -896,6 +906,7 @@ function updateHud(pose, now) {
     }
     ui.time.textContent = formatTime(state.elapsed);
     if (!state.scrubbing) ui.timeline.value = String(Math.round(pose.progress * 1000));
+    paintTimeline();
 }
 
 function trackFrameStats(now, frameMs) {
@@ -1010,12 +1021,12 @@ async function loadFlight(payload) {
         applyInsets(payload && payload.insets);
         state.flight = payload || {};
         state.points = readPoints(payload);
-        if (state.points.length < 2) throw new Error('La trace IGC ne contient pas assez de points pour le rejeu 3D.');
+        if (state.points.length < 2) throw new Error('Trace IGC trop courte.');
         // temps strictement croissants (doublons IGC) et relatifs au 1er point
         const t0 = state.points[0].t;
         state.points.forEach(point => { point.t -= t0; });
         state.points = state.points.filter((p, i, all) => i === 0 || p.t > all[i - 1].t);
-        if (state.points.length < 2) throw new Error('La trace IGC ne contient pas assez de points pour le rejeu 3D.');
+        if (state.points.length < 2) throw new Error('Trace IGC trop courte.');
         state.duration = Math.max(1, state.points[state.points.length - 1].t);
         computeKinematics(state.points);
         state.elapsed = 0;
@@ -1125,6 +1136,7 @@ ui.timeline.addEventListener('input', event => {
     if (!state.ready) return;
     state.elapsed = Number(event.target.value) / 1000 * state.duration;
     snapNext = true; // saut dans le temps : la caméra se recale sans « voler » jusqu'au planeur
+    paintTimeline();
 });
 
 function pointerDistance() {

@@ -40,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
@@ -49,14 +50,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -84,15 +83,14 @@ interface ChecklistStore {
 }
 
 /**
- * Page Check-lists : copie de la maquette v8, toutes les polices agrandies de 30 %.
- * Les tailles CSS de la maquette sont conservées dans le code et multipliées par [SCALE].
+ * Page Check-lists. V18.1 « New UI » : Inter et échelle typographique d'Apple dans les deux thèmes ; pages
+ * blanches façon iOS (Large Title, fond groupé gris, chaque check-list dans une carte blanche arrondie, bleu ciel
+ * pour les cases et la sélection — jeton [route], vert GLIDY en thème sombre). Le contenu vient de [Checklists].
  */
-private const val SCALE = 1.3f
-private fun fs(cssPx: Float): TextUnit = (cssPx * SCALE).sp
-
 @Composable
 fun ChecklistScreen(store: ChecklistStore, modifier: Modifier = Modifier) {
     val c = Gc.colors
+    val social = Gc.social
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val checked by store.checked.collectAsState(initial = emptySet())
@@ -103,53 +101,50 @@ fun ChecklistScreen(store: ChecklistStore, modifier: Modifier = Modifier) {
 
     Column(
         modifier.fillMaxSize().background(c.background).verticalScroll(rememberScrollState())
-            .padding(start = 14.dp, end = 14.dp, top = 10.dp, bottom = 28.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 10.dp, bottom = 28.dp),
     ) {
-        // En-tête de page
-        Row(Modifier.fillMaxWidth().padding(horizontal = 2.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                gcHeading(Checklists.PAGE_TITLE),
-                style = if (Gc.social) Gc.type.title.copy(lineHeight = fs(30f))
-                else TextStyle(fontSize = fs(30f), fontWeight = FontWeight.SemiBold, letterSpacing = 0.02.em, color = c.ink, lineHeight = fs(30f)),
-            )
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    Checklists.PAGE_TAG,
-                    style = TextStyle(fontSize = fs(10f), color = c.dim, textAlign = TextAlign.End, lineHeight = fs(13f)),
-                )
-                GcThemeToggleButton(Modifier.padding(start = 10.dp))
+        // En-tête de page : Large Title + bascule clair/sombre (les codes CRIS, TVBCR… figurent déjà sur les cartes)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(gcHeading(Checklists.PAGE_TITLE), style = if (social) Gc.type.largeTitle else Gc.type.title, modifier = Modifier.weight(1f))
+            if (!social) {
+                Text(Checklists.PAGE_TAG, style = Gc.type.caption2.copy(color = c.dim, textAlign = TextAlign.End))
             }
+            GcThemeToggleButton(Modifier.padding(start = 10.dp))
         }
         Spacer(Modifier.height(12.dp))
-        // Encadré d'introduction
-        Row(Modifier.fillMaxWidth().padding(top = 2.dp).height(IntrinsicSize.Min).background(c.sunken)) {
-            Box(Modifier.width(3.dp).fillMaxHeight().background(c.warn))
+        // Encadré d'introduction (filet orange : rappel de priorité du manuel de vol)
+        Row(
+            Modifier.fillMaxWidth().height(IntrinsicSize.Min)
+                .clip(RoundedCornerShape(if (social) 14.dp else 0.dp)).background(if (social) c.panel else c.sunken),
+        ) {
+            Box(Modifier.width(if (social) 4.dp else 3.dp).fillMaxHeight().background(c.warn))
             Text(
                 Checklists.INTRO,
-                style = TextStyle(fontSize = fs(11f), lineHeight = fs(11f * 1.45f), color = c.dim),
+                style = Gc.type.subhead.copy(color = c.dim),
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
             )
         }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(10.dp))
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Text(
                 Checklists.RESET_NOTE,
-                style = TextStyle(fontSize = fs(9f), lineHeight = fs(9f * 1.35f), color = c.faint),
+                style = Gc.type.footnote.copy(color = c.faint),
                 modifier = Modifier.weight(1f),
             )
             Text(
                 Checklists.RESET_BUTTON,
-                style = TextStyle(fontSize = fs(12f), fontWeight = FontWeight.Bold, color = c.ink),
+                style = Gc.type.subhead.copy(fontWeight = FontWeight.SemiBold, color = if (social) c.route else c.ink),
                 modifier = Modifier
-                    .border(1.dp, c.line, RoundedCornerShape(10.dp))
+                    .clip(RoundedCornerShape(10.dp))
+                    .then(if (social) Modifier.background(c.route.copy(alpha = 0.12f)) else Modifier.border(1.dp, c.line, RoundedCornerShape(10.dp)))
                     .clickable(role = Role.Button) {
                         scope.launch { store.clearChecks() }
                         Toast.makeText(context, Checklists.RESET_TOAST, Toast.LENGTH_SHORT).show()
                     }
-                    .padding(horizontal = 12.dp, vertical = 9.dp),
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             )
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(if (social) 4.dp else 10.dp))
 
         Checklists.all.forEachIndexed { index, list ->
             ChecklistCard(
@@ -162,13 +157,13 @@ fun ChecklistScreen(store: ChecklistStore, modifier: Modifier = Modifier) {
                 onCheck = { id, on -> scope.launch { store.setChecked(id, on) } },
                 onBrief = { b -> brief = b; scope.launch { store.saveBrief(b) } },
             )
-            if (index == Checklists.all.lastIndex) HorizontalDivider(thickness = 1.dp, color = c.lineSoft)
+            if (!social && index == Checklists.all.lastIndex) HorizontalDivider(thickness = 1.dp, color = c.lineSoft)
         }
 
         Text(
             Checklists.SOURCE,
-            style = TextStyle(fontSize = fs(9f), lineHeight = fs(9f * 1.45f), color = c.faint),
-            modifier = Modifier.padding(top = 15.dp, bottom = 4.dp),
+            style = Gc.type.caption1.copy(color = c.faint),
+            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp, start = if (social) 4.dp else 0.dp, end = if (social) 4.dp else 0.dp),
         )
     }
 }
@@ -185,39 +180,52 @@ private fun ChecklistCard(
     onBrief: (CableBriefInput) -> Unit,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     val progress = list.progress(checked)
-    Column(Modifier.fillMaxWidth().background(c.background)) {
-        HorizontalDivider(thickness = 1.dp, color = c.lineSoft)
+    // thème social : carte blanche arrondie sur fond groupé ; thème sombre : liste à filets de la maquette v8
+    val cardModifier = if (social) {
+        Modifier.padding(top = 12.dp).fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(c.panel).padding(horizontal = 12.dp)
+    } else {
+        Modifier.fillMaxWidth().background(c.background)
+    }
+    Column(cardModifier) {
+        if (!social) HorizontalDivider(thickness = 1.dp, color = c.lineSoft)
         Row(
             Modifier.fillMaxWidth().heightIn(min = 64.dp)
                 .clickable(onClickLabel = if (expanded) "Replier" else "Déplier", onClick = onToggleOpen)
                 .padding(horizontal = 4.dp, vertical = 11.dp)
                 .semantics { stateDescription = if (expanded) "déplié" else "replié" },
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Box(
-                Modifier.size(width = 60.dp, height = 47.dp)
-                    .background(c.control, RoundedCornerShape(13.dp))
-                    .then(if (expanded) Modifier.border(1.dp, c.ok.copy(alpha = 0.33f), RoundedCornerShape(13.dp)) else Modifier),
+                Modifier.size(width = 58.dp, height = 44.dp)
+                    .background(if (social) c.route.copy(alpha = 0.12f) else c.control, RoundedCornerShape(12.dp))
+                    .then(if (expanded && !social) Modifier.border(1.dp, c.route.copy(alpha = 0.33f), RoundedCornerShape(12.dp)) else Modifier),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(list.code, style = TextStyle(fontSize = fs(13f), fontWeight = FontWeight.Bold, letterSpacing = 0.04.em, color = c.ok), maxLines = 1, softWrap = false)
+                Text(
+                    list.code,
+                    style = Gc.type.footnote.copy(fontWeight = FontWeight.Bold, letterSpacing = 0.04.em, color = c.route),
+                    maxLines = 1,
+                    softWrap = false,
+                )
             }
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                Text(list.title, style = TextStyle(fontSize = fs(13f), fontWeight = FontWeight.Bold, color = c.ink))
-                Text(list.subtitle, style = TextStyle(fontSize = fs(10f), lineHeight = fs(13f), color = c.dim))
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(list.title, style = Gc.type.headline)
+                Text(list.subtitle, style = Gc.type.footnote.copy(color = c.dim))
             }
+            val done = if (social) c.mint else c.ok
             Text(
                 progress.toString(),
-                style = TextStyle(
-                    fontSize = fs(9f), textAlign = TextAlign.Center, fontFeatureSettings = "tnum",
-                    color = if (progress.complete) c.onAccent else c.dim,
+                style = Gc.type.caption1.copy(
+                    fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center, fontFeatureSettings = "tnum",
+                    color = if (progress.complete) (if (social) c.onAccentFill else c.onAccent) else c.dim,
                 ),
                 modifier = Modifier
-                    .widthIn(min = 57.dp)
-                    .background(if (progress.complete) c.ok else c.control, RoundedCornerShape(50))
-                    .padding(horizontal = 7.dp, vertical = 5.dp),
+                    .widthIn(min = 52.dp)
+                    .background(if (progress.complete) done else c.control, RoundedCornerShape(50))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
             )
         }
         if (expanded) {
@@ -226,8 +234,8 @@ private fun ChecklistCard(
                     when (block) {
                         is Block.Subtitle -> Text(
                             block.text.uppercase(),
-                            style = TextStyle(fontSize = fs(9f), fontWeight = FontWeight.Bold, letterSpacing = 0.12.em, color = c.ok),
-                            modifier = Modifier.padding(top = 12.dp, bottom = 5.dp),
+                            style = Gc.type.footnote.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 0.06.em, color = if (social) c.dim else c.route),
+                            modifier = Modifier.padding(top = 14.dp, bottom = 6.dp),
                         )
                         is Block.Items -> block.items.forEach { item ->
                             CheckRow(item, plan, item.id in checked) { onCheck(item.id, it) }
@@ -247,28 +255,28 @@ private fun CheckRow(item: CheckItem, plan: CablePlan, isChecked: Boolean, onCha
     val color = if (isChecked) c.dim else c.inkSoft
     val deco = if (isChecked) TextDecoration.LineThrough else TextDecoration.None
     Column(Modifier.fillMaxWidth()) {
-        HorizontalDivider(thickness = 1.dp, color = c.lineFaint)
+        HorizontalDivider(thickness = if (Gc.social) 0.5.dp else 1.dp, color = if (Gc.social) c.lineSoft else c.lineFaint)
         Row(
-            Modifier.fillMaxWidth().heightIn(min = 42.dp)
+            Modifier.fillMaxWidth().heightIn(min = 44.dp)
                 .clickable(role = Role.Checkbox) { onChange(!isChecked) }
                 .semantics { contentDescription = listOfNotNull(item.bold, text).joinToString(" "); stateDescription = if (isChecked) "coché" else "non coché" }
-                .padding(horizontal = 2.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = 2.dp, vertical = 9.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.Top,
         ) {
             CheckBoxMark(isChecked, Modifier.padding(top = 1.dp))
             Column(Modifier.weight(1f)) {
                 Text(
                     buildAnnotatedString {
-                        item.bold?.let { withStyle(SpanStyle(fontWeight = FontWeight.Bold)) { append(it) }; append(" ") }
+                        item.bold?.let { withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append(it) }; append(" ") }
                         append(text)
                     },
-                    style = TextStyle(fontSize = fs(11.5f), lineHeight = fs(11.5f * 1.35f), color = color, textDecoration = deco),
+                    style = Gc.type.subhead.copy(color = color, textDecoration = deco),
                 )
                 item.small?.let {
                     Text(
                         it,
-                        style = TextStyle(fontSize = fs(9.5f), lineHeight = fs(9.5f * 1.35f), color = c.dim, textDecoration = deco),
+                        style = Gc.type.footnote.copy(color = c.dim, textDecoration = deco),
                         modifier = Modifier.padding(top = 2.dp),
                     )
                 }
@@ -280,17 +288,20 @@ private fun CheckRow(item: CheckItem, plan: CablePlan, isChecked: Boolean, onCha
 @Composable
 private fun CheckBoxMark(on: Boolean, modifier: Modifier = Modifier) {
     val c = Gc.colors
+    // case cochée : aplat bleu ciel (vert GLIDY en sombre), coche blanche ; vide : contour gris
+    val shape = RoundedCornerShape(if (Gc.social) 6.dp else 4.dp)
+    val tick = if (Gc.social) c.onAccentFill else c.onAccent
     Box(
         modifier.size(22.dp).then(
-            if (on) Modifier.background(c.ok, RoundedCornerShape(4.dp))
-            else Modifier.border(1.5.dp, c.dim, RoundedCornerShape(4.dp)),
+            if (on) Modifier.background(if (Gc.social) c.accentFill else c.ok, shape)
+            else Modifier.border(1.5.dp, if (Gc.social) c.faint else c.dim, shape),
         ),
     ) {
         if (on) Canvas(Modifier.fillMaxSize()) {
             val w = size.width
             val stroke = 2.4.dp.toPx()
-            drawLine(c.onAccent, Offset(w * 0.24f, w * 0.52f), Offset(w * 0.43f, w * 0.70f), stroke, StrokeCap.Round)
-            drawLine(c.onAccent, Offset(w * 0.43f, w * 0.70f), Offset(w * 0.77f, w * 0.31f), stroke, StrokeCap.Round)
+            drawLine(tick, Offset(w * 0.24f, w * 0.52f), Offset(w * 0.43f, w * 0.70f), stroke, StrokeCap.Round)
+            drawLine(tick, Offset(w * 0.43f, w * 0.70f), Offset(w * 0.77f, w * 0.31f), stroke, StrokeCap.Round)
         }
     }
 }
@@ -298,19 +309,19 @@ private fun CheckBoxMark(on: Boolean, modifier: Modifier = Modifier) {
 @Composable
 private fun CableBriefBlock(brief: CableBriefInput, plan: CablePlan, onBrief: (CableBriefInput) -> Unit) {
     val c = Gc.colors
-    Column(Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
-        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+    Column(Modifier.fillMaxWidth().padding(top = 8.dp, bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             BriefField("Piste / QFU", brief.qfu, { onBrief(brief.copy(qfu = it)) }, Modifier.weight(1f), numeric = true)
-            BriefField("Demi-tour envisagé dès", brief.turn, { onBrief(brief.copy(turn = it)) }, Modifier.weight(1f), numeric = true, unit = "m sol")
+            BriefField("Demi-tour dès", brief.turn, { onBrief(brief.copy(turn = it)) }, Modifier.weight(1f), numeric = true, unit = "m sol")
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-            BriefField("Atterrissage devant sous", brief.ahead, { onBrief(brief.copy(ahead = it)) }, Modifier.weight(1f), numeric = true, unit = "m sol")
-            BriefField("Terrain de dégagement", brief.field, { onBrief(brief.copy(field = it)) }, Modifier.weight(1f))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            BriefField("Posé devant sous", brief.ahead, { onBrief(brief.copy(ahead = it)) }, Modifier.weight(1f), numeric = true, unit = "m sol")
+            BriefField("Dégagement", brief.field, { onBrief(brief.copy(field = it)) }, Modifier.weight(1f))
         }
-        BriefField("Menace principale", brief.threat, { onBrief(brief.copy(threat = it)) }, Modifier.fillMaxWidth())
+        BriefField("Menace", brief.threat, { onBrief(brief.copy(threat = it)) }, Modifier.fillMaxWidth())
     }
     Column(
-        Modifier.fillMaxWidth().padding(top = 8.dp).background(c.sunkenPlan, RoundedCornerShape(10.dp)).padding(10.dp),
+        Modifier.fillMaxWidth().padding(top = 8.dp).background(c.sunkenPlan, RoundedCornerShape(12.dp)).padding(12.dp),
     ) {
         plan.rows.forEach { row ->
             Text(
@@ -319,7 +330,7 @@ private fun CableBriefBlock(brief: CableBriefInput, plan: CablePlan, onBrief: (C
                     append(" ")
                     append(row.text)
                 },
-                style = TextStyle(fontSize = fs(10.5f), lineHeight = fs(10.5f * 1.55f), color = c.planText),
+                style = Gc.type.footnote.copy(color = c.planText, lineHeight = 20.sp),
             )
         }
     }
@@ -331,26 +342,26 @@ private fun BriefField(label: String, value: String, onChange: (String) -> Unit,
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
     Column(
-        modifier.border(1.dp, c.lineSoft, RoundedCornerShape(10.dp)).background(c.sunkenField, RoundedCornerShape(10.dp)).padding(8.dp),
+        modifier.border(1.dp, if (focused) c.route else c.lineSoft, RoundedCornerShape(10.dp)).background(c.sunkenField, RoundedCornerShape(10.dp)).padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(label, style = TextStyle(fontSize = fs(9f), color = c.dim))
+        Text(label, style = Gc.type.caption1.copy(color = c.dim), maxLines = 1)
         BasicTextField(
             value = value,
             onValueChange = onChange,
             singleLine = true,
             interactionSource = interaction,
-            textStyle = TextStyle(fontSize = fs(12f), fontWeight = FontWeight.Medium, color = c.ink),
-            cursorBrush = SolidColor(c.ok),
+            textStyle = Gc.type.callout.copy(fontWeight = FontWeight.Medium, color = c.ink, fontFeatureSettings = "tnum"),
+            cursorBrush = SolidColor(c.route),
             keyboardOptions = if (numeric) KeyboardOptions(keyboardType = KeyboardType.Number) else KeyboardOptions.Default,
             modifier = Modifier.fillMaxWidth().semantics { contentDescription = label },
             decorationBox = { inner ->
                 Column {
                     Box(Modifier.padding(vertical = 3.dp)) { inner() }
-                    HorizontalDivider(thickness = 1.dp, color = if (focused) c.ok else c.inputLine)
+                    HorizontalDivider(thickness = 1.dp, color = if (focused) c.route else c.inputLine)
                 }
             },
         )
-        unit?.let { Text(it, style = TextStyle(fontSize = fs(9f), color = c.dim)) }
+        unit?.let { Text(it, style = Gc.type.caption1.copy(color = c.dim)) }
     }
 }

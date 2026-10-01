@@ -19,14 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
+import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.domain.Club
 import com.neutronstar.glidercopilot.domain.aero.AirspaceFamily
@@ -45,41 +46,43 @@ internal fun OfflineMapCard(ui: OfflineMapUi, onDownload: () -> Unit, onCancel: 
     val c = Gc.colors
     val pill: Pair<String, Color> = when {
         ui.progress != null -> "Téléchargement" to c.dim
-        ui.installed != null && ui.aeroExpired -> "Aéro à mettre à jour" to c.warn
+        ui.installed != null && ui.aeroExpired -> "Aéro périmée" to c.warn
         ui.updateAvailable -> "Mise à jour" to c.warn
         ui.installed != null -> "Installée" to c.ok
         else -> "Non installée" to c.dim
     }
     val pack = ui.installed ?: ui.available
-    GcCard(title = "Carte hors ligne", trailing = { GcPill(pill.first, pill.second) }) {
+    GcCard(title = "Carte hors ligne", icon = GcIcons.Carte, tint = c.sky, trailing = { GcPill(pill.first, pill.second) }) {
         when {
             pack != null -> {
-                Text(pack.name, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.ink))
+                Text(pack.name, style = cardStyle(TextRole.Strong, 14.sp, c.ink, FontWeight.Bold))
                 Text(
-                    "Fond OpenStreetMap, relief et courbes, espaces aériens et terrains openAIP · ${mb((ui.available ?: pack).totalBytes)}",
-                    style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.dim),
+                    "Fond OpenStreetMap, relief, courbes, espaces aériens et terrains openAIP · ${mb((ui.available ?: pack).totalBytes)}",
+                    style = cardStyle(TextRole.Secondary, 11.sp, c.dim, darkLineHeight = 15.sp),
                 )
                 ui.installed?.aeroValidUntil?.let {
                     Text(
-                        (if (ui.aeroExpired) "Données aéro périmées depuis le " else "Données aéro valables jusqu’au ") + DAY.format(it),
-                        style = TextStyle(fontSize = 11.sp, color = if (ui.aeroExpired) c.warn else c.dim),
+                        (if (ui.aeroExpired) "Aéro périmée depuis le " else "Aéro valable jusqu’au ") + DAY.format(it),
+                        style = cardStyle(TextRole.Secondary, 11.sp, if (ui.aeroExpired) c.warn else c.dim),
                     )
                 }
             }
-            ui.catalogLoading -> Text("Recherche de la carte de la région…", style = TextStyle(fontSize = 11.sp, color = c.dim))
-            ui.outOfCoverage -> Text("Pas encore de carte pour ce terrain : les régions couvertes sont celles des clubs du sud de la France.", style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.dim))
-            ui.catalogError != null -> Text("${ui.catalogError}. La carte se télécharge au sol, avec du réseau.", style = TextStyle(fontSize = 11.sp, color = c.warn))
+            ui.catalogLoading -> Text("Recherche de la carte…", style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
+            ui.outOfCoverage -> Text("Pas encore de carte ici : seuls les clubs du sud de la France sont couverts.", style = cardStyle(TextRole.Secondary, 11.sp, c.dim, darkLineHeight = 15.sp))
+            ui.catalogError != null -> Text("${ui.catalogError}. Téléchargement au sol, avec réseau.", style = cardStyle(TextRole.Secondary, 11.sp, c.warn))
         }
         ui.progress?.let { p ->
-            Box(Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(c.control)) {
-                Box(Modifier.fillMaxWidth(p.coerceIn(0f, 1f)).height(6.dp).background(c.ok))
+            // V18.1 : barre de progression en gélule bleu ciel sur pages blanches
+            val social = Gc.social
+            Box(Modifier.fillMaxWidth().height(6.dp).clip(if (social) RoundedCornerShape(50) else RoundedCornerShape(3.dp)).background(c.control)) {
+                Box(Modifier.fillMaxWidth(p.coerceIn(0f, 1f)).height(6.dp).then(if (social) Modifier.clip(RoundedCornerShape(50)) else Modifier).background(if (social) c.sky else c.ok))
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text("${(p * 100).roundToInt()} % · fichiers vérifiés un par un", style = TextStyle(fontSize = 11.sp, color = c.dim))
+                Text("${(p * 100).roundToInt()} % · fichiers vérifiés", style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
                 GcButton("Annuler", onCancel)
             }
         }
-        ui.downloadError?.let { Text("Échec : $it", style = TextStyle(fontSize = 11.sp, color = c.warn)) }
+        ui.downloadError?.let { Text("Échec : $it", style = cardStyle(TextRole.Secondary, 11.sp, c.warn)) }
         if (ui.progress == null) {
             when {
                 ui.available != null && (ui.installed == null || ui.updateAvailable) ->
@@ -89,7 +92,7 @@ internal fun OfflineMapCard(ui: OfflineMapUi, onDownload: () -> Unit, onCancel: 
         }
         Text(
             "© OpenStreetMap (ODbL) · Protomaps · openAIP (CC BY-NC) · Copernicus DEM",
-            style = TextStyle(fontSize = 9.5.sp, color = c.faint),
+            style = cardStyle(TextRole.Fine, 9.5.sp, c.faint),
         )
     }
 }
@@ -101,10 +104,12 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
     if (ui.installed == null) return
     GcCard(
         title = "Espaces aériens · ${CartoText.RADIUS} km autour de ${ui.fieldLabel ?: "terrain"}",
+        icon = GcIcons.Carte,
+        tint = c.altitude,
         trailing = { GcPill("${ui.airspacesAround.size}", c.dim) },
     ) {
         if (ui.airspacesAround.isEmpty()) {
-            Text("Aucun espace dans ce rayon selon openAIP.", style = TextStyle(fontSize = 11.sp, color = c.dim))
+            Text("Aucun espace dans ce rayon selon openAIP.", style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
         }
         ui.airspacesAround.forEach { (a, d) ->
             val color = when (a.family) {
@@ -116,21 +121,25 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
             Row(Modifier.fillMaxWidth().padding(vertical = 3.dp), verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
                 Box(Modifier.padding(top = 5.dp).size(8.dp).background(color, CircleShape))
                 Column(Modifier.weight(1f)) {
-                    Text(a.name, style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
+                    Text(a.name, style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.SemiBold), maxLines = 1)
                     Text(
                         listOfNotNull(a.typeLabel, a.classLetter?.let { "classe $it" }, if (a.byNotam) "activable NOTAM" else null).joinToString(" · "),
-                        style = TextStyle(fontSize = 11.sp, color = c.dim),
+                        style = cardStyle(TextRole.Secondary, 11.sp, c.dim),
                     )
                 }
                 Column(horizontalAlignment = Alignment.End, modifier = Modifier.widthIn(max = 170.dp)) {
-                    Text(a.verticalLabel, style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = color, fontFeatureSettings = "tnum", textAlign = androidx.compose.ui.text.style.TextAlign.End), maxLines = 2)
-                    Text(if (d == 0.0) "terrain dedans" else String.format(Locale.FRANCE, "à %.1f km", d), style = TextStyle(fontSize = 11.sp, color = c.dim))
+                    Text(
+                        a.verticalLabel,
+                        style = cardStyle(TextRole.Secondary, 11.sp, color, FontWeight.Medium).copy(fontWeight = FontWeight.Medium, fontFeatureSettings = "tnum", textAlign = TextAlign.End),
+                        maxLines = 2,
+                    )
+                    Text(if (d == 0.0) "terrain dedans" else String.format(Locale.FRANCE, "à %.1f km", d), style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
                 }
             }
         }
         Text(
-            "openAIP" + (ui.aeroFetched?.let { " · données du ${DAY.format(it)}" } ?: "") + " · niveaux de vol en atmosphère standard. Vérifier SUP AIP et NOTAM avant le vol.",
-            style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.faint),
+            "openAIP" + (ui.aeroFetched?.let { " · données du ${DAY.format(it)}" } ?: "") + " · FL en atmosphère standard. Vérifiez SUP AIP et NOTAM avant le vol.",
+            style = cardStyle(TextRole.Fine, 10.sp, c.faint, darkLineHeight = 14.sp),
         )
     }
 }
@@ -144,18 +153,18 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
 internal fun NotamCard(club: Club?) {
     val c = Gc.colors
     val uriHandler = LocalUriHandler.current
-    GcCard(title = "NOTAM") {
+    GcCard(title = "NOTAM", tint = c.heart) {
         Text(
-            club?.airfieldIcao?.let { "Terrain du club : ${club.displayName} ($it)" }
-                ?: (club?.let { "Terrain du club : ${it.displayName}, code OACI inconnu" } ?: "Choisissez votre club pour préparer la recherche NOTAM."),
-            style = TextStyle(fontSize = 12.sp, color = c.dim),
+            club?.airfieldIcao?.let { "Terrain : ${club.displayName} ($it)" }
+                ?: (club?.let { "Terrain : ${it.displayName}, code OACI inconnu" } ?: "Choisissez un club pour la recherche NOTAM."),
+            style = cardStyle(TextRole.Body, 12.sp, if (Gc.social) c.ink else c.dim),
         )
         Text(
-            "Les NOTAM ne sont pas rechargés dans l'app : consultez toujours la source officielle avant le vol.",
-            style = TextStyle(fontSize = 10.5.sp, lineHeight = 14.sp, color = c.faint),
+            "NOTAM non chargés dans l'app : consultez toujours la source officielle avant le vol.",
+            style = cardStyle(TextRole.Fine, 10.5.sp, c.faint, darkLineHeight = 14.sp),
         )
         GcButton(
-            "Consulter les NOTAM (SOFIA-Briefing, DGAC)",
+            "NOTAM sur SOFIA-Briefing (DGAC)",
             onClick = { uriHandler.openUri("https://sofia-briefing.aviation-civile.gouv.fr/sofia/pages/notamsearchaero.html") },
             primary = true,
         )

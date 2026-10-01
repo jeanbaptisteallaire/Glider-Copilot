@@ -1,6 +1,14 @@
 package com.neutronstar.glidercopilot.designsystem
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -40,7 +48,8 @@ import androidx.compose.ui.unit.sp
 
 /**
  * Carte Prévol v8 : fond noir, simple filet supérieur, titre en capitales.
- * Thème social (S15) : filet très léger, titre en casse normale, gras, comme une section de réseau social.
+ * V18.1 pages blanches (Apple Santé) : carte blanche aux coins de 14 dp sur fond groupé gris, titre coloré à la
+ * teinte du sujet ([tint], pictogramme [icon] facultatif), [trailing] à droite (heure, pastille, chevron).
  */
 @Composable
 fun GcCard(
@@ -48,22 +57,47 @@ fun GcCard(
     title: String? = null,
     trailing: (@Composable () -> Unit)? = null,
     accent: Color? = null,
+    icon: ImageVector? = null,
+    tint: Color? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val c = Gc.colors
-    val social = Gc.social
-    Column(modifier.fillMaxWidth().background(c.panel)) {
-        HorizontalDivider(thickness = 1.dp, color = accent ?: if (social) c.lineFaint else c.lineSoft)
+    if (Gc.social) {
+        val t = tint ?: accent ?: c.cardTitle
         Column(
-            Modifier.fillMaxWidth().padding(horizontal = 2.dp, vertical = if (social) 14.dp else 12.dp),
-            verticalArrangement = Arrangement.spacedBy(if (social) 10.dp else 9.dp),
+            modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(c.panel).padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            if (title != null || trailing != null) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    if (icon != null) {
+                        Icon(icon, contentDescription = null, tint = t, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                    }
+                    if (title != null) Text(
+                        title.socialCase(),
+                        style = Gc.type.subhead.copy(color = t, fontWeight = FontWeight.SemiBold),
+                        maxLines = 1,
+                        modifier = Modifier.weight(1f),
+                    ) else Spacer(Modifier.weight(1f))
+                    trailing?.invoke()
+                }
+            }
+            content()
+        }
+        return
+    }
+    Column(modifier.fillMaxWidth().background(c.panel)) {
+        HorizontalDivider(thickness = 1.dp, color = accent ?: c.lineSoft)
+        Column(
+            Modifier.fillMaxWidth().padding(horizontal = 2.dp, vertical = 12.dp),
+            verticalArrangement = Arrangement.spacedBy(9.dp),
         ) {
             if (title != null || trailing != null) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
                     if (title != null) Text(
-                        if (social) title.socialCase() else title.uppercase(),
-                        style = if (social) Gc.type.body.copy(color = c.cardTitle, fontWeight = FontWeight.Bold, fontSize = 16.sp, letterSpacing = (-0.2).sp)
-                        else Gc.type.eyebrow.copy(color = c.cardTitle, fontWeight = FontWeight.Bold, fontSize = 10.5.sp, letterSpacing = 1.4.sp),
+                        title.uppercase(),
+                        style = Gc.type.eyebrow.copy(color = c.cardTitle, fontWeight = FontWeight.Bold, fontSize = 10.5.sp, letterSpacing = 1.4.sp),
                         modifier = Modifier.weight(1f, fill = false),
                     )
                     trailing?.invoke()
@@ -71,6 +105,15 @@ fun GcCard(
             }
             content()
         }
+    }
+}
+
+/** Section groupée façon iOS : titre de section (Title 3) au-dessus d'une ou plusieurs cartes. */
+@Composable
+fun GcSectionTitle(text: String, modifier: Modifier = Modifier, trailing: (@Composable () -> Unit)? = null) {
+    Row(modifier.fillMaxWidth().padding(top = 10.dp, bottom = 2.dp, start = 2.dp, end = 2.dp), verticalAlignment = Alignment.Bottom) {
+        Text(text, style = Gc.type.title3.copy(fontWeight = FontWeight.Bold), modifier = Modifier.weight(1f))
+        trailing?.invoke()
     }
 }
 
@@ -93,7 +136,7 @@ fun GcPill(text: String, color: Color, modifier: Modifier = Modifier) {
         val neutral = color == c.dim || color == c.faint || color == c.ink
         Text(
             text,
-            style = Gc.type.eyebrow.copy(color = if (neutral) c.dim else color, fontWeight = FontWeight.SemiBold, fontSize = 11.sp, letterSpacing = 0.1.sp),
+            style = Gc.type.caption1.copy(color = if (neutral) c.dim else color, fontWeight = FontWeight.SemiBold),
             maxLines = 1,
             modifier = modifier
                 .background(if (neutral) c.control else color.copy(alpha = 0.12f), RoundedCornerShape(50))
@@ -113,12 +156,44 @@ fun GcPill(text: String, color: Color, modifier: Modifier = Modifier) {
     )
 }
 
+/**
+ * Chiffre clé. V18.1 pages blanches (Apple Santé) : libellé au-dessus, en couleur de catégorie ou gris, puis la
+ * valeur dont les unités sont plus petites et grises (« 62 BPM », « 1 h 08 », « 128 km »).
+ */
 @Composable
-fun GcKpi(value: String, label: String, modifier: Modifier = Modifier, color: Color = Gc.colors.ink) {
+fun GcKpi(value: String, label: String, modifier: Modifier = Modifier, color: Color = Gc.colors.ink, labelColor: Color? = null) {
+    if (Gc.social) {
+        val c = Gc.colors
+        Column(modifier) {
+            Text(label.socialCase(), style = Gc.type.footnote.copy(color = labelColor ?: c.dim, fontWeight = FontWeight.SemiBold), maxLines = 1)
+            Text(metricText(value, Gc.type.kpi.copy(color = if (color == c.ok) c.ink else color), c.faint), maxLines = 1)
+        }
+        return
+    }
     Column(modifier) {
         Text(value, style = Gc.type.kpi.copy(color = color))
-        if (Gc.social) Text(label.socialCase(), style = Gc.type.eyebrow.copy(fontSize = 12.sp))
-        else Text(label.uppercase(), style = Gc.type.eyebrow.copy(fontSize = 9.sp, letterSpacing = 0.6.sp))
+        Text(label.uppercase(), style = Gc.type.eyebrow.copy(fontSize = 9.sp, letterSpacing = 0.6.sp))
+    }
+}
+
+/**
+ * « 1 h 08 » → chiffres au style [number], lettres (unités) à 60 % de la taille et en [unitColor] : le rendu
+ * « 62 BPM » d'Apple Santé, utilisable pour toute valeur mesurée.
+ */
+fun metricText(value: String, number: TextStyle, unitColor: Color): AnnotatedString = buildAnnotatedString {
+    val unit = SpanStyle(fontSize = number.fontSize * 0.62f, color = unitColor, fontWeight = FontWeight.SemiBold)
+    var i = 0
+    while (i < value.length) {
+        val ch = value[i]
+        val isNum = ch.isDigit() || ((ch == ',' || ch == '.' || ch == ':' || ch == '+' || ch == '−' || ch == '-') && i + 1 < value.length && value[i + 1].isDigit())
+        val start = i
+        if (isNum) {
+            while (i < value.length && (value[i].isDigit() || value[i] in ",.:+−-")) i++
+            withStyle(number.toSpanStyle()) { append(value.substring(start, i)) }
+        } else {
+            while (i < value.length && !value[i].isDigit() && !(value[i] in "+−-" && i + 1 < value.length && value[i + 1].isDigit())) i++
+            withStyle(unit) { append(value.substring(start, i)) }
+        }
     }
 }
 
@@ -137,8 +212,9 @@ fun GcButton(
 ) {
     val c = Gc.colors
     val social = Gc.social
-    val container = when { primary && social -> c.accentFill; primary -> c.ok; social -> c.control; else -> c.panel }
-    val content = when { primary && social -> c.onAccentFill; primary -> c.onAccent; else -> c.ink }
+    // V18.1 : principal = bleu ciel plein ; secondaire = teinté (texte bleu sur bleu pâle), comme iOS
+    val container = when { primary && social -> c.accentFill; primary -> c.ok; social -> c.route.copy(alpha = 0.12f); else -> c.panel }
+    val content = when { primary && social -> c.onAccentFill; primary -> c.onAccent; social -> c.route; else -> c.ink }
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -155,7 +231,8 @@ fun GcButton(
     ) {
         Text(
             if (social) text.socialCase() else text,
-            style = Gc.type.body.copy(fontSize = (if (social) fontSize + 2f else fontSize).sp, fontWeight = if (social) FontWeight.SemiBold else FontWeight.Bold, color = if (social && !enabled) c.faint else content),
+            style = if (social) Gc.type.headline.copy(fontSize = 16.sp, color = if (!enabled) c.faint else content)
+            else Gc.type.body.copy(fontSize = fontSize.sp, fontWeight = FontWeight.Bold, color = content),
         )
     }
 }
@@ -163,14 +240,15 @@ fun GcButton(
 @Composable
 fun GcSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit, modifier: Modifier = Modifier) {
     val c = Gc.colors
+    val on = if (Gc.social) c.mint else c.ok
     Switch(
         checked = checked,
         onCheckedChange = onCheckedChange,
         modifier = modifier,
         colors = SwitchDefaults.colors(
-            checkedThumbColor = c.onAccent,
-            checkedTrackColor = c.ok,
-            checkedBorderColor = c.ok,
+            checkedThumbColor = if (Gc.social) c.panel else c.onAccent,
+            checkedTrackColor = on,
+            checkedBorderColor = on,
             uncheckedThumbColor = c.dim,
             uncheckedTrackColor = c.control,
             uncheckedBorderColor = c.line,

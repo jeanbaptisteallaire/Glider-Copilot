@@ -58,6 +58,7 @@ import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidy.feed.FeedApp
 import com.neutronstar.glidercopilot.designsystem.GcThemeToggle
 import com.neutronstar.glidercopilot.designsystem.LocalGcThemeToggle
+import com.neutronstar.glidercopilot.designsystem.GcFonts
 import androidx.compose.runtime.CompositionLocalProvider
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.designsystem.GlidyColors
@@ -247,7 +248,7 @@ private fun MainScaffold(container: AppContainer) {
                         demoFlight = { FlightArchiveHost.DEMO_NAME to context.assets.open(FlightArchiveHost.DEMO_ASSET) },
                         onReplay3d = { f ->
                             // pas de rejeu 3D pendant un vol enregistré : GPU et batterie restent au pilotage
-                            if (recording) Toast.makeText(context, "Rejeu 3D disponible après l'atterrissage", Toast.LENGTH_LONG).show()
+                            if (recording) Toast.makeText(context, "Rejeu 3D après l'atterrissage", Toast.LENGTH_LONG).show()
                             else replayed = f
                         },
                     )
@@ -257,10 +258,10 @@ private fun MainScaffold(container: AppContainer) {
         // barre d'onglets : sous Pilotage, exactement la barre noire d'avant (thème sombre) ; ailleurs, blanche
         GlidyAdaptiveTheme(social) {
             val bar = Gc.colors
-            Column(Modifier.fillMaxWidth().background(bar.background)) {
+            Column(Modifier.fillMaxWidth().background(if (social) bar.overlay else bar.background)) {
                 if (social) HorizontalDivider(thickness = 0.5.dp, color = bar.line)
                 Row(
-                    Modifier.fillMaxWidth().background(bar.background).navigationBarsPadding().padding(top = 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
+                    Modifier.fillMaxWidth().navigationBarsPadding().padding(top = 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -274,27 +275,27 @@ private fun MainScaffold(container: AppContainer) {
 }
 
 private fun icon(t: Tab): ImageVector = when (t) {
-    Tab.FEED -> GcIcons.Feed
-    Tab.PREVOL -> GcIcons.Prevol
-    Tab.CHECKLIST -> GcIcons.Checklist
-    Tab.PILOTAGE -> GcIcons.Pilotage
-    Tab.CARTE -> GcIcons.Carte
-    Tab.MES_VOLS -> GcIcons.MesVols
+    Tab.FEED -> GcIcons.Tab.Feed
+    Tab.PREVOL -> GcIcons.Tab.Prevol
+    Tab.CHECKLIST -> GcIcons.Tab.Checklist
+    Tab.PILOTAGE -> GcIcons.Tab.Pilotage
+    Tab.CARTE -> GcIcons.Tab.Carte
+    Tab.MES_VOLS -> GcIcons.Tab.MesVols
 }
 
 @Composable
 private fun TabButton(label: String, icon: ImageVector, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val c = Gc.colors
     val social = Gc.social
-    // social (S15) : noir sélectionné / gris sinon, comme les réseaux sociaux ; sombre : vert / gris (inchangé)
-    val color = if (social) (if (selected) c.ink else c.faint) else if (selected) c.route else c.dim
+    // V18.1 : bleu ciel sélectionné / gris Apple sinon ; sous Pilotage (sombre) : vert / gris, inchangé
+    val color = if (social) (if (selected) c.route else c.faint) else if (selected) c.route else c.dim
     Column(
         modifier.fillMaxHeight().clickable(role = Role.Tab, onClick = onClick).semantics { this.selected = selected },
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
     ) {
-        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(23.dp))
-        Text(label, style = TextStyle(fontSize = 10.sp, fontWeight = if (social && selected) FontWeight.SemiBold else FontWeight.Medium, color = color))
+        Icon(icon, contentDescription = null, tint = color, modifier = Modifier.size(26.dp))
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 10.sp, fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium, color = color))
     }
 }
 
@@ -325,14 +326,13 @@ private fun Disclaimer(onAccept: () -> Unit) {
         Text("GLIDY", style = Gc.type.giant.copy(color = c.ok, fontSize = 64.sp, lineHeight = 64.sp, fontWeight = FontWeight.SemiBold))
         Spacer(Modifier.height(16.dp))
         Text(
-            "Aide secondaire au vol à voile. L'instrumentation de bord et la veille extérieure priment. " +
-                "Cette application ne remplace ni le vario, ni le calculateur, ni le FLARM, et n'est pas un moyen de navigation certifié. " +
-                "Le pilote reste seul responsable de la conduite de son vol.",
+            "Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. " +
+                "Instruments de bord et veille extérieure priment. Le pilote reste seul responsable.",
             style = Gc.type.body.copy(lineHeight = 21.sp),
         )
         Spacer(Modifier.height(10.dp))
         Text(
-            "Données : Météo-France via precog, Open Glider Network (ODbL). Les estimations thermiques sont calculées dans l'app et doivent être confrontées au ciel.",
+            "Données : Météo-France via precog, OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
             style = Gc.type.bodySmall,
         )
         Spacer(Modifier.height(24.dp))

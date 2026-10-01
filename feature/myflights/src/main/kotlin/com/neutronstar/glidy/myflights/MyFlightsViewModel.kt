@@ -45,21 +45,21 @@ internal fun ReconciliationResult.issueNotice(): String? = when {
 
 internal fun PendingFlightRecovery.issueNotice(): String? = when {
     imported > 0 && rejected > 0 -> "$imported vol(s) Pilotage récupéré(s), $rejected fichier(s) rejeté(s)."
-    imported > 0 -> "$imported vol(s) terminé(s) récupéré(s) depuis Pilotage."
+    imported > 0 -> "$imported vol(s) récupéré(s) depuis Pilotage."
     rejected > 0 -> "$rejected fichier(s) Pilotage rejeté(s)."
     else -> null
 }
 
 internal fun ImportIgcResult.userMessage(): String = when (this) {
-    is ImportIgcResult.Imported -> "Vol importé et archivé sur cet appareil."
-    is ImportIgcResult.Duplicate -> "Ce vol est déjà présent dans le carnet."
+    is ImportIgcResult.Imported -> "Vol importé sur ce téléphone."
+    is ImportIgcResult.Duplicate -> "Vol déjà dans le carnet."
     is ImportIgcResult.Invalid -> when (error) {
         IgcParseError.EmptyFile -> "Le fichier IGC est vide."
-        IgcParseError.MissingDateHeader -> "Le fichier IGC ne contient aucune date."
-        is IgcParseError.InvalidDateHeader -> "La date du fichier IGC est invalide."
-        IgcParseError.NoValidFix -> "Le fichier IGC ne contient aucun point GPS valide."
+        IgcParseError.MissingDateHeader -> "Fichier IGC sans date."
+        is IgcParseError.InvalidDateHeader -> "Date du fichier IGC invalide."
+        IgcParseError.NoValidFix -> "Aucun point GPS valide dans ce fichier IGC."
     }
-    ImportIgcResult.TooLarge -> "Le fichier dépasse la limite de 64 Mo."
+    ImportIgcResult.TooLarge -> "Fichier trop lourd (64 Mo max)."
     is ImportIgcResult.Failed -> "Import impossible : $reason"
 }
 
@@ -123,7 +123,7 @@ class MyFlightsViewModel(
                 flights = latest.flights.map {
                     if (it.id == id) it.copy(visibility = target, publishedAt = if (target == FlightVisibility.PUBLIC) now else null) else it
                 },
-                notice = if (target == FlightVisibility.PUBLIC) "Vol partagé : il sera visible sur le fil des pilotes GLIDY."
+                notice = if (target == FlightVisibility.PUBLIC) "Vol partagé sur le fil GLIDY."
                 else "Vol retiré du fil : il redevient privé.",
             )
         }
@@ -232,13 +232,13 @@ class MyFlightsViewModel(
                     flights = latest.flights.filterNot { it.id == id },
                     selectedFlightId = null,
                     pendingDeleteFlightId = null,
-                    notice = "Le vol et sa copie locale ont été supprimés.",
+                    notice = "Vol supprimé de ce téléphone.",
                 )
                 RemoveFlightResult.NotFound -> latest.copy(
                     flights = latest.flights.filterNot { it.id == id },
                     selectedFlightId = null,
                     pendingDeleteFlightId = null,
-                    notice = "Ce vol n'était plus présent dans le carnet.",
+                    notice = "Vol déjà absent du carnet.",
                 )
                 is RemoveFlightResult.Failed -> latest.copy(
                     pendingDeleteFlightId = null,
@@ -276,6 +276,6 @@ class MyFlightsViewModelFactory(
 internal fun ShareFlightResult.userMessage(): String = when (this) {
     ShareFlightResult.Presented -> "Le menu de partage est ouvert."
     ShareFlightResult.NotFound -> "Ce vol n'est plus présent dans le carnet."
-    ShareFlightResult.FileUnavailable -> "Le fichier IGC n'est plus disponible sur cet appareil."
+    ShareFlightResult.FileUnavailable -> "Fichier IGC introuvable sur ce téléphone."
     is ShareFlightResult.Failed -> "Partage impossible : $reason"
 }

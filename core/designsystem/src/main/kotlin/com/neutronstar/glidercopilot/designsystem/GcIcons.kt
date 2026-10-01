@@ -1,5 +1,6 @@
 package com.neutronstar.glidercopilot.designsystem
 
+import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -73,4 +74,68 @@ object GcIcons {
     val Search = stroke("search", 2f, "M10.5 17a6.5 6.5 0 1 0 0-13a6.5 6.5 0 1 0 0 13", "M15.3 15.3 20 20")
     /** S17 — effacer la recherche. */
     val Close = stroke("close", 2f, "M6 6l12 12M18 6 6 18")
+
+    /** V18.1 — pictogramme plein façon Apple (SF Symbols « .fill ») : aplats + traits éventuels. */
+    private fun glyph(name: String, fills: List<String>, strokes: List<String> = emptyList(), width: Float = 2f): ImageVector =
+        ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f).apply {
+            fills.forEach { d ->
+                addPath(pathData = PathParser().parsePathString(d).toNodes(), fill = SolidColor(Color.White), pathFillType = PathFillType.EvenOdd)
+            }
+            strokes.forEach { d ->
+                addPath(
+                    pathData = PathParser().parsePathString(d).toNodes(),
+                    stroke = SolidColor(Color.White),
+                    strokeLineWidth = width,
+                    strokeLineCap = StrokeCap.Round,
+                    strokeLineJoin = StrokeJoin.Round,
+                )
+            }
+        }.build()
+
+    /** V18.1 — barre d'onglets : pictogrammes pleins, lumineux, inspirés d'Apple. */
+    object Tab {
+        /** Soleil plein. */
+        val Prevol = glyph(
+            "tabPrevol",
+            listOf("M12 7.2a4.8 4.8 0 1 1 0 9.6a4.8 4.8 0 1 1 0-9.6z"),
+            listOf("M12 1.8v2M12 20.2v2M4.8 4.8l1.4 1.4M17.8 17.8l1.4 1.4M1.8 12h2M20.2 12h2M4.8 19.2l1.4-1.4M17.8 6.2l1.4-1.4"),
+            2.1f,
+        )
+        /** Planeur vu de dessus : grande envergure, fuselage fin, empennage. */
+        val Pilotage = glyph(
+            "tabPilotage",
+            listOf(
+                "M12 3c.7 0 1 .6 1 1.5v4.9l9.4.6c.4 0 .6.3.6.6v.5c0 .3-.2.6-.6.6l-9.4.4v6.5l2.4.4c.3.1.5.3.5.6v.3c0 .3-.3.5-.6.5H8.7c-.3 0-.6-.2-.6-.5v-.3c0-.3.2-.5.5-.6l2.4-.4v-6.5l-9.4-.4c-.4 0-.6-.3-.6-.6v-.5c0-.3.2-.6.6-.6l9.4-.6V4.5c0-.9.3-1.5 1-1.5z",
+            ),
+        )
+        /** Silhouette de personne : Mes vols est la page profil du pilote. */
+        val MesVols = glyph(
+            "tabMesVols",
+            listOf(
+                "M12 3a4.3 4.3 0 1 1 0 8.6a4.3 4.3 0 1 1 0-8.6z",
+                "M3.8 19.9c0-3.9 3.7-6.6 8.2-6.6s8.2 2.7 8.2 6.6c0 .8-.6 1.3-1.3 1.3H5.1c-.7 0-1.3-.5-1.3-1.3z",
+            ),
+        )
+        /** Cartes empilées : le fil. */
+        val Feed = glyph(
+            "tabFeed",
+            listOf(
+                "M6.2 8h11.6c1.3 0 2.2 1 2.2 2.2v8.6c0 1.3-1 2.2-2.2 2.2H6.2C5 21 4 20 4 18.8v-8.6C4 9 5 8 6.2 8z",
+                "M7 4.2h10c.6 0 1 .4 1 1s-.4 1-1 1H7c-.6 0-1-.4-1-1s.4-1 1-1z",
+            ),
+        )
+        /** Carré plein, coche évidée. */
+        val Checklist = glyph(
+            "tabChecklist",
+            listOf(
+                "M5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3z" +
+                    "M7.3 12.4l1.5-1.5 2.1 2.1 4.3-4.3 1.5 1.5-5.8 5.8z",
+            ),
+        )
+        /** Carte pliée en trois volets pleins. */
+        val Carte = glyph(
+            "tabCarte",
+            listOf("M2.5 6.6 8.2 4.3v13.4l-5.7 2.2z", "M9.7 4.3l4.6 2.2v13.4l-4.6-2.2z", "M15.8 6.5l5.7-2.2v13.4l-5.7 2.2z"),
+        )
+    }
 }

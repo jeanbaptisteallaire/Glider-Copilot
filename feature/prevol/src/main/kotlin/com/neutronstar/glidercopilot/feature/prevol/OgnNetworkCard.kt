@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,17 +63,18 @@ internal fun OgnNetworkCard(ui: OgnNetworkUi) {
     val c = Gc.colors
     GcCard(
         title = "Réseau OGN · ${ui.radiusKm} km",
+        tint = c.sky,
         trailing = { GcPill(if (ui.replay) "Rejeu" else if (ui.connected) "En direct" else "Hors ligne", if (ui.replay) c.warn else if (ui.connected) c.ok else c.dim) },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(Modifier.size(7.dp).background(if (ui.warning != null) c.warn else if (ui.connected) c.statusOn else c.statusOff, CircleShape))
-            Text(ui.statusLabel, style = TextStyle(fontSize = 11.sp, color = c.dim))
+            Text(ui.statusLabel, style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
         }
-        ui.warning?.let { Text(it, style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.warn)) }
+        ui.warning?.let { Text(it, style = cardStyle(TextRole.Secondary, 11.sp, c.warn, darkLineHeight = 15.sp)) }
         if (ui.connected) {
             Text(
                 "${ui.framesPerMin} trames/min" + (ui.lastFrameAgoS?.let { " · dernière il y a $it s" } ?: " · aucune trame encore"),
-                style = TextStyle(fontSize = 10.5.sp, color = c.faint),
+                style = cardStyle(TextRole.Secondary, 10.5.sp, c.faint),
             )
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
@@ -85,16 +85,16 @@ internal fun OgnNetworkCard(ui: OgnNetworkUi) {
         }
         if (ui.ownLabel != null) {
             Column(Modifier.padding(top = 2.dp)) {
-                Text("Mon planeur · ${ui.ownLabel}", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (ui.ownSeen) c.ok else c.ink))
-                Text(ui.ownLine ?: "Pas encore reçu depuis la connexion.", style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.dim))
+                Text("Mon planeur · ${ui.ownLabel}", style = cardStyle(TextRole.Strong, 13.sp, if (ui.ownSeen) c.ok else c.ink, FontWeight.Bold))
+                Text(ui.ownLine ?: "Pas encore reçu.", style = cardStyle(TextRole.Secondary, 11.sp, c.dim, darkLineHeight = 15.sp))
             }
         }
-        Text(ui.ddbStatus, style = TextStyle(fontSize = 10.5.sp, color = c.faint))
+        Text(ui.ddbStatus, style = cardStyle(TextRole.Secondary, 10.5.sp, c.faint))
         Text(
-            (if (ui.replay) "Rejeu d'un enregistrement OGN anonymisé (démonstration). " else "") +
-                "Open Glider Network (ODbL) · furtifs, « no-tracking » et refus DDB ignorés · rien n'est conservé au-delà de 30 min. " +
-                "Le vario OGN arrive avec retard : secours uniquement.",
-            style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+            (if (ui.replay) "Rejeu OGN anonymisé (démo). " else "") +
+                "Open Glider Network (ODbL) · furtifs, « no-tracking » et refus DDB ignorés · rien conservé au-delà de 30 min. " +
+                "Vario OGN en retard : secours uniquement.",
+            style = cardStyle(TextRole.Fine, 9.5.sp, c.faint, darkLineHeight = 13.sp),
         )
     }
 }

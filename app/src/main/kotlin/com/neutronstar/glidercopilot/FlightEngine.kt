@@ -719,10 +719,10 @@ class FlightEngine(
             running = running,
             replay = replay,
             sourceLabel = when {
-                snap == null -> "Moteur de vol à l'arrêt (app en arrière-plan)"
-                replay && replayDone -> "Rejeu terminé · relancer l'app pour le rejouer"
-                mode == OwnshipMode.DEMO -> "Mode démo : capteurs simulés (bascule sur la carte de Pilotage)"
-                mode == OwnshipMode.FOLLOW -> "Suivi & debug : ${glider.followRegistrationValue ?: "planeur"} via OGN, capteurs du téléphone ignorés"
+                snap == null -> "Moteur de vol en pause (arrière-plan)"
+                replay && replayDone -> "Rejeu terminé · relancer l'app pour revoir"
+                mode == OwnshipMode.DEMO -> "Démo : capteurs simulés"
+                mode == OwnshipMode.FOLLOW -> "Suivi : ${glider.followRegistrationValue ?: "planeur"} via OGN"
                 else -> varioSourceLabel(snap, ognDelay) + if (!baroPresent && !replay) " · pas de baromètre sur ce téléphone" else ""
             },
             sourceOk = snap?.source == VarioSource.BARO_ACCEL || snap?.source == VarioSource.BARO,
@@ -737,8 +737,8 @@ class FlightEngine(
                 snap == null -> ""
                 snap.recording -> "En vol · ${chrono(snap.flightSeconds)} · IGC ${snap.igcFixes} points"
                 snap.phase == FlightPhase.LANDED -> "Posé · vol de ${chrono(snap.flightSeconds)} enregistré"
-                autoTakeoff -> "Au sol · chrono et trace au-dessus de 50 km/h"
-                else -> "Au sol · chrono manuel (appui sur le chrono de Pilotage)"
+                autoTakeoff -> "Au sol · départ auto à 50 km/h"
+                else -> "Au sol · chrono manuel"
             },
             soundOn = soundOn,
             voiceOn = voiceOn,

@@ -245,9 +245,9 @@ class OgnLiveRepository(
             lastFrameAgoS = lastFrameAt?.let { Duration.between(it, now).seconds },
             warning = when {
                 state is AprsState.Waiting && Regex("(?i)invalid|refus").containsMatchIn(state.reason) ->
-                    "Le serveur OGN a refusé la connexion (${state.reason}). Rien ne sera reçu tant que ce n'est pas corrigé."
+                    "OGN a refusé la connexion (${state.reason})."
                 state is AprsState.Connected && !replay && (lastFrameAt == null || Duration.between(lastFrameAt, now).seconds > 120) ->
-                    "Connexion ouverte mais aucune trame depuis plus de deux minutes : vérifiez le réseau, sinon signalez-le."
+                    "Aucune trame OGN depuis 2 min : vérifiez le réseau."
                 else -> null
             },
             statusLabel = when (state) {

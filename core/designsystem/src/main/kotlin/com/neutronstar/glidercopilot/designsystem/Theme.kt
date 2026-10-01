@@ -11,6 +11,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -68,6 +69,16 @@ data class GcColors(
     val onAccentFill: Color = onAccent,
     /** S16 — trait des traces de vol dans les vignettes du profil et du fil (rouge demandé par JB). */
     val trace: Color = Color(0xFFE5383B),
+    /*
+     * V18.1 « New UI » — couleurs de catégorie à la manière d'Apple Santé : chaque carte porte la teinte de son
+     * sujet (titre + pictogramme + graphique). Ciel = sélection et interactions des pages blanches (demande JB).
+     */
+    val sky: Color = Color(0xFF0A84FF),
+    val sun: Color = Color(0xFFFF9500),
+    val wind: Color = Color(0xFF30B0C7),
+    val altitude: Color = Color(0xFF5E5CE6),
+    val heart: Color = Color(0xFFFF375F),
+    val mint: Color = Color(0xFF34C759),
 )
 
 val GlidyColors = GcColors(
@@ -121,35 +132,35 @@ val GlidyColors = GcColors(
  * vert foncé lisible pour les chiffres et le texte d'accent. Contrastes texte ≥ 4,5:1 sur blanc.
  */
 val GlidyLightColors = GcColors(
-    background = Color(0xFFFFFFFF),
+    background = Color(0xFFF2F2F7),
     panel = Color(0xFFFFFFFF),
-    control = Color(0xFFF2F2F2),
-    controlOn = Color(0xFFE6E6E6),
-    line = Color(0xFFDFDFDF),
-    lineSoft = Color(0xFFEBEBEB),
-    lineFaint = Color(0xFFF3F3F3),
-    sunken = Color(0xFFF8F8F8),
+    control = Color(0xFFEEEEF0),
+    controlOn = Color(0xFFE3E3E8),
+    line = Color(0xFFD1D1D6),
+    lineSoft = Color(0xFFE5E5EA),
+    lineFaint = Color(0xFFF0F0F3),
+    sunken = Color(0xFFF7F7FA),
     sunkenField = Color(0xFFFFFFFF),
-    sunkenPlan = Color(0xFFF3F3F3),
+    sunkenPlan = Color(0xFFF2F2F7),
     inkSoft = Color(0xFF1A1A1A),
     planText = Color(0xFF3A3A3C),
     inputLine = Color(0xFFCFCFCF),
-    ink = Color(0xFF0F0F0F),
-    dim = Color(0xFF636366),
-    faint = Color(0xFF8A8A8E),
+    ink = Color(0xFF000000),
+    dim = Color(0xFF6C6C70),
+    faint = Color(0xFF8E8E93),
     cardTitle = Color(0xFF0F0F0F),
     ok = Color(0xFF1A7F37),
     warn = Color(0xFFC25E00),
     bad = Color(0xFFC25E00),
     danger = Color(0xFFD1242F),
     onAccent = Color(0xFFFFFFFF),
-    route = Color(0xFF1A7F37),
+    route = Color(0xFF0A84FF),
     heading = Color(0xFF8A3FFC),
     air = Color(0xFF0A6ED8),
     finesseIdle = Color(0xFF8E8E93),
     statusOn = Color(0xFF1A7F37),
     statusOff = Color(0xFFD1242F),
-    overlay = Color(0xF2FFFFFF),
+    overlay = Color(0xF2F9F9F9),
     terrainTop = Color(0xFFBFE3C4),
     terrainBottom = Color(0xFF8FCB98),
     mapLow = Color(0xFFEDEDF2),
@@ -163,8 +174,8 @@ val GlidyLightColors = GcColors(
         3.5 to Color(0xFFFF8078),
     ),
     windLayer = Color(0xFF1A7F37),
-    accentFill = Color(0xFFB7F7A5),
-    onAccentFill = Color(0xFF0B2410),
+    accentFill = Color(0xFF0A84FF),
+    onAccentFill = Color(0xFFFFFFFF),
 )
 
 /** Couleur interpolée sur l'échelle vario de la charte. */
@@ -180,10 +191,16 @@ fun GcColors.vario(ms: Double): Color {
 }
 
 object GcFonts {
-    /** Police système (Roboto sur Android), équivalent de -apple-system de la maquette. */
-    val ui: FontFamily = FontFamily.SansSerif
-    val mono: FontFamily = FontFamily.SansSerif
-    val numbers: FontFamily = FontFamily.SansSerif
+    /** V18.1 — Inter (SIL OFL 1.1, licenses/INTER-FONT-LICENSE.txt) dans toute l'application, Pilotage compris. */
+    val inter: FontFamily = FontFamily(
+        Font(R.font.inter_regular, FontWeight.Normal),
+        Font(R.font.inter_medium, FontWeight.Medium),
+        Font(R.font.inter_semibold, FontWeight.SemiBold),
+        Font(R.font.inter_bold, FontWeight.Bold),
+    )
+    val ui: FontFamily = inter
+    val mono: FontFamily = inter
+    val numbers: FontFamily = inter
 }
 
 @Immutable
@@ -196,9 +213,34 @@ data class GcType(
     val title: TextStyle,
     val kpi: TextStyle,
     val giant: TextStyle,
-)
+    /*
+     * V18.1 — échelle typographique d'Apple (Human Interface Guidelines, iOS, taille par défaut) :
+     * Large Title 34 · Title 1 28 · Title 2 22 · Title 3 20 · Headline 17 semi-gras · Body 17 · Callout 16 ·
+     * Subheadline 15 · Footnote 13 · Caption 1 12 · Caption 2 11.
+     */
+    val largeTitle: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 34.sp, lineHeight = 41.sp, letterSpacing = (-0.4).sp),
+    val title1: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 28.sp, lineHeight = 34.sp, letterSpacing = (-0.4).sp),
+    val title2: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 22.sp, lineHeight = 28.sp, letterSpacing = (-0.3).sp),
+    val title3: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, lineHeight = 25.sp, letterSpacing = (-0.3).sp),
+    val headline: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 17.sp, lineHeight = 22.sp, letterSpacing = (-0.4).sp),
+    val callout: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontSize = 16.sp, lineHeight = 21.sp, letterSpacing = (-0.3).sp),
+    val subhead: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp, lineHeight = 20.sp, letterSpacing = (-0.2).sp),
+    val footnote: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, lineHeight = 18.sp, letterSpacing = (-0.1).sp),
+    val caption1: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, lineHeight = 16.sp),
+    val caption2: TextStyle = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, lineHeight = 13.sp, letterSpacing = 0.06.sp),
+    /** Grand chiffre d'une carte (« 62 BPM » d'Apple Santé) : Title 1 en chiffres tabulaires. */
+    val metric: TextStyle = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.SemiBold, fontSize = 28.sp, lineHeight = 34.sp, letterSpacing = (-0.5).sp, fontFeatureSettings = "tnum"),
+) {
+    /** Applique la couleur d'encre du thème aux styles de l'échelle Apple. */
+    internal fun inked(c: GcColors): GcType = copy(
+        largeTitle = largeTitle.copy(color = c.ink), title1 = title1.copy(color = c.ink), title2 = title2.copy(color = c.ink),
+        title3 = title3.copy(color = c.ink), headline = headline.copy(color = c.ink), callout = callout.copy(color = c.ink),
+        subhead = subhead.copy(color = c.ink), footnote = footnote.copy(color = c.dim), caption1 = caption1.copy(color = c.dim),
+        caption2 = caption2.copy(color = c.dim), metric = metric.copy(color = c.ink),
+    )
+}
 
-private fun gcType(c: GcColors, social: Boolean = false) = if (social) socialType(c) else GcType(
+private fun gcType(c: GcColors, social: Boolean = false): GcType = if (social) socialType(c) else GcType(
     eyebrow = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 10.sp, letterSpacing = 0.15.sp, color = c.dim),
     body = TextStyle(fontFamily = GcFonts.ui, fontSize = 14.sp, color = c.ink),
     bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, color = c.dim),
@@ -207,19 +249,22 @@ private fun gcType(c: GcColors, social: Boolean = false) = if (social) socialTyp
     title = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 30.sp, letterSpacing = (-0.6).sp, color = c.ink),
     kpi = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.SemiBold, fontSize = 25.sp, color = c.ink, fontFeatureSettings = "tnum"),
     giant = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Medium, fontSize = 50.sp, letterSpacing = (-2.2).sp, color = c.ok, fontFeatureSettings = "tnum"),
-)
+).inked(c)
 
-/** S15 — typographie du thème social : mêmes jetons, titres en casse normale, plus gras et plus grands. */
+/**
+ * Typographie des pages blanches. V18.1 : échelle d'Apple — titres d'écran en Large Title (34), texte courant en
+ * Body (17), texte secondaire en Subheadline (15), libellés en Footnote (13), chiffres en Title 1 tabulaire.
+ */
 private fun socialType(c: GcColors) = GcType(
-    eyebrow = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 11.sp, letterSpacing = 0.2.sp, color = c.dim),
-    body = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp, color = c.ink),
-    bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, color = c.dim),
-    mono = TextStyle(fontFamily = GcFonts.mono, fontWeight = FontWeight.Medium, fontSize = 14.sp, color = c.ink, fontFeatureSettings = "tnum"),
-    monoSmall = TextStyle(fontFamily = GcFonts.mono, fontSize = 12.sp, color = c.dim, fontFeatureSettings = "tnum"),
-    title = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 28.sp, letterSpacing = (-0.8).sp, color = c.ink),
-    kpi = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Bold, fontSize = 22.sp, letterSpacing = (-0.3).sp, color = c.ink, fontFeatureSettings = "tnum"),
-    giant = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Bold, fontSize = 48.sp, letterSpacing = (-2).sp, color = c.ok, fontFeatureSettings = "tnum"),
-)
+    eyebrow = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 13.sp, lineHeight = 18.sp, letterSpacing = (-0.1).sp, color = c.dim),
+    body = TextStyle(fontFamily = GcFonts.ui, fontSize = 17.sp, lineHeight = 22.sp, letterSpacing = (-0.4).sp, color = c.ink),
+    bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp, lineHeight = 20.sp, letterSpacing = (-0.2).sp, color = c.dim),
+    mono = TextStyle(fontFamily = GcFonts.mono, fontWeight = FontWeight.Medium, fontSize = 17.sp, color = c.ink, fontFeatureSettings = "tnum"),
+    monoSmall = TextStyle(fontFamily = GcFonts.mono, fontSize = 13.sp, color = c.dim, fontFeatureSettings = "tnum"),
+    title = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Bold, fontSize = 34.sp, lineHeight = 41.sp, letterSpacing = (-0.4).sp, color = c.ink),
+    kpi = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.SemiBold, fontSize = 28.sp, lineHeight = 34.sp, letterSpacing = (-0.5).sp, color = c.ink, fontFeatureSettings = "tnum"),
+    giant = TextStyle(fontFamily = GcFonts.numbers, fontWeight = FontWeight.Bold, fontSize = 48.sp, letterSpacing = (-1).sp, color = c.ink, fontFeatureSettings = "tnum"),
+).inked(c)
 
 val LocalGcColors = staticCompositionLocalOf { GlidyColors }
 /** S15 — vrai dans le thème clair « social » (tous les onglets sauf Pilotage). */
@@ -235,6 +280,23 @@ object Gc {
 /** Titre d'écran : en capitales dans la charte sombre v8, en casse normale dans le thème social. */
 @Composable
 fun gcHeading(text: String): String = if (Gc.social) text else text.uppercase()
+
+/** V18.1 — typographie Material (champs, menus, boutons système) en Inter, tailles Apple. */
+fun interTypography(): Typography {
+    val base = Typography()
+    fun TextStyle.inter() = copy(fontFamily = GcFonts.ui)
+    return base.copy(
+        displayLarge = base.displayLarge.inter(), displayMedium = base.displayMedium.inter(), displaySmall = base.displaySmall.inter(),
+        headlineLarge = base.headlineLarge.inter(), headlineMedium = base.headlineMedium.inter(), headlineSmall = base.headlineSmall.inter(),
+        titleLarge = base.titleLarge.inter(), titleMedium = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 17.sp),
+        titleSmall = base.titleSmall.inter(),
+        bodyLarge = TextStyle(fontFamily = GcFonts.ui, fontSize = 17.sp), bodyMedium = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp),
+        bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp),
+        labelLarge = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 15.sp),
+        labelMedium = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 13.sp),
+        labelSmall = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 11.sp),
+    )
+}
 
 @Composable
 fun GlidyTheme(content: @Composable () -> Unit) {
@@ -288,6 +350,6 @@ fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
         )
     }
     CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c, social = light), LocalGcSocial provides light) {
-        MaterialTheme(colorScheme = scheme, content = content)
+        MaterialTheme(colorScheme = scheme, typography = interTypography(), content = content)
     }
 }

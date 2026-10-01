@@ -72,14 +72,14 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
 
     override fun signOut() = run("Déconnexion…") {
         withContext(Dispatchers.IO) { client.signOut() }
-        _state.update { it.copy(email = null, message = "Déconnecté : vos vols restent sur ce téléphone.") }
+        _state.update { it.copy(email = null, message = "Déconnecté. Vos vols restent sur le téléphone.") }
     }
 
     override fun deleteAccount() = run("Suppression du compte…") {
         when (val r = withContext(Dispatchers.IO) { client.deleteAccount() }) {
             is CloudResult.Ok -> {
                 flights.repository.listFlights().forEach { flights.repository.updateSyncState(it.id, SyncState.LOCAL_ONLY, null) }
-                _state.update { it.copy(email = null, message = "Compte et vols en ligne supprimés. Vos vols restent sur ce téléphone.") }
+                _state.update { it.copy(email = null, message = "Compte supprimé. Vos vols restent sur le téléphone.") }
                 refreshCounts()
             }
             else -> _state.update { it.copy(message = r.userMessage()) }
@@ -91,7 +91,7 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
         val report = runCatching { sync.sync() }.onFailure { Log.w(TAG, "sauvegarde impossible", it) }.getOrNull()
         if (report != null && report.restored > 0) _changes.update { it + 1 }
         if (client.session == null) _state.update { it.copy(email = null) }
-        _state.update { it.copy(message = report?.message ?: "Sauvegarde impossible (réseau ?)") }
+        _state.update { it.copy(message = report?.message ?: "Échec de la sauvegarde (réseau ?)") }
         refreshCounts()
     }
 
@@ -120,7 +120,7 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
 
     private fun CloudResult<*>.userMessage(): String = when (this) {
         is CloudResult.Failed -> "Échec : $reason"
-        CloudResult.SignedOut -> "Session expirée : reconnectez-vous"
+        CloudResult.SignedOut -> "Session expirée"
         CloudResult.NotConfigured -> "Sauvegarde cloud non configurée"
         is CloudResult.Ok -> ""
     }

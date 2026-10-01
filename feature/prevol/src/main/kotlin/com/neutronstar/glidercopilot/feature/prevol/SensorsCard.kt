@@ -17,13 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
+import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.GcSwitch
@@ -66,13 +66,17 @@ data class SensorsUi(
 @Composable
 internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
     val c = Gc.colors
+    // V18.1 : lien « Partager » en bleu d'interaction sur pages blanches
+    val link = if (Gc.social) c.route else c.ok
     GcCard(
         title = "Capteurs & vols",
+        icon = GcIcons.Sound,
+        tint = c.heart,
         trailing = { GcPill(if (ui.replay) "Rejeu" else if (ui.sourceOk) "Prêt" else if (ui.running) "Dégradé" else "À l'arrêt", if (ui.replay) c.warn else if (ui.sourceOk) c.ok else c.dim) },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             Box(Modifier.size(7.dp).background(if (ui.sourceOk) c.statusOn else c.statusOff, CircleShape))
-            Text(ui.sourceLabel, style = TextStyle(fontSize = 11.sp, color = c.dim))
+            Text(ui.sourceLabel, style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             GcKpi(ui.baroHz, "Baro", Modifier.weight(1f), color = if (ui.baroPresent) c.ink else c.warn)
@@ -80,19 +84,19 @@ internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
             GcKpi(ui.accelHz, "Accél.", Modifier.weight(1f))
             GcKpi(ui.gpsAccuracy, "GPS", Modifier.weight(1f))
         }
-        if (ui.altitudeLine.isNotEmpty()) Text(ui.altitudeLine, style = TextStyle(fontSize = 11.sp, lineHeight = 15.sp, color = c.dim))
-        if (ui.flightLine.isNotEmpty()) Text(ui.flightLine, style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink))
+        if (ui.altitudeLine.isNotEmpty()) Text(ui.altitudeLine, style = cardStyle(TextRole.Secondary, 11.sp, c.dim, darkLineHeight = 15.sp))
+        if (ui.flightLine.isNotEmpty()) Text(ui.flightLine, style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.Bold))
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(Modifier.weight(1f)) {
-                Text("Son du vario", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink))
-                Text("Bips en montée, grave sous −1,7 m/s, continue écran éteint", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+                Text("Son du vario", style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.Bold))
+                Text("Bips en montée, grave sous −1,7 m/s, continue écran éteint", style = cardStyle(TextRole.Secondary, 10.5.sp, c.dim))
             }
             GcSwitch(ui.soundOn, source::setSound, Modifier.semantics { contentDescription = "Son du vario" })
         }
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(Modifier.weight(1f)) {
-                Text("Annonces vocales", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink))
-                Text("Décollage, atterrissage, perte du baromètre", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+                Text("Annonces vocales", style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.Bold))
+                Text("Décollage, atterrissage, perte du baromètre", style = cardStyle(TextRole.Secondary, 10.5.sp, c.dim))
             }
             GcSwitch(ui.voiceOn, source::setVoice, Modifier.semantics { contentDescription = "Annonces vocales" })
         }
@@ -100,55 +104,55 @@ internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
             GcButton(if (ui.testing) "Essai en cours…" else "Essai du son", source::testSound, Modifier.weight(1f), enabled = !ui.testing)
             GcButton("Essai de la voix", source::testVoice, Modifier.weight(1f))
         }
-        Text("Vols enregistrés (IGC)", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink), modifier = Modifier.padding(top = 4.dp))
+        Text("Vols enregistrés (IGC)", style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.Bold), modifier = Modifier.padding(top = 4.dp))
         if (ui.flights.isEmpty()) {
-            Text("Aucun vol pour l'instant : la trace démarre au décollage détecté.", style = TextStyle(fontSize = 11.sp, color = c.dim))
+            Text("Aucun vol : la trace démarre au décollage détecté.", style = cardStyle(TextRole.Secondary, 11.sp, c.dim))
         }
         ui.flights.take(5).forEach { f ->
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text(f.name, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium, color = c.ink), maxLines = 1)
-                    Text(f.detail, style = TextStyle(fontSize = 10.5.sp, color = c.dim), maxLines = 1)
+                    Text(f.name, style = cardStyle(TextRole.Body, 12.sp, c.ink, FontWeight.Medium), maxLines = 1)
+                    Text(f.detail, style = cardStyle(TextRole.Secondary, 10.5.sp, c.dim), maxLines = 1)
                 }
                 Text(
                     "Partager",
-                    style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = c.ok),
+                    style = cardStyle(TextRole.Secondary, 11.sp, link, FontWeight.Bold),
                     modifier = Modifier.clickable(role = Role.Button, onClickLabel = "Partager ${f.name}") { source.share(f) }.padding(horizontal = 10.dp, vertical = 10.dp),
                 )
             }
         }
         if (ui.calibrations.isNotEmpty()) {
-            Text("Journaux de calibration", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.ink), modifier = Modifier.padding(top = 4.dp))
+            Text("Journaux de calibration", style = cardStyle(TextRole.Strong, 13.sp, c.ink, FontWeight.Bold), modifier = Modifier.padding(top = 4.dp))
             ui.calibrations.take(5).forEach { f ->
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text(f.name, style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Medium, color = c.ink), maxLines = 1)
-                        Text(f.detail, style = TextStyle(fontSize = 10.5.sp, color = c.dim), maxLines = 1)
+                        Text(f.name, style = cardStyle(TextRole.Body, 12.sp, c.ink, FontWeight.Medium), maxLines = 1)
+                        Text(f.detail, style = cardStyle(TextRole.Secondary, 10.5.sp, c.dim), maxLines = 1)
                     }
                     Text(
                         "Partager",
-                        style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = c.ok),
+                        style = cardStyle(TextRole.Secondary, 11.sp, link, FontWeight.Bold),
                         modifier = Modifier.clickable(role = Role.Button, onClickLabel = "Partager ${f.name}") { source.share(f) }.padding(horizontal = 10.dp, vertical = 10.dp),
                     )
                 }
             }
             Text(
-                "Enregistrés depuis la bascule « calib » de Pilotage : baromètre, accélération verticale et GPS bruts, " +
-                    "à transmettre après un vol d'essai pour affiner le filtre du vario — jamais utilisés en vol.",
-                style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+                "Bascule « calib » de Pilotage : baromètre, accélération verticale et GPS bruts, " +
+                    "à transmettre après un vol d'essai pour affiner le vario. Jamais utilisés en vol.",
+                style = cardStyle(TextRole.Fine, 9.5.sp, c.faint, darkLineHeight = 13.sp),
             )
         }
         Text(
-            "Vario : filtre de Kalman baromètre + accéléromètre ; sans baromètre, montée OGN de mon planeur en secours (retard de plusieurs secondes). " +
-                "IGC d'enregistreur non approuvé : trace indicative, sans valeur pour un badge.",
-            style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+            "Vario : Kalman baromètre + accéléromètre ; sans baromètre, secours par la montée OGN de mon planeur (plusieurs secondes de retard). " +
+                "IGC non approuvé : trace indicative, sans valeur pour un badge.",
+            style = cardStyle(TextRole.Fine, 9.5.sp, c.faint, darkLineHeight = 13.sp),
         )
         // S8 : certains téléphones (notamment hors Android « stock ») coupent le suivi en vol long si l'app
         // reste soumise aux optimisations de batterie, même avec le service de premier plan actif.
         Text(
-            "Vol long (plusieurs heures) : dans les réglages Android, mets GLIDY en « Sans restriction » côté batterie " +
-                "pour éviter toute coupure du suivi écran éteint.",
-            style = TextStyle(fontSize = 9.5.sp, lineHeight = 13.sp, color = c.faint),
+            "Vol long : réglez la batterie de GLIDY sur « Sans restriction » (réglages Android) " +
+                "pour éviter toute coupure écran éteint.",
+            style = cardStyle(TextRole.Fine, 9.5.sp, c.faint, darkLineHeight = 13.sp),
         )
     }
 }

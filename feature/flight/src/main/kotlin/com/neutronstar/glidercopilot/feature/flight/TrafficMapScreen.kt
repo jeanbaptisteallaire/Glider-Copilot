@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidercopilot.domain.Geo
@@ -64,12 +65,12 @@ fun TrafficMapScreen(
         ) {
             Column(Modifier.weight(1f)) {
                 if (Gc.social) Text("Carte · aéronefs en vol", style = Gc.type.title.copy(fontSize = 22.sp))
-                else Text("CARTE · AÉRONEFS EN VOL", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, color = c.dim))
-                Text(networkLabel, style = TextStyle(fontSize = 10.5.sp, color = c.faint), maxLines = 1)
+                else Text("CARTE · AÉRONEFS EN VOL", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.8.sp, color = c.dim))
+                Text(networkLabel, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.5.sp, color = c.faint), maxLines = 1)
             }
             Text(
                 "${traffic.aircraft.size}",
-                style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Medium, color = if (traffic.aircraft.isEmpty()) c.dim else c.ok),
+                style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 26.sp, fontWeight = FontWeight.Medium, color = if (traffic.aircraft.isEmpty()) c.dim else c.ok),
             )
             GcThemeToggleButton(Modifier.padding(start = 10.dp))
         }
@@ -87,18 +88,18 @@ fun TrafficMapScreen(
                 )
             } else {
                 Box(Modifier.fillMaxSize().background(c.mapLow), contentAlignment = Alignment.Center) {
-                    Text("Carte hors ligne à télécharger dans Prévol", style = TextStyle(fontSize = 12.sp, color = c.dim))
+                    Text("Carte hors ligne à télécharger dans Prévol", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 12.sp, color = c.dim))
                 }
             }
             // zoom : même commande que Pilotage
             Column(Modifier.align(Alignment.BottomEnd).padding(end = 13.dp, bottom = 15.dp).background(c.background, RoundedCornerShape(22.dp))) {
                 Text(
-                    "+", style = TextStyle(fontSize = 23.sp, color = c.ink, textAlign = androidx.compose.ui.text.style.TextAlign.Center),
+                    "+", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 23.sp, color = c.ink, textAlign = androidx.compose.ui.text.style.TextAlign.Center),
                     modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomIn).padding(top = 6.dp)
                         .semantics { contentDescription = "Zoom avant" },
                 )
                 Text(
-                    "−", style = TextStyle(fontSize = 23.sp, color = c.ink, textAlign = androidx.compose.ui.text.style.TextAlign.Center),
+                    "−", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 23.sp, color = c.ink, textAlign = androidx.compose.ui.text.style.TextAlign.Center),
                     modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomOut).padding(top = 6.dp)
                         .semantics { contentDescription = "Zoom arrière" },
                 )
@@ -106,7 +107,7 @@ fun TrafficMapScreen(
             if (map != null) {
                 Text(
                     map.attribution + " · Open Glider Network (ODbL)",
-                    style = TextStyle(fontSize = 7.sp, color = c.faint),
+                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 7.sp, color = c.faint),
                     maxLines = 1,
                     modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 1.dp),
                 )
@@ -146,15 +147,15 @@ private fun BoxScope.AircraftCard(
             ) {
                 Text(
                     a.fullLabel.ifBlank { a.label.substringBefore(' ') }.ifBlank { a.typeLabel },
-                    style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold, color = c.ink),
+                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = c.ink),
                     maxLines = 1,
                 )
-                Text(a.typeLabel + if (a.circling) " · en spirale" else "", style = TextStyle(fontSize = 10.5.sp, color = c.dim))
+                Text(a.typeLabel + if (a.circling) " · en spirale" else "", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.5.sp, color = c.dim))
             }
             if (onFollow != null) {
                 Text(
                     "SUIVRE",
-                    style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp, color = c.onAccent),
+                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 11.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.6.sp, color = c.onAccent),
                     modifier = Modifier
                         .background(c.ok, RoundedCornerShape(9.dp))
                         .clickable(role = Role.Button, onClickLabel = "Suivre cet aéronef dans Pilotage", onClick = onFollow)
@@ -174,7 +175,7 @@ private fun BoxScope.AircraftCard(
                 dist?.let { String.format(Locale.FRANCE, "%.0f km de %s", it, fieldId ?: "terrain") },
                 "vu il y a ${a.ageS} s",
             ).joinToString(" · "),
-            style = TextStyle(fontSize = 10.5.sp, color = c.faint),
+            style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.5.sp, color = c.faint),
         )
     }
 }
@@ -183,8 +184,8 @@ private fun BoxScope.AircraftCard(
 private fun Value(label: String, value: String) {
     val c = Gc.colors
     Column(Modifier.width(96.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(label, style = TextStyle(fontSize = 8.5.sp, fontWeight = FontWeight.Medium, letterSpacing = 0.5.sp, color = c.dim))
-        Text(value, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ink), maxLines = 1)
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.5.sp, fontWeight = FontWeight.Medium, letterSpacing = 0.5.sp, color = c.dim))
+        Text(value, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ink), maxLines = 1)
     }
 }
 

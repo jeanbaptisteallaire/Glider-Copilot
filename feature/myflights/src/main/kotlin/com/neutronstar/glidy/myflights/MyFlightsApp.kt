@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,15 +41,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,6 +63,8 @@ import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
+import com.neutronstar.glidercopilot.designsystem.gcHeading
+import com.neutronstar.glidercopilot.designsystem.metricText
 import com.neutronstar.glidercopilot.designsystem.vario
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
@@ -272,7 +279,7 @@ fun MyFlightsScreen(
 @Composable
 private fun LoadingScreen() {
     Box(Modifier.fillMaxSize().testTag("loading"), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(color = Gc.colors.ok, strokeWidth = 2.dp)
+        CircularProgressIndicator(color = if (Gc.social) Gc.colors.route else Gc.colors.ok, strokeWidth = 2.dp)
     }
 }
 
@@ -293,12 +300,15 @@ private fun ErrorScreen(message: String, onRetry: () -> Unit) {
 
 @Composable
 private fun FileStateBadge(state: LocalFileState) {
-    val label = when (state) {
-        LocalFileState.MISSING -> "FICHIER MANQUANT"
-        LocalFileState.INVALID -> "FICHIER INVALIDE"
-        LocalFileState.RECORDING -> "ENREGISTREMENT EN COURS"
-        LocalFileState.AVAILABLE -> "LOCAL"
-    }
+    // capitales en sombre (charte v8), casse normale sur les pages blanches (V18.1)
+    val label = gcHeading(
+        when (state) {
+            LocalFileState.MISSING -> "Fichier manquant"
+            LocalFileState.INVALID -> "Fichier invalide"
+            LocalFileState.RECORDING -> "Enregistrement"
+            LocalFileState.AVAILABLE -> "Local"
+        },
+    )
     GcPill(label, if (state == LocalFileState.AVAILABLE) Gc.colors.dim else Gc.colors.warn)
 }
 
@@ -314,37 +324,61 @@ private fun FlightDetailScreen(
     onReplay3d: () -> Unit,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     Column(Modifier.fillMaxSize()) {
         Row(
             Modifier.fillMaxWidth().padding(start = 8.dp, end = 16.dp, top = 6.dp, bottom = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                Modifier.size(44.dp).testTag("back").clickable(role = Role.Button, onClickLabel = "Retour au carnet", onClick = onBack),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(GcIcons.ChevronDown, contentDescription = "Retour", tint = c.ink, modifier = Modifier.size(22.dp).rotate(90f))
+            if (social) {
+                // V18.1 : retour façon iOS, chevron et libellé en bleu ciel
+                Row(
+                    Modifier.height(44.dp).testTag("back").clickable(role = Role.Button, onClickLabel = "Retour au carnet", onClick = onBack)
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Icon(GcIcons.ChevronDown, contentDescription = "Retour", tint = c.route, modifier = Modifier.size(24.dp).rotate(90f))
+                    Text("Carnet", style = Gc.type.body.copy(color = c.route))
+                }
+            } else {
+                Box(
+                    Modifier.size(44.dp).testTag("back").clickable(role = Role.Button, onClickLabel = "Retour au carnet", onClick = onBack),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(GcIcons.ChevronDown, contentDescription = "Retour", tint = c.ink, modifier = Modifier.size(22.dp).rotate(90f))
+                }
+                Text("DÉTAIL DU VOL", style = Gc.type.eyebrow.copy(color = c.cardTitle, fontWeight = FontWeight.Bold, fontSize = 10.5.sp, letterSpacing = 1.4.sp))
             }
-            Text("DÉTAIL DU VOL", style = Gc.type.eyebrow.copy(color = c.cardTitle, fontWeight = FontWeight.Bold, fontSize = 10.5.sp, letterSpacing = 1.4.sp))
         }
         LazyColumn(
             modifier = Modifier.fillMaxSize().testTag("flight-detail"),
-            contentPadding = PaddingValues(start = 14.dp, end = 14.dp, top = 0.dp, bottom = 28.dp),
+            contentPadding = PaddingValues(start = if (social) 16.dp else 14.dp, end = if (social) 16.dp else 14.dp, top = 0.dp, bottom = 28.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text(if (Gc.social) flight.date else flight.date.uppercase(), style = Gc.type.title.copy(fontSize = 24.sp))
-                    Text("${flight.day} · ${flight.place}", style = Gc.type.bodySmall)
+                Column(verticalArrangement = Arrangement.spacedBy(if (social) 2.dp else 4.dp)) {
+                    if (social) {
+                        Text(flight.date, style = Gc.type.title1)
+                        Text("${flight.day.replaceFirstChar { it.titlecase(Locale.FRANCE) }} · ${flight.place}", style = Gc.type.subhead.copy(color = c.dim))
+                    } else {
+                        Text(flight.date.uppercase(), style = Gc.type.title.copy(fontSize = 24.sp))
+                        Text("${flight.day} · ${flight.place}", style = Gc.type.bodySmall)
+                    }
                 }
             }
             item {
-                GcCard(title = "Trace", trailing = { GcPill(if (flight.isExample) "EXEMPLE SYNTHÉTIQUE" else "IGC TÉLÉPHONE", if (flight.isExample) c.warn else c.dim) }) {
+                GcCard(
+                    title = "Trace",
+                    icon = GcIcons.Carte,
+                    tint = c.trace,
+                    trailing = { GcPill(gcHeading(if (flight.isExample) "Exemple" else "IGC téléphone"), if (flight.isExample) c.warn else c.dim) },
+                ) {
                     RoutePreview(route = flight.route, modifier = Modifier.fillMaxWidth().aspectRatio(1.6f))
                     Row(Modifier.fillMaxWidth()) {
-                        GcKpi(flight.duration, "Durée", Modifier.weight(1f), color = c.ok)
-                        GcKpi(flight.distance, "Distance", Modifier.weight(1f))
-                        GcKpi(flight.maxAltitude, "Alt. max", Modifier.weight(1f))
+                        // V18.1 : teinte de catégorie par chiffre (temps, distance, altitude)
+                        GcKpi(flight.duration, "Durée", Modifier.weight(1f), color = c.ok, labelColor = c.mint)
+                        GcKpi(flight.distance, "Distance", Modifier.weight(1f), labelColor = c.sun)
+                        GcKpi(flight.maxAltitude, "Alt. max", Modifier.weight(1f), labelColor = c.altitude)
                     }
                     GcButton(
                         "REVOIR LE VOL EN 3D",
@@ -357,12 +391,13 @@ private fun FlightDetailScreen(
                 }
             }
             item {
-                GcCard(title = "Profil d'altitude", trailing = { GcPill("GPS · VARIO", c.dim) }) {
-                    AltitudeChart(flight.altitudes, flight.durationSeconds)
+                GcCard(title = "Profil d'altitude", icon = GcIcons.MesVols, tint = c.altitude, trailing = { GcPill(gcHeading(if (social) "GPS" else "GPS · vario"), c.dim) }) {
+                    if (social) HealthAltitudeChart(flight.altitudes, flight.durationSeconds)
+                    else AltitudeChart(flight.altitudes, flight.durationSeconds)
                 }
             }
             item {
-                GcCard(title = "Informations", trailing = { FileStateBadge(flight.localState) }) {
+                GcCard(title = "Informations", tint = if (social) c.dim else null, trailing = { FileStateBadge(flight.localState) }) {
                     InformationPanel(flight)
                 }
             }
@@ -373,7 +408,7 @@ private fun FlightDetailScreen(
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     if (sharingEnabled && !flight.isExample && flight.localState == LocalFileState.AVAILABLE) {
                         GcButton(
-                            if (flight.isPublic) "Partagé sur le fil ✓ · retirer" else "Partager sur le fil GLIDY",
+                            if (flight.isPublic) "Retirer du fil" else "Partager sur le fil",
                             onClick = onToggleShare,
                             primary = !flight.isPublic,
                             modifier = Modifier.fillMaxWidth().testTag("share-feed"),
@@ -397,6 +432,14 @@ private fun FlightDetailScreen(
 @Composable
 private fun DangerButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val c = Gc.colors
+    if (Gc.social) {
+        // V18.1 : bouton destructif façon iOS, texte rouge sur carte blanche
+        Box(
+            modifier.height(44.dp).clip(RoundedCornerShape(12.dp)).background(c.panel).clickable(role = Role.Button, onClick = onClick),
+            contentAlignment = Alignment.Center,
+        ) { Text(text, style = Gc.type.headline.copy(fontSize = 16.sp, color = c.danger)) }
+        return
+    }
     Box(
         modifier.height(40.dp).border(1.dp, c.danger.copy(alpha = 0.45f), RoundedCornerShape(10.dp))
             .clickable(role = Role.Button, onClick = onClick),
@@ -417,22 +460,21 @@ private fun DeleteFlightDialog(
         title = { Text("Supprimer ce vol ?", style = Gc.type.body.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold)) },
         text = {
             Text(
-                "Le fichier $fileName et son index local seront supprimés de ce téléphone. " +
-                    "Les autres vols ne seront pas modifiés.",
+                "Le fichier $fileName sera supprimé de ce téléphone. Les autres vols restent.",
                 style = Gc.type.body.copy(color = c.dim),
             )
         },
         confirmButton = {
             TextButton(onClick = onConfirm, modifier = Modifier.testTag("confirm-delete")) {
-                Text("SUPPRIMER", style = Gc.type.body.copy(color = c.danger, fontWeight = FontWeight.Bold))
+                Text(gcHeading("Supprimer"), style = Gc.type.body.copy(color = c.danger, fontWeight = FontWeight.Bold))
             }
         },
         dismissButton = {
             TextButton(onClick = onCancel, modifier = Modifier.testTag("cancel-delete")) {
-                Text("ANNULER", style = Gc.type.body.copy(color = c.ink, fontWeight = FontWeight.Bold))
+                Text(gcHeading("Annuler"), style = Gc.type.body.copy(color = if (Gc.social) c.route else c.ink, fontWeight = FontWeight.Bold))
             }
         },
-        containerColor = c.control,
+        containerColor = if (Gc.social) c.panel else c.control,
         shape = RoundedCornerShape(16.dp),
     )
 }
@@ -444,13 +486,13 @@ private fun InformationPanel(flight: FlightCardUi) {
         listOf(
             "Planeur" to flight.glider,
             "Pilote" to flight.pilot,
-            "Altitude minimale" to flight.minimumAltitude,
-            "Dénivelé positif" to flight.gain,
-            "Points valides" to flight.pointCount,
-            "Fichier source" to flight.fileName,
+            "Alt. min" to flight.minimumAltitude,
+            "Dénivelé +" to flight.gain,
+            "Points GPS" to flight.pointCount,
+            "Fichier" to flight.fileName,
             "Taille" to flight.fileSize,
             "Empreinte" to flight.fingerprint,
-            "État local" to flight.localState.userLabel(),
+            "État" to flight.localState.userLabel(),
         ).forEachIndexed { index, (label, value) ->
             if (index > 0) HorizontalDivider(color = c.lineSoft)
             InfoRow(label, value)
@@ -460,6 +502,14 @@ private fun InformationPanel(flight: FlightCardUi) {
 
 @Composable
 private fun InfoRow(label: String, value: String) {
+    if (Gc.social) {
+        // V18.1 : ligne de réglages iOS, libellé à gauche, valeur grise alignée à droite
+        Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(label, style = Gc.type.subhead, maxLines = 1, modifier = Modifier.padding(end = 12.dp))
+            Text(value, style = Gc.type.subhead.copy(color = Gc.colors.dim), textAlign = TextAlign.End, modifier = Modifier.weight(1f))
+        }
+        return
+    }
     Row(Modifier.fillMaxWidth().padding(vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(label.uppercase(), style = Gc.type.eyebrow, modifier = Modifier.weight(0.42f))
         Text(value, style = Gc.type.body.copy(fontSize = 13.sp), modifier = Modifier.weight(0.58f))
@@ -470,6 +520,7 @@ private fun InfoRow(label: String, value: String) {
 @Composable
 private fun RoutePreview(route: List<Pair<Float, Float>>, modifier: Modifier) {
     val c = Gc.colors
+    val social = Gc.social
     Canvas(modifier = modifier.background(c.sunken, RoundedCornerShape(10.dp)).border(1.dp, c.lineFaint, RoundedCornerShape(10.dp)).padding(8.dp)) {
         for (index in 1..3) {
             val fraction = index / 4f
@@ -483,7 +534,8 @@ private fun RoutePreview(route: List<Pair<Float, Float>>, modifier: Modifier) {
                 val y = point.second * size.height
                 if (index == 0) path.moveTo(x, y) else path.lineTo(x, y)
             }
-            drawPath(path, c.route, style = Stroke(width = 2.6f, cap = StrokeCap.Round))
+            // V18.1 : trace rouge sur les pages blanches (comme les vignettes) ; sombre inchangé
+            drawPath(path, if (social) c.trace else c.route, style = Stroke(width = if (social) 3.2f else 2.6f, cap = StrokeCap.Round, join = StrokeJoin.Round))
             val start = route.first()
             val end = route.last()
             drawCircle(c.ink, radius = 4.5f, center = Offset(start.first * size.width, start.second * size.height))
@@ -525,6 +577,82 @@ private fun AltitudeChart(altitudes: List<Float>, durationSeconds: Long) {
             Text("DÉPART · ${altitudes.firstOrNull()?.toInt() ?: "—"} m", style = Gc.type.eyebrow)
             Text("PLAFOND ${altitudes.maxOrNull()?.toInt() ?: "—"} m", style = Gc.type.eyebrow.copy(color = c.ok))
             Text("ARRIVÉE · ${altitudes.lastOrNull()?.toInt() ?: "—"} m", style = Gc.type.eyebrow)
+        }
+    }
+}
+
+/**
+ * V18.1 pages blanches — profil d'altitude à la manière d'Apple Santé : plage min–max en tête, aire en dégradé
+ * doux de la teinte altitude, trait aux extrémités arrondies, quadrillage fin, graduations en Caption 2.
+ */
+@Composable
+private fun HealthAltitudeChart(altitudes: List<Float>, durationSeconds: Long) {
+    val c = Gc.colors
+    val tint = c.altitude
+    val minimum = altitudes.minOrNull()
+    val maximum = altitudes.maxOrNull()
+    // graduations arrondies à la centaine, de part et d'autre de la plage du vol
+    val low = ((minimum ?: 0f) / 100f).toInt().let { if (minimum != null && minimum < 0f) it - 1 else it } * 100f
+    val high = (((maximum ?: 100f) + 99.99f) / 100f).toInt() * 100f
+    val top = if (high - low < 100f) low + 100f else high
+    val mid = (low + top) / 2f
+    val axis = Gc.type.caption2.copy(color = c.faint, fontFeatureSettings = "tnum")
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column {
+            Text("Plage", style = Gc.type.footnote.copy(color = c.dim, fontWeight = FontWeight.SemiBold))
+            val range = if (minimum != null && maximum != null) "${formatInteger(minimum.toInt())}–${formatInteger(maximum.toInt())} m" else "—"
+            Text(metricText(range, Gc.type.metric, c.faint), style = Gc.type.metric, maxLines = 1)
+        }
+        Row(Modifier.fillMaxWidth().height(150.dp)) {
+            Canvas(Modifier.weight(1f).fillMaxSize()) {
+                val hair = 1f
+                // quadrillage fin : 3 lignes horizontales (haut, milieu, bas)
+                for (k in 0..2) {
+                    val y = size.height * k / 2f
+                    drawLine(c.lineSoft, Offset(0f, y), Offset(size.width, y), hair)
+                }
+                if (altitudes.size > 1) {
+                    val span = (top - low).coerceAtLeast(1f)
+                    val inset = 3f
+                    fun pos(i: Int) = Offset(
+                        i.toFloat() / (altitudes.size - 1) * size.width,
+                        inset + (size.height - 2 * inset) * (1f - (altitudes[i] - low) / span),
+                    )
+                    val line = Path()
+                    for (i in altitudes.indices) {
+                        val p = pos(i)
+                        if (i == 0) line.moveTo(p.x, p.y) else line.lineTo(p.x, p.y)
+                    }
+                    val area = Path()
+                    area.addPath(line)
+                    area.lineTo(size.width, size.height)
+                    area.lineTo(0f, size.height)
+                    area.close()
+                    drawPath(area, Brush.verticalGradient(listOf(tint.copy(alpha = 0.32f), tint.copy(alpha = 0.02f))))
+                    drawPath(line, tint, style = Stroke(width = 2.5.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+                    // plafond marqué d'un point (anneau blanc)
+                    val iMax = altitudes.indices.maxByOrNull { altitudes[it] } ?: 0
+                    val pMax = pos(iMax)
+                    drawCircle(c.panel, radius = 5.dp.toPx(), center = pMax)
+                    drawCircle(tint, radius = 3.5.dp.toPx(), center = pMax)
+                }
+            }
+            // graduations d'altitude à droite, comme Apple Santé
+            Column(Modifier.padding(start = 6.dp).fillMaxHeight(), verticalArrangement = Arrangement.SpaceBetween) {
+                Text(formatInteger(top.toInt()), style = axis)
+                Text(formatInteger(mid.toInt()), style = axis)
+                Text(formatInteger(low.toInt()), style = axis)
+            }
+        }
+        Row(Modifier.fillMaxWidth()) {
+            Text("0 min", style = axis, modifier = Modifier.weight(1f))
+            Text(formatDuration(durationSeconds / 2), style = axis, textAlign = TextAlign.Center, modifier = Modifier.weight(1f))
+            Text(formatDuration(durationSeconds), style = axis, textAlign = TextAlign.End, modifier = Modifier.weight(1f))
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text("Départ ${altitudes.firstOrNull()?.let { formatInteger(it.toInt()) + " m" } ?: "—"}", style = Gc.type.caption1)
+            Text("Plafond ${maximum?.let { formatInteger(it.toInt()) + " m" } ?: "—"}", style = Gc.type.caption1.copy(color = tint, fontWeight = FontWeight.SemiBold))
+            Text("Arrivée ${altitudes.lastOrNull()?.let { formatInteger(it.toInt()) + " m" } ?: "—"}", style = Gc.type.caption1)
         }
     }
 }
@@ -598,7 +726,7 @@ private fun formatFileSize(bytes: Long): String = when {
 }
 
 private fun LocalFileState.userLabel(): String = when (this) {
-    LocalFileState.AVAILABLE -> "Disponible sur cet appareil"
+    LocalFileState.AVAILABLE -> "Sur ce téléphone"
     LocalFileState.RECORDING -> "Enregistrement en cours"
     LocalFileState.MISSING -> "Fichier manquant"
     LocalFileState.INVALID -> "Fichier invalide · diagnostic conservé"

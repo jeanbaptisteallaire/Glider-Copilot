@@ -62,6 +62,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.designsystem.GcColors
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.vario
@@ -211,7 +212,7 @@ fun FlightScreen(
             picker = {
                 androidx.compose.material3.DropdownMenu(expanded = picking, onDismissRequest = { picking = false }, containerColor = c.panel) {
                     androidx.compose.material3.DropdownMenuItem(
-                        text = { Text("AUTO · terrain du club, sinon le meilleur rejoignable", style = TextStyle(fontSize = 13.sp, color = c.ok)) },
+                        text = { Text("AUTO · terrain du club, sinon le meilleur rejoignable", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, color = c.ok)) },
                         onClick = { controls?.selectField(null); picking = false },
                     )
                     live.fieldChoices.take(8).forEach { f ->
@@ -224,7 +225,7 @@ fun FlightScreen(
                                         f.distanceKm?.let { km(it) },
                                         f.marginM?.let { "${signed(it)} m" },
                                     ).joinToString(" · "),
-                                    style = TextStyle(fontSize = 13.sp, color = if ((f.marginM ?: 0.0) >= 0) c.ink else c.bad),
+                                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, color = if ((f.marginM ?: 0.0) >= 0) c.ink else c.bad),
                                 )
                             },
                             onClick = { controls?.selectField(f.id); picking = false },
@@ -358,7 +359,7 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                 AltValue("SÉCU", need?.let { grouped(it.roundToInt()) } ?: "—")
             }
             if (UiMask.SHOW_TREND_LINE) {
-                Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
+                Text("tendance ${trend?.let { signed1(it) } ?: "—"} m/s · $trendNote", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.sp, color = c.dim), maxLines = 1, modifier = Modifier.padding(top = 9.dp))
             }
         }
         // distance au terrain : deuxième information fondamentale, au centre et en grand (V7.1)
@@ -370,19 +371,19 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
             Text(
                 distKm?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—",
                 // V7.2 : blanc, charte aéronautique (le vert reste réservé à la marge de sécurité)
-                style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, color = c.ink, letterSpacing = (-1.2).sp, lineHeight = 38.sp),
+                style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 34.sp, fontWeight = FontWeight.Bold, color = c.ink, letterSpacing = (-1.2).sp, lineHeight = 38.sp),
                 maxLines = 1, softWrap = false,
                 modifier = Modifier.padding(top = 2.dp)
                     .semantics { contentDescription = distKm?.let { "Distance au terrain ${km(it)}" } ?: "Distance au terrain inconnue" },
             )
-            Text("km", style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium, color = c.ink))
+            Text("km", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = c.ink))
         }
         Column(Modifier.width(128.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.Bottom) {
                 Text("Finesse", style = eyebrow(c), maxLines = 1)
                 Text(
                     if (pending != null) "encore : F$pending" else "+${ARRIVAL_MARGIN.toInt()} m · $windLabel",
-                    style = TextStyle(fontSize = 8.sp, color = if (pending != null) c.warn else c.dim), maxLines = 1,
+                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.sp, color = if (pending != null) c.warn else c.dim), maxLines = 1,
                 )
             }
             Row(Modifier.fillMaxWidth().background(c.control, RoundedCornerShape(13.dp)).padding(3.dp), horizontalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -399,8 +400,8 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         val tc = when { selected -> c.ok; isPending -> c.warn; else -> c.finesseIdle }
-                        Text("F", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.Medium, color = tc), modifier = Modifier.padding(top = 4.dp, end = 1.dp))
-                        Text("$f", style = TextStyle(fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = tc))
+                        Text("F", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.sp, fontWeight = FontWeight.Medium, color = tc), modifier = Modifier.padding(top = 4.dp, end = 1.dp))
+                        Text("$f", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = tc))
                     }
                 }
             }
@@ -413,13 +414,13 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
                 picker()
                 // la distance est passée au centre de l'écran (V7.1) : terrain et cap tiennent sur une ligne
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(if (auto) "AUTO" else "MANU", style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
-                    Text(LocalFieldId.current, style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
+                    Text(if (auto) "AUTO" else "MANU", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.sp, fontWeight = FontWeight.SemiBold, color = c.route), modifier = Modifier.background(c.background, RoundedCornerShape(5.dp)).padding(horizontal = 5.dp, vertical = 3.dp))
+                    Text(LocalFieldId.current, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
                     Spacer(Modifier.weight(1f))
                     Text(
                         if (distKm != null) "${brg.roundToInt()}°" else "position ?",
                         // V7.2 : cap en mauve, charte aéronautique
-                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.heading, letterSpacing = (-0.3).sp),
+                        style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = c.heading, letterSpacing = (-0.3).sp),
                         maxLines = 1, softWrap = false,
                     )
                     Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.ink, modifier = Modifier.size(12.dp))
@@ -433,12 +434,12 @@ private fun SafetyZone(marge: Double?, alt: Double?, need: Double?, trend: Doubl
 private fun AltValue(label: String, value: String) {
     val c = Gc.colors
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label, style = TextStyle(fontSize = 8.sp, fontWeight = FontWeight.Medium, color = c.dim, letterSpacing = 0.25.sp), modifier = Modifier.padding(bottom = 2.dp))
-        Text(value, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ink, letterSpacing = (-0.3).sp, fontFeatureSettings = "tnum"))
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.sp, fontWeight = FontWeight.Medium, color = c.dim, letterSpacing = 0.25.sp), modifier = Modifier.padding(bottom = 2.dp))
+        Text(value, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = c.ink, letterSpacing = (-0.3).sp))
     }
 }
 
-private fun eyebrow(c: GcColors) = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium, color = c.dim, letterSpacing = 0.15.sp)
+private fun eyebrow(c: GcColors) = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.sp, fontWeight = FontWeight.Medium, color = c.dim, letterSpacing = 0.15.sp)
 
 // ---------------------------------------------------------------- profil de retour
 
@@ -455,7 +456,7 @@ private fun ReturnProfile(
         HorizontalDivider(thickness = 1.dp, color = c.ok.copy(alpha = 0.11f))
         if (UiMask.SHOW_PROFILE_HEADER) {
             Row(Modifier.fillMaxWidth().height(36.dp).padding(start = 24.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Profil de retour au terrain", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.dim), modifier = Modifier.weight(1f))
+                Text("Profil de retour au terrain", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 11.sp, fontWeight = FontWeight.Medium, color = c.dim), modifier = Modifier.weight(1f))
                 Row(
                     Modifier.fillMaxHeight36().widthIn(min = 86.dp)
                         .clickable(role = Role.Button, onClickLabel = if (open) "Réduire le profil" else "Déployer le profil", onClick = onToggle)
@@ -464,7 +465,7 @@ private fun ReturnProfile(
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(if (open) "Réduire" else "Déployer", style = TextStyle(fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = c.ok))
+                    Text(if (open) "Réduire" else "Déployer", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 11.sp, fontWeight = FontWeight.SemiBold, color = c.ok))
                     Spacer(Modifier.width(8.dp))
                     Icon(if (open) GcIcons.ChevronUp else GcIcons.ChevronDown, contentDescription = null, tint = c.ok, modifier = Modifier.size(12.dp))
                 }
@@ -473,7 +474,7 @@ private fun ReturnProfile(
         if (open && waiting) {
             Text(
                 "Coupe du terrain dès la première position (GPS ou OGN)",
-                style = TextStyle(fontSize = 11.sp, color = c.dim),
+                style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 11.sp, color = c.dim),
                 modifier = Modifier.fillMaxWidth().height(88.dp).padding(start = 24.dp, top = 30.dp),
             )
         } else if (open && UiMask.SHOW_PROFILE_GRAPH) ProfileCanvas(alt, need, finesse, marge ?: 0.0, distKm, brg, result, ceiling)
@@ -526,7 +527,7 @@ private fun ProfileCanvas(
         val pL = 36.dp.toPx(); val pR = 12.dp.toPx(); val pT = 16.dp.toPx(); val pB = 15.dp.toPx()
         fun x(s: Double) = (pL + s / dx * (w - pL - pR)).toFloat()
         fun y(a: Double) = (pT + (top - a) / (top - bot) * (h - pT - pB)).toFloat()
-        val small = TextStyle(fontSize = 9.sp, color = c.dim)
+        val small = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim)
         drawRect(c.background)
         // grille
         val step = if (top - bot > 1400) 500 else 250
@@ -569,15 +570,15 @@ private fun ProfileCanvas(
         if (known) drawLine(c.ink, Offset(x(0.0), y(alt)), Offset(x(end), y(gl(end))), 2.dp.toPx())
         if (known && hit >= 0) {
             drawLine(c.bad, Offset(x(hit), y(gl(hit))), Offset(x(d), y(gl(d))), 2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(4.dp.toPx(), 3.dp.toPx())))
-            label(tm, "RELIEF", x(hit), y(gl(hit)) - 8.dp.toPx(), TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.bad), TextAlign.Center)
+            label(tm, "RELIEF", x(hit), y(gl(hit)) - 8.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.bad), TextAlign.Center)
         }
         // drapeau terrain et arrivée
         val fx = x(d); val fy = y(FIELD_ELEV)
         drawPath(Path().apply { moveTo(fx, fy); lineTo(fx, fy - 14.dp.toPx()); lineTo(fx - 8.dp.toPx(), fy - 10.dp.toPx()); lineTo(fx, fy - 7.dp.toPx()); close() }, c.route)
         val arrH = gl(d) - FIELD_ELEV
         val arrY = (y(gl(d)) - 8.dp.toPx()).coerceIn(pT + 2, h - pB - 14.dp.toPx())
-        if (known) label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - ARRIVAL_MARGIN >= 0) c.ok else c.bad), TextAlign.End)
-        label(tm, "+${ARRIVAL_MARGIN.toInt()}", fx - 4.dp.toPx(), y(arr) + 9.dp.toPx(), TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.warn), TextAlign.End)
+        if (known) label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - ARRIVAL_MARGIN >= 0) c.ok else c.bad), TextAlign.End)
+        label(tm, "+${ARRIVAL_MARGIN.toInt()}", fx - 4.dp.toPx(), y(arr) + 9.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.warn), TextAlign.End)
         // planeur de profil
         val gx = x(0.0); val gy = y(alt)
         if (known) drawLine(c.ink, Offset(gx - 8.dp.toPx(), gy), Offset(gx + 10.dp.toPx(), gy + 1.dp.toPx()), 2.dp.toPx())
@@ -586,7 +587,7 @@ private fun ProfileCanvas(
         if (known) drawLine(if (marge < 0) c.bad else c.ok, Offset(gx + 2.dp.toPx(), gy), Offset(gx + 2.dp.toPx(), y(need)), 3.dp.toPx())
         // légendes
         if (UiMask.SHOW_PROFILE_CAPTION) {
-            label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · " + if (realRelief != null) "relief Copernicus" else "relief schématique", pL, 7.dp.toPx(), TextStyle(fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
+            label(tm, "COUPE → $FIELD_ID · ${brg.roundToInt()}° · F${oneDecimal(finesse)} eff. · " + if (realRelief != null) "relief Copernicus" else "relief schématique", pL, 7.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, fontWeight = FontWeight.Bold, color = c.inkSoft), TextAlign.Start)
         }
         val bottomY = h - 8.dp.toPx()
         label(tm, "0", x(0.0), bottomY, small, TextAlign.Start)
@@ -647,7 +648,7 @@ private fun DemoMap(t: Double, v: Double) {
         val field = Offset(cx - size.width * 0.34f, cy + size.height * 0.28f)
         drawLine(c.route, Offset(cx, cy), field, 2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(8.dp.toPx(), 6.dp.toPx())))
         drawCircle(c.route, 5.dp.toPx(), field)
-        label(tm, FIELD_ID, field.x + 9.dp.toPx(), field.y, TextStyle(fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.route), TextAlign.Start)
+        label(tm, FIELD_ID, field.x + 9.dp.toPx(), field.y, TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.route), TextAlign.Start)
         // trace colorée par le vario sur la dernière spirale
         val a0 = t * 2 * Math.PI / 26
         val seg = 48
@@ -704,7 +705,7 @@ private fun BoxScope.MapOverlays(
     // sous la sécurité : cap vers le terrain retenu, bien visible
     if (capBanner != null) Text(
         capBanner,
-        style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.onAccent),
+        style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.onAccent),
         maxLines = 1,
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 60.dp).background(c.bad, RoundedCornerShape(9.dp)).padding(horizontal = 12.dp, vertical = 7.dp)
             .semantics { contentDescription = capBanner },
@@ -717,7 +718,7 @@ private fun BoxScope.MapOverlays(
         // V7.3 (demande JB) : enregistrement des données brutes baro/accél./GPS, pour affiner le filtre après le vol
         if (onCalibration != null) Text(
             if (calibrationOn) "● CALIB" else "calib",
-            style = TextStyle(fontSize = 9.sp, fontWeight = if (calibrationOn) FontWeight.Bold else FontWeight.Medium, color = if (calibrationOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
+            style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, fontWeight = if (calibrationOn) FontWeight.Bold else FontWeight.Medium, color = if (calibrationOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
             modifier = Modifier
                 .background(if (calibrationOn) c.danger else c.overlay, RoundedCornerShape(50))
                 .clickable(role = Role.Switch, onClickLabel = if (calibrationOn) "Arrêter l'enregistrement de calibration" else "Enregistrer les données brutes des capteurs pour calibration") { onCalibration() }
@@ -726,7 +727,7 @@ private fun BoxScope.MapOverlays(
         )
         if (onDemo != null) Text(
             if (demoOn) "DÉMO" else "démo",
-            style = TextStyle(fontSize = 9.sp, fontWeight = if (demoOn) FontWeight.Bold else FontWeight.Medium, color = if (demoOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
+            style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, fontWeight = if (demoOn) FontWeight.Bold else FontWeight.Medium, color = if (demoOn) c.onAccent else c.faint, letterSpacing = 0.4.sp),
             modifier = Modifier
                 .background(if (demoOn) c.warn else c.overlay, RoundedCornerShape(50))
                 .clickable(role = Role.Switch, onClickLabel = if (demoOn) "Quitter le mode démo" else "Mode démo") { onDemo() }
@@ -737,7 +738,7 @@ private fun BoxScope.MapOverlays(
     // origine de la position affichée (démonstration, rejeu, secours)
     if (tag != null) Text(
         tag,
-        style = TextStyle(fontSize = 9.sp, color = c.faint),
+        style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.faint),
         modifier = Modifier.align(Alignment.TopCenter).padding(top = 14.dp).background(c.overlay, RoundedCornerShape(7.dp)).padding(horizontal = 8.dp, vertical = 4.dp),
     )
     // légende trafic OGN (maquette v8 : .traffic-key)
@@ -747,7 +748,7 @@ private fun BoxScope.MapOverlays(
                 withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append("OGN ") }
                 append("${traffic.aircraft.size} aéronef" + (if (traffic.aircraft.size > 1) "s" else "") + (nearTraffic?.let { " ($it à 15 km)" } ?: "") + " · ${traffic.thermals.size} pompe" + (if (traffic.thermals.size > 1) "s" else ""))
             },
-            style = TextStyle(fontSize = 9.sp, color = c.cardTitle),
+            style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.cardTitle),
             modifier = Modifier.align(Alignment.TopStart).padding(start = 14.dp, top = 62.dp)
                 .background(c.overlay, RoundedCornerShape(10.dp)).border(1.dp, c.line, RoundedCornerShape(10.dp))
                 .padding(horizontal = 8.dp, vertical = 5.dp),
@@ -778,26 +779,26 @@ private fun BoxScope.MapOverlays(
     ) {
         if (wind != null) {
             Icon(GcIcons.WindArrow, contentDescription = null, tint = c.route, modifier = Modifier.size(20.dp).rotate(wind.first.toFloat() + 180f))
-            Text("${((wind.first / 10).roundToInt() * 10) % 360}°\n${wind.second.roundToInt()}", style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.ink, textAlign = TextAlign.Center))
+            Text("${((wind.first / 10).roundToInt() * 10) % 360}°\n${wind.second.roundToInt()}", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.sp, lineHeight = 14.sp, color = c.ink, textAlign = TextAlign.Center))
         } else {
-            Text("vent\n—", style = TextStyle(fontSize = 10.sp, lineHeight = 14.sp, color = c.dim, textAlign = TextAlign.Center))
+            Text("vent\n—", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.sp, lineHeight = 14.sp, color = c.dim, textAlign = TextAlign.Center))
         }
     }
     // échelle vario
     Column(Modifier.align(Alignment.TopEnd).padding(end = 17.dp, top = 141.dp).width(36.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(3.dp)) {
-        Text("+4", style = TextStyle(fontSize = 9.sp, color = c.dim))
+        Text("+4", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim))
         Box(Modifier.size(width = 4.dp, height = 51.dp).background(Brush.verticalGradient(c.varioStops.reversed().map { it.second }), RoundedCornerShape(2.dp)))
-        Text("−3", style = TextStyle(fontSize = 9.sp, color = c.dim))
+        Text("−3", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim))
     }
     // zoom
     Column(Modifier.align(Alignment.BottomEnd).padding(end = 13.dp, bottom = 15.dp).background(c.background, RoundedCornerShape(22.dp))) {
-        Text("+", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomIn).padding(top = 6.dp).semantics { contentDescription = "Zoom avant" })
-        Text("−", style = TextStyle(fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomOut).padding(top = 6.dp).semantics { contentDescription = "Zoom arrière" })
+        Text("+", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomIn).padding(top = 6.dp).semantics { contentDescription = "Zoom avant" })
+        Text("−", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 23.sp, fontWeight = FontWeight.Light, color = c.ink, textAlign = TextAlign.Center), modifier = Modifier.size(44.dp).clickable(role = Role.Button, onClick = controller::zoomOut).padding(top = 6.dp).semantics { contentDescription = "Zoom arrière" })
     }
     // échelle de distance
     val (scaleLabel, scaleDp) = if (map != null) controller.scale() else "500 m" to 60f
     Column(Modifier.align(Alignment.BottomStart).padding(start = 10.dp, bottom = 12.dp)) {
-        Text(scaleLabel, style = TextStyle(fontSize = 9.sp, color = c.dim))
+        Text(scaleLabel, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim))
         Canvas(Modifier.padding(top = 2.dp).size(width = scaleDp.dp, height = 5.dp)) {
             val s = 1.5.dp.toPx()
             drawLine(c.dim, Offset(0f, size.height), Offset(size.width, size.height), s)
@@ -820,7 +821,7 @@ private fun BoxScope.MapOverlays(
     if (map != null) {
         Text(
             map.attribution,
-            style = TextStyle(fontSize = 7.sp, color = c.faint),
+            style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 7.sp, color = c.faint),
             maxLines = 1,
             modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 1.dp),
         )
@@ -833,7 +834,7 @@ private fun BoxScope.MapOverlays(
             .padding(horizontal = 8.dp)
             .semantics { contentDescription = "Chronomètre de vol ${chrono(flightSeconds)}" },
         contentAlignment = Alignment.Center,
-    ) { Text(chrono(flightSeconds), style = TextStyle(fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
+    ) { Text(chrono(flightSeconds), style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
     // S18 Lite — interrupteur discret d'enregistrement du vol (mode manuel : détection auto du décollage coupée)
     if (onChrono != null) RecordSwitch(recording, onChrono, Modifier.align(Alignment.BottomCenter).padding(start = 140.dp, bottom = 10.dp))
 }
@@ -851,7 +852,7 @@ private fun RecordSwitch(recording: Boolean, onToggle: () -> Unit, modifier: Mod
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Text("REC", style = TextStyle(fontSize = 9.sp, color = if (recording) c.danger else c.faint, letterSpacing = 0.18.sp, fontWeight = FontWeight.Bold))
+        Text("REC", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = if (recording) c.danger else c.faint, letterSpacing = 0.18.sp, fontWeight = FontWeight.Bold))
         // mini interrupteur dessiné (piste 22 × 12 dp, curseur 9 dp)
         Box(
             Modifier.size(width = 22.dp, height = 12.dp).background(if (recording) c.danger else c.control, RoundedCornerShape(6.dp)),
@@ -871,7 +872,7 @@ private fun StatusBox(label: String, on: Boolean) {
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Box(Modifier.size(5.dp).background(if (on) c.statusOn else c.statusOff, CircleShape))
-        Text(label, style = TextStyle(fontSize = 8.75.sp, color = Color.White, letterSpacing = 0.18.sp))
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.75.sp, color = Color.White, letterSpacing = 0.18.sp))
     }
 }
 
@@ -883,7 +884,7 @@ private fun RoundTool(text: String, modifier: Modifier, description: String, onC
             .clickable(role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
-    ) { Text(text, style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.ink)) }
+    ) { Text(text, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = c.ink)) }
 }
 
 /** Point à [distKm] de [from] au relèvement [bearingDeg] (approximation locale, suffisante à quelques km). */
@@ -941,7 +942,7 @@ private fun VarioPanel(
                     Text(label, style = eyebrow(c), modifier = Modifier.padding(bottom = 4.dp), maxLines = 1)
                     Text(
                         v?.let { signed1(it) } ?: "—",
-                        style = TextStyle(fontSize = 40.sp, lineHeight = 44.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1.5).sp, color = v?.let { c.vario(it) } ?: c.dim, fontFeatureSettings = "tnum"),
+                        style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 40.sp, lineHeight = 44.sp, fontWeight = FontWeight.Medium, letterSpacing = (-1.5).sp, color = v?.let { c.vario(it) } ?: c.dim),
                         maxLines = 1, softWrap = false,
                         modifier = Modifier.semantics { contentDescription = v?.let { "Vario ${signed1(it)} mètres par seconde" } ?: "Vario indisponible" },
                     )
@@ -998,8 +999,8 @@ private fun VarioActions(open: Boolean, soundOn: Boolean, onSound: () -> Unit, o
 private fun Avg(label: String, value: String, modifier: Modifier = Modifier) {
     val c = Gc.colors
     Column(modifier, verticalArrangement = Arrangement.spacedBy(5.dp)) {
-        Text(label, style = TextStyle(fontSize = 9.sp, color = c.dim), maxLines = 1)
-        Text(value, style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, letterSpacing = (-0.4).sp, color = c.ink, fontFeatureSettings = "tnum"), maxLines = 1, softWrap = false)
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim), maxLines = 1)
+        Text(value, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 15.sp, fontWeight = FontWeight.Medium, letterSpacing = (-0.4).sp, color = c.ink), maxLines = 1, softWrap = false)
     }
 }
 
@@ -1046,10 +1047,10 @@ private fun AltitudeStrip(history: List<Sample>, alt: Double, need: Double, CEIL
         val le = history.last()
         drawCircle(c.ink, 2.6.dp.toPx(), Offset(x(le.t), y(le.alt)))
         val lx = size.width - pR + 6.dp.toPx()
-        label(tm, "alt ${grouped(alt.roundToInt())} m", lx, size.height * 0.5f, TextStyle(fontSize = 9.sp, color = c.ink), TextAlign.Start)
-        if (CEILING != null) label(tm, "plaf. ${grouped(CEILING.toInt())}", lx, 8.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.ok), TextAlign.Start)
-        label(tm, "sécu ${grouped(need.roundToInt())}", lx, size.height - 7.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.bad), TextAlign.Start)
-        label(tm, "−5 min", pL + 2.dp.toPx(), 8.dp.toPx(), TextStyle(fontSize = 9.sp, color = c.dim), TextAlign.Start)
+        label(tm, "alt ${grouped(alt.roundToInt())} m", lx, size.height * 0.5f, TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.ink), TextAlign.Start)
+        if (CEILING != null) label(tm, "plaf. ${grouped(CEILING.toInt())}", lx, 8.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.ok), TextAlign.Start)
+        label(tm, "sécu ${grouped(need.roundToInt())}", lx, size.height - 7.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.bad), TextAlign.Start)
+        label(tm, "−5 min", pL + 2.dp.toPx(), 8.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.dim), TextAlign.Start)
     }
 }
 

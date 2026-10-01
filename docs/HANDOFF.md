@@ -1,5 +1,30 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18.1 — « New UI », V1.1.0-lite (01/10/2026)
+Nouvelle couche visuelle demandée par JB (rôle : directeur artistique), inspirée d'Apple Santé. Orchestration :
+fondations (design system, barre d'onglets, Pilotage) faites directement, puis trois agents en parallèle sur des
+fichiers disjoints (Prévol ; Mes vols ; Rejeu 3D + Feed + Check-lists).
+- **Police Inter partout** (v4.1, SIL OFL, `licenses/INTER-FONT-LICENSE.txt`) : `core/designsystem/res/font`
+  (4 graisses statiques) via `GcFonts.ui/mono/numbers` ; `InterVariable.woff2` pour le rejeu 3D.
+- **Échelle typographique d'Apple** dans `GcType` : largeTitle 34 · title1 28 · title2 22 · title3 20 ·
+  headline 17 · callout 16 · subhead 15 · footnote 13 · caption1 12 · caption2 11 · `metric` 28 tabulaire.
+  Les pages blanches passent en Body 17 / Subheadline 15.
+- **Pages blanches** : fond groupé `F2F2F7`, cartes blanches à coins 14 dp, titre de carte teinté par catégorie
+  avec pictogramme (jetons `sky`, `sun`, `wind`, `altitude`, `heart`, `mint`), chiffres « Apple Santé » (libellé
+  au-dessus, grand nombre, unité petite et grise via `metricText`). **Sélection = bleu ciel `0A84FF`** (`route`,
+  `accentFill`) à la place du vert clair.
+- **Graphiques** : barres en capsules à dégradé doux, grilles en pointillés légers, peu d'étiquettes (Prévol) ;
+  nouveau profil d'altitude à aire dégradée indigo dans le détail d'un vol (Mes vols).
+- **Barre d'onglets** : pictogrammes pleins façon SF Symbols (`GcIcons.Tab` : soleil, planeur vu de dessus,
+  personne, cartes, coche, carte pliée), 26 dp ; bleu ciel sélectionné, barre blanche translucide.
+- **Pilotage** : fond noir et mise en page inchangés ; **seule la police change** (Inter, chiffres tabulaires),
+  accord JB (« tu peux changer les polices à travers toutes les pages »). Empreintes du garde-fou régénérées.
+  La barre d'onglets sous Pilotage reste noire, avec les nouveaux pictogrammes.
+- **Rejeu 3D** : HUD en panneaux translucides floutés, Inter, lecture et progression en bleu ciel.
+- **Passe de rédaction** : phrases raccourcies dans toute l'app (avertissement d'accueil, Prévol, Mes vols, Feed,
+  Check-lists, rejeu, messages du moteur et du cloud). Textes utilisés par `tools/screens.sh` et les tests conservés.
+- Édition complète : 0.11.0.
+
 ## Session 18 Lite — édition allégée pour un lancement Play Store rapide, V1.0.0-lite (01/10/2026)
 Changement de stratégie demandé par JB : une V1 « Lite » avec trois onglets. Tout le code de l'édition complète
 reste dans le dépôt ; elle se construit avec `./gradlew -Pglidy.edition=full …`.

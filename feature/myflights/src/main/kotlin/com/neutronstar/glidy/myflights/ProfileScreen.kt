@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -59,8 +60,10 @@ import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcPill
+import com.neutronstar.glidercopilot.designsystem.GcSectionTitle
 import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.designsystem.GcTraceThumbnail
+import com.neutronstar.glidercopilot.designsystem.metricText
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.social.ExperienceLevel
 import com.neutronstar.glidy.social.PilotProfile
@@ -91,13 +94,15 @@ internal fun ProfileScreen(
     onDeleteAccount: () -> Unit,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     // Lite : le compte (sauvegarde en ligne) est visible d'emblée sous l'en-tête
     var showAccount by rememberSaveable { mutableStateOf(!sharingEnabled) }
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize().testTag("flight-list"),
-        contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 0.dp, bottom = 28.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        // V18.1 pages blanches : marges iOS de 16 dp, tuiles espacées de 8 dp
+        contentPadding = PaddingValues(start = if (social) 16.dp else 12.dp, end = if (social) 16.dp else 12.dp, top = 0.dp, bottom = 28.dp),
+        horizontalArrangement = Arrangement.spacedBy(if (social) 8.dp else 6.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -120,17 +125,20 @@ internal fun ProfileScreen(
             }
         }
         item(span = { GridItemSpan(maxLineSpan) }) {
-            Row(Modifier.fillMaxWidth().padding(top = 2.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text("Vols", style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp), modifier = Modifier.weight(1f))
-                val shared = flights.count { it.isPublic }
-                Text(
-                    when {
-                        !sharingEnabled -> "${flights.size} vol${if (flights.size > 1) "s" else ""}"
-                        shared > 0 -> "$shared partagé${if (shared > 1) "s" else ""} sur le fil"
-                        else -> "Rien de partagé"
-                    },
-                    style = Gc.type.bodySmall,
-                )
+            val shared = flights.count { it.isPublic }
+            val count = when {
+                !sharingEnabled -> "${flights.size} vol${if (flights.size > 1) "s" else ""}"
+                shared > 0 -> "$shared sur le fil"
+                else -> "Rien de partagé"
+            }
+            if (social) {
+                // V18.1 : titre de section groupée façon iOS
+                GcSectionTitle("Vols", trailing = { Text(count, style = Gc.type.footnote) })
+            } else {
+                Row(Modifier.fillMaxWidth().padding(top = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text("Vols", style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp), modifier = Modifier.weight(1f))
+                    Text(count, style = Gc.type.bodySmall)
+                }
             }
         }
         if (flights.isEmpty()) {
@@ -141,11 +149,11 @@ internal fun ProfileScreen(
         }
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
-                if (sharingEnabled) "Carnet local : les fichiers IGC restent sur ce téléphone. Un vol n'apparaît sur le fil que si vous " +
-                    "touchez son icône de partage. Enregistreur non approuvé, sans valeur pour un badge."
-                else "Carnet local : les fichiers IGC restent sur ce téléphone (sauvegarde en ligne avec un compte, facultatif). " +
-                    "Enregistreur non approuvé, sans valeur pour un badge.",
-                style = Gc.type.bodySmall.copy(color = c.faint),
+                if (sharingEnabled) "Fichiers IGC gardés sur ce téléphone. Un vol n'apparaît sur le fil que si vous le partagez. " +
+                    "Enregistreur non approuvé : sans valeur pour un badge."
+                else "Fichiers IGC gardés sur ce téléphone (sauvegarde en ligne facultative). " +
+                    "Enregistreur non approuvé : sans valeur pour un badge.",
+                style = if (social) Gc.type.footnote.copy(color = c.faint) else Gc.type.bodySmall.copy(color = c.faint),
                 modifier = Modifier.padding(top = 6.dp),
             )
         }
@@ -163,6 +171,7 @@ private fun ProfileHeader(
     onDeleteAccount: () -> Unit,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     val real = flights.filterNot { it.isExample }
     val carnetSeconds = real.sumOf { it.durationSeconds }
     val totalMinutes = totalFlightMinutes(profile, carnetSeconds)
@@ -172,7 +181,8 @@ private fun ProfileHeader(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 if (profile.username.isNotBlank()) "@${profile.username}" else "Mon profil",
-                style = Gc.type.title.copy(fontSize = 22.sp),
+                // V18.1 : Large Title d'Apple sur les pages blanches
+                style = if (social) Gc.type.largeTitle else Gc.type.title.copy(fontSize = 22.sp),
                 modifier = Modifier.weight(1f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -193,37 +203,61 @@ private fun ProfileHeader(
                 }
             }
         }
-        // avatar + chiffres (codes des réseaux sociaux)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Avatar(profile.initials, Modifier.size(78.dp))
-            Spacer(Modifier.width(14.dp))
-            Stat(real.size.toString(), "Vols", Modifier.weight(1f))
-            Stat(formatHours(totalMinutes), "Heures", Modifier.weight(1f))
-            Stat(formatKm(real.sumOf { it.distanceMeters ?: 0L }), "Km", Modifier.weight(1f))
-        }
-        // identité
-        Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(
-                profile.displayName.ifBlank { "Pilote GLIDY" },
-                style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
-            )
-            if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.body.copy(fontSize = 14.sp))
-            val line = listOfNotNull(profile.club.takeIf(String::isNotBlank)).joinToString(" · ")
-            if (line.isNotBlank()) Text(line, style = Gc.type.bodySmall)
-            profile.experience?.let { GcPill(it.label, c.ok, Modifier.padding(top = 4.dp)) }
-            if (profile.minutesBeforeApp > 0) {
+        val distanceKm = formatKm(real.sumOf { it.distanceMeters ?: 0L })
+        if (social) {
+            // V18.1 (Apple Santé) : avatar + identité, puis une carte blanche de chiffres clés teintés par catégorie
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Avatar(profile.initials, Modifier.size(64.dp))
+                Spacer(Modifier.width(14.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(profile.displayName.ifBlank { "Pilote GLIDY" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    if (profile.club.isNotBlank()) Text(profile.club, style = Gc.type.subhead.copy(color = c.dim), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    profile.experience?.let { GcPill(it.label, c.route, Modifier.padding(top = 4.dp)) }
+                }
+            }
+            if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.subhead)
+            GcCard {
+                Row(Modifier.fillMaxWidth()) {
+                    ProfileStat(real.size.toString(), "Vols", c.sky, Modifier.weight(1f))
+                    ProfileStat(formatHours(totalMinutes).let { if ('h' in it) it else "$it h" }, "Heures", c.mint, Modifier.weight(1f))
+                    ProfileStat("$distanceKm km", "Distance", c.sun, Modifier.weight(1f))
+                }
+                if (profile.minutesBeforeApp > 0) {
+                    Text("Dont ${profile.minutesBeforeApp / 60} h avant GLIDY", style = Gc.type.footnote.copy(color = c.faint))
+                }
+            }
+        } else {
+            // avatar + chiffres (codes des réseaux sociaux)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Avatar(profile.initials, Modifier.size(78.dp))
+                Spacer(Modifier.width(14.dp))
+                Stat(real.size.toString(), "Vols", Modifier.weight(1f))
+                Stat(formatHours(totalMinutes), "Heures", Modifier.weight(1f))
+                Stat(distanceKm, "Km", Modifier.weight(1f))
+            }
+            // identité
+            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    "Dont ${profile.minutesBeforeApp / 60} h déclarées avant GLIDY",
-                    style = Gc.type.bodySmall.copy(color = c.faint, fontSize = 12.sp),
+                    profile.displayName.ifBlank { "Pilote GLIDY" },
+                    style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 )
+                if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.body.copy(fontSize = 14.sp))
+                val line = listOfNotNull(profile.club.takeIf(String::isNotBlank)).joinToString(" · ")
+                if (line.isNotBlank()) Text(line, style = Gc.type.bodySmall)
+                profile.experience?.let { GcPill(it.label, c.ok, Modifier.padding(top = 4.dp)) }
+                if (profile.minutesBeforeApp > 0) {
+                    Text(
+                        "Dont ${profile.minutesBeforeApp / 60} h avant GLIDY",
+                        style = Gc.type.bodySmall.copy(color = c.faint, fontSize = 12.sp),
+                    )
+                }
             }
         }
         if (profile.isEmpty) {
-            GcCard(title = "Crée ton profil pilote") {
+            GcCard(title = "Crée ton profil pilote", icon = GcIcons.MesVols, tint = c.sky) {
                 Text(
-                    "Nom, pseudo, club et niveau : ton profil sera la vitrine de tes vols sur le fil GLIDY. " +
-                        "Tout reste sur ce téléphone tant que tu ne partages rien.",
-                    style = Gc.type.bodySmall,
+                    "Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien.",
+                    style = if (social) Gc.type.subhead.copy(color = c.dim) else Gc.type.bodySmall,
                 )
             }
         }
@@ -268,13 +302,24 @@ private fun Stat(value: String, label: String, modifier: Modifier) {
     }
 }
 
+/** V18.1 pages blanches : chiffre clé à la manière d'Apple Santé (libellé teinté au-dessus, unité petite et grise). */
+@Composable
+private fun ProfileStat(value: String, label: String, tint: Color, modifier: Modifier) {
+    val number = Gc.type.metric.copy(fontSize = 24.sp, lineHeight = 30.sp)
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
+        Text(label, style = Gc.type.footnote.copy(color = tint, fontWeight = FontWeight.SemiBold), maxLines = 1)
+        Text(metricText(value, number, Gc.colors.faint), style = number, maxLines = 1, softWrap = false, overflow = TextOverflow.Clip)
+    }
+}
+
 @Composable
 private fun EmptyGrid(onLoadDemo: (() -> Unit)?, onImport: () -> Unit) {
-    GcCard(title = "Carnet vide") {
+    val c = Gc.colors
+    GcCard(title = "Carnet vide", icon = GcIcons.MesVols, tint = c.sky) {
         Text("Votre carnet est vide", style = Gc.type.body.copy(fontWeight = FontWeight.SemiBold))
         Text(
-            "Vos vols enregistrés par GLIDY apparaîtront ici après l'atterrissage. Vous pouvez aussi importer une trace IGC.",
-            style = Gc.type.bodySmall,
+            "Vos vols GLIDY apparaissent ici après l'atterrissage. Vous pouvez aussi importer un fichier IGC.",
+            style = if (Gc.social) Gc.type.subhead.copy(color = c.dim) else Gc.type.bodySmall,
         )
         if (onLoadDemo != null) {
             GcButton("Charger le vol d'exemple", onClick = onLoadDemo, primary = true, modifier = Modifier.testTag("load-demo"))
@@ -286,11 +331,16 @@ private fun EmptyGrid(onLoadDemo: (() -> Unit)?, onImport: () -> Unit) {
 @Composable
 private fun FlightTile(flight: FlightCardUi, sharingEnabled: Boolean, onClick: () -> Unit, onToggleShare: () -> Unit) {
     val c = Gc.colors
+    val social = Gc.social
+    // V18.1 pages blanches : tuile = carte blanche aux coins de 12 dp, vignette inscrite (rayon 8 dp + marge 4 dp)
+    val card = if (social) Modifier.clip(RoundedCornerShape(12.dp)).background(c.panel) else Modifier
     Column(
         Modifier
             .testTag("flight-card-${flight.id}")
             .semantics { contentDescription = "Vol du ${flight.date}, ${flight.duration}, ${flight.distance}" }
-            .clickable(role = Role.Button, onClick = onClick),
+            .then(card)
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(if (social) 4.dp else 0.dp),
     ) {
         Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
             GcTraceThumbnail(flight.route, Modifier.fillMaxSize())
@@ -305,14 +355,22 @@ private fun FlightTile(flight: FlightCardUi, sharingEnabled: Boolean, onClick: (
                 )
             }
         }
-        Spacer(Modifier.height(5.dp))
-        Text(flight.shortDate, style = Gc.type.bodySmall.copy(color = c.ink, fontWeight = FontWeight.SemiBold, fontSize = 12.sp), maxLines = 1)
-        Text(
-            "${flight.duration} · ${flight.distance}",
-            style = Gc.type.bodySmall.copy(fontSize = 11.sp),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Spacer(Modifier.height(if (social) 6.dp else 5.dp))
+        Column(Modifier.padding(start = if (social) 4.dp else 0.dp, end = if (social) 4.dp else 0.dp, bottom = if (social) 4.dp else 0.dp)) {
+            Text(
+                flight.shortDate,
+                style = if (social) Gc.type.footnote.copy(color = c.ink, fontWeight = FontWeight.SemiBold)
+                else Gc.type.bodySmall.copy(color = c.ink, fontWeight = FontWeight.SemiBold, fontSize = 12.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                "${flight.duration} · ${flight.distance}",
+                style = if (social) Gc.type.caption2.copy(fontFeatureSettings = "tnum") else Gc.type.bodySmall.copy(fontSize = 11.sp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
@@ -352,6 +410,7 @@ internal fun ProfileEditScreen(
     onSave: (PilotProfile) -> Unit,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     BackHandler(onBack = onCancel)
     var name by rememberSaveable { mutableStateOf(initial.displayName) }
     var username by rememberSaveable { mutableStateOf(initial.username.ifBlank { if (initial.displayName.isNotBlank()) Usernames.suggestFrom(initial.displayName) else "" }) }
@@ -375,15 +434,15 @@ internal fun ProfileEditScreen(
             Modifier.fillMaxWidth().padding(start = 4.dp, end = 12.dp, top = 6.dp, bottom = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            TextButton(onClick = onCancel) { Text("Annuler", style = Gc.type.body.copy(color = c.ink)) }
+            TextButton(onClick = onCancel) { Text("Annuler", style = Gc.type.body.copy(color = if (social) c.route else c.ink)) }
             Text(
                 if (identityOnly) "Nom et pseudo" else "Modifier le profil",
-                style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
+                style = if (social) Gc.type.headline else Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f),
             )
             TextButton(onClick = { onSave(candidate) }, enabled = problems.isEmpty(), modifier = Modifier.testTag("save-profile")) {
-                Text("OK", style = Gc.type.body.copy(color = if (problems.isEmpty()) c.ok else c.faint, fontWeight = FontWeight.Bold))
+                Text("OK", style = Gc.type.body.copy(color = if (!problems.isEmpty()) c.faint else if (social) c.route else c.ok, fontWeight = FontWeight.Bold))
             }
         }
         LazyColumn(
@@ -402,7 +461,7 @@ internal fun ProfileEditScreen(
                     EditField(username, { username = Usernames.normalize(it).take(Usernames.MAX) }, "Pseudo", prefix = "@", tag = "field-username")
                     Text(
                         Usernames.problem(username)
-                            ?: "Unique sur GLIDY : il sera réservé à l'activation de ton compte en ligne.",
+                            ?: "Unique sur GLIDY, réservé à l'activation du compte en ligne.",
                         style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = if (Usernames.problem(username) != null) c.warn else c.faint),
                     )
                 }
@@ -433,7 +492,7 @@ internal fun ProfileEditScreen(
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                         EditField(hours, { hours = it.filter(Char::isDigit).take(6) }, "Heures de vol avant GLIDY", keyboard = KeyboardType.Number, tag = "field-hours")
                         Text(
-                            "Ajoutées aux vols de ton carnet pour le total d'heures du profil.",
+                            "Ajoutées au total d'heures du profil.",
                             style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = c.faint),
                         )
                     }
@@ -487,6 +546,7 @@ private fun EditField(
     tag: String,
 ) {
     val c = Gc.colors
+    val social = Gc.social
     OutlinedTextField(
         value = value,
         onValueChange = onChange,
@@ -499,9 +559,11 @@ private fun EditField(
         modifier = Modifier.fillMaxWidth().testTag(tag),
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = c.ink, unfocusedBorderColor = c.inputLine, cursorColor = c.ink,
+            // V18.1 pages blanches : champ blanc sur fond groupé, focus en bleu ciel (sombre : inchangé, panneau noir)
+            focusedBorderColor = if (social) c.route else c.ink, unfocusedBorderColor = c.inputLine, cursorColor = if (social) c.route else c.ink,
             focusedTextColor = c.ink, unfocusedTextColor = c.ink,
             focusedLabelColor = c.dim, unfocusedLabelColor = c.dim,
+            focusedContainerColor = c.panel, unfocusedContainerColor = c.panel,
         ),
     )
 }
@@ -516,9 +578,9 @@ internal fun DeleteAccountDialog(hasOnlineAccount: Boolean, onCancel: () -> Unit
         title = { Text("Supprimer le compte ?", style = Gc.type.body.copy(fontSize = 17.sp, fontWeight = FontWeight.SemiBold)) },
         text = {
             Text(
-                (if (hasOnlineAccount) "Ton compte en ligne, tes vols sauvegardés en ligne et ton profil seront effacés définitivement. "
-                else "Ton profil pilote (nom, pseudo, bio, club, niveau) sera effacé de ce téléphone. ") +
-                    "Les vols présents sur ce téléphone sont conservés.",
+                (if (hasOnlineAccount) "Ton compte, tes vols en ligne et ton profil seront effacés définitivement. "
+                else "Ton profil pilote sera effacé de ce téléphone. ") +
+                    "Les vols de ce téléphone sont conservés.",
                 style = Gc.type.body.copy(color = c.dim),
             )
         },
@@ -528,7 +590,7 @@ internal fun DeleteAccountDialog(hasOnlineAccount: Boolean, onCancel: () -> Unit
             }
         },
         dismissButton = {
-            TextButton(onClick = onCancel) { Text("Annuler", style = Gc.type.body.copy(color = c.ink, fontWeight = FontWeight.Bold)) }
+            TextButton(onClick = onCancel) { Text("Annuler", style = Gc.type.body.copy(color = if (Gc.social) c.route else c.ink, fontWeight = FontWeight.Bold)) }
         },
         containerColor = c.panel,
         shape = RoundedCornerShape(16.dp),
