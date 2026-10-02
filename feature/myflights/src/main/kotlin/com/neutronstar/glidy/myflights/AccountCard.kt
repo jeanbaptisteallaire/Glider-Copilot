@@ -1,5 +1,9 @@
 package com.neutronstar.glidy.myflights
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,12 +53,16 @@ data class AccountCardState(
     val message: String? = null,
     /** Faux pendant un vol enregistré : aucun envoi réseau en vol. */
     val canSync: Boolean = true,
+    /** S18.2 — bouton « Continuer avec Google » proposé (ID client Google fourni au build). */
+    val googleAvailable: Boolean = false,
 )
 
 interface AccountActions {
     fun sendCode(email: String)
     fun verifyCode(code: String)
     fun cancelCode()
+    /** S18.2 — connexion Google ; [context] = activité affichant la feuille de choix du compte. */
+    fun signInWithGoogle(context: Context) {}
     fun syncNow()
     fun signOut()
     fun deleteAccount()
@@ -90,19 +98,61 @@ internal fun AccountCard(state: AccountCardState, actions: AccountActions?) {
 
 @Composable
 private fun SignIn(state: AccountCardState, actions: AccountActions) {
+    val c = Gc.colors
+    val context = LocalContext.current
+    var open by rememberSaveable { mutableStateOf(false) }
     var email by rememberSaveable { mutableStateOf("") }
     var code by rememberSaveable { mutableStateOf("") }
-    if (state.codeSentTo == null) {
-        Text("Retrouvez vos vols sur un autre téléphone. Sans mot de passe : un code par e-mail.", style = Gc.type.bodySmall)
-        Field(email, { email = it }, "Adresse e-mail", KeyboardType.Email, "account-email")
-        GcButton("Recevoir un code", onClick = { actions.sendCode(email) }, primary = true, enabled = !state.busy && email.contains('@'), modifier = Modifier.fillMaxWidth())
-    } else {
-        Text("Code envoyé à ${state.codeSentTo}. Saisissez les 6 chiffres.", style = Gc.type.bodySmall)
-        Field(code, { code = it.filter(Char::isDigit).take(8) }, "Code", KeyboardType.Number, "account-code")
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            GcButton("Se connecter", onClick = { actions.verifyCode(code) }, primary = true, enabled = !state.busy && code.length >= 6, modifier = Modifier.weight(1f))
-            GcButton("Annuler", onClick = { code = ""; actions.cancelCode() }, modifier = Modifier.weight(1f))
+    when {
+        state.codeSentTo != null -> {
+            Text("Code envoyé à ${state.codeSentTo}. Saisissez les 6 chiffres.", style = Gc.type.bodySmall)
+            Field(code, { code = it.filter(Char::isDigit).take(8) }, "Code", KeyboardType.Number, "account-code")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GcButton("Valider", onClick = { actions.verifyCode(code) }, primary = true, enabled = !state.busy && code.length >= 6, modifier = Modifier.weight(1f))
+                GcButton("Annuler", onClick = { code = ""; actions.cancelCode() }, modifier = Modifier.weight(1f))
+            }
         }
+        !open -> {
+            Text("Vos vols sauvegardés, retrouvés sur un autre téléphone ou après une réinstallation.", style = Gc.type.bodySmall)
+            GcButton("Se connecter", onClick = { open = true }, primary = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth().testTag("account-sign-in"))
+        }
+        else -> {
+            if (state.googleAvailable) {
+                GoogleButton(enabled = !state.busy) { actions.signInWithGoogle(context) }
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    HorizontalDivider(Modifier.weight(1f), thickness = 0.5.dp, color = c.line)
+                    Text("ou", style = Gc.type.bodySmall.copy(color = c.faint), modifier = Modifier.padding(horizontal = 10.dp))
+                    HorizontalDivider(Modifier.weight(1f), thickness = 0.5.dp, color = c.line)
+                }
+            }
+            Field(email, { email = it }, "Adresse e-mail", KeyboardType.Email, "account-email")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                GcButton("Recevoir un code", onClick = { actions.sendCode(email) }, primary = !state.googleAvailable, enabled = !state.busy && email.contains('@'), modifier = Modifier.weight(1f))
+                GcButton("Annuler", onClick = { open = false }, modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}
+
+/** S18.2 — « Continuer avec Google » : bouton blanc à filet, comme le veut la charte de connexion Google. */
+@Composable
+private fun GoogleButton(enabled: Boolean, onClick: () -> Unit) {
+    val c = Gc.colors
+    val social = Gc.social
+    Box(
+        Modifier.fillMaxWidth().height(if (social) 48.dp else 42.dp)
+            .clip(RoundedCornerShape(if (social) 12.dp else 10.dp))
+            .background(if (social) c.panel else c.control)
+            .border(1.dp, c.line, RoundedCornerShape(if (social) 12.dp else 10.dp))
+            .clickable(role = Role.Button, enabled = enabled, onClick = onClick)
+            .testTag("account-google"),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            "Continuer avec Google",
+            style = if (social) Gc.type.headline.copy(fontSize = 16.sp, color = if (enabled) c.ink else c.faint)
+            else Gc.type.body.copy(fontWeight = FontWeight.Bold, color = if (enabled) c.ink else c.faint),
+        )
     }
 }
 

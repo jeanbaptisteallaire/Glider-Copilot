@@ -33,7 +33,7 @@ sealed interface CloudResult<out T> {
 }
 
 /**
- * Client Supabase minimal (Auth par code reçu par e-mail, PostgREST, Storage) — sans SDK, en HTTP direct.
+ * Client Supabase minimal (Auth par code reçu par e-mail ou jeton Google, PostgREST, Storage) — sans SDK, en HTTP direct.
  * Connexion en deux temps : [sendCode] envoie un code à 6 chiffres par e-mail, [verifyCode] ouvre la session.
  * Aucun mot de passe, aucun lien à ouvrir (pas de lien profond à gérer dans l'app).
  */
@@ -55,6 +55,22 @@ class SupabaseClient(
         val r = transport.send(post("/auth/v1/verify", mapOf("type" to "email", "email" to email.trim(), "token" to code.trim()), token = null))
         if (!r.ok) return@guarded fail(r)
         val s = sessionFrom(MiniJson.parse(r.text).obj(), fallbackEmail = email.trim())
+            ?: return@guarded CloudResult.Failed("réponse de connexion illisible", retryable = false)
+        sessions.save(s)
+        CloudResult.Ok(s)
+    }
+
+    /**
+     * S18.2 — connexion « Continuer avec Google » : jeton d'identité Google obtenu sur le téléphone
+     * (Credential Manager), échangé contre une session Supabase. [rawNonce] : valeur aléatoire dont Google a reçu
+     * l'empreinte SHA-256 ; Supabase la revérifie (protection contre le rejeu du jeton).
+     */
+    fun signInWithIdToken(provider: String, idToken: String, rawNonce: String?): CloudResult<CloudSession> = guarded {
+        val body = linkedMapOf<String, Any?>("provider" to provider, "id_token" to idToken)
+        if (rawNonce != null) body["nonce"] = rawNonce
+        val r = transport.send(post("/auth/v1/token?grant_type=id_token", body, token = null))
+        if (!r.ok) return@guarded fail(r)
+        val s = sessionFrom(MiniJson.parse(r.text).obj(), fallbackEmail = "Compte Google")
             ?: return@guarded CloudResult.Failed("réponse de connexion illisible", retryable = false)
         sessions.save(s)
         CloudResult.Ok(s)

@@ -35,7 +35,7 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
     private val client = SupabaseClient(config, UrlConnectionTransport(), PrefsSessionStore(context.applicationContext))
     private val sync = FlightSyncService(client, flights.repository) { call -> withContext(Dispatchers.IO) { call() } }
 
-    private val _state = MutableStateFlow(AccountCardState(configured = config.isConfigured, email = client.session?.email))
+    private val _state = MutableStateFlow(AccountCardState(configured = config.isConfigured, email = client.session?.email, googleAvailable = GoogleSignIn.available))
     val state: StateFlow<AccountCardState> = _state.asStateFlow()
 
     /** Incrémenté quand le carnet local a changé (vols restaurés) : l'écran Mes vols se relit. */
@@ -63,6 +63,24 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
                 doSync()
             }
             else -> _state.update { it.copy(message = r.userMessage()) }
+        }
+    }
+
+    /**
+     * S18.2 — « Continuer avec Google ». À la connexion, la synchronisation part aussitôt : les vols du téléphone
+     * sont envoyés et ceux déjà en ligne (autre téléphone, réinstallation) sont restaurés dans le carnet.
+     */
+    override fun signInWithGoogle(context: Context) = run("Connexion Google…") {
+        when (val g = GoogleSignIn.request(context)) {
+            is GoogleSignIn.Result.Token -> when (val r = withContext(Dispatchers.IO) { client.signInWithIdToken("google", g.idToken, g.rawNonce) }) {
+                is CloudResult.Ok -> {
+                    _state.update { it.copy(email = r.value.email, codeSentTo = null, message = null) }
+                    doSync()
+                }
+                else -> _state.update { it.copy(message = r.userMessage()) }
+            }
+            GoogleSignIn.Result.Cancelled -> _state.update { it.copy(message = null) }
+            is GoogleSignIn.Result.Error -> _state.update { it.copy(message = g.message) }
         }
     }
 

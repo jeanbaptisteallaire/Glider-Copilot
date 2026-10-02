@@ -115,6 +115,28 @@ class SupabaseClientTest {
         assertTrue(server.requests.first().body!!.toString(Charsets.UTF_8).contains("\"email\":\"jb@example.org\""))
     }
 
+    @Test fun googleSignInExchangesIdTokenWithRawNonce() {
+        val server = FakeSupabase(); val store = MemorySessionStore()
+        val client = SupabaseClient(config, server, store) { 1_000 }
+        val s = (client.signInWithIdToken("google", "eyJ.jeton.google", "nonce-brut") as CloudResult.Ok).value
+        val req = server.requests.single()
+        assertEquals("${FakeSupabase.BASE}/auth/v1/token?grant_type=id_token", req.url)
+        val body = req.body!!.toString(Charsets.UTF_8)
+        assertTrue(body.contains("\"provider\":\"google\""))
+        assertTrue(body.contains("\"id_token\":\"eyJ.jeton.google\""))
+        assertTrue(body.contains("\"nonce\":\"nonce-brut\""))
+        assertEquals(FakeSupabase.USER, s.userId)
+        assertEquals("jb@example.org", s.email)
+        assertEquals(s, store.load())
+    }
+
+    @Test fun googleSignInIsInactiveWithoutConfiguration() {
+        val server = FakeSupabase()
+        val client = SupabaseClient(CloudConfig.DISABLED, server, MemorySessionStore())
+        assertEquals(CloudResult.NotConfigured, client.signInWithIdToken("google", "t", null))
+        assertEquals(0, server.requests.size)
+    }
+
     @Test fun expiredSessionIsRefreshedBeforeUse() {
         val server = FakeSupabase()
         val store = MemorySessionStore(CloudSession("old", "ref", FakeSupabase.USER, "jb@example.org", expiresAtEpochSeconds = 1_010))

@@ -5,3 +5,7 @@
 # (le fichier mapping.txt est à téléverser avec chaque AAB).
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
+
+# S18.2 — Credential Manager : l'implémentation Play Services est chargée par réflexion (règle officielle).
+-if class androidx.credentials.CredentialManager
+-keep class androidx.credentials.playservices.** { *; }

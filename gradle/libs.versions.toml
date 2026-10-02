@@ -19,6 +19,9 @@ androidxTestExtJunit = "1.2.1"
 androidxTestRunner = "1.6.2"
 # 13.0.x : dernière série compilée en Kotlin 2.0 (13.1+ exige Kotlin 2.3) ; variante OpenGL ES
 maplibre = "13.0.2"
+# S18.2 — « Continuer avec Google » (Credential Manager + Sign in with Google)
+credentials = "1.3.0"
+googleid = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +55,9 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 maplibre-android = { group = "org.maplibre.gl", name = "android-sdk-opengl", version.ref = "maplibre" }
+androidx-credentials-core = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

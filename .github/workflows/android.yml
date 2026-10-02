@@ -40,6 +40,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           PRECOG_API_KEY: ${{ secrets.PRECOG_API_KEY }}
+          GOOGLE_WEB_CLIENT_ID: ${{ secrets.GOOGLE_WEB_CLIENT_ID }}
         run: |
           set -o pipefail
           # secrets absents (tant que JB ne les a pas créés) : variables vides → build.gradle.kts retombe sur la clé debug
@@ -73,6 +74,10 @@ jobs:
           if [ -n "$AAB" ]; then mkdir -p report/release && cp "$AAB" report/release/glidy-release.aab; fi
           RAPK=$(ls app/build/outputs/apk/release/*.apk 2>/dev/null | head -1)
           if [ -n "$RAPK" ]; then mkdir -p report/release && cp "$RAPK" report/release/glidy-release.apk; fi
+          # S18.2 — empreintes (publiques) des certificats de signature, à déclarer dans Google Cloud (client Android)
+          { for f in report/apk/glider-copilot-debug.apk report/release/glidy-release.apk; do
+              [ -f "$f" ] && { echo "== $(basename "$f")"; keytool -printcert -jarfile "$f" | grep -E "SHA1:|SHA256:"; }
+            done; } > report/signing-sha.txt 2>/dev/null || true
           MAP=app/build/outputs/mapping/release/mapping.txt
           if [ -f "$MAP" ]; then mkdir -p report/release && gzip -c "$MAP" > report/release/mapping.txt.gz; fi
           [ -f app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt ] && cp app/build/intermediates/lint_vital_intermediate_text_report/release/lintVitalReportRelease/lint-results-release.txt report/ || true

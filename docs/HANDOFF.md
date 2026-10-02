@@ -1,5 +1,20 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18.2 — « Continuer avec Google » dans Mes vols, V1.2.0-lite (02/10/2026)
+Demande JB : depuis « Se connecter », option de connexion Google ; les vols sont sauvegardés en base et
+reviennent après une mise à jour, une réinstallation ou sur un autre téléphone.
+- **Carte « Sauvegarde en ligne »** : bouton **Se connecter** → *Continuer avec Google* (si configuré), « ou »,
+  puis e-mail + *Recevoir un code* (étape code : *Valider*).
+- **Google** : Credential Manager + `GetSignInWithGoogleOption` (`app/GoogleSignIn.kt`), nonce aléatoire
+  (empreinte SHA-256 envoyée à Google, valeur brute à Supabase). Jeton échangé par
+  `SupabaseClient.signInWithIdToken` (`/auth/v1/token?grant_type=id_token`, 2 tests). Aucune nouvelle table.
+- À la connexion, `FlightSyncService` part aussitôt : envoi des vols du téléphone, restauration de ceux en ligne.
+- **Configuration à faire par JB** (docs/supabase/SETUP.md §6) : clients OAuth Web + Android dans Google Cloud,
+  fournisseur Google dans Supabase, secret GitHub `GOOGLE_WEB_CLIENT_ID`. Sans ce secret, bouton Google masqué.
+- **SHA-1** : la CI écrit `build-report/signing-sha.txt`. L'APK debug change de clé à chaque build ; tester
+  Google avec l'APK release signé par la clé d'upload (secrets `KEYSTORE_*`).
+- Dépendances : `androidx.credentials` 1.3.0 (+ play-services-auth), `googleid` 1.1.1 ; règle R8 ajoutée.
+
 ## Session 18.1 — « New UI », V1.1.0-lite (01/10/2026)
 Nouvelle couche visuelle demandée par JB (rôle : directeur artistique), inspirée d'Apple Santé. Orchestration :
 fondations (design system, barre d'onglets, Pilotage) faites directement, puis trois agents en parallèle sur des

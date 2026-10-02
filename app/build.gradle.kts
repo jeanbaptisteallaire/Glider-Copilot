@@ -19,7 +19,7 @@ android {
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
         // S18 Lite (lancement Play Store rapide) : Prévol (météo + cartes), Pilotage, Mes vols. Édition complète :
         // ./gradlew -Pglidy.edition=full …  (Feed, Check-lists, Carte, planeur FLARM/OGN dans Prévol).
-        versionName = if (lite) "1.1.0-lite" else "0.11.0"
+        versionName = if (lite) "1.2.0-lite" else "0.11.1"
         buildConfigField("boolean", "LITE", lite.toString())
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
@@ -28,6 +28,9 @@ android {
         buildConfigField("String", "SUPABASE_URL", "\"${System.getenv("SUPABASE_URL").orEmpty().trim()}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${System.getenv("SUPABASE_ANON_KEY").orEmpty().trim()}\"")
         // Clé d'API météo precog (secret GitHub PRECOG_API_KEY ; poste local : variable d'environnement). Jamais dans le dépôt.
+        // S18.2 — « Continuer avec Google » : ID client OAuth de type « Application Web » (secret GOOGLE_WEB_CLIENT_ID,
+        // voir docs/supabase/SETUP.md). Vide = bouton Google masqué, connexion par code e-mail seulement.
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${System.getenv("GOOGLE_WEB_CLIENT_ID").orEmpty().trim()}\"")
         buildConfigField("String", "PRECOG_API_KEY", "\"${System.getenv("PRECOG_API_KEY").orEmpty().trim()}\"")
     }
     // Clé d'upload Play App Signing (S8) : jamais dans le dépôt (public), lue via 4 secrets d'environnement
@@ -96,6 +99,9 @@ dependencies {
     implementation(project(":feature:replay3d"))
     implementation(project(":data:flightcloud"))
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.credentials.core)
+    implementation(libs.androidx.credentials.play.services)
+    implementation(libs.googleid)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
