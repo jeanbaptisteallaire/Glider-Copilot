@@ -76,7 +76,7 @@ jobs:
           if [ -n "$RAPK" ]; then mkdir -p report/release && cp "$RAPK" report/release/glidy-release.apk; fi
           # S18.2 — empreintes (publiques) des certificats de signature, à déclarer dans Google Cloud (client Android)
           { for f in report/apk/glider-copilot-debug.apk report/release/glidy-release.apk; do
-              [ -f "$f" ] && { echo "== $(basename "$f")"; keytool -printcert -jarfile "$f" | grep -E "SHA1:|SHA256:"; }
+              [ -f "$f" ] && { echo "== $(basename "$f")"; "$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)/apksigner" verify --print-certs "$f" | grep -E "SHA-1|SHA-256"; }
             done; } > report/signing-sha.txt 2>/dev/null || true
           MAP=app/build/outputs/mapping/release/mapping.txt
           if [ -f "$MAP" ]; then mkdir -p report/release && gzip -c "$MAP" > report/release/mapping.txt.gz; fi
