@@ -37,20 +37,21 @@ android {
     // (KEYSTORE_BASE64 encodé en base64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD). Tant qu'ils sont absents
     // (poste local, forks, dépôt tant que JB n'a pas configuré les secrets GitHub), la release reste signée
     // debug pour ne jamais casser la CI existante — voir docs/PLAY-STORE.md pour la procédure complète.
-    val uploadKeystoreB64 = System.getenv("KEYSTORE_BASE64")
+    // S18.2 : valeurs nettoyées (retour à la ligne final souvent collé avec le secret).
+    val uploadKeystoreB64 = System.getenv("KEYSTORE_BASE64")?.takeIf { it.isNotBlank() }
     val uploadKeystoreFile = uploadKeystoreB64?.let { b64 ->
         File.createTempFile("glidy-upload", ".jks").apply {
             deleteOnExit()
-            writeBytes(Base64.getDecoder().decode(b64))
+            writeBytes(Base64.getMimeDecoder().decode(b64.trim()))
         }
     }
     signingConfigs {
         if (uploadKeystoreFile != null) {
             create("release") {
                 storeFile = uploadKeystoreFile
-                storePassword = System.getenv("KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("KEY_ALIAS")
-                keyPassword = System.getenv("KEY_PASSWORD")
+                storePassword = System.getenv("KEYSTORE_PASSWORD")?.trim()
+                keyAlias = System.getenv("KEY_ALIAS")?.trim()
+                keyPassword = System.getenv("KEY_PASSWORD")?.trim()
             }
         }
     }
