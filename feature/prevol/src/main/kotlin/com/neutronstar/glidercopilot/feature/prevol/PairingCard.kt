@@ -48,6 +48,8 @@ internal fun PairingCard(
     onFollowInput: (String) -> Unit = {},
     onFollowValidate: () -> Unit = {},
     onFollowPick: (String) -> Unit = {},
+    /** V18.6 : édition Lite → pas de « Suivi & debug » (outil de mise au point). */
+    showFollow: Boolean = true,
 ) {
     val c = Gc.colors
     val social = Gc.social
@@ -117,14 +119,14 @@ internal fun PairingCard(
             }
             GcSwitch(ui.autoTakeoff, onAutoTakeoff, Modifier.semantics { contentDescription = "Détection automatique du décollage" })
         }
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (showFollow) Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Column(Modifier.weight(1f)) {
                 Text("Suivi & debug", style = cardStyle(TextRole.Strong, 13.sp, if (ui.followOn) c.warn else c.ink, FontWeight.Bold))
                 Text("Calculs sur un planeur du club en vol (FLARM via OGN)", style = cardStyle(TextRole.Secondary, 10.5.sp, c.dim))
             }
             GcSwitch(ui.followOn, onFollow, Modifier.semantics { contentDescription = "Suivi et debug d'un planeur en vol" })
         }
-        if (ui.followOn) FollowBlock(ui, onFollowInput, onFollowValidate, onFollowPick)
+        if (showFollow && ui.followOn) FollowBlock(ui, onFollowInput, onFollowValidate, onFollowPick)
     }
 }
 

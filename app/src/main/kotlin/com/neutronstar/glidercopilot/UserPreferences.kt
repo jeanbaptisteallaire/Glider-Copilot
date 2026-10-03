@@ -72,7 +72,7 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val recentRegistrations: Flow<List<String>> =
         store.data.map { p -> p[kRegs]?.split('|')?.filter { it.isNotBlank() } ?: emptyList() }
     override val pairedRegistration: Flow<String?> = store.data.map { it[kPaired] }
-    override val autoTakeoff: Flow<Boolean> = store.data.map { it[kAutoTakeoff] ?: true }
+    override val autoTakeoff: Flow<Boolean> = store.data.map { it[kAutoTakeoff] ?: !BuildConfig.LITE } // V18.6 : Lite = manuel par défaut, réglable dans Prévol
     override val checklistChecked: Flow<Set<String>> = store.data.map { it[kChecked] ?: emptySet() }
     override val checklistBrief: Flow<CableBriefInput> = store.data.map { p ->
         val d = CableBriefInput()

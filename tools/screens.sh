@@ -297,5 +297,13 @@ timeout 20 adb exec-out screencap -p > "$OUT/26b-lite-pilotage-rec-on.png"
 P=$(tap_text "Enregistrer le vol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 4; }
 P=$(tap_text "Mes vols"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 8; }
 timeout 20 adb exec-out screencap -p > "$OUT/26c-lite-mes-vols.png"
+# V18.6 — Lite : appairage FLARM + détection auto du décollage, en bas de Prévol (sous les NOTAM)
+adb shell am force-stop com.neutronstar.glidercopilot || true
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+pass_welcome
+sleep 10
+for i in 1 2 3 4 5 6 7 8; do adb shell input swipe 540 1700 540 400 300; sleep 1; done
+sleep 2
+timeout 20 adb exec-out screencap -p > "$OUT/27-lite-prevol-appairage.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

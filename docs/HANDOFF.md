@@ -1,5 +1,12 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18.6 — appairage FLARM de retour en Lite, V1.6.0-lite (03/10/2026)
+- Prévol (Lite) : carte « Planeur du jour · FLARM » remise **sous les NOTAM** (immatriculation → trafic OGN,
+  base OGN et refus de suivi respectés), sans « Suivi & debug » (`PairingCard(showFollow = false)`).
+- Interrupteur **Détec. auto. décollage** actif aussi en Lite (avant : forcé à manuel). Par défaut : manuel en Lite
+  (`UserPreferences`), automatique dans l'édition complète. Désactivé → interrupteur REC dans Pilotage.
+- CI : capture `27-lite-prevol-appairage`.
+
 ## Session 18.5 — menu d'accueil spiral (3 cartes), V1.5.0-lite (03/10/2026)
 - Après la page de connexion (et l'avertissement au premier lancement), **menu d'accueil** `app/HomeMenuScreen.kt`
   d'après la maquette de JB (« Menu 2 inspiration »), cartes à coins arrondis (22 dp) :

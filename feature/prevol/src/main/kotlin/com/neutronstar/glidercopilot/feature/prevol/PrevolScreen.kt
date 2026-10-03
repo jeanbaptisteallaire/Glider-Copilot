@@ -125,6 +125,18 @@ fun PrevolScreen(
             }
             item { AirspacesCard(map) }
             item { NotamCard(state.club) }
+            // V18.6 : en Lite, appairage FLARM (immatriculation → trafic OGN) et détection auto du décollage, en bas
+            if (lite) item {
+                PairingCard(
+                    ui = state.pairing,
+                    onInput = viewModel::onRegistrationInput,
+                    onValidate = viewModel::validateRegistration,
+                    onCancel = viewModel::cancelRegistration,
+                    onPickRecent = viewModel::pickRecent,
+                    onAutoTakeoff = viewModel::setAutoTakeoff,
+                    showFollow = false,
+                )
+            }
         }
     }
     if (picking) {
