@@ -1,4 +1,6 @@
-# GLIDY (ex-Glider Copilot) — consignes pour les sessions Claude
+# spiral (ex-GLIDY, ex-Glider Copilot) — consignes pour les sessions Claude
+
+- V18.3 : l'app s'appelle **spiral** (minuscules). `applicationId` et noms de modules inchangés (GLIDY dans le code).
 
 - Lire d'abord `docs/HANDOFF.md` (état, décisions, prochaine session) et le plan dans le projet claude.ai « Planneur App ».
 - Onglets : **Feed** (S17, premier onglet : fil des pilotes suivis, recherche, suivre — démo jusqu'à Supabase), **Prévol** (météo + planeur FLARM + club), **Check-lists**, **Pilotage**, **Carte** et **Mes vols** (S10, carnet IGC + rejeu 3D ; S16 : page profil du pilote + grille 3 colonnes + partage par vol). Pas d’Annexes.

@@ -1,5 +1,23 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18.3 — l'app devient « spiral », page d'accueil avec connexion Google, V1.3.0-lite (03/10/2026)
+- **Nouveau nom : spiral** (minuscules, décision JB). Renommé partout où c'est visible : nom sous l'icône, page
+  d'accueil, avertissement, notification de vol, textes de Mes vols / Prévol, en-tête IGC (`HFFTYFRTYPE:SPIRAL`).
+  Inchangés (techniques) : `applicationId` `com.neutronstar.glidercopilot` (Google + Play Store), code fabricant
+  IGC `AXXXGLY`, identifiant OGN `GLIDYnnnn`, noms de modules et de paquets.
+- **Icône** : logo spiral sur fond clair (icône adaptative vectorielle).
+- **Page d'accueil** (`app/WelcomeScreen.kt`), remplace l'écran écureuil :
+  - fond `welcome_background.webp` (photo sans planeur) + planeur détouré `welcome_glider.webp`, posé à sa place
+    dans la photo (centre 51 % / 54 %, envergure 83 %), assets de « Planneur APP/1 Graphic assets » ;
+  - logo vectoriel `spiral_logo.xml` à 60 % d'opacité, nom « spiral » en Inter 46 sp ;
+  - animation : le planeur monte de 14 dp en 20 s (une fois) ; parallaxe au toucher (fond ±6 dp, planeur ±18 dp,
+    ressort très souple, retour au relâché) ;
+  - boutons pilule givrés : « Continuer avec Google » (logo G officiel de Google Play Services,
+    `googleg_standard_color_18`, gardé par `res/raw/keep.xml`) et « Continuer en invité » ;
+  - sans compte : affichée à **chaque ouverture** (décision JB) ; avec compte : écran de lancement 1,6 s.
+- CI : `tools/screens.sh` passe l'accueil à chaque lancement à froid (`pass_welcome`), capture `00-accueil` ;
+  le test de fumée release aussi.
+
 ## Session 18.2 — « Continuer avec Google » dans Mes vols, V1.2.0-lite (02/10/2026)
 Demande JB : depuis « Se connecter », option de connexion Google ; les vols sont sauvegardés en base et
 reviennent après une mise à jour, une réinstallation ou sur un autre téléphone.

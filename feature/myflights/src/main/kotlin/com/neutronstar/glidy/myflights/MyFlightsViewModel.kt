@@ -100,7 +100,7 @@ class MyFlightsViewModel(
     }
 
     /**
-     * S16 — icône de partage d'une tuile : publie ou dépublie le vol sur le fil GLIDY. Le vol d'exemple ne se
+     * S16 — icône de partage d'une tuile : publie ou dépublie le vol sur le fil spiral. Le vol d'exemple ne se
      * publie pas. Sans compte en ligne, le choix est gardé et appliqué dès que la sauvegarde sera active (S18).
      */
     fun toggleShare(id: FlightId) {
@@ -123,7 +123,7 @@ class MyFlightsViewModel(
                 flights = latest.flights.map {
                     if (it.id == id) it.copy(visibility = target, publishedAt = if (target == FlightVisibility.PUBLIC) now else null) else it
                 },
-                notice = if (target == FlightVisibility.PUBLIC) "Vol partagé sur le fil GLIDY."
+                notice = if (target == FlightVisibility.PUBLIC) "Vol partagé sur le fil spiral."
                 else "Vol retiré du fil : il redevient privé.",
             )
         }

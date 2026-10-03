@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- V18.3 : logo « G » officiel fourni par Google Play Services, référencé par nom (getIdentifier). -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/googleg_standard_color_18" />

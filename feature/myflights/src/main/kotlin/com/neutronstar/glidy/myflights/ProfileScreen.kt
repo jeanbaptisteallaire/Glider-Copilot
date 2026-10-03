@@ -210,7 +210,7 @@ private fun ProfileHeader(
                 Avatar(profile.initials, Modifier.size(64.dp))
                 Spacer(Modifier.width(14.dp))
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(profile.displayName.ifBlank { "Pilote GLIDY" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(profile.displayName.ifBlank { "Pilote spiral" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     if (profile.club.isNotBlank()) Text(profile.club, style = Gc.type.subhead.copy(color = c.dim), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     profile.experience?.let { GcPill(it.label, c.route, Modifier.padding(top = 4.dp)) }
                 }
@@ -223,7 +223,7 @@ private fun ProfileHeader(
                     ProfileStat("$distanceKm km", "Distance", c.sun, Modifier.weight(1f))
                 }
                 if (profile.minutesBeforeApp > 0) {
-                    Text("Dont ${profile.minutesBeforeApp / 60} h avant GLIDY", style = Gc.type.footnote.copy(color = c.faint))
+                    Text("Dont ${profile.minutesBeforeApp / 60} h avant spiral", style = Gc.type.footnote.copy(color = c.faint))
                 }
             }
         } else {
@@ -238,7 +238,7 @@ private fun ProfileHeader(
             // identité
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    profile.displayName.ifBlank { "Pilote GLIDY" },
+                    profile.displayName.ifBlank { "Pilote spiral" },
                     style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 )
                 if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.body.copy(fontSize = 14.sp))
@@ -247,7 +247,7 @@ private fun ProfileHeader(
                 profile.experience?.let { GcPill(it.label, c.ok, Modifier.padding(top = 4.dp)) }
                 if (profile.minutesBeforeApp > 0) {
                     Text(
-                        "Dont ${profile.minutesBeforeApp / 60} h avant GLIDY",
+                        "Dont ${profile.minutesBeforeApp / 60} h avant spiral",
                         style = Gc.type.bodySmall.copy(color = c.faint, fontSize = 12.sp),
                     )
                 }
@@ -318,7 +318,7 @@ private fun EmptyGrid(onLoadDemo: (() -> Unit)?, onImport: () -> Unit) {
     GcCard(title = "Carnet vide", icon = GcIcons.MesVols, tint = c.sky) {
         Text("Votre carnet est vide", style = Gc.type.body.copy(fontWeight = FontWeight.SemiBold))
         Text(
-            "Vos vols GLIDY apparaissent ici après l'atterrissage. Vous pouvez aussi importer un fichier IGC.",
+            "Vos vols spiral apparaissent ici après l'atterrissage. Vous pouvez aussi importer un fichier IGC.",
             style = if (Gc.social) Gc.type.subhead.copy(color = c.dim) else Gc.type.bodySmall,
         )
         if (onLoadDemo != null) {
@@ -461,7 +461,7 @@ internal fun ProfileEditScreen(
                     EditField(username, { username = Usernames.normalize(it).take(Usernames.MAX) }, "Pseudo", prefix = "@", tag = "field-username")
                     Text(
                         Usernames.problem(username)
-                            ?: "Unique sur GLIDY, réservé à l'activation du compte en ligne.",
+                            ?: "Unique sur spiral, réservé à l'activation du compte en ligne.",
                         style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = if (Usernames.problem(username) != null) c.warn else c.faint),
                     )
                 }
@@ -490,7 +490,7 @@ internal fun ProfileEditScreen(
                 }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        EditField(hours, { hours = it.filter(Char::isDigit).take(6) }, "Heures de vol avant GLIDY", keyboard = KeyboardType.Number, tag = "field-hours")
+                        EditField(hours, { hours = it.filter(Char::isDigit).take(6) }, "Heures de vol avant spiral", keyboard = KeyboardType.Number, tag = "field-hours")
                         Text(
                             "Ajoutées au total d'heures du profil.",
                             style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = c.faint),

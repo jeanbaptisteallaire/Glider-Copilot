@@ -86,10 +86,11 @@ private enum class Tab(val label: String) { FEED("Feed"), PREVOL("Prévol"), CHE
 
 @Composable
 fun AppRoot(container: AppContainer) {
-    // écran d'accueil (V7.2) : logo et fond affichés ensemble, sans transition entre les deux, à chaque ouverture
+    // V18.3 : page d'accueil spiral (connexion Google ou invité), affichée à chaque ouverture tant qu'aucun compte
+    // n'est connecté ; avec un compte, elle sert d'écran de lancement.
     var splashDone by rememberSaveable { mutableStateOf(false) }
     if (!splashDone) {
-        SplashScreen(onDone = { splashDone = true })
+        WelcomeScreen(container.cloud, onContinue = { splashDone = true })
         return
     }
     val ack by container.prefs.acknowledgedDisclaimer.collectAsState(initial = -1)
@@ -98,32 +99,6 @@ fun AppRoot(container: AppContainer) {
         ack == -1 -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
         ack < DISCLAIMER_VERSION -> Disclaimer { scope.launch { container.prefs.acknowledgeDisclaimer(DISCLAIMER_VERSION) } }
         else -> MainScaffold(container)
-    }
-}
-
-private val SPLASH_BLUE = Color(0xFF3E7DB5)
-
-/** Écran d'accueil (V7.2) : fond bleu et logo écureuil affichés d'un bloc, nom et slogan dessous. */
-@Composable
-private fun SplashScreen(onDone: () -> Unit) {
-    LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(1600)
-        onDone()
-    }
-    Column(
-        Modifier.fillMaxSize().background(SPLASH_BLUE).statusBarsPadding().navigationBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        androidx.compose.foundation.Image(
-            painter = androidx.compose.ui.res.painterResource(R.drawable.splash_glidy),
-            contentDescription = null,
-            modifier = Modifier.size(200.dp).clip(androidx.compose.foundation.shape.CircleShape),
-        )
-        Spacer(Modifier.height(22.dp))
-        Text("Glidy", style = TextStyle(fontSize = 34.sp, fontWeight = FontWeight.Bold, color = Color.White, letterSpacing = (-0.5).sp))
-        Spacer(Modifier.height(4.dp))
-        Text("Glide easy", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium, color = Color.White.copy(alpha = 0.85f), letterSpacing = 1.2.sp))
     }
 }
 
@@ -323,7 +298,7 @@ private fun Disclaimer(onAccept: () -> Unit) {
         Modifier.fillMaxSize().background(c.background).statusBarsPadding().navigationBarsPadding().padding(24.dp),
         verticalArrangement = Arrangement.Bottom,
     ) {
-        Text("GLIDY", style = Gc.type.giant.copy(color = c.ok, fontSize = 64.sp, lineHeight = 64.sp, fontWeight = FontWeight.SemiBold))
+        Text("spiral", style = Gc.type.giant.copy(color = c.ok, fontSize = 64.sp, lineHeight = 64.sp, fontWeight = FontWeight.SemiBold))
         Spacer(Modifier.height(16.dp))
         Text(
             "Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. " +

@@ -86,7 +86,7 @@ internal fun AccountCard(state: AccountCardState, actions: AccountActions?) {
     ) {
         when {
             !state.configured || actions == null -> Text(
-                "Bientôt disponible. GLIDY fonctionne sans compte : vos vols restent sur ce téléphone.",
+                "Bientôt disponible. spiral fonctionne sans compte : vos vols restent sur ce téléphone.",
                 style = Gc.type.bodySmall,
             )
             state.email == null -> SignIn(state, actions)

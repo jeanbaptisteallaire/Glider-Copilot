@@ -33,7 +33,15 @@ PY
 }
 adb shell am start -n $PKG/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6 --ez glidy.flights.demo true
 sleep 15
-tap "Wait"; tap "J'ai compris"
+tap "Wait"
+# V18.3 : page d'accueil spiral → « Continuer en invité » (essais répétés pendant l'animation du planeur)
+for i in 1 2 3 4 5 6 7 8; do
+  P0=$(adb shell uiautomator dump /sdcard/ui-r.xml >/dev/null 2>&1; adb shell cat /sdcard/ui-r.xml 2>/dev/null | grep -c "Continuer en invité")
+  [ "${P0:-0}" -gt 0 ] && { tap "Continuer en invité"; break; }
+  sleep 4
+done
+sleep 3
+tap "J'ai compris"
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/90-release-prevol.png"
 tap "Check-lists"; sleep 6

@@ -1,9 +1,11 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <!-- Planeur vu de dessus, aile longue, sur fond cockpit -->
-    <path android:fillColor="#E6EDF2" android:pathData="M16,50 L92,50 L92,55 L16,55 Z" />
-    <path android:fillColor="#E6EDF2" android:pathData="M52,34 L56,34 L56,78 L52,78 Z" />
-    <path android:fillColor="#E6EDF2" android:pathData="M44,74 L64,74 L64,78 L44,78 Z" />
-    <path android:fillColor="#6FE08A" android:pathData="M30,86 Q54,64 78,86 L78,89 Q54,68 30,89 Z" />
+    <!-- V18.3 : logo spiral centré dans la zone sûre (66 dp) de l'icône adaptative -->
+    <group android:scaleX="0.122" android:scaleY="0.122" android:translateX="35.7" android:translateY="28">
+        <path android:fillColor="#1F2730"
+            android:pathData="M 150 275.5 A 125.5 125.5 0 1 1 275.5 150 H 212.5 A 62.5 62.5 0 1 0 150 212.5 Z" />
+        <path android:fillColor="#1F2730"
+            android:pathData="M 150 150.5 A 125.5 125.5 0 1 1 24.5 276 H 87.5 A 62.5 62.5 0 1 0 150 213.5 Z" />
+    </group>
 </vector>

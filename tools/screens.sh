@@ -14,9 +14,6 @@ adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_
 adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION || true
 # position GPS de l'émulateur sur LFNL (sinon Mountain View : club le plus proche faux dès le premier fix)
 adb emu geo fix 3.78167 43.80028 183 || true
-adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
-sleep 12
-timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
 tap_text() {
   rm -f /tmp/ui.xml
   timeout 25 adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
@@ -61,6 +58,21 @@ dismiss_anr() {
     P=$(tap_text "$t"); [ -n "$P" ] && { echo "boîte système écartée : $t"; timeout 10 adb shell input tap $P; sleep 3; }
   done
 }
+# V18.3 : page d'accueil spiral à chaque ouverture (pas de compte en CI) → « Continuer en invité ».
+# Le planeur monte pendant 20 s : uiautomator peut attendre la fin de l'animation, d'où les essais répétés.
+pass_welcome() {
+  for i in 1 2 3 4 5 6 7 8; do
+    P=$(tap_text "Continuer en invité"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "accueil passé (essai $i)"; sleep 3; return 0; }
+    sleep 4
+  done
+  echo "accueil : bouton invité introuvable" >&2
+}
+adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+sleep 8
+timeout 20 adb exec-out screencap -p > "$OUT/00-accueil.png"
+pass_welcome
+sleep 4
+timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
 dismiss_anr
 P=$(tap_text "J'ai compris"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 35
@@ -102,6 +114,7 @@ timeout 20 adb exec-out screencap -p > "$OUT/07b-checklists-suite.png"
 adb shell am force-stop com.neutronstar.glidercopilot
 T0=$(date +%s)
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
+pass_welcome
 sleep 8
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 # temps réel : décollage ~12 s, largage ~72 s, spirales jusqu'à ~170 s, atterrissage ~330 s
@@ -139,6 +152,7 @@ cat "$OUT/igc-controle.txt"
 # S6 : mode démo (vol simulé autour du terrain, trafic OGN réel), choix du terrain, finesse F10
 adb shell am force-stop com.neutronstar.glidercopilot
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+pass_welcome
 sleep 10
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
@@ -149,6 +163,7 @@ sleep 3
 timeout 20 adb exec-out screencap -p > "$OUT/12b-pilotage-terrain-au-sol.png"
 adb shell am force-stop com.neutronstar.glidercopilot
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+pass_welcome
 sleep 10
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 4
@@ -179,6 +194,7 @@ timeout 20 adb exec-out screencap -p > "$OUT/17-pilotage-suivi.png"
 # S7 : onglet Carte (aéronefs du sud de la France), pistes des terrains, fiche d'un aéronef
 adb shell am force-stop com.neutronstar.glidercopilot
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+pass_welcome
 sleep 12
 P=$(tap_text "Carte"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 40
@@ -209,6 +225,7 @@ timeout 20 adb exec-out screencap -p > "$OUT/20-carte-pistes.png"
 # S10 — Mes vols : vol synthétique d'exemple importé au lancement, liste, détail, rejeu 3D
 adb shell am force-stop com.neutronstar.glidercopilot || true
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flights.demo true
+pass_welcome
 sleep 14
 dismiss_anr
 P=$(tap_text "Mes vols"); [ -n "$P" ] && timeout 10 adb shell input tap $P
@@ -233,6 +250,7 @@ if [ -z "$opened" ]; then
   echo "bouton rejeu introuvable : ouverture directe"
   adb shell am force-stop com.neutronstar.glidercopilot || true
   adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flights.replay3d true
+  pass_welcome
   sleep 14
 fi
 sleep 30
@@ -261,6 +279,7 @@ adb shell input keyevent 4 || true
 # S18 Lite — Pilotage hors démo : interrupteur discret « REC » (enregistrement manuel), avant puis après appui
 adb shell am force-stop com.neutronstar.glidercopilot || true
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
+pass_welcome
 sleep 12
 dismiss_anr
 P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
