@@ -1,685 +1,616 @@
 --------- beginning of main
-10-03 13:36:27.273  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:27.273  1252  1252 I SsBaseTemplateCard: Secondary card pane is null
+10-03 14:50:08.334  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:08.334  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:08.334  1296  1296 I SsBaseTemplateCard: Secondary card pane is null
+10-03 14:50:08.337   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=5 freq=2437 RxLinkSpeed=2
+10-03 14:50:08.337   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:08.337   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:08.337   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:08.337   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:08.337   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 5Mbps, Tx Link speed: 5Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:08.337   671   939 D WifiScoreCard: txRate: 7 txSpeed: 5
+10-03 14:50:08.337   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 5
+10-03 14:50:08.337   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=5 tx=6.6, 0.0, 0.0 rx=6.6 bcn=0 [on:0 tx:0 rx:0 period:3006] from screen [on:0 period:37645905] score=60
+10-03 14:50:08.344  1029  1029 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+10-03 14:50:08.378   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:09.262  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:09.266  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:09.266  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:09.266  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:09.271  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:09.327  7609  7653 I GlidyFlight: annonce : Chrono arrêté
+10-03 14:50:09.332  2569  7704 I GoogleTTSServiceImpl: Synthesis request for locale fra-FRA and name fr-FR-language
+10-03 14:50:09.332  2569  7704 I GoogleTTSServiceImpl: TTS dispatch: fr-fr-x-vlf-lstm-embedded
+10-03 14:50:09.368   531   563 D NativePermissionController: checkPermission: missing 1 for 10150
+10-03 14:50:09.368   531   563 D NativePermissionController: checkPermission: missing 3 for 10150
+10-03 14:50:09.368   531   563 D NativePermissionController: checkPermission: missing 5 for 10150
+10-03 14:50:09.369   531   563 D AudioFlinger: Client defaulted notificationFrames to 2048 for frameCount 4096
+10-03 14:50:09.369   531   563 I AF::PthrPatchRecord: creating track with enforcement level 0
+10-03 14:50:09.380  1176  1176 I bluetooth: system/btif/avrcp/avrcp_service.cc:536 SendMediaUpdate: track_changed=false :  play_state=true :  queue=false
+10-03 14:50:09.380  1176  1176 E MediaControlProfile: onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
+10-03 14:50:09.380  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
+10-03 14:50:09.380  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:09.386  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:09.390  1176  1176 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+10-03 14:50:09.390  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:09.390  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:09.393  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:09.393  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:09.393  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+10-03 14:50:09.393  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+10-03 14:50:09.393  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
 --------- beginning of system
-10-03 13:36:27.273   647  1780 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-10-03 13:36:27.273   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.273   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:27.274   647   647 D BatterySaverPolicy: accessibility changed to true, updating policy.
-10-03 13:36:27.277  1640  3172 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-10-03 13:36:27.278  1015  1015 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-10-03 13:36:27.280  1640  1884 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
-10-03 13:36:27.280  1640  1884 I AiAiEcho: EchoTargets: 
-10-03 13:36:27.280  1640  1884 I AiAiEcho: Filtered by AiAi flag check: 
-10-03 13:36:27.280  1640  1884 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
-10-03 13:36:27.281  1640  1884 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
-10-03 13:36:27.281  1640  1884 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
-10-03 13:36:27.281  1640  1884 I AiAiEcho: EchoTargets: 
-10-03 13:36:27.281  1640  1884 I AiAiEcho: Filtered by AiAi flag check: 
-10-03 13:36:27.281  1640  1884 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
-10-03 13:36:27.281  1640  1884 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
-10-03 13:36:27.282  1640  1884 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-10-03 13:36:27.282  1640  1884 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-10-03 13:36:27.286  1252  1252 D SsBaseTemplateCard: No text view can be set up
-10-03 13:36:27.286  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:27.286  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:27.286  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:27.286  1252  1252 I SsBaseTemplateCard: Secondary card pane is null
-10-03 13:36:27.286  1015  1015 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-10-03 13:36:28.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:28.026  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:28.026  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:28.026  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:28.044  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:28.146   647   923 D WifiClientModeImpl[36295:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=2 freq=2437 RxLinkSpeed=2
-10-03 13:36:28.146   647   923 D WifiDataStall: tx tput in kbps: 37000
-10-03 13:36:28.146   647   923 D WifiDataStall: rx tput in kbps: 37000
-10-03 13:36:28.146   647   923 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
-10-03 13:36:28.146   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:28.146   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:28.146   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:28.146   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:28.147   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:28.147   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:28.147   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:28.147   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:28.147   647   923 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 70050534 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 2Mbps, Tx Link speed: 2Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
-10-03 13:36:28.147   647   923 D WifiScoreCard: txRate: 3 txSpeed: 2
-10-03 13:36:28.147   647   923 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 948372522 RSSI -50 txSpeed -1
-10-03 13:36:28.147   647   923 D WifiClientModeImpl[36295:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 3 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=2 tx=2.8, 0.0, 0.0 rx=2.8 bcn=0 [on:0 tx:0 rx:0 period:3003] from screen [on:0 period:33225715] score=60
-10-03 13:36:28.784  7686  7686 W AccessibilityNodeInfoDumper: Fetch time: 460ms
-10-03 13:36:28.809   647  1780 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
-10-03 13:36:28.810   647  1780 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
-10-03 13:36:28.810   647  1780 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.811  1640  3172 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
-10-03 13:36:28.811  7686  7686 D AndroidRuntime: Shutting down VM
-10-03 13:36:28.812  1640  1884 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
-10-03 13:36:28.812  7686  7699 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
-10-03 13:36:28.812  7686  7695 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
-10-03 13:36:28.811   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812  7686  7697 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812  7686  7700 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.812   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.813  1640  1884 I AiAiEcho: EchoTargets: 
-10-03 13:36:28.813  1640  1884 I AiAiEcho: Filtered by AiAi flag check: 
-10-03 13:36:28.813  1640  1884 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
-10-03 13:36:28.813  1640  1884 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
-10-03 13:36:28.813  1640  1884 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
-10-03 13:36:28.814  1640  1884 I AiAiEcho: EchoTargets: 
-10-03 13:36:28.814  1640  1884 I AiAiEcho: Filtered by AiAi flag check: 
-10-03 13:36:28.814  1640  1884 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
-10-03 13:36:28.814  1640  1884 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
-10-03 13:36:28.815  1640  1884 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
-10-03 13:36:28.817  1640  1884 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
-10-03 13:36:28.817  1015  1015 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
-10-03 13:36:28.821   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.821   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:28.826   647   647 D BatterySaverPolicy: accessibility changed to false, updating policy.
-10-03 13:36:28.827  1252  1252 D SsBaseTemplateCard: No text view can be set up
-10-03 13:36:28.827  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:28.827  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:28.827  1252  1252 D SsBaseTemplateCard: Passed-in item info is null
-10-03 13:36:28.827  1252  1252 I SsBaseTemplateCard: Secondary card pane is null
-10-03 13:36:29.037  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:29.043  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:29.043  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:29.043  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:29.057  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:29.133   647   746 D ActivityManager: sync unfroze 4931 com.google.android.googlequicksearchbox:search for 6
-10-03 13:36:29.170   647   929 D ConnectivityService: releasing NetworkRequest [ REQUEST id=206, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ] (release request)
-10-03 13:36:29.176   647   929 I ConnectivityService: Update capabilities for net 101 : -FOREGROUND
-10-03 13:36:29.176   647   746 D ActivityManager: sync unfroze 4557 com.google.android.googlequicksearchbox:googleapp for 6
-10-03 13:36:29.177   647   746 D ActivityManager: sync unfroze 4601 com.google.android.webview:sandboxed_process0:org.chromium.content.app.SandboxedProcessService0:0 for 6
-10-03 13:36:29.181   441  7238 I netd    : networkSetPermissionForNetwork(101, 1) <3.94ms>
-10-03 13:36:29.194   647   929 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:29.194   647   929 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:29.194   647   929 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:29.229   647   746 D ActivityManager: sync unfroze 3748 com.google.android.apps.messaging for 6
-10-03 13:36:29.254  3748  3748 D WM-DelayedWorkTracker: Scheduling work ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a
-10-03 13:36:29.255  3748  3748 D WM-GreedyScheduler: Starting tracking for ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a
-10-03 13:36:29.299   647  1797 W ProcessStats: Tracking association SourceState{a0490af com.google.android.googlequicksearchbox:search/10147 ImpBg #6075} whose proc state 6 is better than process ProcessState{8864a95 com.google.android.googlequicksearchbox:googleapp/10147 pkg=com.google.android.googlequicksearchbox} proc state 15 (10 skipped)
-10-03 13:36:29.320  4931  4931 I avrd    : (REDACTED) Starting %s background task %s.
-10-03 13:36:29.341  3748  3748 I BugleDataModel: ActionExecutorImpl: ACTION_EXECUTE_QUEUED_CountryCodeDetectorAction
-10-03 13:36:29.341  3748  7712 I BugleDataModel: ExecuteActionRunnable: running action CountryCodeDetectorAction
-10-03 13:36:29.343  3748  7712 I BugleDataModel: ActionExecutorImpl: ACTION_BACKGROUND_QUEUED_CountryCodeDetectorAction
-10-03 13:36:29.347  3748  3748 D WM-SystemJobService: onStartJob for WorkGenerationalId(workSpecId=ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a, generation=0)
-10-03 13:36:29.352   647   679 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:29.373  4931  5002 W acte    : Account id is not cached
-10-03 13:36:29.378  3748  7714 D WM-Processor: pst: processing WorkGenerationalId(workSpecId=ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a, generation=0)
-10-03 13:36:29.379   647   679 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:29.384  4931  6098 I aukg    : Using pair HTTP connection
-10-03 13:36:29.429  3748  7715 I Bugle   : CountryCodeDetector: updateSmsNetworkCountry from default subscription network country. detected country: us
-10-03 13:36:29.429  3748  7715 I BugleDataModel: ActionExecutorImpl: ACTION_RESPONSE_QUEUED_CountryCodeDetectorAction
-10-03 13:36:29.503  3748  7208 D WM-ConstraintTracker: pxn: initial state = NetworkState(isConnected=true, isValidated=true, isMetered=false, isNotRoaming=true)
-10-03 13:36:29.503  3748  7208 D WM-NetworkStateTracker: Registering network callback
-10-03 13:36:29.503  4931  7720 I abhp    : [Upload] Connected
-10-03 13:36:29.503   647  1366 D ConnectivityService: requestNetwork for uid/pid:10146/3748 activeRequest: null callbackRequest: 223 [NetworkRequest [ TRACK_DEFAULT id=224, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ], NetworkRequest [ REQUEST id=225, [ Transports: SATELLITE Capabilities: INTERNET&TRUSTED&NOT_VCN_MANAGED Uid: 10146 RequestorUid: 10146 RequestorPkg: com.google.android.apps.messaging UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOST|NC
-10-03 13:36:29.504  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.504  4931  4965 I alhi    : (REDACTED) Nga state changed to %s
-10-03 13:36:29.505  4931  4965 I alhi    : (REDACTED) isTngActive=%s
-10-03 13:36:29.507  3748  4248 D WM-NetworkStateTracker: Network capabilities changed: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=12000Kbps LinkDnBandwidth>=30000Kbps TransportInfo: <SSID: <unknown ssid>, BSSID: 02:00:00:00:00:00, MAC: 02:00:00:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 2Mbps, Tx Link speed: 2Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: -1, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: -1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none><none>MLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>> SignalStrength: -50 UnderlyingNetworks: Null]
-10-03 13:36:29.507  1330  1985 I TapAndPay: deviceSupportsHce has detected emulator [CONTEXT service_id=79 ]
-10-03 13:36:29.507  1330  1985 I .gms.persistent: AssetManager2(0x7e811e820398) locale list changing from [] to [en-US]
-10-03 13:36:29.509   647   929 D ConnectivityService: NetReassign [224 : null → 103] [c 2] [a 3] [i 0]
-10-03 13:36:29.518  1330  1985 I TapAndPay: NfcAdapter is null while obtaining CardEmulation instance. [CONTEXT service_id=79 ]
-10-03 13:36:29.519  1330  7252 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService started execution. cause:4 exec_start_elapsed_seconds: 1170 [CONTEXT service_id=218 ]
-10-03 13:36:29.530  1330  7252 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService started execution. cause:4 exec_start_elapsed_seconds: 1171 [CONTEXT service_id=218 ]
-10-03 13:36:29.535  1330  7721 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.tapandpay.gcmtask.TapAndPayGcmTaskService finished executing. cause:4 result: 3 elapsed_millis: 189 uptime_millis: 189 exec_start_elapsed_seconds: 1170 [CONTEXT service_id=218 ]
-10-03 13:36:29.538  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.539  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.546  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.555  3748  7208 D MddListenableWorkerFactory: createWorker for class: com.google.android.apps.messaging.shared.rcsprovisioning.RcsProvisioningListenableWorker
-10-03 13:36:29.564  4931  4956 W earchbox:search: Long monitor contention with owner BG Thread #1 (4965) at void alhc.run()(PG:20) waiters=0 in com.google.android.apps.gsa.nga.api.NgaState alhi.a() for 350ms
-10-03 13:36:29.566  3748  3748 D WM-WorkerWrapper: Starting work for com.google.android.apps.messaging.shared.rcsprovisioning.RcsProvisioningListenableWorker
-10-03 13:36:29.566  3748  3748 I BugleRcsWorker: [seqId=3][workId=e6e78066-2edd-4527-97af-90b963ea99ad] RCS provisioning task has started
-10-03 13:36:29.567  3748  7715 D WM-GreedyScheduler: Constraints met: Scheduling work ID WorkGenerationalId(workSpecId=ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a, generation=0)
-10-03 13:36:29.568  3748  7714 D WM-Processor: Work WorkGenerationalId(workSpecId=ae2a5dcf-fc0e-4ddc-8854-4ef9f73e5c1a, generation=0) is already enqueued for processing
-10-03 13:36:29.576  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.578  4931  4968 W earchbox:search: Long monitor contention with owner BG Thread #1 (4965) at void alhc.run()(PG:20) waiters=1 in com.google.android.apps.gsa.nga.api.NgaState alhi.a() for 304ms
-10-03 13:36:29.582  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.583   647  1788 D ActivityManager: sync unfroze 2451 com.google.android.gms.unstable for 6
-10-03 13:36:29.587  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.590  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.591   647   974 D BackgroundInstallControlService: Package event received: 0
-10-03 13:36:29.597  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.607  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.620  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.631  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.649  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.731  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.750  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.751  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.752  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.753  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.753  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.757  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.758  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.790  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.791  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.793  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.797  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.798   441  7726 I resolv  : GetAddrInfoHandler::run: {103 786535 103 983143 10145 0}
-10-03 13:36:29.806   441  7729 I resolv  : res_nmkquery: (QUERY, IN, A)
-10-03 13:36:29.814   441  7729 I resolv  : res_nsend: used send_dg 164 terrno: 0
-10-03 13:36:29.814   441  7729 I resolv  : doQuery: rcode=0, ancount=8, return value=164
-10-03 13:36:29.877  3748  7717 I BugleRcsWorker: [seqId=3][workId=e6e78066-2edd-4527-97af-90b963ea99ad] Starting StateMachine, trigger is STATE_MACHINE_RETRY
-10-03 13:36:29.878  3748  7717 I BugleRcsEngine: start PEv2, trigger is STATE_MACHINE_RETRY, workerId is e6e78066-2edd-4527-97af-90b963ea99ad [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=145 ]
-10-03 13:36:29.878  3748  7717 I BugleRcsEngine: Created new RcsProvisioningProtoDataStorage for sim redacted-pii:sim_id[chars:20,last3:897] [CONTEXT thread_id=145 ]
-10-03 13:36:29.890   441  7728 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-10-03 13:36:29.893   441  7728 I resolv  : res_nsend: used send_dg 260 terrno: 0
-10-03 13:36:29.893   441  7728 I resolv  : doQuery: rcode=0, ancount=8, return value=260
-10-03 13:36:29.908  4931  4968 W earchbox:search: Long monitor contention with owner BG Thread #1 (4965) at void alhc.run()(PG:20) waiters=1 in com.google.android.apps.gsa.nga.api.NgaState alhi.a() for 266ms
-10-03 13:36:29.915  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.923  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.928   647   916 I WifiService: getWifiEnabledState uid=10147 state=3
-10-03 13:36:29.930  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.930  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.932  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.934  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.937  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.939  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.941  3748  7717 I BugleRcsEngine: start [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=145 ]
-10-03 13:36:29.941  3748  7208 I StateMachineV2: State transition requested, from null to 1
-10-03 13:36:29.941  3748  7208 I StateMachineV2: Pretend entering dkii@d3a2baf
-10-03 13:36:29.941  3748  7725 I BugleRcsEngine: Enter EnabledState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:29.941  3748  7208 I StateMachineV2: Initialized StateMachineV2 to 1
-10-03 13:36:29.947  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:29.950  3748  7725 I StateMachineV2: Queuing delayed 9 for PT5M
-10-03 13:36:29.951  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.957  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.960  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.961  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.965  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.966  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.969  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.969  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.970  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:29.984  3748  7725 I BugleRcsEngine: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[true], enableSingleRegistrationProvisioning:[false] [CONTEXT thread_id=151 ]
-10-03 13:36:29.987  4931  4931 E rdv     : onError
-10-03 13:36:29.987  4931  4931 E rdv     : afvv: errorCode: 65561, engine: 2
-10-03 13:36:29.987  4931  4931 E rdv     : 	at auki.a(PG:23)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at abhl.hv(PG:13)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at fyqd.e(PG:9)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at ahbi.d(PG:154)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at ahbi.iW(PG:26)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at abhm.c(PG:102)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at abhn.run(PG:1)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:524)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at aggv.run(PG:20)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at aght.run(PG:3)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at aght.run(PG:3)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at java.lang.Thread.run(Thread.java:1119)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at aggj.run(PG:42)
-10-03 13:36:29.987  4931  4931 E rdv     : Caused by: afvx: errorCode: 65586, engine: 2
-10-03 13:36:29.987  4931  4931 E rdv     : 	at abhl.hv(PG:6)
-10-03 13:36:29.987  4931  4931 E rdv     : 	... 14 more
-10-03 13:36:29.987  4931  4931 E rdv     : Caused by: afvt: errorCode: 401, engine: 2
-10-03 13:36:29.987  4931  4931 E rdv     : 	at rds.b(PG:30)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at abii.hJ(PG:11)
-10-03 13:36:29.987  4931  4931 E rdv     : 	at ahbi.d(PG:129)
-10-03 13:36:29.987  4931  4931 E rdv     : 	... 12 more
-10-03 13:36:29.989  4931  7720 I aukg    : Using pair HTTP connection
-10-03 13:36:29.993  3748  7725 I BugleRcsProvisioning: RcsAvailability configuration availability and enabled status: simId: redacted-pii:sim_id[chars:20,last3:897], SipConnectionType: DUAL_REG, isConfigurationAvailableAndEnabled: false
-10-03 13:36:29.993  3748  7725 I BugleRcsProvisioning: Checking isConfigServerUrlAvailable with simId: redacted-pii:sim_id[chars:20,last3:897], 
-10-03 13:36:29.995  4931  7736 I abhp    : [Upload] Connected
-10-03 13:36:30.002  3748  7725 I BugleRcsEngine: getConfigServerUrl with simId: redacted-pii:sim_id[chars:20,last3:897] [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.003  3748  7725 I BugleRcsEngine: Using config server URL from chgq [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.003   647   916 I WifiService: getWifiEnabledState uid=10147 state=3
-10-03 13:36:30.004  4931  4931 W qrh     : Failed to sync device settings.
-10-03 13:36:30.004  4931  4931 I qrh     : Retrying to sync device settings.
-10-03 13:36:30.010  4931  4969 W dncx    : Upload request without a content type.
-10-03 13:36:30.010  3748  7725 I BugleRcsProvisioning: RcsAvailability: Subscription Id: 1, simId: redacted-pii:sim_id[chars:20,last3:897], sipConnectionType: DUAL_REG, isRcsAvailable: false
-10-03 13:36:30.020  3748  7725 I BugleRcsProvisioning: updateAvailabilityForRcsProvisioningId. SimId: redacted-pii:sim_id[chars:20,last3:897], currentAvailability: 30, newAvailability: 30, hint: NO_HINT
-10-03 13:36:30.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:30.023  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:30.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:30.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
-10-03 13:36:30.024  4931  4931 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=960000, deadline=960000). The functional constraints are not likely to be satisfied when the job runs.
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: Exception in upload method
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: afds: Error code: 262182
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at dndc.b(PG:15)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at dncj.read(PG:13)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at gdyp.run(PG:401)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at gdyq.run(PG:142)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at dncv.run(PG:13)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at dnqr.run(PG:9)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at agie.b(PG:3)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at agih.run(PG:1)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at djui.run(PG:5)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at fler.run(PG:44)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at djtz.run(PG:42)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at java.lang.Thread.run(Thread.java:1119)
-10-03 13:36:30.026  4931  5002 E cn_CronetUrlRequestContext: 	at djvl.run(PG:62)
-10-03 13:36:30.029   647  1107 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=960000, deadline=960000). The functional constraints are not likely to be satisfied when the job runs.
-10-03 13:36:30.029   647  1107 W JobInfo : Job 'com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService#-353' has a deadline with functional constraints and an extremely short time window of 0 ms (delay=960000, deadline=960000). The functional constraints are not likely to be satisfied when the job runs.
-10-03 13:36:30.043   647   916 D ActivityManager: sync unfroze 1657 com.google.android.gms for 6
-10-03 13:36:30.047   647   916 D ActivityManager: sync unfroze 3855 com.google.android.adservices.api for 6
-10-03 13:36:30.064   647   916 W JobScheduler: Job didn't exist in JobStore: 224f9a3 #u0a147/-353 com.google.android.googlequicksearchbox/com.google.android.apps.gsa.tasks.BackgroundTasksJobService
-10-03 13:36:30.086  3748  7725 I BugleRcsEngine: transitionViaMessage, srcState=EnabledState, destState = CheckPreconditionsState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.086  3748  7725 I BugleRcsEngine: Sending ProvisioningEvent to Bugle [Update provisioning status (11)], redacted-pii:[chars:85] [CONTEXT thread_id=151 ]
-10-03 13:36:30.087  3748  7725 I BugleRcsEngine: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:243] from source PROVISIONING_EVENT [CONTEXT log_prefix="EngineBroadcaster" thread_id=151 ]
-10-03 13:36:30.088  3748  7714 I StateMachineV2: State transition requested, from 1 to 14
-10-03 13:36:30.088  3748  7714 I StateMachineV2: Pretend entering dkib@36e1bbc
-10-03 13:36:30.091  3748  7715 I BugleRcsProvisioning: RcsProvisioningTrigger: onRcsAvailabilityUpdate : availability is updated to RCS is disabled because the configuration has version = 0, and validity seconds > 0, lastAvailabilityLocal is RCS is disabled because the configuration has version = 0, and validity seconds > 0, simId hash = -5438360906901465096, simId = redacted-pii:sim_id[chars:20,last3:897], isPev3Enabled = true
-10-03 13:36:30.092  3748  7208 I StateMachineV2: Pretend sent message 2004 to dkib@36e1bbc
-10-03 13:36:30.093  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.101  3748  7725 I BugleRcsEngine: EnabledState: Transition to check preconditions [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.101  3748  7725 W StateMachineV2: Current state 14 and its parents requested to transition to more than 1 state. Requests: [(1, 14), (14, 14)]
-10-03 13:36:30.102  3748  7714 I StateMachineV2: Ignoring transitioning request to 14, state machine is already at that state
-10-03 13:36:30.106  3748  7208 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Update provisioning status
-10-03 13:36:30.107  3748  7725 I BugleRcsEngine: transitionTo: destState=CheckPreconditionsState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.109  3748  7725 I BugleRcsEngine: onTransitionRequested EnabledState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.111  3748  7208 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@fc1a3c6
-10-03 13:36:30.113  3748  7725 I BugleRcsEngine: Enter CheckPreconditionsState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.114   441  7238 I netd    : tetherGetStats() -> {[]} <0.33ms>
-10-03 13:36:30.115  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.120  3748  7725 I StateMachineV2: Queuing delayed 9 for PT5M
-10-03 13:36:30.121  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:30.123  3748  7725 I BugleRcsEngine: Configuration is still valid [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.123  3748  7725 I BugleRcsEngine: transitionViaMessage, srcState=CheckPreconditionsState, destState = ConfiguredState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.123  3748  7725 W StateMachineV2: Current state 14 and its parents requested to transition to more than 1 state. Requests: [(1, 14), (14, 14), (14, 6)]
-10-03 13:36:30.127  3748  7714 I StateMachineV2: State transition requested, from 14 to 6
-10-03 13:36:30.127  3748  7714 I StateMachineV2: Pretend exiting dkib@36e1bbc
-10-03 13:36:30.127  3748  7714 I StateMachineV2: Pretend exiting dkii@d3a2baf
-10-03 13:36:30.127  3748  7714 I StateMachineV2: Pretend entering dkie@18656f2
-10-03 13:36:30.128  1657  1657 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.semanticlocationhistory.settings.SettingsSyncOneOffService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsInternalBoundBrokerService }
-10-03 13:36:30.128  1657  1657 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.semanticlocationhistory.settings.SettingsSyncOneOffService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsInternalBoundBrokerService }
-10-03 13:36:30.129  3748  7725 I BugleRcsEngine: CheckPreconditionsState: Transition to configured [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.129  3748  7725 W StateMachineV2: Current state 6 and its parents requested to transition to more than 1 state. Requests: [(1, 14), (14, 14), (14, 6), (6, 6)]
-10-03 13:36:30.129  3748  7725 I BugleRcsEngine: transitionTo: destState=ConfiguredState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.130  3748  7725 I BugleRcsEngine: onTransitionRequested CheckPreconditionsState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.130  3748  7725 I BugleRcsEngine: Exit CheckPreconditionsState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.131  3748  7725 I BugleRcsEngine: Exit EnabledState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.132  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:30.132  3748  7725 I BugleRcsEngine: Enter ConfiguredState [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.136  3748  7714 I StateMachineV2: Pretend sent message 2017 to dkie@18656f2
-10-03 13:36:30.137  3748  7715 I StateMachineV2: Ignoring transitioning request to 6, state machine is already at that state
-10-03 13:36:30.162  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.190  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:30.191  3748  7725 I StateMachineV2: Queuing delayed 9 for PT5M
-10-03 13:36:30.192  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.196  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.197  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.198  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.199  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.201  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.203  1330  1330 D BoundBrokerSvc: onRebind: Intent { act=com.google.android.gms.auth.aang.events.services.START dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.PersistentApiService }
-10-03 13:36:30.204  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.205  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.211  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.217  3748  7725 I BugleRcsEngine: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[true], enableSingleRegistrationProvisioning:[false] [CONTEXT thread_id=151 ]
-10-03 13:36:30.222   647   660 I system_server: Background concurrent mark compact GC freed 23MB AllocSpace bytes, 46(1304KB) LOS objects, 44% free, 30MB/54MB, paused 3.929ms,34.167ms total 878.187ms
-10-03 13:36:30.225  3748  7725 I BugleRcsProvisioning: RcsAvailability configuration availability and enabled status: simId: redacted-pii:sim_id[chars:20,last3:897], SipConnectionType: DUAL_REG, isConfigurationAvailableAndEnabled: false
-10-03 13:36:30.231  3748  7725 I BugleRcsProvisioning: Checking isConfigServerUrlAvailable with simId: redacted-pii:sim_id[chars:20,last3:897], 
-10-03 13:36:30.231  3748  7725 I BugleRcsEngine: getConfigServerUrl with simId: redacted-pii:sim_id[chars:20,last3:897] [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.233  3748  7725 I BugleRcsEngine: Using config server URL from chgq [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.234  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.247  1657  1883 I LocationHistory: [SettingsSyncOneOffTask] Synced ODLH settings for all accounts. [CONTEXT service_id=314 ]
-10-03 13:36:30.249  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.253  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.255  1657  1657 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.semanticlocationhistory.settings.SettingsSyncOneOffService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.GmsInternalBoundBrokerService }
-10-03 13:36:30.256  1330  1985 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.semanticlocationhistory.settings.SettingsSyncOneOffService started execution. cause:5 exec_start_elapsed_seconds: 1171 [CONTEXT service_id=218 ]
-10-03 13:36:30.259  3748  7725 I BugleRcsProvisioning: RcsAvailability: Subscription Id: 1, simId: redacted-pii:sim_id[chars:20,last3:897], sipConnectionType: DUAL_REG, isRcsAvailable: false
-10-03 13:36:30.263  1330  1985 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.semanticlocationhistory.settings.SettingsSyncOneOffService finished executing. cause:5 result: 1 elapsed_millis: 249 uptime_millis: 249 exec_start_elapsed_seconds: 1171 [CONTEXT service_id=218 ]
-10-03 13:36:30.264  3748  7714 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=148 ]
-10-03 13:36:30.268  3748  7725 I BugleRcsProvisioning: updateAvailabilityForRcsProvisioningId. SimId: redacted-pii:sim_id[chars:20,last3:897], currentAvailability: 30, newAvailability: 30, hint: NO_HINT
-10-03 13:36:30.272  3748  7208 I BugleRcsProvisioning: RcsProvisioningTrigger: onRcsAvailabilityUpdate : availability is updated to RCS is disabled because the configuration has version = 0, and validity seconds > 0, lastAvailabilityLocal is RCS is disabled because the configuration has version = 0, and validity seconds > 0, simId hash = -5438360906901465096, simId = redacted-pii:sim_id[chars:20,last3:897], isPev3Enabled = true
-10-03 13:36:30.273  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:30.274  3748  7725 I BugleRcsEngine: Provisioned with disabled config (version <= 0). Invoke failure [e140ef22-3e09-41da-b219-fd293ca20d8d] [CONTEXT log_prefix="(PEv2-SM-Bugle-133132905)" thread_id=151 ]
-10-03 13:36:30.274  3748  7725 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=151 ]
-10-03 13:36:30.274  3748  7725 I BugleRcsEngine: Sending ProvisioningEvent to Bugle [Update provisioning status (11)], redacted-pii:[chars:85] [CONTEXT thread_id=151 ]
-10-03 13:36:30.274  3748  7725 I BugleRcsEngine: Broadcasting provisioning intent com.google.android.ims.provisioning.engine.provisioningEventAction to Bugle with extras redacted-pii:[chars:243] from source PROVISIONING_EVENT [CONTEXT log_prefix="EngineBroadcaster" thread_id=151 ]
-10-03 13:36:30.286  3748  7208 I BugleRcsProvisioning: RcsProvisioningEventReceiver: Received ProvisioningEvent: Update provisioning status
-10-03 13:36:30.290  3748  7208 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of com.google.android.apps.messaging.shared.receiver.RcsProvisioningEventReceiver@a208a76
-10-03 13:36:30.311  4931  4965 I alhi    : NGA enabled in interactor.
+10-03 14:50:09.393   671  1717 E AppOps  : attributionTag  not declared in manifest of com.google.android.tts
+10-03 14:50:09.393  1176  1176 W MediaControlProfile: MCS service state fields left unhandled: 
+10-03 14:50:09.393  1176  1176 W MediaControlProfile:    > PLAYER_NAME
+10-03 14:50:09.393  1176  1176 W MediaControlProfile:    > PLAYING_ORDER_SUPPORTED
+10-03 14:50:09.397   531   563 D NativePermissionController: checkPermission: missing 13 for 10150
+10-03 14:50:09.397   531   563 D NativePermissionController: checkPermission: missing 13 for 10150
+10-03 14:50:09.399   531   563 D NativePermissionController: checkPermission: missing 13 for 10150
+10-03 14:50:09.399   531   563 D NativePermissionController: checkPermission: missing 13 for 10150
+10-03 14:50:09.418   671  2127 I AS.AudioService: AudioHardening background playback would be muted for com.google.android.tts (10150), level: full
+10-03 14:50:09.440  7609  7648 I GlidyFlights: vol archivé : 2026-10-03-XXX-GLY-01.igc → Imported(flight=ArchivedFlight(id=FlightId(value=dc2081cb-5674-3f33-ada5-a2b51fbadea1), file=IgcFileRef(relativePath=13960b7b3f65a5e2b26f15e27417db06c0682879f620208e2d72166d2d8c1c10.igc, fileName=2026-10-03-XXX-GLY-01.igc, sizeBytes=649, sha256=13960b7b3f65a5e2b26f15e27417db06c0682879f620208e2d72166d2d8c1c10), summary=FlightSummary(startedAt=2026-10-03T14:50:00Z, endedAt=2026-10-03T14:50:09Z, pointCount=7, validPointCount=7, distanceMeters=0, minimumAltitudeMeters=183, maximumAltitudeMeters=183, positiveGainMeters=0, bounds=GeoBounds(south=43.80028333333333, west=3.7816666666666667, north=43.80028333333333, east=3.7816666666666667)), pilot=null, gliderType=null, gliderId=null, localState=AVAILABLE, syncState=LOCAL_ONLY, remoteId=null, previewTrack=[GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667), GeoPoint(latitude=43.80028333333333, longitude=3.7816666666666667)], altitudeProfileMeters=[183, 183, 183, 183, 183, 183, 183], visibility=PRIVATE, publishedAt=null))
+10-03 14:50:09.484   531   641 D AudioFlinger: mixer(0x75305b7f2770) throttle end: throttle time(36)
+10-03 14:50:10.247  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:10.252  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:10.252  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:10.252  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
+10-03 14:50:10.527   531   641 D AudioFlinger: mixer(0x75305b7f2770) throttle end: throttle time(44)
+10-03 14:50:10.601  2569  7705 D AudioTrack: stop(19): called with 29400 frames delivered
+10-03 14:50:10.602   671  2127 E AppOps  : attributionTag  not declared in manifest of com.google.android.tts
+10-03 14:50:10.608  1176  1176 I bluetooth: system/btif/avrcp/avrcp_service.cc:536 SendMediaUpdate: track_changed=false :  play_state=true :  queue=false
+10-03 14:50:10.608  1176  1176 E MediaControlProfile: onCurrentPlayerStateUpdated: base actions not supported, player actions= 0, expected at least= 7f
+10-03 14:50:10.608  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:10.608  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:10.608  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED(BIT 8) support: true
+10-03 14:50:10.608  1176  1176 W MediaControlGattService: Feature PLAYBACK_SPEED_NOTIFY support: true
+10-03 14:50:10.609  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:10.611  1176  1176 W MediaControlGattService: Feature TRACK_POSITION(BIT 7) support: true
+10-03 14:50:10.611  1176  1176 W MediaControlGattService: Feature TRACK_POSITION_NOTIFY support: true
+10-03 14:50:10.611  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:10.611  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:10.614  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:10.614  1176  1176 W MediaControlGattService: Feature MEDIA_CONTROL_POINT_OPCODES_SUPPORTED(BIT 19) support: true
+10-03 14:50:10.614  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:10.614  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:10.615  1176  1176 I AdapterProperties: getBondedDevices: length=0
+10-03 14:50:10.615  1176  1176 W MediaControlGattService: Feature MEDIA_STATE(BIT 17) support: true
+10-03 14:50:10.615  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+10-03 14:50:10.615  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+10-03 14:50:10.617  1176  1176 W MediaControlGattService: Feature SEEKING_SPEED(BIT 9) support: true
+10-03 14:50:10.617  1176  1176 W MediaControlProfile: MCS service state fields left unhandled: 
+10-03 14:50:10.617  1176  1176 W MediaControlProfile:    > PLAYER_NAME
+10-03 14:50:10.617  1176  1176 W MediaControlProfile:    > PLAYING_ORDER_SUPPORTED
+10-03 14:50:10.793  7609  7614 I r.glidercopilot: Background concurrent mark compact GC freed 16MB AllocSpace bytes, 138(3836KB) LOS objects, 49% free, 19MB/39MB, paused 122us,4.036ms total 193.271ms
+10-03 14:50:11.245  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:11.246  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:11.246  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:11.246  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:11.261  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:11.339   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=6 freq=2437 RxLinkSpeed=2
+10-03 14:50:11.339   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:11.339   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:11.339   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:11.339   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:11.339   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 6Mbps, Tx Link speed: 6Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:11.339   671   939 D WifiScoreCard: txRate: 6 txSpeed: 6
+10-03 14:50:11.339   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 6
+10-03 14:50:11.340   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=6 tx=5.3, 0.0, 0.0 rx=5.3 bcn=0 [on:0 tx:0 rx:0 period:3003] from screen [on:0 period:37648908] score=60
+10-03 14:50:12.245  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=61
+10-03 14:50:12.245  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:12.246  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=3
+10-03 14:50:12.246  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:12.246  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:12.249  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:13.290  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=61
+10-03 14:50:13.290  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:13.336  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=3
+10-03 14:50:13.336  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:13.336  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:13.343  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:13.421  7853  7853 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+10-03 14:50:13.424  7853  7853 I AndroidRuntime: Using default boot image
+10-03 14:50:13.424  7853  7853 I AndroidRuntime: Leaving lock profiling enabled
+10-03 14:50:13.426  7853  7853 I app_process: Core platform API reporting enabled, enforcing=false
+10-03 14:50:13.426  7853  7853 I app_process: Using CollectorTypeCMC GC.
+10-03 14:50:13.533  7853  7853 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+10-03 14:50:13.542  7853  7853 D nativeloader: Load libicu_jni.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+10-03 14:50:13.543  7853  7853 D app_process: u_setTimeZoneFilesDirectory("/apex/com.android.tzdata/etc/tz/versioned/9/icu") succeeded. 
+10-03 14:50:13.543  7853  7853 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt76l.dat
+10-03 14:50:13.544  7853  7853 D nativeloader: Load libjavacore.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+10-03 14:50:13.545  7853  7853 D nativeloader: Load libopenjdk.so using APEX ns com_android_art for caller /apex/com.android.art/javalib/core-oj.jar: ok
+10-03 14:50:13.547  7853  7853 W app_process: Unexpected CPU variant for x86: x86_64.
+10-03 14:50:13.547  7853  7853 W app_process: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, goldmont-without-sha-xsaves, tremont, kabylake, alderlake, default
+10-03 14:50:13.548  7853  7853 W app_process: ClassLoaderContext shared library size mismatch. Expected=2, found=0 (PCL[]{PCL[/system/framework/android.test.base.jar*2789897741]#PCL[/system/framework/android.test.mock.jar*3361312393]} | PCL[])
+10-03 14:50:13.549  7853  7853 W app_process: ClassLoaderContext classpath size mismatch. expected=0, found=1 (PCL[]{PCL[/system/framework/android.test.runner.jar*895143020]#PCL[/system/framework/android.test.base.jar*2789897741]} | PCL[/system/framework/android.test.runner.jar*895143020])
+10-03 14:50:13.578  7853  7853 D nativeloader: Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+10-03 14:50:13.579  7853  7853 D AndroidRuntime: Calling main entry com.android.commands.uiautomator.Launcher
+10-03 14:50:13.581  7853  7853 I AconfigPackage: android.media.swcodec.flags is mapped to com.android.media.swcodec
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.google.android.settings.simplemode.flags is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.google.android.systemui is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.google.android.apps.nexuslauncher is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.android.settings.accessibility is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.android.settings.flags is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.google.android.apps.miphone.aiai.matchmaker.overview.ui is mapped to system_ext
+10-03 14:50:13.584  7853  7853 I AconfigPackage: com.google.android.settings.flags is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.launcher3 is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.wallpaper is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.settings.media_drm is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.systemui.accessibility.accessibilitymenu is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.settings.keyboard is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.server.policy.feature.flags is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.settings.factory_reset is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.google.android.haptics.flags is mapped to system_ext
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.permission.flags is mapped to com.android.permission
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.icu is mapped to com.android.i18n
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.appsearch.flags is mapped to com.android.appsearch
+10-03 14:50:13.585  7853  7853 I AconfigPackage: android.uprobestats.mainline.flags is mapped to com.android.uprobestats
+10-03 14:50:13.585  7853  7853 I AconfigPackage: android.provider.flags is mapped to com.android.configinfrastructure
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.server.deviceconfig is mapped to com.android.configinfrastructure
+10-03 14:50:13.585  7853  7853 I AconfigPackage: com.android.nfc.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.admin.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.database.sqlite is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.providers.calendar is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.power.feature.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.media.performance.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.contextualsearch.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.ondeviceintelligence.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.media.projection.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.companion is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.service.controls.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.text.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.providers.contactkeys.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.intentresolver is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.companion.virtualdevice.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.uprobestats.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.net.thread.platform.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.view.contentprotection.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.dreams is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.graphics.surfaceflinger.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.hardware.input is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.sdk is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.input.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.tracing is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.biometrics is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.view.contentcapture.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.job is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.content.res is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.net.platform.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.aconfig.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.graphics.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.server.app is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.speech.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.stats is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.hardware.biometrics is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.car.feature is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.adpf is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.location.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.settingslib.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.managedprovisioning.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.assist.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.net is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.settingslib.widget.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.internal.camera.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.hardware.libsensor.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.internal.jank is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.providers.settings is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.multiuser is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.power.optimization is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.calllogbackup is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.media.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.server.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.graphics.libvulkan.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.appfunctions.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.app.smartspace.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.providers.contacts.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.shell.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.media.aaudio is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.hardware.radio is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.google.wear.services.infra.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: suspend_service.flags is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: android.media.midi is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.libcore.readonly is mapped to system
+10-03 14:50:13.586  7853  7853 I AconfigPackage: com.android.settingslib.widget.selectorwithwidgetpreference.flags is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.service.notification is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.systemui.shared is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.app.jank is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.app.wearable is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.media.audio is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.service.chooser is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.server.compat is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.server.alarm is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.apex.flags is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.service.quickaccesswallet is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.app.usage is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: com.android.server.accessibility is mapped to system
+10-03 14:50:13.587  7853  7853 I AconfigPackage: android.app.supervision.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.utils is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.chre.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.content.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.media.codec is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.internal.os is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.nfc.nci.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.app is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.security.keystore2 is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.crashrecovery.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.tradeinmode.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.hardware.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.telecom.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.settingslib.media.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.policy is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.media.audiopolicy is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.egg.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.internal.compat.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.security is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.service.autofill is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.example.android.aconfig.demo.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.view.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.companion.virtual.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.aconfig_new_storage is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.feature.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.systemui is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.power.batterysaver is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.widget.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.media.editing.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.media.codec.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.powerstats is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.graphics.egl.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.media.audioserver is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.deviceidle is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.nfc is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.permission.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.service.voice.flags is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.content.pm is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: com.android.server.power.hint is mapped to system
+10-03 14:50:13.590  7853  7853 I AconfigPackage: android.os is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.service.dreams is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.graphics.libgui.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.hardware.usb.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.provider is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.job is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.internal.foldables.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.internal.telephony.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.webkit is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.credentials.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.display.feature.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.notification is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.appwidget.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.frameworks.sensorservice.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.printspooler.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.window.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.adaptiveauth is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.net.wifi.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.media.tv.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.usb.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.os.vibrator is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.hardware.devicestate.feature.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.usage is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.server is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.wm.shell is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.view.inputmethod is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.graphics.hwui.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.backup is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.internal.pm.pkg.component.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.view.accessibility is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.google.wear.sdk is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.media.audio is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.server.am is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.media.playback.flags is mapped to system
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.art.flags is mapped to com.android.art
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.libcore is mapped to com.android.art
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.media.extractor.flags is mapped to com.android.media
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.media.mainline.flags is mapped to com.android.media
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.wifi.flags is mapped to com.android.wifi
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.org.conscrypt.flags is mapped to com.android.conscrypt
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.healthfitness.flags is mapped to com.android.healthfitness
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.google.android.input.twoshay.flags is mapped to vendor
+10-03 14:50:13.591  7853  7853 I AconfigPackage: libgooglecamerahal.flags is mapped to vendor
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.ipsec.flags is mapped to com.android.ipsec
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.nfc.module.flags is mapped to com.android.nfcservices
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.adservices.ondevicepersonalization.flags is mapped to com.android.ondevicepersonalization
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.bluetooth.flags is mapped to com.android.bt
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.devicelock.flags is mapped to com.android.devicelock
+10-03 14:50:13.591  7853  7853 I AconfigPackage: android.os.profiling is mapped to com.android.profiling
+10-03 14:50:13.591  7853  7853 I AconfigPackage: com.android.os.statsd.flags is mapped to com.android.os.statsd
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.cellbroadcastreceiver.flags is mapped to com.android.cellbroadcast
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.adservices.flags is mapped to com.android.adservices
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.sdksandbox.flags is mapped to com.android.adservices
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.uwb.flags is mapped to com.android.uwb
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.ranging.flags is mapped to com.android.uwb
+10-03 14:50:13.592  7853  7853 I AconfigPackage: android.graphics.pdf.flags is mapped to com.android.mediaprovider
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.providers.media.flags is mapped to com.android.mediaprovider
+10-03 14:50:13.592  7853  7853 I AconfigPackage: android.graphics.pdf.flags.readonly is mapped to com.android.mediaprovider
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.net.ct.flags is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.net.flags is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: android.net.vcn is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.nearby.flags is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: android.net.http is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.net.thread.flags is mapped to com.android.tethering
+10-03 14:50:13.592  7853  7853 I AconfigPackage: com.android.system.virtualmachine.flags is mapped to com.android.virt
+10-03 14:50:13.592  7853  7853 E FeatureFlagsImplExport: android.os.flagging.AconfigStorageReadException: ERROR_PACKAGE_NOT_FOUND: package android.xr cannot be found on the device
+10-03 14:50:13.598  7853  7853 D UiAutomationConnection: Created on user UserHandle{0}
+10-03 14:50:13.599  7853  7853 I UiAutomation: Initialized for user 0 on display 0
+10-03 14:50:13.599  7853  7853 W UiAutomation: Created with deprecatead constructor, assumes DEFAULT_DISPLAY
+10-03 14:50:13.606   671  2127 D AccessibilityManagerService: changeCurrentUserForTestAutomationIfNeededLocked(0): ignoring because device doesn't support visible background users
+10-03 14:50:13.606   671  2127 I UiAutomationManager: Registering UiTestAutomationService (id=com.android.server.accessibility/UiAutomation, flags=0x0) when called by user 0
+10-03 14:50:13.606   671  2127 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
+10-03 14:50:13.608   473  5313 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 1272960
+10-03 14:50:13.608   473  5313 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: joining consumeThread
+10-03 14:50:13.609   671  2127 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+10-03 14:50:13.610  1642  1698 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+10-03 14:50:13.610  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:13.610  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:13.610  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:13.610  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:13.610  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:13.610  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+10-03 14:50:13.611  1296  1296 D SsBaseTemplateCard: No text view can be set up
+10-03 14:50:13.611  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.611  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.611  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.611  1296  1296 I SsBaseTemplateCard: Secondary card pane is null
+10-03 14:50:13.611  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:13.611  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:13.611  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:13.611  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:13.611  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:13.611  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+10-03 14:50:13.611  1029  1029 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+10-03 14:50:13.615  7853  7865 V UiAutomation: Init UiAutomation@2791eed[id=80, displayId=0, flags=0]
+10-03 14:50:13.615   473  7849 D android.hardware.audio@7.1-impl.ranchu: consumeThread: exiting
+10-03 14:50:13.615   473  5313 D android.hardware.audio@7.1-impl.ranchu: ~TinyalsaSink: stopping PCM stream
+10-03 14:50:13.622   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.622   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.622   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.622   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.622   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.623   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.623   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.623   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.623   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.627   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.631   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.631   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.631   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.632   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.633   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.633   671   671 D BatterySaverPolicy: accessibility changed to true, updating policy.
+10-03 14:50:13.636   671  2127 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
+10-03 14:50:13.638   671  2127 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+10-03 14:50:13.638   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.639   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.639   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.639   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.640   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.640   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.640   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.641   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:13.643  1642  1698 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+10-03 14:50:13.643  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:13.643  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:13.643  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:13.643  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:13.643  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:13.644  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+10-03 14:50:13.644  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:13.644  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:13.644  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:13.644  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:13.644  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:13.644  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+10-03 14:50:13.645  1029  1029 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+10-03 14:50:13.645  1296  1296 D SsBaseTemplateCard: No text view can be set up
+10-03 14:50:13.645  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.645  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.645  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:13.645  1296  1296 I SsBaseTemplateCard: Secondary card pane is null
+10-03 14:50:14.260  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:14.341  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:14.341  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:14.341  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:14.343   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
+10-03 14:50:14.343   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:14.343   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:14.343   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:14.343   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:14.343   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:14.343   671   939 D WifiScoreCard: txRate: 6 txSpeed: 1
+10-03 14:50:14.343   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 1
+10-03 14:50:14.343   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=5.7, 0.0, 0.0 rx=5.7 bcn=0 [on:0 tx:0 rx:0 period:3003] from screen [on:0 period:37651911] score=60
+10-03 14:50:14.350  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:14.823  7853  7853 W AccessibilityNodeInfoDumper: Fetch time: 129ms
+10-03 14:50:14.824   671  2127 V AccessibilityManagerService: onUserStateChangedLocked for userId: 0, forceUpdate: false
+10-03 14:50:14.824   671  2127 W MagnificationConnectionManager: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+10-03 14:50:14.824  1642  1698 I AiAiEcho: Settings changed for uri: content://settings/secure/accessibility_enabled
+10-03 14:50:14.824   671  2127 D AccessibilityManagerService: restoreCurrentUserForTestAutomationIfNeededLocked(): ignoring because device doesn't support visible background users
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:14.825  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:14.825  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:14.825  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.826   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.826   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.826   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.826   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.826   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.827   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.827   671   671 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:14.825  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:14.827  7853  7864 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+10-03 14:50:14.827  7853  7866 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+10-03 14:50:14.827  7853  7862 W IPCThreadState: call to talkWithDriver in joinThreadPool returned error: -9 (Bad file descriptor), FD: -1
+10-03 14:50:14.827  1642  1904 I AiAiEcho: Predicting[0]:  [CONTEXT sampling_count=5 ]
+10-03 14:50:14.827  1642  1904 I AiAiEcho: EchoTargets: 
+10-03 14:50:14.827  1642  1904 I AiAiEcho: Filtered by AiAi flag check: 
+10-03 14:50:14.827  1642  1904 I AiAiEcho: [CONTEXT ratelimit_period="10 SECONDS" ]
+10-03 14:50:14.827  1642  1904 I AiAiEcho: #remoteViewsTwiddler: feature disabled.
+10-03 14:50:14.827  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+10-03 14:50:14.827  7853  7853 D AndroidRuntime: Shutting down VM
+10-03 14:50:14.828   671   671 D BatterySaverPolicy: accessibility changed to false, updating policy.
+10-03 14:50:14.829  1642  1904 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+10-03 14:50:14.830  1296  1296 D SsBaseTemplateCard: No text view can be set up
+10-03 14:50:14.830  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:14.830  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:14.830  1296  1296 D SsBaseTemplateCard: Passed-in item info is null
+10-03 14:50:14.830  1296  1296 I SsBaseTemplateCard: Secondary card pane is null
+10-03 14:50:14.830  1029  1029 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+10-03 14:50:15.247  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:15.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:15.248  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:15.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
+10-03 14:50:15.551   671  1353 D TelephonyManager: requestModemActivityInfo: Sending result to app: ModemActivityInfo{ mTimestamp=1137968 mSleepTimeMs=126 mIdleTimeMs=42 mActivityStatsTechSpecificInfo=[{mRat=UNKNOWN,mFrequencyRange=UNKNOWN,mTxTimeMs[]=[3, 9, 18, 24, 27],mRxTimeMs=27}]}
+10-03 14:50:15.575   459   490 I netd    : tetherGetStats() -> {[]} <0.33ms>
+10-03 14:50:15.920  1195  1434 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled
+10-03 14:50:16.166   671   990 D BackgroundInstallControlService: Package event received: 0
+10-03 14:50:16.282  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:16.299  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:16.299  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:16.299  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:16.305  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:17.108   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:17.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:17.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:17.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:17.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
+10-03 14:50:17.289   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:17.347   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=2 freq=2437 RxLinkSpeed=2
+10-03 14:50:17.347   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:17.347   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:17.347   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:17.347   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:17.348   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 2Mbps, Tx Link speed: 2Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:17.348   671   939 D WifiScoreCard: txRate: 5 txSpeed: 2
+10-03 14:50:17.348   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 2
+10-03 14:50:17.348   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=2 tx=4.4, 0.0, 0.0 rx=4.4 bcn=0 [on:0 tx:0 rx:0 period:3005] from screen [on:0 period:37654916] score=60
+10-03 14:50:18.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:18.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:18.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:18.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:18.251  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:18.333   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:19.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:19.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:19.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:19.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:19.252  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:20.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:20.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:20.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:20.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:20.251  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:20.351   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
+10-03 14:50:20.351   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:20.351   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:20.351   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:20.351   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:20.351   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:20.351   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:20.351   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:20.351   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:20.352   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:20.352   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:20.352   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:20.352   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:20.352   671   939 D WifiScoreCard: txRate: 5 txSpeed: 1
+10-03 14:50:20.352   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 1
+10-03 14:50:20.352   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=4.3, 0.0, 0.0 rx=4.3 bcn=0 [on:0 tx:0 rx:0 period:3004] from screen [on:0 period:37657920] score=60
+10-03 14:50:21.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:21.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:21.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:21.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
+10-03 14:50:22.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:22.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:22.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:22.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:22.250  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:23.248  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:23.249  1094  7698 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
+10-03 14:50:23.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
+10-03 14:50:23.249  1094  7698 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
+10-03 14:50:23.251  2717  3041 I FusedLocation: location delivery to 10144/com.google.android.gms[.personalsafety]/d326f005 blocked - too close [CONTEXT service_id=6 ]
+10-03 14:50:23.353   671   939 D WifiClientModeImpl[26059:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
+10-03 14:50:23.353   671   939 D WifiDataStall: tx tput in kbps: 37000
+10-03 14:50:23.353   671   939 D WifiDataStall: rx tput in kbps: 37000
+10-03 14:50:23.353   671   939 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
+10-03 14:50:23.353   671   939 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
+10-03 14:50:23.353   671   939 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 1502201786 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
+10-03 14:50:23.353   671   939 D WifiScoreCard: txRate: 5 txSpeed: 1
+10-03 14:50:23.353   671   939 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 1645000741 RSSI -50 txSpeed 1
+10-03 14:50:23.353   671   939 D WifiClientModeImpl[26059:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 1 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=4.9, 0.0, 0.0 rx=4.9 bcn=0 [on:0 tx:0 rx:0 period:3001] from screen [on:0 period:37660921] score=60
+10-03 14:50:23.622   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:23.643   671   700 W IPCThreadState: Sending oneway calls to frozen process.
+10-03 14:50:23.896  7875  7875 W screencap: Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: SurfaceFlingerAIDL
+10-03 14:50:23.896  7875  7875 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+10-03 14:50:23.897  7875  7875 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+10-03 14:50:23.898   535  1325 E HwcComposer: getLuts failed Status(-8, EX_SERVICE_SPECIFIC): '8: '
+10-03 14:50:23.898   535  1325 E HWComposer: getLuts: getLuts failed for display 4619827259835644672: UNSUPPORTED (8)
 --------- beginning of kernel
-10-03 13:36:30.471     0     0 I servicemanager: Caller(pid=231,uid=1017,sid=u:r:keystore:s0) Found android.hardware.security.keymint.IRemotelyProvisionedComponent/default in device VINTF manifest.
-10-03 13:36:30.317   647  1791 I RemoteProvisionSysSvc: getRegistration(android.hardware.security.keymint.IRemotelyProvisionedComponent/default)
-10-03 13:36:30.323   647   974 D BackgroundInstallControlService: Package event received: 0
-10-03 13:36:30.326   647  1791 D ActivityManager: sync unfroze 2811 com.google.android.rkpdapp for 6
-10-03 13:36:30.328   647   974 D BackgroundInstallControlService: Package event received: 0
-10-03 13:36:30.330  3748  7725 I BugleRcsEngine: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[true], enableSingleRegistrationProvisioning:[false] [CONTEXT thread_id=151 ]
-10-03 13:36:30.343  3748  7725 I BugleRcsProvisioning: RcsAvailability configuration availability and enabled status: simId: redacted-pii:sim_id[chars:20,last3:897], SipConnectionType: DUAL_REG, isConfigurationAvailableAndEnabled: false
-10-03 13:36:30.343   647   647 I RegistrationProxy: onServiceConnected: com.android.rkpdapp.service.RemoteProvisioningService
-10-03 13:36:30.354  3748  7725 I BugleRcsProvisioning: Checking isConfigServerUrlAvailable with simId: redacted-pii:sim_id[chars:20,last3:897], 
-10-03 13:36:30.354  3748  7725 I BugleRcsEngine: getConfigServerUrl with simId: redacted-pii:sim_id[chars:20,last3:897] [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.355  3748  7725 I BugleRcsEngine: Using config server URL from chgq [CONTEXT log_prefix="ProvisioningServerUtil" thread_id=151 ]
-10-03 13:36:30.360  3748  7725 I BugleRcsProvisioning: RcsAvailability: Subscription Id: 1, simId: redacted-pii:sim_id[chars:20,last3:897], sipConnectionType: DUAL_REG, isRcsAvailable: false
-10-03 13:36:30.362   647  1791 I RegistrationProxy: IGetRegistrationCallback.onSuccess
-10-03 13:36:30.366   647  1791 I RemoteProvisionSysSvc: Fetching key 10145 for client 158522743
-10-03 13:36:30.366   647  1791 I RegistrationProxy: getKeyAsync operation started with callback 107789796
-10-03 13:36:30.367  3748  7725 I BugleRcsProvisioning: updateAvailabilityForRcsProvisioningId. SimId: redacted-pii:sim_id[chars:20,last3:897], currentAvailability: 30, newAvailability: 30, hint: NO_HINT
-10-03 13:36:30.368  2811  7742 I RkpdRegistrationBinder: Key requested for : android.hardware.security.keymint.IRemotelyProvisionedComponent/default, clientUid: 1017, keyId: 10145, callback: 155596261
-10-03 13:36:30.368  2811  7742 I RkpdRegistrationBinder: Key successfully assigned to client
-10-03 13:36:30.368   647   647 I RemoteProvisionSysSvc: Successfully fetched key for client 158522743
-10-03 13:36:30.373  3748  7714 I BugleRcsProvisioning: RcsProvisioningTrigger: onRcsAvailabilityUpdate : availability is updated to RCS is disabled because the configuration has version = 0, and validity seconds > 0, lastAvailabilityLocal is RCS is disabled because the configuration has version = 0, and validity seconds > 0, simId hash = -5438360906901465096, simId = redacted-pii:sim_id[chars:20,last3:897], isPev3Enabled = true
-10-03 13:36:30.521     0     0 I servicemanager: Caller(pid=2811,uid=10209,sid=u:r:rkpdapp:s0:c209,c256,c512,c768) Found android.hardware.security.keymint.IRemotelyProvisionedComponent/default in device VINTF manifest.
-10-03 13:36:30.544     0     0 I servicemanager: Caller(pid=231,uid=1017,sid=u:r:keystore:s0) Found android.hardware.security.keymint.IRemotelyProvisionedComponent/default in device VINTF manifest.
-10-03 13:36:30.380  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.382   232   232 D SoftKeymaster: system/keymaster/km_openssl/certificate_utils.cpp, Line 148: Using TAG_CERTIFICATE_NOT_BEFORE: 0
-10-03 13:36:30.382   232   232 D SoftKeymaster: system/keymaster/km_openssl/certificate_utils.cpp, Line 154: Using TAG_CERTIFICATE_NOT_AFTER: 2461449600000
-10-03 13:36:30.382   232   232 D SoftKeymaster: system/keymaster/km_openssl/certificate_utils.cpp, Line 159: Got certificate date params:  NotBefore = 0, NotAfter = 2461449600000
-10-03 13:36:30.382   232   232 D SoftKeymaster: system/keymaster/km_openssl/certificate_utils.cpp, Line 273: Setting notBefore to 0
-10-03 13:36:30.382   232   232 D SoftKeymaster: system/keymaster/km_openssl/certificate_utils.cpp, Line 282: Setting notAfter to 2461449600
-10-03 13:36:30.486  3748  7208 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=132 ]
-10-03 13:36:30.494  3748  7208 W BugleRcsEngine: Unable to send diagnostic log [CONTEXT thread_id=132 ]
-10-03 13:36:30.593  2451  2451 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.droidguard.DroidGuardFastRefreshGmsTaskBoundService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.UnstableInternalBoundBrokerService }
-10-03 13:36:30.593  2451  2451 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.droidguard.DroidGuardFastRefreshGmsTaskBoundService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.UnstableInternalBoundBrokerService }
-10-03 13:36:30.598  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.599  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.600  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.602  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.603  1330  7721 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.droidguard.DroidGuardFastRefreshGmsTaskBoundService started execution. cause:5 exec_start_elapsed_seconds: 1172 [CONTEXT service_id=218 ]
-10-03 13:36:30.604  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.605  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.606  2451  2451 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.droidguard.DroidGuardFastRefreshGmsTaskBoundService.ACTION_TASK_READY dat=chimera-action:/... xflg=0x4 cmp=com.google.android.gms/.chimera.UnstableInternalBoundBrokerService }
-10-03 13:36:30.607  1330  7721 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.droidguard.DroidGuardFastRefreshGmsTaskBoundService finished executing. cause:5 result: 2 elapsed_millis: 119 uptime_millis: 119 exec_start_elapsed_seconds: 1172 [CONTEXT service_id=218 ]
-10-03 13:36:30.607  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.608  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.610  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.612  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.613  2451  2546 W SystemServiceRegistry: No service published for: persistent_data_block
-10-03 13:36:30.613  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.614  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.616  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.618  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.618   647  1791 D FileUtils: Rounded bytes from 4110614528 to 8000000000
-10-03 13:36:30.620  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.621  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.625  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.625  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.626  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.626  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.626  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.627  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.629  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.629  4931  4965 I alhi    : NGA enabled in interactor.
-10-03 13:36:30.633  1651  2983 I sww     : Initializing all components
-10-03 13:36:30.642  1651  1964 I tkr     : (REDACTED) Nga on-device enabled based on TNG:MA active state: %b
-10-03 13:36:30.647  1651  1964 I wxp     : (REDACTED) onIsEnabledChanged, isEnabled: %s
-10-03 13:36:30.651  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.654  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.654  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.655   647   974 D BackgroundInstallControlService: Package event received: 0
-10-03 13:36:30.656  1651  2174 I tuc     : (REDACTED) on opa visibility changed %s
-10-03 13:36:30.657  1651  2174 I tuc     : (REDACTED) on opa visibility changed %s
-10-03 13:36:30.658  1651  2174 I tkr     : (REDACTED) Nga on-device enabled based on TNG:MA active state: %b
-10-03 13:36:30.660  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.660  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.662  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.665  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.666  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.666  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.666  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.666  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 I xlz     : (REDACTED) Setting session to type: %s
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.671  1651  1964 I xnl     : (REDACTED) setNavBarVisible: %s
-10-03 13:36:30.683  1651  2174 I thn     : Initialize
-10-03 13:36:30.691  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.695  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.697  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.698  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.737  7470  7678 I HWUI    : Davey! duration=755ms; Flags=0, FrameTimelineVsyncId=100309, IntendedVsync=1171567175654, Vsync=1171600508986, InputEventId=-1008716971, HandleInputStart=1171611730898, AnimationStart=1171611731679, PerformTraversalsStart=1172271736562, DrawStart=1172271783870, FrameDeadline=1172050508968, FrameStartTime=1171611727472, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=1172282128271, SyncStart=1172282162224, IssueDrawCommandsStart=1172282378257, SwapBuffers=1172283499459, FrameCompleted=1172323050116, DequeueBufferDuration=3016, QueueBufferDuration=205062, GpuCompleted=1172323050116, SwapBuffersCompleted=1172284568441, DisplayPresentTime=0, CommandSubmissionCompleted=1172283499459, 
-10-03 13:36:30.781  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.782  1651  1964 W zdf     : Disposing empty manager. Did you forgot to subscribe observables?
-10-03 13:36:30.782  1651  1964 I vlu     : (REDACTED) State changed: %s => %s by %s and %s with %s
-10-03 13:36:30.793  1651  1964 I vrs     : (REDACTED) Recognizer choice: (recognizer_type: %s, recognizer_mode: %s, choice_reason: %s)
-10-03 13:36:30.794  1651  1964 I xik     : (REDACTED) onActiveStateChangeEvent: %s => %s
-10-03 13:36:30.794  1651  2174 I wqn     : (REDACTED) stopListening(%s, %s)
-10-03 13:36:30.800  1651  2174 I tkr     : (REDACTED) Nga on-device enabled based on TNG:MA active state: %b
-10-03 13:36:30.802  1651  1964 I vhj     : (REDACTED) #onActiveStateChangeEvent, newState: %s, previousState: %s.
-10-03 13:36:30.823  1651  1964 I egel    : showGestureNav
-10-03 13:36:30.823  1651  1964 I egej    : (REDACTED) setUiHints(hints = %s)
-10-03 13:36:30.841  1651  2174 I egej    : setUiHints: finished successfully
-10-03 13:36:30.844  1651  2174 I sww     : Successfully initialized all components
-10-03 13:36:31.011  1651  2983 V ClearcutMetricXmitter: Transmission is done.
-10-03 13:36:31.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:31.025  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:31.025  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:31.025  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:31.039  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:31.148   647   923 D WifiClientModeImpl[36295:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=48 freq=2437 RxLinkSpeed=2
-10-03 13:36:31.148   647   923 D WifiDataStall: tx tput in kbps: 37000
-10-03 13:36:31.148   647   923 D WifiDataStall: rx tput in kbps: 37000
-10-03 13:36:31.148   647   923 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
-10-03 13:36:31.148   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:31.149   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:31.149   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:31.149   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:31.150   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:31.150   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:31.151   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:31.153   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:31.154   647   923 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 70050534 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 48Mbps, Tx Link speed: 48Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
-10-03 13:36:31.154   647   923 D WifiScoreCard: txRate: 15 txSpeed: 48
-10-03 13:36:31.154   647   923 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 948372522 RSSI -50 txSpeed 48
-10-03 13:36:31.154   647   923 D WifiClientModeImpl[36295:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 3 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=48 tx=14.3, 0.0, 0.0 rx=20.8 bcn=0 [on:0 tx:0 rx:0 period:3007] from screen [on:0 period:33228722] score=60
-10-03 13:36:31.227  2451  2546 I EGL_emulation: Opening libGLESv1_CM_emulation.so
-10-03 13:36:31.228  2451  2546 I EGL_emulation: Opening libGLESv2_emulation.so
-10-03 13:36:31.356   647   679 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:31.539   441  7754 I resolv  : GetAddrInfoHandler::run: {103 786535 103 983143 10145 0}
-10-03 13:36:31.544  2451  2546 W libc    : Access denied finding property "persist.adb.tls_server.enable"
-10-03 13:36:31.544  2451  2546 W libc    : Access denied finding property "service.adb.tls.port"
-10-03 13:36:31.540  2451  2451 W binder:2451_4: type=1400 audit(0.0:54): avc:  denied  { read } for  name="u:object_r:system_adbd_prop:s0" dev="tmpfs" ino=338 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:system_adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
-10-03 13:36:31.540  2451  2451 W binder:2451_4: type=1400 audit(0.0:55): avc:  denied  { read } for  name="u:object_r:adbd_prop:s0" dev="tmpfs" ino=63 scontext=u:r:gmscore_app:s0:c512,c768 tcontext=u:object_r:adbd_prop:s0 tclass=file permissive=0 app=com.google.android.gms
-10-03 13:36:31.587  1330  4165 W GmsUrlRequestImpl: Content-Type header is overwritten.
-10-03 13:36:31.589   441  7755 I resolv  : GetAddrInfoHandler::run: {103 786535 103 983143 10145 0}
-10-03 13:36:31.589   441  7757 I resolv  : res_nmkquery: (QUERY, IN, A)
-10-03 13:36:31.589   441  7756 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-10-03 13:36:31.614   441  7756 I resolv  : res_nsend: used send_dg 264 terrno: 0
-10-03 13:36:31.614   441  7756 I resolv  : doQuery: rcode=0, ancount=8, return value=264
-10-03 13:36:31.633   441  7757 I resolv  : res_nsend: used send_dg 168 terrno: 0
-10-03 13:36:31.633   441  7757 I resolv  : doQuery: rcode=0, ancount=8, return value=168
-10-03 13:36:31.675  1330  4165 W GLSUser : [AppCertManager] Exception while requesting key: 
-10-03 13:36:31.675  1330  4165 W GLSUser : java.util.concurrent.ExecutionException: cilv: Parse Proto Exception with response code 400
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at ggaz.j(:com.google.android.gms@252635038@25.26.35 (260800-783060121):21)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at ggbi.u(:com.google.android.gms@252635038@25.26.35 (260800-783060121):71)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at agui.b(:com.google.android.gms@252635038@25.26.35 (260800-783060121):439)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at agug.b(:com.google.android.gms@252635038@25.26.35 (260800-783060121):45)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at agub.a(:com.google.android.gms@252635038@25.26.35 (260800-783060121):1)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at ague.a(:com.google.android.gms@252635038@25.26.35 (260800-783060121):58)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at acba.call(:com.google.android.gms@252635038@25.26.35 (260800-783060121):56)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at java.util.concurrent.FutureTask.run(FutureTask.java:317)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at azpj.c(:com.google.android.gms@252635038@25.26.35 (260800-783060121):50)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at azpj.run(:com.google.android.gms@252635038@25.26.35 (260800-783060121):70)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1156)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:651)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at azva.run(:com.google.android.gms@252635038@25.26.35 (260800-783060121):8)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at java.lang.Thread.run(Thread.java:1119)
-10-03 13:36:31.675  1330  4165 W GLSUser : Caused by: cilv: Parse Proto Exception with response code 400
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at cina.b(:com.google.android.gms@252635038@25.26.35 (260800-783060121):71)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at cipp.d(:com.google.android.gms@252635038@25.26.35 (260800-783060121):18)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at ciqg.onSucceeded(:com.google.android.gms@252635038@25.26.35 (260800-783060121):9)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at m1.ng.onSucceeded(:com.google.android.gms.dynamite_cronetdynamite@252635038@25.26.35 (260800-0):3)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at m1.md.run(:com.google.android.gms.dynamite_cronetdynamite@252635038@25.26.35 (260800-0):21)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at m1.lx.run(:com.google.android.gms.dynamite_cronetdynamite@252635038@25.26.35 (260800-0):31)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	... 6 more
-10-03 13:36:31.675  1330  4165 W GLSUser : Caused by: gztt: Protocol message contained an invalid tag (zero).
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzqp.k(:com.google.android.gms@252635038@25.26.35 (260800-783060121):43)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzut.c(:com.google.android.gms@252635038@25.26.35 (260800-783060121):398)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzut.i(:com.google.android.gms@252635038@25.26.35 (260800-783060121):8)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzsx.oo(:com.google.android.gms@252635038@25.26.35 (260800-783060121):23)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzss.g(:com.google.android.gms@252635038@25.26.35 (260800-783060121):3)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzql.e(:com.google.android.gms@252635038@25.26.35 (260800-783060121):1)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzql.d(:com.google.android.gms@252635038@25.26.35 (260800-783060121):3)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at gzql.p(:com.google.android.gms@252635038@25.26.35 (260800-783060121):1)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at cina.g(:com.google.android.gms@252635038@25.26.35 (260800-783060121):69)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	at cina.b(:com.google.android.gms@252635038@25.26.35 (260800-783060121):11)
-10-03 13:36:31.675  1330  4165 W GLSUser : 	... 11 more
-10-03 13:36:31.678  1330  7721 I NetworkScheduler.Stats: Task com.google.android.gms/com.google.android.gms.auth.account.be.legacy.AuthCronService finished executing. cause:4 result: 3 elapsed_millis: 2214 uptime_millis: 2214 exec_start_elapsed_seconds: 1171 [CONTEXT service_id=218 ]
-10-03 13:36:32.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:32.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:32.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:32.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
-10-03 13:36:32.082   647   916 I WifiService: getWifiEnabledState uid=10147 state=3
-10-03 13:36:32.084   647   916 D ConnectivityService: requestNetwork for uid/pid:10147/4931 activeRequest: null callbackRequest: 226 [NetworkRequest [ REQUEST id=226, [ Transports: CELLULAR Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10147 RequestorUid: 10147 RequestorPkg: com.google.android.googlequicksearchbox UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false declaredMethods: AVAIL|LOSING|LOST|NC|LP
-10-03 13:36:32.085   441  7238 I netd    : networkSetPermissionForNetwork(101, 0) <1.03ms>
-10-03 13:36:32.088   647   929 D ConnectivityService: NetReassign [226 : null → 101] [c 0] [a 4] [i 0]
-10-03 13:36:32.088   647   929 D ConnectivityService: reportNetworkConnectivity(103, false) by 10147
-10-03 13:36:32.089  1111  7314 D NetworkMonitor/103: Forcing reevaluation for UID 10147. Dns signal count: 0
-10-03 13:36:32.092   441  7761 I resolv  : ResNSendHandler::run: 0 / {103 983143 103 983143 1073 1}
-10-03 13:36:32.092   441  7762 I resolv  : ResNSendHandler::run: 0 / {103 983143 103 983143 1073 1}
-10-03 13:36:32.094   441  7763 I resolv  : ResNSendHandler::run: 0 / {103 983143 103 983143 1073 1}
-10-03 13:36:32.094   441  7763 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7cd150333850
-10-03 13:36:32.094   441  7762 I resolv  : res_nsend: used send_dg 256 terrno: 0
-10-03 13:36:32.095   441  7764 I resolv  : ResNSendHandler::run: 0 / {103 983143 103 983143 1073 1}
-10-03 13:36:32.096   441  7764 I resolv  : res_nsend: used send_dg 160 terrno: 0
-10-03 13:36:32.104  1111  7759 D NetworkMonitor/103: PROBE_DNS www.google.com 13ms OK 142.251.153.119,142.251.150.119,142.251.152.119,142.251.157.119,142.251.154.119,142.251.151.119,142.251.155.119,142.251.156.119,2001:4860:4829:7700::,2001:4860:482c:7700::,2001:4860:482d:7700::,2001:4860:4827:7700::,2001:4860:482b:7700::,2001:4860:4826:7700::,2001:4860:482a:7700::,2001:4860:4828:7700::
-10-03 13:36:32.104   441  7765 I resolv  : GetAddrInfoHandler::run: {103 983143 103 983143 1073 1}
-10-03 13:36:32.105   441  7766 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-10-03 13:36:32.105   441  7767 I resolv  : res_nmkquery: (QUERY, IN, A)
-10-03 13:36:32.105   441  7767 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7cd2d032feb0
-10-03 13:36:32.105   441  7767 I resolv  : doQuery: rcode=0, ancount=8, return value=160
-10-03 13:36:32.105   441  7766 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7cd19032d610
-10-03 13:36:32.105   441  7766 I resolv  : doQuery: rcode=0, ancount=8, return value=256
-10-03 13:36:32.130   441  7761 I resolv  : res_nsend: used send_dg 75 terrno: 0
-10-03 13:36:32.132  1111  7760 D NetworkMonitor/103: PROBE_DNS connectivitycheck.gstatic.com 42ms OK 142.250.73.99,2607:f8b0:400a:809::2003
-10-03 13:36:32.133   441  7768 I resolv  : GetAddrInfoHandler::run: {103 983143 103 983143 1073 1}
-10-03 13:36:32.134   441  7770 I resolv  : res_nmkquery: (QUERY, IN, A)
-10-03 13:36:32.134   441  7770 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7cd150333850
-10-03 13:36:32.134   441  7769 I resolv  : res_nmkquery: (QUERY, IN, AAAA)
-10-03 13:36:32.134   441  7770 I resolv  : doQuery: rcode=0, ancount=1, return value=63
-10-03 13:36:32.134   441  7769 I resolv  : resolv_cache_lookup: FOUND IN CACHE entry=0x7cd150331470
-10-03 13:36:32.135   441  7769 I resolv  : doQuery: rcode=0, ancount=1, return value=75
-10-03 13:36:32.138  1111  7759 D NetworkMonitor/103: PROBE_HTTPS https://www.google.com/generate_204 time=35ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Alt-Svc=[h3=":443"; ma=2592000,h3-29=":443"; ma=2592000], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 03 Oct 2026 13:36:32 GMT], X-Android-Received-Millis=[1791034592138], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1791034592131]}
-10-03 13:36:32.139  1111  7758 D NetworkMonitor/103: isCaptivePortal: isSuccessful()=true isPortal()=false RedirectUrl=null isPartialConnectivity()=false Time=51ms
-10-03 13:36:32.140   647   929 D ConnectivityService: [103 WIFI] validation passed
-10-03 13:36:32.368  1111  7760 D NetworkMonitor/103: PROBE_HTTP http://connectivitycheck.gstatic.com/generate_204 time=236ms ret=204 request={Connection=[close], User-Agent=[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.32 Safari/537.36]} headers={null=[HTTP/1.1 204 No Content], Connection=[close], Content-Length=[0], Cross-Origin-Resource-Policy=[cross-origin], Date=[Sat, 03 Oct 2026 13:36:32 GMT], X-Android-Received-Millis=[1791034592368], X-Android-Response-Source=[NETWORK 204], X-Android-Selected-Protocol=[http/1.1], X-Android-Sent-Millis=[1791034592143]}
-10-03 13:36:33.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:33.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:33.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:33.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:33.025  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:33.626  4931  7735 W abht    : (REDACTED) [%s] response code: %d
-10-03 13:36:34.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:34.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:34.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:34.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:34.025  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:34.155   647   923 D WifiClientModeImpl[36295:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=2 freq=2437 RxLinkSpeed=2
-10-03 13:36:34.156   647   923 D WifiDataStall: tx tput in kbps: 37000
-10-03 13:36:34.156   647   923 D WifiDataStall: rx tput in kbps: 37000
-10-03 13:36:34.156   647   923 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:34.156   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:34.156   647   923 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 70050534 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 2Mbps, Tx Link speed: 2Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
-10-03 13:36:34.157   647   923 D WifiScoreCard: txRate: 24 txSpeed: 2
-10-03 13:36:34.157   647   923 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 948372522 RSSI -50 txSpeed 2
-10-03 13:36:34.157   647   923 D WifiClientModeImpl[36295:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 3 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=2 tx=23.3, 0.0, 0.0 rx=23.8 bcn=0 [on:0 tx:0 rx:0 period:3003] from screen [on:0 period:33231725] score=60
-10-03 13:36:34.167  4931  7704 I IPCThreadState: oneway function results for code 2 on binder at 0x7e824e829f30 will be dropped but finished with status UNKNOWN_TRANSACTION
-10-03 13:36:34.170  4931  5243 I IPCThreadState: oneway function results for code 2 on binder at 0x7e824e832210 will be dropped but finished with status UNKNOWN_TRANSACTION
-10-03 13:36:34.939   441  7238 I netd    : setProcSysNet(4, 2, wlan0, retrans_time_ms, 750) <0.06ms>
-10-03 13:36:34.939   441  7238 I netd    : setProcSysNet(4, 2, wlan0, ucast_solicit, 10) <0.02ms>
-10-03 13:36:34.939   441  7238 I netd    : setProcSysNet(6, 2, wlan0, retrans_time_ms, 750) <0.03ms>
-10-03 13:36:34.939   441  7238 I netd    : setProcSysNet(6, 2, wlan0, ucast_solicit, 10) <0.02ms>
-10-03 13:36:35.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:35.024  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:35.025  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:35.025  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:35.028  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:35.280   647   929 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-10-03 13:36:35.280   647   929 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-10-03 13:36:35.280   647   929 D InetDiagMessage: Destroyed live tcp sockets for uids={10204} in 1ms
-10-03 13:36:35.281   647   929 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET, states=14
-10-03 13:36:35.282   647   929 D InetDiagMessage: Destroyed 0 sockets, proto=IPPROTO_TCP, family=AF_INET6, states=14
-10-03 13:36:35.282   647   929 D InetDiagMessage: Destroyed live tcp sockets for uids={20204} in 1ms
-10-03 13:36:36.021  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:36.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:36.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:36.022  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:321
-10-03 13:36:36.683  1184  1432 D SatelliteController: iisInCarrierRoamingNbIotNtn: satellite is disabled
-10-03 13:36:37.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:37.023  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:37.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:37.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:37.025  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:37.161   647   923 D WifiClientModeImpl[36295:wlan0]: updateLinkLayerStatsRssiSpeedFrequencyCapabilities rssi=-50 TxLinkspeed=1 freq=2437 RxLinkSpeed=2
-10-03 13:36:37.161   647   923 D WifiDataStall: tx tput in kbps: 37000
-10-03 13:36:37.161   647   923 D WifiDataStall: rx tput in kbps: 37000
-10-03 13:36:37.161   647   923 V WifiConfigManager: Updating scan detail cache freq=2437 BSSID=02:15:b2:00:00:01 RSSI=-50 for "AndroidWifi"NONE
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  utilization (LLS) 80 isBluetoothConnected: false final utilization: 80
-10-03 13:36:37.161   647   923 D WifiThroughputPredictor:  BW: 0 RSSI: -50 Nss: 1 Mode: 1 symDur: 4000 snrDb 30 bitPerTone: 4500 rate: 54 throughput: 37
-10-03 13:36:37.162   647   923 D WifiScoreCard: BSSID update SIGNAL_POLL ID: 70050534 SSID: "AndroidWifi", BSSID: 02:15:b2:00:00:01, MAC: 02:15:b2:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 54Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 54Mbps, Frequency: 2437MHz, Net ID: 0, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: 1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none>"AndroidWifi"openMLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>
-10-03 13:36:37.162   647   923 D WifiScoreCard: txRate: 11 txSpeed: 1
-10-03 13:36:37.162   647   923 D WifiScoreCard: network update SIGNAL_POLL "AndroidWifi" ID: 948372522 RSSI -50 txSpeed 1
-10-03 13:36:37.162   647   923 D WifiClientModeImpl[36295:wlan0]:  ClientModeImpl$L2ConnectedState screen=on 3 0 "AndroidWifi" 02:15:b2:00:00:01 rssi=-50 f=2437 sc=60 link=1 tx=10.4, 0.0, 0.0 rx=10.6 bcn=0 [on:0 tx:0 rx:0 period:3005] from screen [on:0 period:33234730] score=60
-10-03 13:36:37.271   647   679 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:37.277   647   679 W IPCThreadState: Sending oneway calls to frozen process.
-10-03 13:36:38.022  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:38.023  1084  7526 D android.hardware.gnss-service.ranchu: GnssHwListener:consume:87 sz=64
-10-03 13:36:38.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:311
-10-03 13:36:38.023  1084  7526 D android.hardware.gnss-service.ranchu: Gnss:onGnssLocationCb:333
-10-03 13:36:38.030  1330  2151 I FusedLocation: location delivery to 10145/com.google.android.gms[.personalsafety]/be96587 blocked - too close [CONTEXT service_id=6 ]
-10-03 13:36:38.051  7773  7773 W screencap: Thread Pool max thread count is 0. Cannot cache binder as linkToDeath cannot be implemented. serviceName: SurfaceFlingerAIDL
-10-03 13:36:38.051  7773  7773 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
-10-03 13:36:38.051  7773  7773 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
-10-03 13:36:38.053   516   606 E HwcComposer: getLuts failed Status(-8, EX_SERVICE_SPECIFIC): '8: '
-10-03 13:36:38.053   516   606 E HWComposer: getLuts: getLuts failed for display 4619827259835644672: UNSUPPORTED (8)
-10-03 13:36:38.259     0     0 I servicemanager: Caller(pid=7773,uid=2000,sid=u:r:shell:s0) Found android.hardware.graphics.allocator.IAllocator/default in device VINTF manifest.
-10-03 13:36:38.262     0     0 I servicemanager: Caller(pid=7773,uid=2000,sid=u:r:shell:s0) Found android.hardware.graphics.allocator.IAllocator/default in device VINTF manifest.
-10-03 13:36:38.264     0     0 I servicemanager: Caller(pid=7773,uid=2000,sid=u:r:shell:s0) Found mapper/ranchu in device VINTF manifest.
+10-03 14:50:24.043     0     0 I servicemanager: Caller(pid=7875,uid=2000,sid=u:r:shell:s0) Found android.hardware.graphics.allocator.IAllocator/default in device VINTF manifest.
+10-03 14:50:24.046     0     0 I servicemanager: Caller(pid=7875,uid=2000,sid=u:r:shell:s0) Found android.hardware.graphics.allocator.IAllocator/default in device VINTF manifest.
+10-03 14:50:24.049     0     0 I servicemanager: Caller(pid=7875,uid=2000,sid=u:r:shell:s0) Found mapper/ranchu in device VINTF manifest.
