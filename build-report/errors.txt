@@ -1,12 +1,2 @@
-> Task :app:packageRelease FAILED
-> Task :app:packageReleaseBundle
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791032422801.json
-
---
-* What went wrong:
-Execution failed for task ':app:packageRelease'.
-> A failure occurred while executing com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable
-   > com.android.ide.common.signing.KeytoolException: Failed to read key glidy-upload from store "/tmp/glidy-upload11902998245073808276.jks": keystore password was incorrect
---
-BUILD FAILED in 3m 33s
-821 actionable tasks: 472 executed, 349 from cache
+BUILD SUCCESSFUL in 2m 41s
+825 actionable tasks: 476 executed, 349 from cache
