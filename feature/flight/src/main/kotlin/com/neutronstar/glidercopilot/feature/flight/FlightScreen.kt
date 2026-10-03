@@ -535,7 +535,7 @@ private fun ProfileCanvas(
         while (a < top) {
             val yy = y(a)
             if (yy >= pT - 2 && yy <= h - pB) {
-                drawLine(Color.White.copy(alpha = 0.06f), Offset(pL, yy), Offset(w - pR, yy), 1f)
+                drawLine(c.ink.copy(alpha = 0.06f), Offset(pL, yy), Offset(w - pR, yy), 1f)
                 label(tm, grouped(a.toInt()), pL - 4.dp.toPx(), yy, small, TextAlign.End)
             }
             a += step
@@ -614,9 +614,9 @@ private fun TraceOnlyMap(s: com.neutronstar.glidercopilot.domain.flight.FlightSn
         drawRect(c.mapLow)
         val step = 40.dp.toPx()
         var gx = 0f
-        while (gx < size.width) { drawLine(Color.White.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
+        while (gx < size.width) { drawLine(c.ink.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
         var gy = 0f
-        while (gy < size.height) { drawLine(Color.White.copy(alpha = 0.06f), Offset(0f, gy), Offset(size.width, gy), 1f); gy += step }
+        while (gy < size.height) { drawLine(c.ink.copy(alpha = 0.06f), Offset(0f, gy), Offset(size.width, gy), 1f); gy += step }
         val cx = size.width / 2; val cy = size.height / 2
         val pxPerKm = 60.dp.toPx() / 0.5f
         val cosLat = cos(Math.toRadians(g.position.lat))
@@ -638,9 +638,9 @@ private fun DemoMap(t: Double, v: Double) {
         drawRect(c.mapLow)
         val step = 40.dp.toPx()
         var gx = 0f
-        while (gx < size.width) { drawLine(Color.White.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
+        while (gx < size.width) { drawLine(c.ink.copy(alpha = 0.06f), Offset(gx, 0f), Offset(gx, size.height), 1f); gx += step }
         var gy = 0f
-        while (gy < size.height) { drawLine(Color.White.copy(alpha = 0.06f), Offset(0f, gy), Offset(size.width, gy), 1f); gy += step }
+        while (gy < size.height) { drawLine(c.ink.copy(alpha = 0.06f), Offset(0f, gy), Offset(size.width, gy), 1f); gy += step }
         val cx = size.width / 2
         val cy = size.height / 2
         val r = 46.dp.toPx()
@@ -745,7 +745,7 @@ private fun BoxScope.MapOverlays(
     if (map != null && (traffic.live || traffic.replay)) {
         Text(
             buildAnnotatedString {
-                withStyle(SpanStyle(color = Color.White, fontWeight = FontWeight.Bold)) { append("OGN ") }
+                withStyle(SpanStyle(color = c.ink, fontWeight = FontWeight.Bold)) { append("OGN ") }
                 append("${traffic.aircraft.size} aéronef" + (if (traffic.aircraft.size > 1) "s" else "") + (nearTraffic?.let { " ($it à 15 km)" } ?: "") + " · ${traffic.thermals.size} pompe" + (if (traffic.thermals.size > 1) "s" else ""))
             },
             style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.cardTitle),
@@ -771,7 +771,7 @@ private fun BoxScope.MapOverlays(
     // vent
     Column(
         Modifier.align(Alignment.TopEnd).padding(end = 13.dp, top = 45.dp).width(44.dp)
-            .background(c.background, RoundedCornerShape(20.dp)).border(1.dp, Color.White.copy(alpha = 0.035f), RoundedCornerShape(20.dp))
+            .background(c.background, RoundedCornerShape(20.dp)).border(1.dp, c.lineSoft, RoundedCornerShape(20.dp))
             .padding(vertical = 10.dp, horizontal = 4.dp)
             .semantics { contentDescription = wind?.let { "Vent estimé ${it.first.roundToInt()} degrés ${it.second.roundToInt()} kilomètres heure" } ?: "Vent pas encore estimé : spiralez" },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -834,7 +834,7 @@ private fun BoxScope.MapOverlays(
             .padding(horizontal = 8.dp)
             .semantics { contentDescription = "Chronomètre de vol ${chrono(flightSeconds)}" },
         contentAlignment = Alignment.Center,
-    ) { Text(chrono(flightSeconds), style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = Color.White, letterSpacing = 0.18.sp)) }
+    ) { Text(chrono(flightSeconds), style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.sp, color = c.ink, letterSpacing = 0.18.sp)) }
     // S18 Lite — interrupteur discret d'enregistrement du vol (mode manuel : détection auto du décollage coupée)
     if (onChrono != null) RecordSwitch(recording, onChrono, Modifier.align(Alignment.BottomCenter).padding(start = 140.dp, bottom = 10.dp))
 }
@@ -872,7 +872,7 @@ private fun StatusBox(label: String, on: Boolean) {
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Box(Modifier.size(5.dp).background(if (on) c.statusOn else c.statusOff, CircleShape))
-        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.75.sp, color = Color.White, letterSpacing = 0.18.sp))
+        Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 8.75.sp, color = c.ink, letterSpacing = 0.18.sp))
     }
 }
 
@@ -880,7 +880,7 @@ private fun StatusBox(label: String, on: Boolean) {
 private fun RoundTool(text: String, modifier: Modifier, description: String, onClick: () -> Unit = {}) {
     val c = Gc.colors
     Box(
-        modifier.size(44.dp).background(c.background, CircleShape).border(1.dp, Color.White.copy(alpha = 0.035f), CircleShape)
+        modifier.size(44.dp).background(c.background, CircleShape).border(1.dp, c.lineSoft, CircleShape)
             .clickable(role = Role.Button, onClick = onClick)
             .semantics { contentDescription = description },
         contentAlignment = Alignment.Center,
@@ -960,7 +960,7 @@ private fun VarioPanel(
         }
         if (open) {
             if (UiMask.SHOW_ALTITUDE_HISTORY) {
-                HorizontalDivider(thickness = 1.dp, color = Color.White.copy(alpha = 0.047f))
+                HorizontalDivider(thickness = 1.dp, color = c.ink.copy(alpha = 0.047f))
                 AltitudeStrip(history, alt ?: history.lastOrNull()?.alt ?: need, need, ceiling)
             }
         }

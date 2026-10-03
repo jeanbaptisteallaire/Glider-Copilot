@@ -25,6 +25,12 @@ data class MapPalette(
     val route: String = "#b7f7a5",
     val glider: String = "#f5f5f5",
     val traffic: String = "#69c8ff",
+    /** V18.7 — réglages d'intensité : les valeurs par défaut sont celles de la carte sombre, inchangée. */
+    val contourOpacity: Double = 0.07,
+    val contourIndexOpacity: Double = 0.16,
+    val airspaceFillOpacity: Double = 0.05,
+    val airspaceLineWidth: Double = 1.6,
+    val hillshadeExaggeration: Double = 0.55,
 )
 
 /** JSON brut à insérer tel quel (GeoJSON déjà sérialisé). */
@@ -91,7 +97,7 @@ object MapStyle {
                 "id" to "hillshade", "type" to "hillshade", "source" to "relief",
                 "paint" to mapOf(
                     "hillshade-shadow-color" to p.hillShadow, "hillshade-highlight-color" to p.hillHighlight,
-                    "hillshade-accent-color" to p.hillShadow, "hillshade-exaggeration" to 0.55,
+                    "hillshade-accent-color" to p.hillShadow, "hillshade-exaggeration" to p.hillshadeExaggeration,
                 ),
             )
         }
@@ -102,8 +108,8 @@ object MapStyle {
         }
         if ("courbes" in sources) {
             val index = listOf("==", listOf("%", listOf("get", "ele"), 500), 0)
-            layers += line("contours", "courbes", "contours", p.contour, width = 0.5, opacity = 0.07, filter = listOf("!", index), minzoom = 10.0)
-            layers += line("contours-index", "courbes", "contours", p.contour, width = 0.9, opacity = 0.16, filter = index, minzoom = 9.0)
+            layers += line("contours", "courbes", "contours", p.contour, width = 0.5, opacity = p.contourOpacity, filter = listOf("!", index), minzoom = 10.0)
+            layers += line("contours-index", "courbes", "contours", p.contour, width = 0.9, opacity = p.contourIndexOpacity, filter = index, minzoom = 9.0)
             layers += mapOf(
                 "id" to "contours-label", "type" to "symbol", "source" to "courbes", "source-layer" to "contours", "minzoom" to 11.5, "filter" to index,
                 "layout" to mapOf("symbol-placement" to "line", "text-field" to listOf("concat", listOf("to-string", listOf("get", "ele")), " m"),
@@ -127,16 +133,16 @@ object MapStyle {
         )
         val isAirspace = listOf("==", listOf("get", "layer"), "airspace")
         layers += mapOf("id" to "airspace-fill", "type" to "fill", "source" to "aero", "filter" to listOf("all", isAirspace, listOf("!=", listOf("get", "type"), 33)),
-            "paint" to mapOf("fill-color" to familyColor, "fill-opacity" to 0.05))
+            "paint" to mapOf("fill-color" to familyColor, "fill-opacity" to p.airspaceFillOpacity))
         // traits pleins pour les espaces contrôlés et d'information, tiretés pour les zones réglementées
         // (line-dasharray n'accepte pas d'expression par entité : deux couches)
         val restrictedTypes = listOf(1, 2, 3, 8, 9, 12, 16, 17, 18, 19, 25, 29, 30, 31)
         val isRestricted = listOf("in", listOf("get", "type"), listOf("literal", restrictedTypes))
         layers += mapOf("id" to "airspace-line", "type" to "line", "source" to "aero", "filter" to listOf("all", isAirspace, listOf("!", isRestricted)),
-            "paint" to mapOf("line-color" to familyColor, "line-width" to listOf("match", listOf("get", "type"), 33, 1.0, 1.6),
+            "paint" to mapOf("line-color" to familyColor, "line-width" to listOf("match", listOf("get", "type"), 33, 1.0, p.airspaceLineWidth),
                 "line-opacity" to listOf("match", listOf("get", "type"), 33, 0.3, 0.85)))
         layers += mapOf("id" to "airspace-line-restricted", "type" to "line", "source" to "aero", "filter" to listOf("all", isAirspace, isRestricted),
-            "paint" to mapOf("line-color" to familyColor, "line-width" to 1.6, "line-opacity" to 0.9,
+            "paint" to mapOf("line-color" to familyColor, "line-width" to p.airspaceLineWidth, "line-opacity" to 0.9,
                 "line-dasharray" to listOf("literal", listOf(4, 2))))
         layers += mapOf("id" to "airspace-label", "type" to "symbol", "source" to "aero", "minzoom" to 9.5, "filter" to listOf("all", isAirspace, listOf("!=", listOf("get", "type"), 33)),
             "layout" to mapOf("symbol-placement" to "line", "symbol-spacing" to 420, "text-field" to listOf("get", "name"),

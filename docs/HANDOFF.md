@@ -1,4 +1,19 @@
-# HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
+# HANDOFF — état du projet (spiral, ex-GLIDY, ex-Glider Copilot)
+
+## Session 18.7 — Pilotage sur fond blanc + carte façon carte VFR papier, V1.7.0-lite (03/10/2026)
+- **Accord explicite de JB** : Pilotage passe sur fond blanc (thème clair, par défaut). Mêmes fonctions, mêmes
+  tailles ; seules les couleurs s'inversent : `GlidyFlightLightColors` (Theme.kt) — encre noire pure pour les
+  chiffres, vert foncé #0E7A2E (marge positive), **orange foncé #C2410C** (alerte), rouge #C62828, cap mauve
+  #7B2CBF, vario du vert foncé au rouge brique. `GlidyFlightTheme(light)` : en thème sombre, la charte noire v8
+  d'origine reste strictement identique (`GlidyTheme`).
+- **Carte claire façon carte aéronautique papier** (`paperChartPalette()` dans AppRoot, Pilotage et Carte en clair) :
+  terrain crème #F4F1E4, forêts vert pâle, eau bleu clair, routes rouge brique, courbes brunes plus marquées, relief
+  ombré chaud. Séparation des espaces aériens conservée : contrôlés bleu plein, réglementés rouge-magenta tireté,
+  information vert ; terrains magenta, retour au terrain violet. `MapPalette` gagne des réglages d'intensité
+  (courbes, remplissage et épaisseur des espaces, relief) dont les valeurs par défaut sont celles de la carte sombre.
+- FlightScreen : plus aucun blanc codé en dur (quadrillage, bordures, chrono, statuts → `c.ink` / `c.lineSoft`).
+- Barre d'onglets et barre d'état claires sous Pilotage en thème clair.
+- Garde-fou `tools/en-vol` régénéré (accord JB) et étendu à la charte claire de Pilotage (10 empreintes).
 
 ## Session 18.6 — appairage FLARM de retour en Lite, V1.6.0-lite (03/10/2026)
 - Prévol (Lite) : carte « Planeur du jour · FLARM » remise **sous les NOTAM** (immatriculation → trafic OGN,

@@ -4,7 +4,7 @@
 JB : « Ne change absolument rien à l'interface En vol » (= onglet Pilotage). Ce script échoue si :
   1. un fichier de l'écran Pilotage diffère de sa référence (empreintes SHA-256 de la V0.9.3/S13) ;
   2. la charte SOMBRE (couleurs, typographie, thème) a bougé dans Theme.kt ;
-  3. AppRoot n'affiche plus Pilotage avec le thème sombre d'origine.
+  3. AppRoot n'affiche plus Pilotage avec son thème de vol (GlidyFlightTheme : blanc V18.7, ou sombre d'origine).
 Une évolution voulue de Pilotage, décidée par JB, se fait en régénérant les empreintes :
   python3 tools/en-vol/check_en_vol.py --update
 """
@@ -20,9 +20,13 @@ BLOCKS = {
     "GlidyColors": r"val GlidyColors = GcColors\(\n.*?\n\)\n",
     "gcTypeSombre": r"else GcType\(\n.*?\n\)\n|private fun gcType\(c: GcColors\) = GcType\(\n.*?\n\)\n",
     "GlidyTheme": r"fun GlidyTheme\(content: @Composable \(\) -> Unit\) \{\n.*?\n\}\n",
+    # V18.7 : charte claire de Pilotage (fond blanc) et son thème
+    "GlidyFlightLightColors": r"val GlidyFlightLightColors = GcColors\(\n.*?\n\)\n",
+    "GlidyFlightTheme": r"fun GlidyFlightTheme\(light: Boolean, content: @Composable \(\) -> Unit\) \{\n.*?\n\}\n",
 }
 APPROOT = "app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt"
-PILOTAGE_LINE = "Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)"
+# V18.7 (accord JB) : Pilotage sur fond blanc via GlidyFlightTheme, charte sombre conservée en thème sombre
+PILOTAGE_LINE = "Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }"
 
 
 def sha(text: str) -> str:

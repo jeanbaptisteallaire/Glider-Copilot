@@ -178,6 +178,58 @@ val GlidyLightColors = GcColors(
     onAccentFill = Color(0xFFFFFFFF),
 )
 
+/*
+ * V18.7 — Pilotage sur fond blanc (demande JB) : la charte sombre inversée. Encre noire pure pour les chiffres
+ * importants (contraste maximal en plein soleil), vert et orange foncés pour garder le sens des couleurs
+ * (marge positive / alerte) tout en restant lisibles sur blanc (contrastes ≥ 4,5:1).
+ */
+val GlidyFlightLightColors = GcColors(
+    background = Color(0xFFFFFFFF),
+    panel = Color(0xFFFFFFFF),
+    control = Color(0xFFEFEFF2),
+    controlOn = Color(0xFFDCDCE2),
+    line = Color(0xFFB8B8BF),
+    lineSoft = Color(0xFFD6D6DB),
+    lineFaint = Color(0xFFE8E8EC),
+    sunken = Color(0xFFF6F6F8),
+    sunkenField = Color(0xFFFFFFFF),
+    sunkenPlan = Color(0xFFF0F0F3),
+    inkSoft = Color(0xFF111111),
+    planText = Color(0xFF222222),
+    inputLine = Color(0xFFB0B0B0),
+    ink = Color(0xFF000000),
+    dim = Color(0xFF3C3C43),
+    faint = Color(0xFF5E5E64),
+    cardTitle = Color(0xFF111111),
+    ok = Color(0xFF0E7A2E),
+    warn = Color(0xFFC2410C),
+    bad = Color(0xFFC2410C),
+    danger = Color(0xFFC62828),
+    onAccent = Color(0xFFFFFFFF),
+    route = Color(0xFF6A1FB0),
+    heading = Color(0xFF7B2CBF),
+    air = Color(0xFF0B5CAD),
+    finesseIdle = Color(0xFF4A4A50),
+    statusOn = Color(0xFF0E7A2E),
+    statusOff = Color(0xFFD1242F),
+    overlay = Color(0xEBFFFFFF),
+    terrainTop = Color(0xFF8DBF7F),
+    terrainBottom = Color(0xFF4E8B57),
+    mapLow = Color(0xFFF4F1E4),
+    mapHigh = Color(0xFFFBF9F1),
+    varioStops = listOf(
+        -3.0 to Color(0xFF1E6B35),
+        -1.0 to Color(0xFF3E9A54),
+        0.0 to Color(0xFF8E8E93),
+        0.6 to Color(0xFFE07B00),
+        1.8 to Color(0xFFC2410C),
+        3.5 to Color(0xFFB3261E),
+    ),
+    windLayer = Color(0xFF0E7A2E),
+    accentFill = Color(0xFF0E7A2E),
+    onAccentFill = Color(0xFFFFFFFF),
+)
+
 /** Couleur interpolée sur l'échelle vario de la charte. */
 fun GcColors.vario(ms: Double): Color {
     val s = varioStops
@@ -314,6 +366,36 @@ fun GlidyTheme(content: @Composable () -> Unit) {
         onSurfaceVariant = c.dim,
         outline = c.line,
         error = c.bad,
+    )
+    val typography = Typography(
+        bodyLarge = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp),
+        bodyMedium = TextStyle(fontFamily = GcFonts.ui, fontSize = 14.sp),
+        bodySmall = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp),
+        labelLarge = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 13.sp),
+        labelMedium = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 11.sp),
+        titleMedium = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 16.sp),
+    )
+    CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c)) {
+        MaterialTheme(colorScheme = scheme, typography = typography, content = content)
+    }
+}
+
+/**
+ * V18.7 — thème de l'onglet Pilotage. [light] (par défaut) : fond blanc [GlidyFlightLightColors], même
+ * typographie de vol que la charte sombre (tailles et graisses inchangées, seules les couleurs s'inversent).
+ * Sinon : la charte sombre v8 d'origine, strictement inchangée ([GlidyTheme]).
+ */
+@Composable
+fun GlidyFlightTheme(light: Boolean, content: @Composable () -> Unit) {
+    if (!light) {
+        GlidyTheme(content)
+        return
+    }
+    val c = GlidyFlightLightColors
+    val scheme = lightColorScheme(
+        primary = c.ok, onPrimary = c.onAccent, secondary = c.route, tertiary = c.air,
+        background = c.background, onBackground = c.ink, surface = c.control, onSurface = c.ink,
+        surfaceVariant = c.control, onSurfaceVariant = c.dim, outline = c.line, error = c.bad,
     )
     val typography = Typography(
         bodyLarge = TextStyle(fontFamily = GcFonts.ui, fontSize = 15.sp),

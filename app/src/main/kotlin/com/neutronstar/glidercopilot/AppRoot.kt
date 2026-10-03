@@ -60,6 +60,8 @@ import com.neutronstar.glidercopilot.designsystem.GcThemeToggle
 import com.neutronstar.glidercopilot.designsystem.LocalGcThemeToggle
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import androidx.compose.runtime.CompositionLocalProvider
+import com.neutronstar.glidercopilot.designsystem.GlidyFlightTheme
+import com.neutronstar.glidercopilot.designsystem.GlidyFlightLightColors
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.designsystem.GlidyColors
 import com.neutronstar.glidercopilot.designsystem.GlidyLightColors
@@ -161,8 +163,9 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     val lightMode by container.prefs.lightMode.collectAsState(initial = true)
     // Pilotage reste toujours sombre ; la Carte suit le mode clair (V7.2). Deux rendus du même pack.
     val flightMapDark = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyColors)) }
-    val flightMapLight = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyLightColors)) }
-    val flightMap = flightMapDark
+    // V18.7 — carte claire façon carte VFR papier (Pilotage et Carte en thème clair)
+    val flightMapLight = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, paperChartPalette()) }
+    val flightMap = if (lightMode) flightMapLight else flightMapDark
 
     // Localisation demandée une seule fois : club le plus proche et pastille GPS. Refus = club par défaut.
     val asked by container.prefs.locationAsked.collectAsState(initial = true)
@@ -195,8 +198,8 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
             kotlinx.coroutines.delay(500)
         }
     }
-    // S15 — thème social blanc sur tous les onglets sauf Pilotage (« En vol » : noir, strictement inchangé)
-    val social = lightMode && tab != Tab.PILOTAGE && replayed == null
+    // S15 — thème social blanc ; V18.7 : Pilotage passe aussi sur fond blanc (accord JB), barre d'onglets claire
+    val social = lightMode && replayed == null
     SystemBarsFor(social)
     val replay = replayed
     if (replay != null) {
@@ -210,7 +213,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         return
     }
 
-    Column(Modifier.fillMaxSize().background(if (social) GlidyLightColors.background else c.background).statusBarsPadding()) {
+    Column(Modifier.fillMaxSize().background(if (social) (if (tab == Tab.PILOTAGE) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
         // S15 : l'interrupteur clair/sombre est dans l'en-tête de chaque écran (jamais sur Pilotage)
         val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
@@ -218,7 +221,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
-                Tab.PILOTAGE -> FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight)
+                Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
                 Tab.CARTE -> GlidyAdaptiveTheme(lightMode) {
                     TrafficMapScreen(
                         map = if (lightMode) flightMapLight else flightMapDark, traffic = traffic, networkLabel = ognUi.statusLabel,
@@ -252,7 +255,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
                 }
             }
         } }
-        // barre d'onglets : sous Pilotage, exactement la barre noire d'avant (thème sombre) ; ailleurs, blanche
+        // barre d'onglets : blanche en thème clair (V18.7 : Pilotage compris) ; noire en thème sombre
         GlidyAdaptiveTheme(social) {
             val bar = Gc.colors
             Column(Modifier.fillMaxWidth().background(if (social) bar.overlay else bar.background)) {
@@ -355,6 +358,22 @@ private fun mapPalette(c: com.neutronstar.glidercopilot.designsystem.GcColors): 
         airport = h(c.ok), navaid = h(c.dim), route = h(c.heading), glider = h(c.ink),
     )
 }
+
+/**
+ * V18.7 — carte claire inspirée des cartes aéronautiques VFR papier (OACI 1:500 000) et des applications de
+ * navigation à fond clair : terrain crème, forêts vert pâle, eau bleu clair, routes rouge brique, courbes brunes,
+ * relief ombré chaud. Les familles d'espaces aériens restent séparées : contrôlés en bleu (trait plein), zones
+ * réglementées en rouge-magenta (tireté), information en vert ; terrains en magenta, cap de retour en violet.
+ */
+private fun paperChartPalette() = com.neutronstar.glidercopilot.carto.MapPalette(
+    background = "#F4F1E4", earth = "#F4F1E4", wood = "#CFE3BF", water = "#A9D3F0", waterLine = "#5EA9DD",
+    roadMajor = "#D46A4F", roadMinor = "#D9C3A0", label = "#2B2B2B", halo = "#FFFFFF",
+    contour = "#8A6D3B", hillShadow = "#6B5A3A", hillHighlight = "#FFFFFF",
+    controlled = "#1F5FBF", restricted = "#C0185A", information = "#2E8B57", other = "#6C6C70",
+    airport = "#B3127C", navaid = "#1F5FBF", route = "#6A1FB0", glider = "#111111", traffic = "#0B5CAD",
+    contourOpacity = 0.25, contourIndexOpacity = 0.45, airspaceFillOpacity = 0.07, airspaceLineWidth = 2.0,
+    hillshadeExaggeration = 0.4,
+)
 
 private fun buildFlightMapConfig(
     activeMap: ActiveMap?,
