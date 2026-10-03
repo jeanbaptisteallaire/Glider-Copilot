@@ -1,201 +1,12 @@
-> Task :feature:prevol:lintAnalyzeDebugAndroidTest FROM-CACHE
-> Task :feature:replay3d:generateDebugAndroidTestLintModel
-> Task :feature:prevol:lintAnalyzeDebugUnitTest FROM-CACHE
-> Task :core:designsystem:generateDebugLintReportModel
-> Task :feature:replay3d:generateDebugUnitTestLintModel
-> Task :feature:replay3d:lintAnalyzeDebugAndroidTest FROM-CACHE
-> Task :feature:replay3d:lintAnalyzeDebugUnitTest FROM-CACHE
-> Task :data:flightarchive:generateDebugLintReportModel
-> Task :core:designsystem:lintReportDebug
-> Task :core:designsystem:lintDebug
-> Task :feature:checklist:generateDebugLintReportModel
-> Task :data:flightarchive:lintReportDebug
-> Task :data:flightarchive:lintDebug
-> Task :feature:feed:generateDebugLintReportModel
-> Task :feature:checklist:lintReportDebug
-> Task :feature:checklist:lintDebug
-> Task :feature:flight:generateDebugLintReportModel
-> Task :feature:feed:lintReportDebug
-> Task :feature:feed:lintDebug
-> Task :feature:myflights:generateDebugLintReportModel
-
-> Task :feature:flight:lintReportDebug
-Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/build/reports/lint-results-debug.html
-
-> Task :feature:flight:lintDebug
-> Task :feature:prevol:generateDebugLintReportModel
-> Task :feature:myflights:lintReportDebug
-> Task :feature:myflights:lintDebug
-> Task :feature:replay3d:generateDebugLintReportModel
-
-> Task :feature:prevol:lintReportDebug
-Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/prevol/build/reports/lint-results-debug.html
-
-> Task :feature:prevol:lintDebug
-> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
-> Task :app:mergeDebugShaders
-> Task :app:compileDebugShaders NO-SOURCE
-> Task :app:generateDebugAssets UP-TO-DATE
-
-> Task :feature:replay3d:lintReportDebug
-Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/replay3d/build/reports/lint-results-debug.html
-
-> Task :feature:replay3d:lintDebug
-> Task :app:mergeDebugAssets
-> Task :app:compressDebugAssets FROM-CACHE
-> Task :app:desugarDebugFileDependencies FROM-CACHE
-> Task :feature:checklist:bundleLibRuntimeToDirDebug
-> Task :app:checkDebugDuplicateClasses
-> Task :feature:prevol:bundleLibRuntimeToDirDebug
-> Task :feature:flight:bundleLibRuntimeToDirDebug
-> Task :feature:myflights:bundleLibRuntimeToDirDebug
-> Task :feature:feed:bundleLibRuntimeToDirDebug
-> Task :feature:replay3d:bundleLibRuntimeToDirDebug
-> Task :core:designsystem:bundleLibRuntimeToDirDebug
-> Task :data:flightarchive:bundleLibRuntimeToDirDebug
-> Task :core:designsystem:copyDebugJniLibsProjectOnly
-> Task :data:flightarchive:copyDebugJniLibsProjectOnly
-> Task :feature:checklist:copyDebugJniLibsProjectOnly
-> Task :feature:feed:copyDebugJniLibsProjectOnly
-> Task :feature:flight:copyDebugJniLibsProjectOnly
-> Task :feature:myflights:copyDebugJniLibsProjectOnly
-> Task :feature:prevol:copyDebugJniLibsProjectOnly
-> Task :feature:replay3d:copyDebugJniLibsProjectOnly
-> Task :core:designsystem:bundleDebugAar
-> Task :core:designsystem:assembleDebug
-> Task :data:flightarchive:bundleDebugAar
-> Task :data:flightarchive:assembleDebug
-> Task :feature:checklist:bundleDebugAar
-> Task :feature:checklist:assembleDebug
-> Task :feature:feed:bundleDebugAar
-> Task :feature:feed:assembleDebug
-> Task :feature:flight:bundleDebugAar
-> Task :feature:flight:assembleDebug
-> Task :app:mergeExtDexDebug FROM-CACHE
-> Task :feature:myflights:bundleDebugAar
-> Task :feature:myflights:assembleDebug
-> Task :feature:prevol:bundleDebugAar
-> Task :feature:prevol:assembleDebug
-> Task :app:mergeLibDexDebug FROM-CACHE
-> Task :app:mergeDebugJniLibFolders
-> Task :feature:replay3d:bundleDebugAar
-> Task :feature:replay3d:assembleDebug
-> Task :core:designsystem:mergeReleaseJniLibFolders
-> Task :core:designsystem:mergeReleaseNativeLibs NO-SOURCE
-> Task :core:designsystem:copyReleaseJniLibsProjectOnly
-> Task :data:flightarchive:mergeReleaseJniLibFolders
-> Task :data:flightarchive:mergeReleaseNativeLibs NO-SOURCE
-> Task :data:flightarchive:copyReleaseJniLibsProjectOnly
-> Task :app:mergeDebugNativeLibs
-> Task :feature:checklist:mergeReleaseJniLibFolders
-> Task :feature:checklist:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:checklist:copyReleaseJniLibsProjectOnly
-> Task :feature:feed:mergeReleaseJniLibFolders
-> Task :feature:feed:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:feed:copyReleaseJniLibsProjectOnly
-> Task :feature:flight:mergeReleaseJniLibFolders
-> Task :feature:flight:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:flight:copyReleaseJniLibsProjectOnly
-> Task :feature:myflights:mergeReleaseJniLibFolders
-> Task :feature:myflights:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:myflights:copyReleaseJniLibsProjectOnly
-> Task :feature:prevol:mergeReleaseJniLibFolders
-> Task :feature:prevol:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:prevol:copyReleaseJniLibsProjectOnly
-> Task :feature:replay3d:mergeReleaseJniLibFolders
-> Task :feature:replay3d:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:replay3d:copyReleaseJniLibsProjectOnly
-> Task :feature:checklist:mergeReleaseGeneratedProguardFiles
-> Task :feature:checklist:exportReleaseConsumerProguardFiles
-> Task :feature:prevol:mergeReleaseGeneratedProguardFiles
-> Task :feature:prevol:exportReleaseConsumerProguardFiles
-> Task :feature:flight:mergeReleaseGeneratedProguardFiles
-> Task :feature:flight:exportReleaseConsumerProguardFiles
-> Task :feature:myflights:mergeReleaseGeneratedProguardFiles
-> Task :feature:myflights:exportReleaseConsumerProguardFiles
-> Task :feature:feed:mergeReleaseGeneratedProguardFiles
-> Task :feature:feed:exportReleaseConsumerProguardFiles
-> Task :feature:replay3d:mergeReleaseGeneratedProguardFiles
-> Task :feature:replay3d:exportReleaseConsumerProguardFiles
-> Task :core:designsystem:mergeReleaseGeneratedProguardFiles
-> Task :core:designsystem:exportReleaseConsumerProguardFiles
-> Task :data:flightarchive:mergeReleaseGeneratedProguardFiles
-> Task :data:flightarchive:exportReleaseConsumerProguardFiles
-> Task :core:designsystem:prepareReleaseArtProfile
-> Task :data:flightarchive:prepareReleaseArtProfile
-> Task :feature:checklist:prepareReleaseArtProfile
-> Task :feature:feed:prepareReleaseArtProfile
-> Task :feature:flight:prepareReleaseArtProfile
-> Task :feature:myflights:prepareReleaseArtProfile
-> Task :feature:prevol:prepareReleaseArtProfile
-> Task :feature:replay3d:prepareReleaseArtProfile
-> Task :core:designsystem:mergeReleaseShaders
-> Task :core:designsystem:compileReleaseShaders NO-SOURCE
-> Task :core:designsystem:generateReleaseAssets UP-TO-DATE
-> Task :core:designsystem:mergeReleaseAssets
-> Task :data:flightarchive:mergeReleaseShaders
-> Task :data:flightarchive:compileReleaseShaders NO-SOURCE
-> Task :data:flightarchive:generateReleaseAssets UP-TO-DATE
-> Task :data:flightarchive:mergeReleaseAssets
-> Task :feature:checklist:mergeReleaseShaders
-> Task :feature:checklist:compileReleaseShaders NO-SOURCE
-> Task :feature:checklist:generateReleaseAssets UP-TO-DATE
-> Task :feature:checklist:mergeReleaseAssets
-> Task :feature:feed:mergeReleaseShaders
-> Task :feature:feed:compileReleaseShaders NO-SOURCE
-> Task :feature:feed:generateReleaseAssets UP-TO-DATE
-> Task :feature:feed:mergeReleaseAssets
-> Task :feature:flight:mergeReleaseShaders
-> Task :feature:flight:compileReleaseShaders NO-SOURCE
-> Task :feature:flight:generateReleaseAssets UP-TO-DATE
-> Task :feature:flight:mergeReleaseAssets
-> Task :feature:myflights:mergeReleaseShaders
-> Task :feature:myflights:compileReleaseShaders NO-SOURCE
-> Task :feature:myflights:generateReleaseAssets UP-TO-DATE
-> Task :feature:myflights:mergeReleaseAssets
-> Task :feature:prevol:mergeReleaseShaders
-> Task :feature:prevol:compileReleaseShaders NO-SOURCE
-> Task :feature:prevol:generateReleaseAssets UP-TO-DATE
-> Task :feature:prevol:mergeReleaseAssets
-> Task :feature:replay3d:mergeReleaseShaders
-> Task :feature:replay3d:compileReleaseShaders NO-SOURCE
-> Task :feature:replay3d:generateReleaseAssets UP-TO-DATE
-> Task :feature:replay3d:mergeReleaseAssets
-> Task :core:designsystem:createFullJarRelease
-> Task :core:designsystem:generateReleaseLintModel
-> Task :data:flightarchive:createFullJarRelease
-> Task :data:flightarchive:generateReleaseLintModel
-> Task :feature:checklist:createFullJarRelease
-> Task :feature:checklist:generateReleaseLintModel
-> Task :feature:feed:createFullJarRelease
-> Task :feature:feed:generateReleaseLintModel
-> Task :feature:flight:createFullJarRelease
-> Task :feature:flight:generateReleaseLintModel
-> Task :feature:myflights:createFullJarRelease
-> Task :feature:myflights:generateReleaseLintModel
-> Task :feature:prevol:createFullJarRelease
-> Task :feature:prevol:generateReleaseLintModel
-> Task :feature:replay3d:createFullJarRelease
-> Task :feature:replay3d:generateReleaseLintModel
-> Task :feature:checklist:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:checklist:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:checklist:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:checklist:extractReleaseAnnotations FROM-CACHE
-> Task :feature:checklist:mergeReleaseConsumerProguardFiles
-> Task :feature:checklist:mergeReleaseJavaResource
-> Task :feature:checklist:syncReleaseLibJars FROM-CACHE
-> Task :feature:checklist:bundleReleaseLocalLintAar
-> Task :feature:prevol:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:prevol:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:prevol:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:prevol:extractReleaseAnnotations FROM-CACHE
-> Task :feature:prevol:mergeReleaseConsumerProguardFiles
+> Task :app:generateReleaseAssets UP-TO-DATE
 > Task :feature:prevol:mergeReleaseJavaResource
 > Task :feature:prevol:syncReleaseLibJars FROM-CACHE
 > Task :feature:prevol:bundleReleaseLocalLintAar
+> Task :app:mergeReleaseAssets
 > Task :feature:flight:stripReleaseDebugSymbols NO-SOURCE
 > Task :feature:flight:copyReleaseJniLibsProjectAndLocalJars
 > Task :feature:flight:extractDeepLinksForAarRelease FROM-CACHE
+> Task :app:compressReleaseAssets FROM-CACHE
 > Task :feature:flight:extractReleaseAnnotations FROM-CACHE
 > Task :feature:flight:mergeReleaseConsumerProguardFiles
 > Task :feature:flight:mergeReleaseJavaResource
@@ -210,59 +21,36 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:myflights:syncReleaseLibJars FROM-CACHE
 > Task :feature:myflights:bundleReleaseLocalLintAar
 > Task :feature:feed:stripReleaseDebugSymbols NO-SOURCE
-> Task :app:validateSigningDebug
 > Task :feature:feed:copyReleaseJniLibsProjectAndLocalJars
 > Task :feature:feed:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:feed:extractReleaseAnnotations FROM-CACHE
-> Task :feature:feed:mergeReleaseConsumerProguardFiles
-> Task :feature:feed:mergeReleaseJavaResource
-> Task :app:writeDebugAppMetadata
-> Task :app:writeDebugSigningConfigVersions
-> Task :app:mergeReleaseJniLibFolders
-
-> Task :app:stripDebugDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
-
-> Task :app:mergeReleaseNativeLibs
-> Task :app:checkReleaseDuplicateClasses
-
-> Task :app:stripReleaseDebugSymbols
-Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
-
-> Task :feature:feed:syncReleaseLibJars FROM-CACHE
-> Task :feature:feed:bundleReleaseLocalLintAar
+> Task :app:extractReleaseVersionControlInfo
 > Task :feature:replay3d:stripReleaseDebugSymbols NO-SOURCE
 > Task :feature:replay3d:copyReleaseJniLibsProjectAndLocalJars
 > Task :feature:replay3d:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:feed:extractReleaseAnnotations FROM-CACHE
+> Task :feature:feed:mergeReleaseConsumerProguardFiles
 > Task :feature:replay3d:extractReleaseAnnotations FROM-CACHE
-> Task :app:extractReleaseNativeSymbolTables FROM-CACHE
-> Task :app:mergeReleaseArtProfile
-> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
 > Task :feature:replay3d:mergeReleaseConsumerProguardFiles
-> Task :app:mergeReleaseStartupProfile
-> Task :app:mergeReleaseShaders
+> Task :feature:feed:mergeReleaseJavaResource
+> Task :feature:feed:syncReleaseLibJars FROM-CACHE
 > Task :feature:replay3d:mergeReleaseJavaResource
-> Task :app:compileReleaseShaders NO-SOURCE
-> Task :app:generateReleaseAssets UP-TO-DATE
 > Task :feature:replay3d:syncReleaseLibJars FROM-CACHE
-> Task :app:mergeReleaseAssets
-> Task :feature:replay3d:bundleReleaseLocalLintAar
+> Task :feature:feed:bundleReleaseLocalLintAar
 > Task :core:designsystem:stripReleaseDebugSymbols NO-SOURCE
 > Task :core:designsystem:copyReleaseJniLibsProjectAndLocalJars
-> Task :app:compressReleaseAssets FROM-CACHE
 > Task :core:designsystem:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:replay3d:bundleReleaseLocalLintAar
 > Task :core:designsystem:extractReleaseAnnotations FROM-CACHE
-> Task :core:designsystem:mergeReleaseConsumerProguardFiles
-> Task :core:designsystem:mergeReleaseJavaResource
-> Task :core:designsystem:syncReleaseLibJars FROM-CACHE
-> Task :core:designsystem:bundleReleaseLocalLintAar
 > Task :data:flightarchive:stripReleaseDebugSymbols NO-SOURCE
 > Task :data:flightarchive:copyReleaseJniLibsProjectAndLocalJars
+> Task :core:designsystem:mergeReleaseConsumerProguardFiles
 > Task :data:flightarchive:extractDeepLinksForAarRelease FROM-CACHE
+> Task :core:designsystem:mergeReleaseJavaResource
+> Task :core:designsystem:syncReleaseLibJars FROM-CACHE
 > Task :data:flightarchive:extractReleaseAnnotations FROM-CACHE
 > Task :data:flightarchive:mergeReleaseConsumerProguardFiles
 > Task :data:flightarchive:mergeReleaseJavaResource
-> Task :app:extractReleaseVersionControlInfo
+> Task :core:designsystem:bundleReleaseLocalLintAar
 > Task :data:flightarchive:syncReleaseLibJars FROM-CACHE
 > Task :data:flightarchive:bundleReleaseLocalLintAar
 > Task :core:designsystem:lintVitalAnalyzeRelease FROM-CACHE
@@ -271,21 +59,21 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :data:flightarchive:writeReleaseLintModelMetadata
 > Task :feature:checklist:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:checklist:writeReleaseLintModelMetadata
-> Task :feature:feed:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:flight:lintVitalAnalyzeRelease FROM-CACHE
-> Task :feature:feed:writeReleaseLintModelMetadata
+> Task :feature:feed:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:flight:writeReleaseLintModelMetadata
-> Task :feature:prevol:lintVitalAnalyzeRelease FROM-CACHE
-> Task :feature:prevol:writeReleaseLintModelMetadata
+> Task :feature:feed:writeReleaseLintModelMetadata
 > Task :feature:myflights:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:myflights:writeReleaseLintModelMetadata
 > Task :feature:replay3d:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:prevol:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:prevol:writeReleaseLintModelMetadata
 > Task :feature:replay3d:writeReleaseLintModelMetadata
 > Task :data:flightarchive:generateReleaseLintVitalModel
 > Task :core:designsystem:generateReleaseLintVitalModel
 > Task :feature:checklist:generateReleaseLintVitalModel
-> Task :feature:feed:generateReleaseLintVitalModel
 > Task :feature:flight:generateReleaseLintVitalModel
+> Task :feature:feed:generateReleaseLintVitalModel
 > Task :feature:myflights:generateReleaseLintVitalModel
 > Task :feature:prevol:generateReleaseLintVitalModel
 > Task :feature:replay3d:generateReleaseLintVitalModel
@@ -301,18 +89,18 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :data:flightarchive:mapReleaseSourceSetPaths
 > Task :core:designsystem:verifyReleaseResources FROM-CACHE
 > Task :core:designsystem:assembleRelease
-> Task :data:flightarchive:mergeReleaseResources FROM-CACHE
 > Task :feature:checklist:bundleReleaseAar
-> Task :data:flightarchive:verifyReleaseResources FROM-CACHE
-> Task :data:flightarchive:assembleRelease
 > Task :core:designsystem:compileReleaseLibraryResources FROM-CACHE
 > Task :feature:checklist:mapReleaseSourceSetPaths
+> Task :data:flightarchive:mergeReleaseResources FROM-CACHE
+> Task :data:flightarchive:verifyReleaseResources FROM-CACHE
+> Task :data:flightarchive:assembleRelease
 > Task :feature:feed:bundleReleaseAar
 > Task :feature:feed:mapReleaseSourceSetPaths
 > Task :feature:checklist:mergeReleaseResources FROM-CACHE
+> Task :feature:feed:mergeReleaseResources FROM-CACHE
 > Task :feature:checklist:verifyReleaseResources FROM-CACHE
 > Task :feature:checklist:assembleRelease
-> Task :feature:feed:mergeReleaseResources FROM-CACHE
 > Task :feature:flight:bundleReleaseAar
 > Task :feature:flight:mapReleaseSourceSetPaths
 > Task :feature:feed:verifyReleaseResources FROM-CACHE
@@ -323,26 +111,26 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :feature:myflights:mergeReleaseResources FROM-CACHE
 > Task :feature:flight:verifyReleaseResources FROM-CACHE
 > Task :feature:flight:assembleRelease
-> Task :feature:prevol:bundleReleaseAar
-> Task :feature:prevol:mapReleaseSourceSetPaths
 > Task :feature:myflights:verifyReleaseResources FROM-CACHE
 > Task :feature:myflights:assembleRelease
-> Task :feature:prevol:mergeReleaseResources FROM-CACHE
+> Task :feature:prevol:bundleReleaseAar
+> Task :feature:prevol:mapReleaseSourceSetPaths
 > Task :feature:replay3d:bundleReleaseAar
 > Task :feature:replay3d:mapReleaseSourceSetPaths
+> Task :feature:prevol:mergeReleaseResources FROM-CACHE
+> Task :feature:replay3d:mergeReleaseResources FROM-CACHE
 > Task :feature:prevol:verifyReleaseResources FROM-CACHE
 > Task :feature:prevol:assembleRelease
 > Task :app:configureReleaseDependencies
 > Task :app:parseReleaseIntegrityConfig FROM-CACHE
-> Task :feature:replay3d:mergeReleaseResources FROM-CACHE
 > Task :feature:replay3d:verifyReleaseResources FROM-CACHE
 > Task :feature:replay3d:assembleRelease
 > Task :app:compileDebugKotlin
 > Task :app:compileReleaseKotlin
 > Task :app:compileDebugJavaWithJavac
 > Task :app:processDebugJavaRes
-> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
 > Task :app:compileReleaseJavaWithJavac
 > Task :app:compileDebugUnitTestKotlin NO-SOURCE
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
@@ -359,8 +147,8 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:test UP-TO-DATE
 > Task :app:generateDebugLintReportModel
 > Task :app:generateDebugUnitTestLintModel
-> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:lintAnalyzeDebugUnitTest
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics FROM-CACHE
 > Task :app:mergeProjectDexDebug
@@ -386,15 +174,227 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/
 > Task :app:compileReleaseArtProfile
 > Task :app:convertShrunkResourcesToBinaryRelease
 > Task :app:optimizeReleaseResources
-> Task :app:packageRelease
-> Task :app:createReleaseApkListingFileRedirect
-> Task :app:assembleRelease
+> Task :app:packageRelease FAILED
 > Task :app:packageReleaseBundle
-> Task :app:signReleaseBundle
-> Task :app:produceReleaseBundleIdeListingFile
-> Task :app:createReleaseBundleListingFileRedirect
-> Task :app:bundleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791030004700.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791032422801.json
 
-BUILD SUCCESSFUL in 3m 19s
-825 actionable tasks: 476 executed, 349 from cache
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:packageRelease'.
+> A failure occurred while executing com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable
+   > com.android.ide.common.signing.KeytoolException: Failed to read key glidy-upload from store "/tmp/glidy-upload11902998245073808276.jks": keystore password was incorrect
+
+* Try:
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+* Exception is:
+org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:packageRelease'.
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable
+	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:287)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:130)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:335)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:318)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLock(DefaultWorkerLeaseService.java:323)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:126)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$0(DefaultAsyncWorkTracker.java:100)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:335)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsIsolatedTask(DefaultWorkerLeaseService.java:211)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsIsolatedTask(DefaultWorkerLeaseService.java:200)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:100)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:78)
+	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:66)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:252)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:29)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:26)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:47)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$1(BuildCacheStep.java:75)
+	at org.gradle.internal.Either$Right.fold(Either.java:175)
+	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:56)
+	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Caused by: java.lang.RuntimeException: com.android.ide.common.signing.KeytoolException: Failed to read key glidy-upload from store "/tmp/glidy-upload11902998245073808276.jks": keystore password was incorrect
+	at com.android.build.gradle.internal.packaging.IncrementalPackagerBuilder.withSigning(IncrementalPackagerBuilder.java:232)
+	at com.android.build.gradle.tasks.PackageAndroidArtifact$Companion.doTask(PackageAndroidArtifact.kt:1090)
+	at com.android.build.gradle.tasks.PackageAndroidArtifact$Companion.access$doTask(PackageAndroidArtifact.kt:922)
+	at com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable.doExecute(PackageAndroidArtifact.kt:525)
+	at com.android.build.gradle.internal.workeractions.WorkActionAdapter.execute(WorkActionAdapter.kt:38)
+	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:194)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:127)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:169)
+	at org.gradle.internal.Factories$1.create(Factories.java:31)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:263)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:127)
+	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:132)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:164)
+	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:133)
+	... 2 more
+Caused by: com.android.ide.common.signing.KeytoolException: Failed to read key glidy-upload from store "/tmp/glidy-upload11902998245073808276.jks": keystore password was incorrect
+	at com.android.ide.common.signing.KeystoreHelper.getCertificateInfo(KeystoreHelper.java:254)
+	at com.android.build.gradle.internal.packaging.IncrementalPackagerBuilder.withSigning(IncrementalPackagerBuilder.java:172)
+	... 32 more
+Caused by: java.io.IOException: keystore password was incorrect
+	at com.android.ide.common.signing.KeystoreHelper.getCertificateInfo(KeystoreHelper.java:230)
+	... 33 more
+Caused by: java.security.UnrecoverableKeyException: failed to decrypt safe contents entry: java.io.IOException: getSecretKey failed: Password is not ASCII
+	... 34 more
+
+
+BUILD FAILED in 3m 33s
+821 actionable tasks: 472 executed, 349 from cache
