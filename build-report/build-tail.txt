@@ -1,6 +1,6 @@
 > Task :feature:prevol:lintAnalyzeDebugAndroidTest FROM-CACHE
-> Task :feature:prevol:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :feature:replay3d:generateDebugAndroidTestLintModel
+> Task :feature:prevol:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :core:designsystem:generateDebugLintReportModel
 > Task :feature:replay3d:generateDebugUnitTestLintModel
 > Task :feature:replay3d:lintAnalyzeDebugAndroidTest FROM-CACHE
@@ -59,15 +59,11 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:feed:copyDebugJniLibsProjectOnly
 > Task :feature:flight:copyDebugJniLibsProjectOnly
 > Task :feature:myflights:copyDebugJniLibsProjectOnly
-> Task :app:mergeExtDexDebug FROM-CACHE
 > Task :feature:prevol:copyDebugJniLibsProjectOnly
 > Task :feature:replay3d:copyDebugJniLibsProjectOnly
-> Task :app:mergeLibDexDebug FROM-CACHE
-> Task :app:mergeDebugJniLibFolders
 > Task :core:designsystem:bundleDebugAar
 > Task :core:designsystem:assembleDebug
 > Task :data:flightarchive:bundleDebugAar
-> Task :app:mergeDebugNativeLibs
 > Task :data:flightarchive:assembleDebug
 > Task :feature:checklist:bundleDebugAar
 > Task :feature:checklist:assembleDebug
@@ -75,10 +71,13 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:feed:assembleDebug
 > Task :feature:flight:bundleDebugAar
 > Task :feature:flight:assembleDebug
+> Task :app:mergeExtDexDebug FROM-CACHE
 > Task :feature:myflights:bundleDebugAar
 > Task :feature:myflights:assembleDebug
 > Task :feature:prevol:bundleDebugAar
 > Task :feature:prevol:assembleDebug
+> Task :app:mergeLibDexDebug FROM-CACHE
+> Task :app:mergeDebugJniLibFolders
 > Task :feature:replay3d:bundleDebugAar
 > Task :feature:replay3d:assembleDebug
 > Task :core:designsystem:mergeReleaseJniLibFolders
@@ -87,6 +86,7 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :data:flightarchive:mergeReleaseJniLibFolders
 > Task :data:flightarchive:mergeReleaseNativeLibs NO-SOURCE
 > Task :data:flightarchive:copyReleaseJniLibsProjectOnly
+> Task :app:mergeDebugNativeLibs
 > Task :feature:checklist:mergeReleaseJniLibFolders
 > Task :feature:checklist:mergeReleaseNativeLibs NO-SOURCE
 > Task :feature:checklist:copyReleaseJniLibsProjectOnly
@@ -173,9 +173,49 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:flight:generateReleaseLintModel
 > Task :feature:myflights:createFullJarRelease
 > Task :feature:myflights:generateReleaseLintModel
-> Task :app:validateSigningDebug
 > Task :feature:prevol:createFullJarRelease
 > Task :feature:prevol:generateReleaseLintModel
+> Task :feature:replay3d:createFullJarRelease
+> Task :feature:replay3d:generateReleaseLintModel
+> Task :feature:checklist:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:checklist:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:checklist:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:checklist:extractReleaseAnnotations FROM-CACHE
+> Task :feature:checklist:mergeReleaseConsumerProguardFiles
+> Task :feature:checklist:mergeReleaseJavaResource
+> Task :feature:checklist:syncReleaseLibJars FROM-CACHE
+> Task :feature:checklist:bundleReleaseLocalLintAar
+> Task :feature:prevol:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:prevol:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:prevol:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:prevol:extractReleaseAnnotations FROM-CACHE
+> Task :feature:prevol:mergeReleaseConsumerProguardFiles
+> Task :feature:prevol:mergeReleaseJavaResource
+> Task :feature:prevol:syncReleaseLibJars FROM-CACHE
+> Task :feature:prevol:bundleReleaseLocalLintAar
+> Task :feature:flight:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:flight:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:flight:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:flight:extractReleaseAnnotations FROM-CACHE
+> Task :feature:flight:mergeReleaseConsumerProguardFiles
+> Task :feature:flight:mergeReleaseJavaResource
+> Task :feature:flight:syncReleaseLibJars FROM-CACHE
+> Task :feature:flight:bundleReleaseLocalLintAar
+> Task :feature:myflights:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:myflights:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:myflights:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:myflights:extractReleaseAnnotations FROM-CACHE
+> Task :feature:myflights:mergeReleaseConsumerProguardFiles
+> Task :feature:myflights:mergeReleaseJavaResource
+> Task :feature:myflights:syncReleaseLibJars FROM-CACHE
+> Task :feature:myflights:bundleReleaseLocalLintAar
+> Task :feature:feed:stripReleaseDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug
+> Task :feature:feed:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:feed:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:feed:extractReleaseAnnotations FROM-CACHE
+> Task :feature:feed:mergeReleaseConsumerProguardFiles
+> Task :feature:feed:mergeReleaseJavaResource
 > Task :app:writeDebugAppMetadata
 > Task :app:writeDebugSigningConfigVersions
 > Task :app:mergeReleaseJniLibFolders
@@ -183,111 +223,71 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :app:stripDebugDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
 
-> Task :app:checkReleaseDuplicateClasses
 > Task :app:mergeReleaseNativeLibs
-> Task :feature:replay3d:createFullJarRelease
-> Task :feature:replay3d:generateReleaseLintModel
-> Task :feature:checklist:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:checklist:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:checklist:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:checklist:extractReleaseAnnotations FROM-CACHE
-> Task :app:mergeReleaseArtProfile
-> Task :feature:checklist:mergeReleaseConsumerProguardFiles
-> Task :feature:checklist:mergeReleaseJavaResource
-> Task :app:mergeReleaseStartupProfile
-> Task :app:mergeReleaseShaders
-> Task :app:compileReleaseShaders NO-SOURCE
-> Task :app:generateReleaseAssets UP-TO-DATE
-> Task :app:mergeReleaseAssets
+> Task :app:checkReleaseDuplicateClasses
 
 > Task :app:stripReleaseDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
 
-> Task :feature:checklist:syncReleaseLibJars FROM-CACHE
-> Task :feature:checklist:bundleReleaseLocalLintAar
-> Task :feature:prevol:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:prevol:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:prevol:extractDeepLinksForAarRelease FROM-CACHE
-> Task :app:compressReleaseAssets FROM-CACHE
-> Task :app:extractReleaseNativeSymbolTables FROM-CACHE
-> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
-> Task :feature:prevol:extractReleaseAnnotations FROM-CACHE
-> Task :feature:prevol:mergeReleaseConsumerProguardFiles
-> Task :feature:prevol:mergeReleaseJavaResource
-> Task :feature:prevol:syncReleaseLibJars FROM-CACHE
-> Task :feature:prevol:bundleReleaseLocalLintAar
-> Task :feature:flight:stripReleaseDebugSymbols NO-SOURCE
-> Task :app:extractReleaseVersionControlInfo
-> Task :feature:flight:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:flight:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:myflights:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:myflights:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:myflights:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:myflights:extractReleaseAnnotations FROM-CACHE
-> Task :feature:flight:extractReleaseAnnotations FROM-CACHE
-> Task :feature:flight:mergeReleaseConsumerProguardFiles
-> Task :feature:myflights:mergeReleaseConsumerProguardFiles
-> Task :feature:flight:mergeReleaseJavaResource
-> Task :feature:myflights:mergeReleaseJavaResource
-> Task :feature:flight:syncReleaseLibJars FROM-CACHE
-> Task :feature:flight:bundleReleaseLocalLintAar
-> Task :feature:myflights:syncReleaseLibJars FROM-CACHE
-> Task :feature:myflights:bundleReleaseLocalLintAar
-> Task :feature:feed:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:feed:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:feed:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:replay3d:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:feed:extractReleaseAnnotations FROM-CACHE
-> Task :feature:replay3d:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:feed:mergeReleaseConsumerProguardFiles
-> Task :feature:replay3d:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:feed:mergeReleaseJavaResource
-> Task :feature:replay3d:extractReleaseAnnotations FROM-CACHE
 > Task :feature:feed:syncReleaseLibJars FROM-CACHE
-> Task :feature:replay3d:mergeReleaseConsumerProguardFiles
 > Task :feature:feed:bundleReleaseLocalLintAar
+> Task :feature:replay3d:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:replay3d:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:replay3d:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:replay3d:extractReleaseAnnotations FROM-CACHE
+> Task :app:extractReleaseNativeSymbolTables FROM-CACHE
+> Task :app:mergeReleaseArtProfile
+> Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
+> Task :feature:replay3d:mergeReleaseConsumerProguardFiles
+> Task :app:mergeReleaseStartupProfile
+> Task :app:mergeReleaseShaders
 > Task :feature:replay3d:mergeReleaseJavaResource
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:generateReleaseAssets UP-TO-DATE
 > Task :feature:replay3d:syncReleaseLibJars FROM-CACHE
+> Task :app:mergeReleaseAssets
+> Task :feature:replay3d:bundleReleaseLocalLintAar
 > Task :core:designsystem:stripReleaseDebugSymbols NO-SOURCE
 > Task :core:designsystem:copyReleaseJniLibsProjectAndLocalJars
+> Task :app:compressReleaseAssets FROM-CACHE
 > Task :core:designsystem:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:replay3d:bundleReleaseLocalLintAar
 > Task :core:designsystem:extractReleaseAnnotations FROM-CACHE
 > Task :core:designsystem:mergeReleaseConsumerProguardFiles
 > Task :core:designsystem:mergeReleaseJavaResource
 > Task :core:designsystem:syncReleaseLibJars FROM-CACHE
+> Task :core:designsystem:bundleReleaseLocalLintAar
 > Task :data:flightarchive:stripReleaseDebugSymbols NO-SOURCE
 > Task :data:flightarchive:copyReleaseJniLibsProjectAndLocalJars
 > Task :data:flightarchive:extractDeepLinksForAarRelease FROM-CACHE
-> Task :core:designsystem:bundleReleaseLocalLintAar
 > Task :data:flightarchive:extractReleaseAnnotations FROM-CACHE
 > Task :data:flightarchive:mergeReleaseConsumerProguardFiles
 > Task :data:flightarchive:mergeReleaseJavaResource
-> Task :core:designsystem:lintVitalAnalyzeRelease FROM-CACHE
+> Task :app:extractReleaseVersionControlInfo
 > Task :data:flightarchive:syncReleaseLibJars FROM-CACHE
-> Task :core:designsystem:writeReleaseLintModelMetadata
 > Task :data:flightarchive:bundleReleaseLocalLintAar
-> Task :feature:checklist:lintVitalAnalyzeRelease FROM-CACHE
-> Task :feature:checklist:writeReleaseLintModelMetadata
+> Task :core:designsystem:lintVitalAnalyzeRelease FROM-CACHE
+> Task :core:designsystem:writeReleaseLintModelMetadata
 > Task :data:flightarchive:lintVitalAnalyzeRelease FROM-CACHE
 > Task :data:flightarchive:writeReleaseLintModelMetadata
+> Task :feature:checklist:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:checklist:writeReleaseLintModelMetadata
 > Task :feature:feed:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:flight:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:feed:writeReleaseLintModelMetadata
 > Task :feature:flight:writeReleaseLintModelMetadata
-> Task :feature:myflights:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:prevol:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:prevol:writeReleaseLintModelMetadata
+> Task :feature:myflights:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:myflights:writeReleaseLintModelMetadata
 > Task :feature:replay3d:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:replay3d:writeReleaseLintModelMetadata
-> Task :core:designsystem:generateReleaseLintVitalModel
 > Task :data:flightarchive:generateReleaseLintVitalModel
+> Task :core:designsystem:generateReleaseLintVitalModel
 > Task :feature:checklist:generateReleaseLintVitalModel
 > Task :feature:feed:generateReleaseLintVitalModel
 > Task :feature:flight:generateReleaseLintVitalModel
-> Task :feature:prevol:generateReleaseLintVitalModel
 > Task :feature:myflights:generateReleaseLintVitalModel
+> Task :feature:prevol:generateReleaseLintVitalModel
 > Task :feature:replay3d:generateReleaseLintVitalModel
 > Task :core:designsystem:bundleReleaseAar
 > Task :app:collectReleaseDependencies
@@ -295,26 +295,26 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
-> Task :core:designsystem:mergeReleaseResources FROM-CACHE
 > Task :app:writeReleaseSigningConfigVersions
+> Task :core:designsystem:mergeReleaseResources FROM-CACHE
 > Task :data:flightarchive:bundleReleaseAar
 > Task :data:flightarchive:mapReleaseSourceSetPaths
 > Task :core:designsystem:verifyReleaseResources FROM-CACHE
 > Task :core:designsystem:assembleRelease
-> Task :feature:checklist:bundleReleaseAar
-> Task :core:designsystem:compileReleaseLibraryResources FROM-CACHE
 > Task :data:flightarchive:mergeReleaseResources FROM-CACHE
-> Task :feature:checklist:mapReleaseSourceSetPaths
+> Task :feature:checklist:bundleReleaseAar
 > Task :data:flightarchive:verifyReleaseResources FROM-CACHE
 > Task :data:flightarchive:assembleRelease
+> Task :core:designsystem:compileReleaseLibraryResources FROM-CACHE
+> Task :feature:checklist:mapReleaseSourceSetPaths
 > Task :feature:feed:bundleReleaseAar
 > Task :feature:feed:mapReleaseSourceSetPaths
 > Task :feature:checklist:mergeReleaseResources FROM-CACHE
 > Task :feature:checklist:verifyReleaseResources FROM-CACHE
 > Task :feature:checklist:assembleRelease
+> Task :feature:feed:mergeReleaseResources FROM-CACHE
 > Task :feature:flight:bundleReleaseAar
 > Task :feature:flight:mapReleaseSourceSetPaths
-> Task :feature:feed:mergeReleaseResources FROM-CACHE
 > Task :feature:feed:verifyReleaseResources FROM-CACHE
 > Task :feature:feed:assembleRelease
 > Task :feature:myflights:bundleReleaseAar
@@ -339,36 +339,36 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 > Task :feature:replay3d:assembleRelease
 > Task :app:compileDebugKotlin
 > Task :app:compileReleaseKotlin
-> Task :app:compileReleaseJavaWithJavac
 > Task :app:compileDebugJavaWithJavac
 > Task :app:processDebugJavaRes
 > Task :app:bundleDebugClassesToRuntimeJar
-> Task :app:processReleaseJavaRes
 > Task :app:bundleDebugClassesToCompileJar
-> Task :app:bundleReleaseClassesToRuntimeJar
-> Task :app:bundleReleaseClassesToCompileJar
-> Task :app:generateDebugLintReportModel
+> Task :app:compileReleaseJavaWithJavac
 > Task :app:compileDebugUnitTestKotlin NO-SOURCE
 > Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processDebugUnitTestJavaRes NO-SOURCE
 > Task :app:testDebugUnitTest NO-SOURCE
+> Task :app:processReleaseJavaRes
+> Task :app:bundleReleaseClassesToRuntimeJar
+> Task :app:bundleReleaseClassesToCompileJar
+> Task :app:generateDebugAndroidTestLintModel
 > Task :app:compileReleaseUnitTestKotlin NO-SOURCE
 > Task :app:compileReleaseUnitTestJavaWithJavac NO-SOURCE
 > Task :app:processReleaseUnitTestJavaRes NO-SOURCE
 > Task :app:testReleaseUnitTest NO-SOURCE
 > Task :app:test UP-TO-DATE
-> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
 > Task :app:generateDebugUnitTestLintModel
-> Task :app:lintAnalyzeDebugAndroidTest
 > Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebugAndroidTest
 > Task :app:dexBuilderDebug
 > Task :app:mergeDebugGlobalSynthetics FROM-CACHE
 > Task :app:mergeProjectDexDebug
 > Task :app:mergeReleaseGeneratedProguardFiles
 > Task :app:mergeDebugJavaResource
-> Task :app:expandReleaseArtProfileWildcards
-> Task :app:generateReleaseLintVitalReportModel
 > Task :app:mergeReleaseJavaResource
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:expandReleaseArtProfileWildcards
 > Task :app:packageDebug
 > Task :app:createDebugApkListingFileRedirect
 > Task :app:assembleDebug
@@ -382,19 +382,19 @@ Unable to strip the following libraries, packaging them as they are: libandroidx
 Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-> Task :app:compileReleaseArtProfile FROM-CACHE
 > Task :app:buildReleasePreBundle
+> Task :app:compileReleaseArtProfile
 > Task :app:convertShrunkResourcesToBinaryRelease
 > Task :app:optimizeReleaseResources
-> Task :app:packageReleaseBundle
 > Task :app:packageRelease
 > Task :app:createReleaseApkListingFileRedirect
 > Task :app:assembleRelease
+> Task :app:packageReleaseBundle
 > Task :app:signReleaseBundle
 > Task :app:produceReleaseBundleIdeListingFile
 > Task :app:createReleaseBundleListingFileRedirect
 > Task :app:bundleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1790931313914.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791030004700.json
 
-BUILD SUCCESSFUL in 3m 27s
-825 actionable tasks: 475 executed, 350 from cache
+BUILD SUCCESSFUL in 3m 19s
+825 actionable tasks: 476 executed, 349 from cache
