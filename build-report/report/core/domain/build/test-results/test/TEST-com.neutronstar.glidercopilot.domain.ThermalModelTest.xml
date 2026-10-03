@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.ThermalModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-09-19T18:24:00" hostname="runnervmlun5p" time="0.008">
+<testsuite name="com.neutronstar.glidercopilot.domain.ThermalModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:16" hostname="runnervm8df0l" time="0.027">
   <properties/>
-  <testcase name="daySummary" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.007"/>
-  <testcase name="stableProfileGivesNoLift" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.0"/>
+  <testcase name="daySummary" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.017"/>
+  <testcase name="stableProfileGivesNoLift" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.001"/>
   <testcase name="cumulusBaseCapsCeiling" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.0"/>
   <testcase name="groundAltitudeFromGeopotential" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.0"/>
   <testcase name="noSunNoClimb" classname="com.neutronstar.glidercopilot.domain.ThermalModelTest" time="0.0"/>
