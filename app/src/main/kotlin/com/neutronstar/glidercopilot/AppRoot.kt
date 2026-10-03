@@ -98,16 +98,33 @@ fun AppRoot(container: AppContainer) {
     when {
         ack == -1 -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
         ack < DISCLAIMER_VERSION -> Disclaimer { scope.launch { container.prefs.acknowledgeDisclaimer(DISCLAIMER_VERSION) } }
-        else -> MainScaffold(container)
+        else -> {
+            // V18.5 : menu d'accueil spiral à chaque ouverture ; le retour système y ramène depuis les onglets
+            var section by rememberSaveable { mutableStateOf<Tab?>(null) }
+            val current = section
+            if (current == null) {
+                val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
+                HomeMenuScreen(
+                    prevol = prevolVm,
+                    onPrevol = { section = Tab.PREVOL },
+                    onPilotage = { section = Tab.PILOTAGE },
+                    onMyFlights = { section = Tab.MES_VOLS },
+                )
+            } else {
+                MainScaffold(container, startTab = current, onHome = { section = null })
+            }
+        }
     }
 }
 
 @Composable
-private fun MainScaffold(container: AppContainer) {
+private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> Unit) {
     val c = Gc.colors
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var tab by rememberSaveable { mutableStateOf(Tab.PREVOL) }
+    var tab by rememberSaveable { mutableStateOf(startTab) }
+    // V18.5 : retour système → menu d'accueil (les retours internes, rejeu 3D par exemple, restent prioritaires)
+    BackHandler(onBack = onHome)
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
     val status = rememberFlightStatus()
     val traffic by container.ogn.traffic.collectAsState()
@@ -133,6 +150,11 @@ private fun MainScaffold(container: AppContainer) {
     LaunchedEffect(tab, recording) {
         if (tab == Tab.PILOTAGE || recording) FlightService.start(context, container.flight.replay)
         else FlightService.stop(context)
+    }
+    // V18.5 : retour au menu d'accueil depuis Pilotage → service arrêté, sauf vol en cours d'enregistrement
+    val recordingNow by androidx.compose.runtime.rememberUpdatedState(recording)
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onDispose { if (!recordingNow) FlightService.stop(context) }
     }
     val activeMap by container.carto.active.collectAsState()
     val club by container.clubs.selectedClub.collectAsState(initial = null)

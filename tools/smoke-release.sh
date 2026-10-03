@@ -42,6 +42,8 @@ for i in 1 2 3 4 5 6 7 8; do
 done
 sleep 3
 tap "J'ai compris"
+sleep 4
+tap "Ouvrir Prévol"   # V18.5 : menu d'accueil → onglet Prévol
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/90-release-prevol.png"
 tap "Check-lists"; sleep 6

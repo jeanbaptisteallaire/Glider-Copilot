@@ -409,3 +409,40 @@ private fun ClubPicker(state: PrevolUiState, onDismiss: () -> Unit, onPick: (Str
         confirmButton = { TextButton(onClick = onDismiss) { Text("Fermer") } },
     )
 }
+
+/**
+ * V18.5 — aperçu de la journée pour le menu d'accueil spiral : déclenchement, plafond, fin et graphique des plafonds
+ * heure par heure, d'après la météo prévue du terrain choisi (même ViewModel que l'onglet Prévol).
+ */
+@Composable
+fun PrevolDayPreview(viewModel: PrevolViewModel, modifier: Modifier = Modifier) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val c = Gc.colors
+    val day = state.day
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        when {
+            day != null -> {
+                val s = day.summary
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    GcKpi(s.triggerTime?.let(Fmt::hm) ?: "—", "Déclenchement", Modifier.weight(1f), labelColor = c.sun)
+                    GcKpi(s.best?.let { Fmt.m(it.ceilingMslM) } ?: "—", s.best?.let { "Plafond ${Fmt.hour(it.validTime)}" } ?: "Plafond", Modifier.weight(1.2f), labelColor = c.altitude)
+                    GcKpi(s.endTime?.let(Fmt::hm) ?: "—", "Fin", Modifier.weight(1f), labelColor = c.sun)
+                }
+                CeilingChart(day.hours, state.selectedHour) { }
+                Text(
+                    listOfNotNull(state.club?.name, "ARPEGE · Météo-France").joinToString(" · "),
+                    style = Gc.type.caption1.copy(color = c.faint),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            state.loading -> Row(verticalAlignment = Alignment.CenterVertically) {
+                CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = c.route)
+                Spacer(Modifier.width(10.dp))
+                Text("Chargement de la météo…", style = Gc.type.subhead.copy(color = c.dim))
+            }
+            state.error != null -> Text(state.error!!, style = Gc.type.subhead.copy(color = c.warn))
+            else -> Text("Choisissez un club dans Prévol pour la météo du terrain.", style = Gc.type.subhead.copy(color = c.dim))
+        }
+    }
+}

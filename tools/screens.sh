@@ -60,9 +60,13 @@ dismiss_anr() {
 }
 # V18.3 : page d'accueil spiral à chaque ouverture (pas de compte en CI) → « Continuer en invité ».
 # Le planeur monte pendant 20 s : uiautomator peut attendre la fin de l'animation, d'où les essais répétés.
+# V18.5 : menu d'accueil (3 cartes) → carte « Preflight & weather » = onglet Prévol, d'où partent les parcours
+pass_home() {
+  P=$(tap_text "Ouvrir Prévol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "menu passé"; sleep 3; }
+}
 pass_welcome() {
   for i in 1 2 3 4 5 6 7 8; do
-    P=$(tap_text "Continuer en invité"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "accueil passé (essai $i)"; sleep 3; return 0; }
+    P=$(tap_text "Continuer en invité"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "accueil passé (essai $i)"; sleep 4; pass_home; return 0; }
     sleep 4
   done
   echo "accueil : bouton invité introuvable" >&2
@@ -75,6 +79,9 @@ sleep 4
 timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
 dismiss_anr
 P=$(tap_text "J'ai compris"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+sleep 25
+timeout 20 adb exec-out screencap -p > "$OUT/00b-menu.png"
+pass_home
 sleep 35
 timeout 20 adb exec-out screencap -p > "$OUT/02-prevol.png"
 P=$(tap_text "Immatriculation du planeur"); [ -n "$P" ] && timeout 10 adb shell input tap $P

@@ -1,5 +1,17 @@
 # HANDOFF — état du projet (GLIDY, ex-Glider Copilot)
 
+## Session 18.5 — menu d'accueil spiral (3 cartes), V1.5.0-lite (03/10/2026)
+- Après la page de connexion (et l'avertissement au premier lancement), **menu d'accueil** `app/HomeMenuScreen.kt`
+  d'après la maquette de JB (« Menu 2 inspiration »), cartes à coins arrondis (22 dp) :
+  - **1° Preflight & weather** : carte blanche avec la vraie journée du terrain choisi (déclenchement, plafond, fin
+    + graphique des plafonds heure par heure, `PrevolDayPreview` exposé par `feature:prevol`, même ViewModel) → Prévol ;
+  - **2° Flight computer** : photo cockpit (`menu_flight_computer.webp`) → Pilotage ;
+  - **3° 3D flight log** : rejeu 3D (`menu_flight_log.webp`) → Mes vols.
+  - Photos de « 1 Graphic assets » (`Sans titre-2.jpg`, `rejeux 3D.jpg`) recadrées à 1,45:1, à 90 % d'opacité,
+    bandeau clair dégradé sous le titre.
+- Le retour système dans les onglets ramène au menu ; quitter Pilotage arrête le service de vol sauf vol en cours.
+- CI : `pass_home` (tap « Ouvrir Prévol ») après chaque accueil, capture `00b-menu`.
+
 ## Session 18.3 — l'app devient « spiral », page d'accueil avec connexion Google, V1.3.0-lite (03/10/2026)
 - **Nouveau nom : spiral** (minuscules, décision JB). Renommé partout où c'est visible : nom sous l'icône, page
   d'accueil, avertissement, notification de vol, textes de Mes vols / Prévol, en-tête IGC (`HFFTYFRTYPE:SPIRAL`).
