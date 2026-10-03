@@ -13,7 +13,7 @@
         errorLine2="            ~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/prevol/src/main/kotlin/com/neutronstar/glidercopilot/feature/prevol/PairingCard.kt"
-            line="215"
+            line="217"
             column="13"/>
     </issue>
 
@@ -29,7 +29,7 @@
         errorLine2="            ~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/prevol/src/main/kotlin/com/neutronstar/glidercopilot/feature/prevol/PairingCard.kt"
-            line="223"
+            line="225"
             column="13"/>
     </issue>
 
