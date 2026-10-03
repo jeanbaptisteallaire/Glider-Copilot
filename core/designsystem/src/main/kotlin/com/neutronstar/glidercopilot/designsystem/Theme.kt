@@ -220,7 +220,7 @@ val GlidyFlightLightColors = GcColors(
     varioStops = listOf(
         -3.0 to Color(0xFF1E6B35),
         -1.0 to Color(0xFF3E9A54),
-        0.0 to Color(0xFF8E8E93),
+        0.0 to Color(0xFF48484A),
         0.6 to Color(0xFFE07B00),
         1.8 to Color(0xFFC2410C),
         3.5 to Color(0xFFB3261E),
