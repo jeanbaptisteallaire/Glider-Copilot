@@ -423,7 +423,7 @@ private fun ClubPicker(state: PrevolUiState, onDismiss: () -> Unit, onPick: (Str
 }
 
 /**
- * V18.5 — aperçu de la journée pour le menu d'accueil spiral : déclenchement, plafond, fin et graphique des plafonds
+ * V18.5 — aperçu de la journée pour le menu d'accueil Wind Glider : déclenchement, plafond, fin et graphique des plafonds
  * heure par heure, d'après la météo prévue du terrain choisi (même ViewModel que l'onglet Prévol).
  */
 @Composable

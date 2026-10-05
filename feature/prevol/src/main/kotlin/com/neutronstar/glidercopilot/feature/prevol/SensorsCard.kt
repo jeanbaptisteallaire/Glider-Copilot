@@ -150,7 +150,7 @@ internal fun SensorsCard(ui: SensorsUi, source: SensorsSource) {
         // S8 : certains téléphones (notamment hors Android « stock ») coupent le suivi en vol long si l'app
         // reste soumise aux optimisations de batterie, même avec le service de premier plan actif.
         Text(
-            "Vol long : réglez la batterie de spiral sur « Sans restriction » (réglages Android) " +
+            "Vol long : réglez la batterie de Wind Glider sur « Sans restriction » (réglages Android) " +
                 "pour éviter toute coupure écran éteint.",
             style = cardStyle(TextRole.Fine, 9.5.sp, c.faint, darkLineHeight = 13.sp),
         )

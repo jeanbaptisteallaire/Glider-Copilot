@@ -7,6 +7,7 @@
     <!-- Charte GLIDY (maquette v8) -->
     <color name="gc_background">#000000</color>
     <color name="gc_panel">#000000</color>
-    <!-- V18.3 : fond clair au lancement, sous la page d'accueil spiral (ciel du fond) -->
-    <color name="gc_launch">#F7F6F4</color>
+    <!-- V18.3 : fond clair au lancement, sous la page d'accueil Wind Glider (ciel du fond) -->
+    <color name="gc_launch">#6C8FB7</color>
+    <color name="ic_launcher_bg">#64BBFD</color>
 </resources>

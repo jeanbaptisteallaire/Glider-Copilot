@@ -87,11 +87,19 @@ private const val DISCLAIMER_VERSION = 1
 /** V19.1 : onglet Tuto tout à gauche, dans les deux éditions. */
 private val visibleTabs: List<Tab> get() = if (BuildConfig.LITE) listOf(Tab.TUTO, Tab.PREVOL, Tab.PILOTAGE, Tab.MES_VOLS) else Tab.entries
 
-private enum class Tab(val label: String) { TUTO("Tuto"), FEED("Feed"), PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
+/** V20 : libellés dans la langue choisie (les mêmes que les cartes du menu d'accueil). */
+private enum class Tab(val label: String, val labelEn: String) {
+    TUTO("Tuto", "Tuto"), FEED("Feed", "Feed"), PREVOL("Prévol", "Pre-flight"), CHECKLIST("Check-lists", "Checklists"),
+    PILOTAGE("Pilotage", "Flight"), CARTE("Carte", "Map"), MES_VOLS("Mes vols", "My flights");
+    fun label(lang: String) = if (lang == "fr") label else labelEn
+}
+
+/** V20 : la page « Avant de voler » s'affiche une fois par lancement de l'app (pas à chaque changement d'onglet). */
+private object PilotNoticeSession { var shown = false }
 
 @Composable
 fun AppRoot(container: AppContainer) {
-    // V18.3 : page d'accueil spiral (connexion Google ou invité), affichée à chaque ouverture tant qu'aucun compte
+    // V18.3 : page d'accueil Wind Glider (connexion Google ou invité), affichée à chaque ouverture tant qu'aucun compte
     // n'est connecté ; avec un compte, elle sert d'écran de lancement.
     var splashDone by rememberSaveable { mutableStateOf(false) }
     if (!splashDone) {
@@ -101,38 +109,48 @@ fun AppRoot(container: AppContainer) {
     val ack by container.prefs.acknowledgedDisclaimer.collectAsState(initial = -1)
     val notice by container.prefs.devNoticeSeen.collectAsState(initial = -1)
     val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
+    val tutorialDone by container.prefs.tutorialDone.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
     when {
-        ack == -1 || notice == -1 -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
-        // V19.1 : page « spiral est en développement », une seule fois, juste après la connexion
+        ack == -1 || notice == -1 || tutorialDone == null -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
+        // V19.1 : page « Wind Glider est en développement », une seule fois, juste après la connexion
         notice < DEV_NOTICE_VERSION -> DevNoticeScreen(
             lang = guideLang(savedLang),
             onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
             onContinue = { scope.launch { container.prefs.setDevNoticeSeen(DEV_NOTICE_VERSION) } },
         )
         ack < DISCLAIMER_VERSION -> Disclaimer { scope.launch { container.prefs.acknowledgeDisclaimer(DISCLAIMER_VERSION) } }
+        // V20 : tutoriel complet et obligatoire au premier lancement (ni « Passer », ni retour système)
+        tutorialDone == false -> TutorialScreen(
+            lang = guideLang(savedLang),
+            onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
+            onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
+            onClose = { scope.launch { container.prefs.setTutorialDone() } },
+            mandatory = true,
+        )
         else -> {
-            // V18.5 : menu d'accueil spiral à chaque ouverture ; le retour système y ramène depuis les onglets
+            // V18.5 : menu d'accueil Wind Glider à chaque ouverture ; le retour système y ramène depuis les onglets
             var section by rememberSaveable { mutableStateOf<Tab?>(null) }
             val current = section
             if (current == null) {
                 val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
                 HomeMenuScreen(
                     prevol = prevolVm,
+                    lang = guideLang(savedLang),
                     onPrevol = { section = Tab.PREVOL },
                     onPilotage = { section = Tab.PILOTAGE },
                     onMyFlights = { section = Tab.MES_VOLS },
                     onTutorial = { section = Tab.TUTO },
                 )
             } else {
-                MainScaffold(container, startTab = current, onHome = { section = null })
+                MainScaffold(container, startTab = current, onHome = { section = null }, startTour = current == Tab.TUTO)
             }
         }
     }
 }
 
 @Composable
-private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> Unit) {
+private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> Unit, startTour: Boolean = false) {
     val c = Gc.colors
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -242,15 +260,30 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         return
     }
 
-    // V19.1b : tutoriel en plein écran (visite guidée sur les vraies pages), barre d'onglets masquée
-    if (tab == Tab.TUTO) {
-        val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
+    // V20 : onglet Tuto = page illustrée (tutoriel, avis) ; tutoriel et avis en plein écran, barre d'onglets masquée.
+    // Ouvert depuis la case « Tutoriel » du menu : le tutoriel démarre directement et la fermeture ramène au menu.
+    val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
+    val lang = guideLang(savedLang)
+    val setLang: (String) -> Unit = { l -> scope.launch { container.prefs.setGuideLanguage(l) } }
+    var tour by rememberSaveable { mutableStateOf(startTour) }
+    var feedbackOnly by rememberSaveable { mutableStateOf(false) }
+    if (tab == Tab.TUTO && tour) {
         TutorialScreen(
-            lang = guideLang(savedLang),
-            onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
-            onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
-            onClose = { val back = tutorialReturn; if (back == null) onHome() else tab = back },
+            lang = lang,
+            onLanguage = setLang,
+            onSendFeedback = { text, l -> container.cloud.sendFeedback(text, l) },
+            onClose = { tour = false; if (startTour && tutorialReturn == null) onHome() },
         )
+        return
+    }
+    if (tab == Tab.TUTO && feedbackOnly) {
+        FeedbackScreen(lang, setLang, onSend = { text, l -> container.cloud.sendFeedback(text, l) }, onDone = { feedbackOnly = false })
+        return
+    }
+    // V20 : « Avant de voler » (téléphone fixé, accord de l'instructeur), une fois par lancement
+    var pilotNotice by remember { mutableStateOf(!PilotNoticeSession.shown) }
+    if (tab == Tab.PILOTAGE && pilotNotice) {
+        PilotNoticeScreen(lang, setLang) { PilotNoticeSession.shown = true; pilotNotice = false }
         return
     }
 
@@ -260,7 +293,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
-                Tab.TUTO -> Unit // plein écran, voir plus haut
+                Tab.TUTO -> TutoHomeScreen(lang, setLang, onTutorial = { tour = true }, onFeedback = { feedbackOnly = true })
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
@@ -308,7 +341,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     visibleTabs.forEach { t ->
-                        TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { if (t == Tab.TUTO) tutorialReturn = tab; tab = t }
+                        TabButton(t.label(lang), icon(t), t == tab, Modifier.weight(1f)) { if (t == Tab.TUTO) tutorialReturn = tab; tab = t }
                     }
                 }
             }
@@ -369,7 +402,7 @@ private fun LocationDisclosure(onContinue: () -> Unit, onLater: () -> Unit) {
             title = { Text("Position GPS", style = Gc.type.headline) },
             text = {
                 Text(
-                    "spiral utilise la position de votre téléphone pour trouver le terrain le plus proche et, en vol, pour " +
+                    "Wind Glider utilise la position de votre téléphone pour trouver le terrain le plus proche et, en vol, pour " +
                         "calculer vario, marge de sécurité, distance au terrain et enregistrer votre trace IGC.\n\n" +
                         "Pendant un vol, la position continue d'être lue écran éteint ; une notification permanente " +
                         "l'indique et le service s'arrête quand vous quittez Pilotage (hors vol enregistré).\n\n" +
@@ -394,34 +427,46 @@ private fun LocationDisclosure(onContinue: () -> Unit, onLater: () -> Unit) {
     }
 }
 
+/** V20 — avertissement de sécurité (premier lancement) sur la couverture illustrée, texte sur carte claire. */
 @Composable
 private fun Disclaimer(onAccept: () -> Unit) {
-    val c = Gc.colors
-    Column(
-        Modifier.fillMaxSize().background(c.background).statusBarsPadding().navigationBarsPadding().padding(24.dp),
-        verticalArrangement = Arrangement.Bottom,
-    ) {
-        Text("spiral", style = Gc.type.giant.copy(color = c.ok, fontSize = 64.sp, lineHeight = 64.sp, fontWeight = FontWeight.SemiBold))
-        Spacer(Modifier.height(16.dp))
-        Text(
-            "Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. " +
-                "Instruments de bord et veille extérieure priment. Le pilote reste seul responsable.",
-            style = Gc.type.body.copy(lineHeight = 21.sp),
-        )
-        Spacer(Modifier.height(10.dp))
-        Text(
-            "Données : Météo-France via precog, OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
-            style = Gc.type.bodySmall,
-        )
-        Spacer(Modifier.height(8.dp))
-        GcLegalLinks(color = c.ok, withDeletion = false)
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = onAccept,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = c.ok, contentColor = c.onAccent),
-        ) { Text("J'ai compris", style = Gc.type.body.copy(color = c.onAccent, fontWeight = FontWeight.Bold)) }
+    GlidyAdaptiveTheme(light = true) {
+        val c = Gc.colors
+        Box(Modifier.fillMaxSize()) {
+            ScenicBackground(R.drawable.wg_cover, 941, 1954, c.brandSky)
+            Column(
+                Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().padding(horizontal = 20.dp),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                Column(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(androidx.compose.ui.graphics.Color.White.copy(alpha = 0.94f))
+                        .padding(horizontal = 22.dp, vertical = 20.dp),
+                ) {
+                    Text(APP_NAME_CAPS, style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 22.sp, letterSpacing = 3.sp, color = c.brandInk))
+                    Spacer(Modifier.height(12.dp))
+                    Text(
+                        "Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. " +
+                            "Instruments de bord et veille extérieure priment. Le pilote reste seul responsable.",
+                        style = Gc.type.body.copy(lineHeight = 22.sp, color = c.brandInk),
+                    )
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        "Données : Météo-France via precog, OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
+                        style = Gc.type.footnote.copy(color = c.brandInk.copy(alpha = 0.7f)),
+                    )
+                    Spacer(Modifier.height(6.dp))
+                    GcLegalLinks(color = c.route, withDeletion = false)
+                    Spacer(Modifier.height(12.dp))
+                    Button(
+                        onClick = onAccept,
+                        modifier = Modifier.fillMaxWidth().height(52.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = c.brandInk, contentColor = androidx.compose.ui.graphics.Color.White),
+                    ) { Text("J'ai compris", style = Gc.type.headline.copy(color = androidx.compose.ui.graphics.Color.White)) }
+                }
+                Spacer(Modifier.height(20.dp))
+            }
+        }
     }
 }
 

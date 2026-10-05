@@ -79,6 +79,13 @@ data class GcColors(
     val altitude: Color = Color(0xFF5E5CE6),
     val heart: Color = Color(0xFFFF375F),
     val mint: Color = Color(0xFF34C759),
+    /*
+     * V20 « Wind Glider » — univers illustré (ciel peint, prairie, planeur blanc) : encre bleu nuit pour les titres et
+     * les chiffres des pages d'accueil, papier chaud en fond, ciel pour les fonds qui prolongent les illustrations.
+     */
+    val brandInk: Color = Color(0xFF1D3550),
+    val brandPaper: Color = Color(0xFFF6F3EE),
+    val brandSky: Color = Color(0xFF6C8FB7),
 )
 
 val GlidyColors = GcColors(
@@ -132,7 +139,7 @@ val GlidyColors = GcColors(
  * vert foncé lisible pour les chiffres et le texte d'accent. Contrastes texte ≥ 4,5:1 sur blanc.
  */
 val GlidyLightColors = GcColors(
-    background = Color(0xFFF2F2F7),
+    background = Color(0xFFF6F3EE), // V20 « Wind Glider » : papier chaud (était le gris Apple #F2F2F7)
     panel = Color(0xFFFFFFFF),
     control = Color(0xFFEEEEF0),
     controlOn = Color(0xFFE3E3E8),

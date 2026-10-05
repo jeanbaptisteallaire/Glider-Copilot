@@ -104,12 +104,12 @@ object Igc {
         "HFDTMGPSDATUM:WGS84",
         "HFRFWFIRMWAREVERSION:${clean(h.appVersion)}",
         "HFRHWHARDWAREVERSION:Android",
-        "HFFTYFRTYPE:SPIRAL,Android",
+        "HFFTYFRTYPE:WINDGLIDER,Android",
         "HFGPSRECEIVER:Android,telephone",
         "HFPRSPRESSALTSENSOR:Android,telephone",
         "HFALGALTGPS:${clean(h.gnssDatum)}",
         "HFALPALTPRESSURE:ISA",
-        "LXXXSPIRAL enregistreur non approuve : trace indicative",
+        "LXXXWINDGLIDER enregistreur non approuve : trace indicative",
     ) + listOfNotNull(h.comment?.let { "LXXX" + clean(it) })
 
     fun bRecord(f: IgcFix): String {

@@ -17,7 +17,7 @@ val Context.userPrefs: DataStore<Preferences> by preferencesDataStore(name = "us
 
 /** Conteneur de dépendances manuel : pas de framework d'injection tant que l'app reste petite. */
 class AppContainer(app: Application) {
-    private val userAgent = "Spiral/${BuildConfig.VERSION_NAME} (Android)"
+    private val userAgent = "WindGlider/${BuildConfig.VERSION_NAME} (Android)"
     val prefs: UserPreferences = LocalUserPreferences(app.userPrefs)
     val location = LocationSource(app)
     val clubs: ClubRepository = ClubRepository(app, prefs, location)

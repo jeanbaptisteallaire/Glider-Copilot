@@ -64,6 +64,11 @@ dismiss_anr() {
 pass_home() {
   P=$(tap_text "Ouvrir Prévol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "menu passé"; sleep 3; }
 }
+# V20 : page « Avant de voler » à la première ouverture de Pilotage de chaque lancement
+pass_pilot() {
+  sleep 3
+  P=$(tap_text "Compris"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "avant-vol passé"; sleep 3; }
+}
 pass_welcome() {
   for i in 1 2 3 4 5 6 7 8; do
     P=$(tap_text "Continuer en invité"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; echo "accueil passé (essai $i)"; sleep 4; pass_home; return 0; }
@@ -76,13 +81,35 @@ sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/00-accueil.png"
 pass_welcome
 sleep 4
-# V19.1 : page « spiral est en développement », une seule fois après l'accueil (langue du téléphone)
+# V19.1/V20 : page bêta « Wind Glider est en développement », une seule fois (langue du téléphone : anglais sur
+# l'émulateur) → le globe passe l'app en français pour toute la suite des captures
 timeout 20 adb exec-out screencap -p > "$OUT/01a-info-developpement.png"
+P=$(tap_text "Langue / Language"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
 P=$(tap_text "Continuer"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
 dismiss_anr
 P=$(tap_text "J'ai compris"); [ -n "$P" ] && timeout 10 adb shell input tap $P
-sleep 25
+sleep 4
+# V20 : tutoriel obligatoire du premier lancement (16 étapes + avis), sans « Passer »
+next_step() {
+  P=$(tap_text "Suivant"); [ -z "$P" ] && P=$(tap_text "Next")
+  [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
+}
+timeout 20 adb exec-out screencap -p > "$OUT/30-tuto-club.png"
+next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/31-tuto-appairage.png"
+next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/32-tuto-marge.png"
+next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/33-tuto-terrain.png"
+next_step; next_step; next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/34-tuto-replier.png"
+next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/35-tuto-3d.png"
+next_step
+timeout 20 adb exec-out screencap -p > "$OUT/36-tuto-avis.png"
+P=$(tap_text "Terminer"); [ -z "$P" ] && P=$(tap_text "Done"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/00b-menu.png"
 pass_home
 sleep 35
@@ -126,7 +153,7 @@ T0=$(date +%s)
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
 pass_welcome
 sleep 8
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P; pass_pilot
 # temps réel : décollage ~12 s, largage ~72 s, spirales jusqu'à ~170 s, atterrissage ~330 s
 while [ $(( $(date +%s) - T0 )) -lt 105 ]; do sleep 2; done
 timeout 20 adb exec-out screencap -p > "$OUT/08-pilotage-vol-rejeu.png"
@@ -164,7 +191,7 @@ adb shell am force-stop com.neutronstar.glidercopilot
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 pass_welcome
 sleep 10
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P; pass_pilot
 sleep 4
 # S7 : le menu du terrain de repli doit s'ouvrir au sol, avant tout calcul de sécurité.
 # Démarrage à part : ni la touche retour ni le menu resté ouvert ne doivent perturber la suite.
@@ -175,7 +202,7 @@ adb shell am force-stop com.neutronstar.glidercopilot
 adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 pass_welcome
 sleep 10
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P; pass_pilot
 sleep 4
 P=$(tap_text "Mode démo"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 50
@@ -198,7 +225,7 @@ sleep 2
 P=$(tap_text "F-CGXB"); [ -n "$P" ] && timeout 10 adb shell input tap $P
 sleep 30
 timeout 20 adb exec-out screencap -p > "$OUT/16-prevol-suivi-debug.png"
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P; pass_pilot
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/17-pilotage-suivi.png"
 # S7 : onglet Carte (aéronefs du sud de la France), pistes des terrains, fiche d'un aéronef
@@ -292,7 +319,7 @@ adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 pass_welcome
 sleep 12
 dismiss_anr
-P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P
+P=$(tap_text "Pilotage"); [ -n "$P" ] && timeout 10 adb shell input tap $P; pass_pilot
 sleep 10
 timeout 20 adb exec-out screencap -p > "$OUT/26-lite-pilotage-rec.png"
 P=$(tap_text "Enregistrer le vol"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 6; }
@@ -319,26 +346,15 @@ P=$(tap_text "Menu du profil"); [ -n "$P" ] && { timeout 10 adb shell input tap 
 P=$(tap_text "Voir le compte"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 P=$(tap_text "Se connecter"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/29-lite-compte-information.png"
-# V19.1b — tutoriel en visite guidée : cadre lumineux sur les vraies pages, « Suivant » (Next en anglais)
-next_step() {
-  P=$(tap_text "Next"); [ -z "$P" ] && P=$(tap_text "Suivant")
-  [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
-}
+# V20 — onglet Tuto : page illustrée (Tutoriel, Donner mon avis), avis direct, puis menu d'accueil
 P=$(tap_text "Tuto"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 4; }
-timeout 20 adb exec-out screencap -p > "$OUT/30-tuto-club.png"
-next_step; next_step
-timeout 20 adb exec-out screencap -p > "$OUT/31-tuto-appairage.png"
-next_step; next_step
-timeout 20 adb exec-out screencap -p > "$OUT/32-tuto-marge.png"
-next_step; next_step; next_step
-timeout 20 adb exec-out screencap -p > "$OUT/33-tuto-terrain.png"
-next_step; next_step; next_step; next_step; next_step
-timeout 20 adb exec-out screencap -p > "$OUT/34-tuto-replier.png"
-next_step; next_step; next_step
-timeout 20 adb exec-out screencap -p > "$OUT/35-tuto-3d.png"
-next_step
-timeout 20 adb exec-out screencap -p > "$OUT/36-tuto-avis.png"
-P=$(tap_text "Done"); [ -z "$P" ] && P=$(tap_text "Terminer"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
-timeout 20 adb exec-out screencap -p > "$OUT/37-apres-tuto.png"
+timeout 20 adb exec-out screencap -p > "$OUT/37-tuto-accueil.png"
+P=$(tap_text "Donner mon avis"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+timeout 20 adb exec-out screencap -p > "$OUT/38-avis-direct.png"
+adb shell input keyevent 4 || true
+sleep 2
+adb shell input keyevent 4 || true
+sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/39-menu.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

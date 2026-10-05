@@ -93,7 +93,7 @@ class FlightService : Service() {
         val stop = PendingIntent.getService(this, 1, Intent(this, FlightService::class.java).setAction(ACTION_STOP), PendingIntent.FLAG_IMMUTABLE)
         return NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_stat_glidy)
-            .setContentTitle("spiral")
+            .setContentTitle("Wind Glider")
             .setContentText(text)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

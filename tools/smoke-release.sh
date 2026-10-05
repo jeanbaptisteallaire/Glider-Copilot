@@ -41,16 +41,20 @@ for i in 1 2 3 4 5 6 7 8; do
   sleep 4
 done
 sleep 3
-tap "Continuer"   # V19.1 : page « spiral est en développement » (une fois)
+tap "Langue / Language"; sleep 2   # V20 : la page bêta passe l'app en français (émulateur en anglais)
+tap "Continuer"   # V19.1 : page « Wind Glider est en développement » (une fois)
 sleep 3
 tap "J'ai compris"
+sleep 3
+for k in $(seq 1 16); do tap "Suivant"; sleep 1; done   # V20 : tutoriel obligatoire du premier lancement
+tap "Terminer"
 sleep 4
 tap "Ouvrir Prévol"   # V18.5 : menu d'accueil → onglet Prévol
 sleep 20
 timeout 20 adb exec-out screencap -p > "$OUT/90-release-prevol.png"
 tap "Check-lists"; sleep 6
 timeout 20 adb exec-out screencap -p > "$OUT/91-release-checklists.png"
-tap "Pilotage"; sleep 25
+tap "Pilotage"; sleep 4; tap "Compris"; sleep 21   # V20 : « Avant de voler »
 timeout 20 adb exec-out screencap -p > "$OUT/92-release-pilotage.png"
 tap "Carte"; sleep 15
 timeout 20 adb exec-out screencap -p > "$OUT/93-release-carte.png"
@@ -60,7 +64,7 @@ tap "Feed"; sleep 6
 timeout 20 adb exec-out screencap -p > "$OUT/95-release-feed.png"
 tap "Tuto"; sleep 6   # V19.1 : tutoriel (onglet le plus à gauche)
 timeout 20 adb exec-out screencap -p > "$OUT/96-release-tuto.png"
-adb shell input keyevent 4; sleep 3   # retour : quitte le tutoriel plein écran
+adb shell input keyevent 4; sleep 3   # retour : menu d'accueil
 tap "Prévol"; sleep 8
 timeout 30 adb logcat -d > "$OUT/release-logcat.txt" || true
 ALIVE=$(adb shell pidof $PKG | tr -d '\r')

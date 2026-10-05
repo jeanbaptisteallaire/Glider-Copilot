@@ -74,6 +74,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcIcons
@@ -82,7 +83,7 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 
 /*
- * V19.1 — page « spiral est en développement » (une fois, après la connexion) et tutoriel illustré (FR/EN).
+ * V19.1 — page « Wind Glider est en développement » (une fois, après la connexion) et tutoriel illustré (FR/EN).
  * Textes au plus court, une capture d'écran réelle par étape (recadrages des captures CI, drawable-nodpi/tuto_*).
  * Le tutoriel se termine par un champ de commentaire libre enregistré dans Supabase (table feedback, écriture seule).
  */
@@ -116,49 +117,133 @@ private fun LanguageButton(lang: String, dark: Boolean = false, onToggle: () -> 
 // Page « en développement »
 // ------------------------------------------------------------------------------------------------
 
+/** V20 — page « bêta » sur l'illustration du plateau (deux pilotes, planeur dans le ciel) : texte sur carte claire. */
 @Composable
 internal fun DevNoticeScreen(lang: String, onLanguage: (String) -> Unit, onContinue: () -> Unit) {
     GlidyAdaptiveTheme(light = true) {
-        val c = Gc.colors
         val fr = lang == "fr"
-        Column(
-            Modifier.fillMaxSize().background(c.panel).statusBarsPadding().navigationBarsPadding()
-                .padding(horizontal = 24.dp).verticalScroll(rememberScrollState()),
-        ) {
-            Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
-                LanguageButton(lang) { onLanguage(if (fr) "en" else "fr") }
-            }
-            Spacer(Modifier.height(56.dp))
-            Image(painterResource(R.drawable.spiral_logo), contentDescription = null, modifier = Modifier.height(56.dp))
-            Spacer(Modifier.height(28.dp))
-            Text(
-                if (fr) "spiral est en cours de développement" else "spiral is still in development",
-                style = Gc.type.largeTitle,
-            )
-            Spacer(Modifier.height(16.dp))
-            Text(
-                if (fr) "Nous aimerions avoir vos retours sur les fonctions actuelles, et sur celles que vous aimeriez avoir."
-                else "We'd love your feedback on the current features, and on the ones you would like to have.",
-                style = Gc.type.body.copy(color = c.ink),
-            )
-            Spacer(Modifier.height(12.dp))
-            Text(
-                if (fr) "Dites-le-nous dans les commentaires du Play Store, ou en bas du tutoriel."
-                else "Tell us in the Play Store reviews, or at the bottom of the tutorial.",
-                style = Gc.type.body.copy(color = c.dim),
-            )
-            Spacer(Modifier.height(40.dp))
-            Box(
-                Modifier.fillMaxWidth().height(52.dp).clip(RoundedCornerShape(14.dp)).background(c.accentFill)
-                    .clickable(role = Role.Button, onClick = onContinue)
-                    .semantics { contentDescription = "Continuer" }
-                    .testTag("dev-notice-continue"),
-                contentAlignment = Alignment.Center,
+        Box(Modifier.fillMaxSize()) {
+            ScenicBackground(R.drawable.wg_beta_bg, 941, 1672, Color(0xFF69A8DE))
+            Column(
+                Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().padding(horizontal = 20.dp),
             ) {
-                Text(if (fr) "Continuer" else "Continue", style = Gc.type.headline.copy(color = c.onAccentFill))
+                Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
+                    LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }
+                }
+                Spacer(Modifier.height(20.dp))
+                Column(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(Color.White.copy(alpha = 0.9f))
+                        .padding(horizontal = 22.dp, vertical = 22.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Text("BETA", style = Gc.type.footnote.copy(color = Color(0xFF3B7FC4), fontWeight = FontWeight.SemiBold, letterSpacing = 2.sp))
+                    Text(
+                        if (fr) "Wind Glider est en cours de développement" else "Wind Glider is still in development",
+                        style = Gc.type.title1.copy(color = WG_INK),
+                    )
+                    Text(
+                        if (fr) "Nous aimerions avoir vos retours sur les fonctions actuelles, et sur celles que vous aimeriez avoir."
+                        else "We'd love your feedback on the current features, and on the ones you would like to have.",
+                        style = Gc.type.body.copy(color = WG_INK),
+                    )
+                    Text(
+                        if (fr) "Dites-le-nous dans les commentaires du Play Store, ou depuis l'onglet Tuto."
+                        else "Tell us in the Play Store reviews, or from the Tuto tab.",
+                        style = Gc.type.subhead.copy(color = WG_INK.copy(alpha = 0.7f)),
+                    )
+                }
+                Spacer(Modifier.weight(1f))
+                WgButton(if (fr) "Continuer" else "Continue", onContinue, Modifier.fillMaxWidth(), tag = "dev-notice-continue")
+                Spacer(Modifier.height(28.dp))
             }
-            Spacer(Modifier.height(24.dp))
         }
+    }
+}
+
+/** V20 — onglet Tuto : illustration plein écran, deux boutons (tutoriel, avis). */
+@Composable
+internal fun TutoHomeScreen(lang: String, onLanguage: (String) -> Unit, onTutorial: () -> Unit, onFeedback: () -> Unit) {
+    GlidyAdaptiveTheme(light = true) {
+        val fr = lang == "fr"
+        Box(Modifier.fillMaxSize().testTag("tuto-home")) {
+            ScenicBackground(R.drawable.wg_tuto_bg, 941, 1672, Color(0xFF88BBF5))
+            Column(Modifier.fillMaxSize().padding(horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
+                    LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }
+                }
+                Spacer(Modifier.height(28.dp))
+                Text(if (fr) "AIDE\n& AVIS" else "HELP\n& FEEDBACK", style = brandTitleStyle(44.sp))
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    if (fr) "Découvrez l'app pas à pas, ou dites-nous ce que vous en pensez."
+                    else "Discover the app step by step, or tell us what you think.",
+                    style = Gc.type.subhead.copy(color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center, shadow = androidx.compose.ui.graphics.Shadow(Color(0x55000000), blurRadius = 8f)),
+                    modifier = Modifier.fillMaxWidth(0.85f),
+                )
+                Spacer(Modifier.weight(1f))
+                WgButton(if (fr) "Tutoriel" else "Tutorial", onTutorial, Modifier.fillMaxWidth(0.78f), tag = "tuto-start")
+                Spacer(Modifier.height(16.dp))
+                WgButton(if (fr) "Donner mon avis" else "Give feedback", onFeedback, Modifier.fillMaxWidth(0.78f), tag = "tuto-feedback")
+                Spacer(Modifier.height(36.dp))
+            }
+        }
+    }
+}
+
+/** V20 — avant Pilotage (une fois par lancement) : fixer son téléphone, voler avec l'accord de l'instructeur. */
+@Composable
+internal fun PilotNoticeScreen(lang: String, onLanguage: (String) -> Unit, onOk: () -> Unit) {
+    GlidyAdaptiveTheme(light = true) {
+        val fr = lang == "fr"
+        Box(Modifier.fillMaxSize().testTag("pilot-notice")) {
+            ScenicBackground(R.drawable.wg_cockpit, 1081, 1455, Color(0xFF579EE4))
+            Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
+                Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
+                    LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }
+                }
+                Spacer(Modifier.weight(1f))
+                Column(
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(Color.White.copy(alpha = 0.93f))
+                        .padding(horizontal = 22.dp, vertical = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Text(if (fr) "Avant de voler" else "Before you fly", style = Gc.type.title1.copy(color = WG_INK))
+                    NoticeLine(if (fr) "Fixez solidement votre téléphone dans le cockpit, sans gêner les commandes ni la vue dehors."
+                        else "Mount your phone securely in the cockpit, clear of the controls and of your view outside.")
+                    NoticeLine(if (fr) "Utilisez Wind Glider avec l'accord de votre instructeur."
+                        else "Use Wind Glider with your instructor's approval.")
+                    NoticeLine(if (fr) "Aide secondaire : instruments de bord et veille extérieure d'abord."
+                        else "A secondary aid: cockpit instruments and lookout come first.")
+                    Spacer(Modifier.height(4.dp))
+                    Box(
+                        Modifier.fillMaxWidth().height(52.dp).clip(RoundedCornerShape(14.dp)).background(WG_INK)
+                            .clickable(role = Role.Button, onClick = onOk)
+                            .semantics { contentDescription = "Compris" }
+                            .testTag("pilot-notice-ok"),
+                        contentAlignment = Alignment.Center,
+                    ) { Text(if (fr) "Compris" else "Got it", style = Gc.type.headline.copy(color = Color.White)) }
+                }
+                Spacer(Modifier.height(24.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun NoticeLine(text: String) {
+    Row(verticalAlignment = Alignment.Top) {
+        Box(Modifier.padding(top = 8.dp).size(6.dp).clip(CircleShape).background(Color(0xFF3B7FC4)))
+        Spacer(Modifier.width(10.dp))
+        Text(text, style = Gc.type.body.copy(color = WG_INK))
+    }
+}
+
+/** V20 — avis directement depuis l'onglet Tuto (sans passer par tout le tutoriel). */
+@Composable
+internal fun FeedbackScreen(lang: String, onLanguage: (String) -> Unit, onSend: suspend (String, String) -> Boolean, onDone: () -> Unit) {
+    GlidyAdaptiveTheme(light = true) {
+        BackHandler(onBack = onDone)
+        FeedbackPage(lang == "fr", lang, onLanguage, onSend, onBack = onDone, onDone = onDone, backLabelFr = "Retour", backLabelEn = "Back")
     }
 }
 
@@ -245,12 +330,14 @@ internal fun TutorialScreen(
     onLanguage: (String) -> Unit,
     onSendFeedback: suspend (String, String) -> Boolean,
     onClose: () -> Unit,
+    /** V20 : tutoriel obligatoire du premier lancement — ni « Passer », ni sortie par le retour système. */
+    mandatory: Boolean = false,
 ) {
     GlidyAdaptiveTheme(light = true) {
         val fr = lang == "fr"
         val flat = remember { STEPS.flatMap { (part, steps) -> steps.map { part to it } } }
         var index by rememberSaveable { mutableIntStateOf(0) }
-        BackHandler { if (index > 0) index-- else onClose() }
+        BackHandler { if (index > 0) index-- else if (!mandatory) onClose() }
         if (index >= flat.size) {
             FeedbackPage(fr, lang, onLanguage, onSendFeedback, onBack = { index = flat.size - 1 }, onDone = onClose)
         } else {
@@ -260,7 +347,7 @@ internal fun TutorialScreen(
                 position = index + 1, total = flat.size,
                 onPrevious = { if (index > 0) index-- },
                 onNext = { index++ },
-                onSkip = onClose,
+                onSkip = if (mandatory) null else onClose,
             )
         }
     }
@@ -269,7 +356,7 @@ internal fun TutorialScreen(
 @Composable
 private fun SpotlightPage(
     step: Step, part: Part, fr: Boolean, lang: String, onLanguage: (String) -> Unit,
-    position: Int, total: Int, onPrevious: () -> Unit, onNext: () -> Unit, onSkip: () -> Unit,
+    position: Int, total: Int, onPrevious: () -> Unit, onNext: () -> Unit, onSkip: (() -> Unit)?,
 ) {
     val spot = step.spot
     val density = LocalDensity.current
@@ -373,12 +460,14 @@ private fun SpotlightPage(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text(
-                if (fr) "Passer" else "Skip",
-                style = Gc.type.subhead.copy(color = Color.White.copy(alpha = 0.8f)),
-                modifier = Modifier.clip(CircleShape).clickable(role = Role.Button, onClick = onSkip)
-                    .padding(horizontal = 10.dp, vertical = 10.dp).testTag("tour-skip"),
-            )
+            if (onSkip != null) {
+                Text(
+                    if (fr) "Passer" else "Skip",
+                    style = Gc.type.subhead.copy(color = Color.White.copy(alpha = 0.8f)),
+                    modifier = Modifier.clip(CircleShape).clickable(role = Role.Button, onClick = onSkip)
+                        .padding(horizontal = 10.dp, vertical = 10.dp).testTag("tour-skip"),
+                )
+            }
             LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }
             Spacer(Modifier.weight(1f))
             if (position > 1) {
@@ -408,7 +497,7 @@ private fun TourButton(text: String, filled: Boolean, onClick: () -> Unit, tag: 
 @Composable
 private fun FeedbackPage(
     fr: Boolean, lang: String, onLanguage: (String) -> Unit, onSend: suspend (String, String) -> Boolean,
-    onBack: () -> Unit, onDone: () -> Unit,
+    onBack: () -> Unit, onDone: () -> Unit, backLabelFr: String = "Revoir", backLabelEn: String = "Back",
 ) {
     val c = Gc.colors
     Column(
@@ -422,7 +511,7 @@ private fun FeedbackPage(
         }
         FeedbackCard(fr, onSend)
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            GcButton(if (fr) "Revoir" else "Back", onClick = onBack, modifier = Modifier.weight(1f), fontSize = 15f)
+            GcButton(if (fr) backLabelFr else backLabelEn, onClick = onBack, modifier = Modifier.weight(1f), fontSize = 15f)
             GcButton(if (fr) "Terminer" else "Done", onClick = onDone, primary = true, modifier = Modifier.weight(1f).testTag("tour-done"), fontSize = 15f)
         }
         Spacer(Modifier.height(12.dp))

@@ -1,4 +1,22 @@
-# HANDOFF — état du projet (spiral, ex-GLIDY, ex-Glider Copilot)
+# HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
+
+## Session 20 — « Wind Glider » : nouveau nom, nouvel univers illustré, V2.0.0-lite (06/10/2026)
+- **Nom : Wind Glider** (remplace spiral partout où c'est visible : nom de l'app, pages, notification, IGC
+  `HFFTYFRTYPE:WINDGLIDER`, pages légales). `applicationId` inchangé.
+- **Univers graphique** (illustrations de JB, « Planneur APP/Session 19.1b/New assets ») : couverture prairie +
+  planeur (`wg_cover`), titre **WIND GLIDER** en Inter capitales espacées, boutons cartes blanches à texte bleu nuit
+  (`brandInk` #1D3550), papier chaud (`brandPaper` #F6F3EE, aussi fond du thème clair), ciel prolongé sur les écrans
+  hauts (`ScenicBackground`, WgArt.kt). Nouvelle icône (logo illustré, adaptative, monochrome = planeur).
+- Menu d'accueil d'après la maquette : Prévol & météo (vraie journée), Pilotage (cockpit dessiné), Mes vols
+  (bandeau terrain) ; titres FR/EN = noms de la barre d'onglets, qui suit aussi la langue choisie.
+- Premier lancement : couverture → page bêta (illustration `wg_beta_bg`) → avertissement (sur la couverture) →
+  **tutoriel complet obligatoire** (sans « Passer », `tutorialDone`) → menu.
+- Onglet **Tuto** : page illustrée (`wg_tuto_bg`) avec « Tutoriel » et « Donner mon avis » (avis direct).
+- **Avant Pilotage** : page « Avant de voler » (cockpit dessiné) une fois par lancement : téléphone fixé,
+  accord de l'instructeur, aide secondaire.
+- **Mes vols** : bandeau illustré en haut, titre/thème/menu posés dessus, avatar illustré du pilote à cheval sur le bord.
+- CI : le globe de la page bêta passe l'émulateur (anglais) en français ; captures du tutoriel pendant le parcours
+  obligatoire, `37-tuto-accueil`, `38-avis-direct`, `39-menu` ; `pass_pilot` après chaque ouverture de Pilotage.
 
 ## Session 19.1b — tutoriel en visite guidée (cadre lumineux sur les vraies pages), V1.9.2-lite (06/10/2026)
 - Refonte de la forme demandée par JB (contenu inchangé) : `TutorialScreen` plein écran, captures pleine page

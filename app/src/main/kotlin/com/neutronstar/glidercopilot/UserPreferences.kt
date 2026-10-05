@@ -31,10 +31,13 @@ interface UserPreferences {
     val followRegistration: Flow<String?>
     /** Mode clair (V7.2) : s'applique à Prévol, Check-lists et Carte. Pilotage reste noir, toujours. */
     val lightMode: Flow<Boolean>
-    /** V19.1 — page « spiral est en développement » vue (version de la page, 0 = jamais). */
+    /** V19.1 — page « Wind Glider est en développement » vue (version de la page, 0 = jamais). */
     val devNoticeSeen: Flow<Int>
     /** V19.1 — langue choisie pour le tutoriel et la page d'info (« fr », « en ») ; null = langue du téléphone. */
     val guideLanguage: Flow<String?>
+    /** V20 — tutoriel obligatoire du premier lancement terminé. */
+    val tutorialDone: Flow<Boolean>
+    suspend fun setTutorialDone()
     suspend fun setDevNoticeSeen(version: Int)
     suspend fun setGuideLanguage(lang: String)
     suspend fun acknowledgeDisclaimer(version: Int)
@@ -74,6 +77,7 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kLightMode = booleanPreferencesKey("light_mode_social")
     private val kDevNotice = intPreferencesKey("dev_notice_seen")
     private val kGuideLang = stringPreferencesKey("guide_language")
+    private val kTutorialDone = booleanPreferencesKey("tutorial_done")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
@@ -96,6 +100,8 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val guideLanguage: Flow<String?> = store.data.map { it[kGuideLang] }
     override suspend fun setDevNoticeSeen(version: Int) { store.edit { it[kDevNotice] = version } }
     override suspend fun setGuideLanguage(lang: String) { store.edit { it[kGuideLang] = lang } }
+    override val tutorialDone: Flow<Boolean> = store.data.map { it[kTutorialDone] ?: false }
+    override suspend fun setTutorialDone() { store.edit { it[kTutorialDone] = true } }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }

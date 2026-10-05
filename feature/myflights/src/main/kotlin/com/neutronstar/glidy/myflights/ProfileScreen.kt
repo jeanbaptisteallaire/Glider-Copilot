@@ -1,5 +1,11 @@
 package com.neutronstar.glidy.myflights
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.draw.shadow
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -179,25 +185,16 @@ private fun ProfileHeader(
     val carnetSeconds = real.sumOf { it.durationSeconds }
     val totalMinutes = totalFlightMinutes(profile, carnetSeconds)
     var menu by remember { mutableStateOf(false) }
-    Column(Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 6.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        // ligne du haut : pseudo (ou titre) + interrupteur de thème + menu du profil
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                if (profile.username.isNotBlank()) "@${profile.username}" else "Mon profil",
-                // V18.1 : Large Title d'Apple sur les pages blanches
-                style = if (social) Gc.type.largeTitle else Gc.type.title.copy(fontSize = 22.sp),
-                modifier = Modifier.weight(1f),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            GcThemeToggleButton(Modifier.padding(start = 8.dp))
+    Column(Modifier.fillMaxWidth().padding(top = if (social) 6.dp else 10.dp, bottom = 6.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        val profileMenu: @Composable (onImage: Boolean) -> Unit = { onImage ->
             Box {
                 Box(
-                    Modifier.padding(start = 8.dp).size(34.dp).clip(CircleShape).background(c.control)
+                    Modifier.padding(start = 8.dp).size(34.dp).clip(CircleShape)
+                        .background(if (onImage) Color.White.copy(alpha = 0.85f) else c.control)
                         .clickable(role = Role.Button, onClickLabel = "Menu du profil") { menu = true }
                         .testTag("profile-menu"),
                     contentAlignment = Alignment.Center,
-                ) { Icon(GcIcons.More, contentDescription = "Menu du profil", tint = c.ink, modifier = Modifier.size(18.dp)) }
+                ) { Icon(GcIcons.More, contentDescription = "Menu du profil", tint = if (onImage) WgInk else c.ink, modifier = Modifier.size(18.dp)) }
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, containerColor = c.panel) {
                     MenuEntry("Voir le compte") { menu = false; onShowAccount() }
                     MenuEntry("Modifier nom et pseudo") { menu = false; onEditIdentity() }
@@ -206,14 +203,49 @@ private fun ProfileHeader(
                 }
             }
         }
+        val title = if (profile.username.isNotBlank()) "@${profile.username}" else "Mon profil"
+        if (social) {
+            // V20 « Wind Glider » : bandeau illustré en haut de Mes vols ; titre, thème et menu posés sur le ciel,
+            // avatar illustré du pilote à cheval sur le bord bas du bandeau
+            Box(Modifier.fillMaxWidth().height(232.dp)) {
+                Box(Modifier.fillMaxWidth().height(196.dp).clip(RoundedCornerShape(22.dp))) {
+                    Image(
+                        painterResource(R.drawable.wg_flights_header), contentDescription = null,
+                        contentScale = ContentScale.Crop, alignment = Alignment.Center, modifier = Modifier.fillMaxSize(),
+                    )
+                    Box(Modifier.fillMaxWidth().height(90.dp).background(Brush.verticalGradient(listOf(Color(0x55102A44), Color.Transparent))))
+                    Row(Modifier.fillMaxWidth().padding(start = 18.dp, end = 10.dp, top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            title,
+                            style = Gc.type.title1.copy(color = Color.White, shadow = Shadow(Color(0x66000000), blurRadius = 10f)),
+                            modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis,
+                        )
+                        GcThemeToggleButton(Modifier.padding(start = 8.dp))
+                        profileMenu(true)
+                    }
+                }
+                Avatar(profile.initials, Modifier.align(Alignment.BottomStart).padding(start = 16.dp).size(76.dp))
+            }
+        } else {
+            // ligne du haut : pseudo (ou titre) + interrupteur de thème + menu du profil
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    title,
+                    style = Gc.type.title.copy(fontSize = 22.sp),
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                GcThemeToggleButton(Modifier.padding(start = 8.dp))
+                profileMenu(false)
+            }
+        }
         val distanceKm = formatKm(real.sumOf { it.distanceMeters ?: 0L })
         if (social) {
             // V18.1 (Apple Santé) : avatar + identité, puis une carte blanche de chiffres clés teintés par catégorie
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Avatar(profile.initials, Modifier.size(64.dp))
-                Spacer(Modifier.width(14.dp))
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(profile.displayName.ifBlank { "Pilote spiral" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Column(Modifier.weight(1f).padding(start = 4.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text(profile.displayName.ifBlank { "Pilote Wind Glider" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     if (profile.club.isNotBlank()) Text(profile.club, style = Gc.type.subhead.copy(color = c.dim), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     profile.experience?.let { GcPill(it.label, c.route, Modifier.padding(top = 4.dp)) }
                 }
@@ -226,7 +258,7 @@ private fun ProfileHeader(
                     ProfileStat("$distanceKm km", "Distance", c.sun, Modifier.weight(1f))
                 }
                 if (profile.minutesBeforeApp > 0) {
-                    Text("Dont ${profile.minutesBeforeApp / 60} h avant spiral", style = Gc.type.footnote.copy(color = c.faint))
+                    Text("Dont ${profile.minutesBeforeApp / 60} h avant Wind Glider", style = Gc.type.footnote.copy(color = c.faint))
                 }
             }
         } else {
@@ -241,7 +273,7 @@ private fun ProfileHeader(
             // identité
             Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
-                    profile.displayName.ifBlank { "Pilote spiral" },
+                    profile.displayName.ifBlank { "Pilote Wind Glider" },
                     style = Gc.type.body.copy(fontWeight = FontWeight.Bold, fontSize = 16.sp),
                 )
                 if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.body.copy(fontSize = 14.sp))
@@ -250,7 +282,7 @@ private fun ProfileHeader(
                 profile.experience?.let { GcPill(it.label, c.ok, Modifier.padding(top = 4.dp)) }
                 if (profile.minutesBeforeApp > 0) {
                     Text(
-                        "Dont ${profile.minutesBeforeApp / 60} h avant spiral",
+                        "Dont ${profile.minutesBeforeApp / 60} h avant Wind Glider",
                         style = Gc.type.bodySmall.copy(color = c.faint, fontSize = 12.sp),
                     )
                 }
@@ -286,15 +318,16 @@ private fun MenuEntry(text: String, danger: Boolean = false, onClick: () -> Unit
     )
 }
 
+/** V20 — avatar illustré du pilote (casquette, veste), cerclé de blanc. */
 @Composable
-private fun Avatar(initials: String, modifier: Modifier) {
+private fun Avatar(@Suppress("UNUSED_PARAMETER") initials: String, modifier: Modifier) {
     val c = Gc.colors
-    Box(
-        modifier.clip(CircleShape).background(c.accentFill).border(2.dp, c.panel, CircleShape),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(initials, style = Gc.type.title.copy(fontSize = 26.sp, color = c.onAccentFill, letterSpacing = 0.sp))
-    }
+    Image(
+        painterResource(R.drawable.wg_avatar),
+        contentDescription = "Avatar du pilote",
+        contentScale = ContentScale.Crop,
+        modifier = modifier.shadow(6.dp, CircleShape).clip(CircleShape).background(c.panel).border(3.dp, Color.White, CircleShape),
+    )
 }
 
 @Composable
@@ -321,7 +354,7 @@ private fun EmptyGrid(onLoadDemo: (() -> Unit)?, onImport: () -> Unit) {
     GcCard(title = "Carnet vide", icon = GcIcons.MesVols, tint = c.sky) {
         Text("Votre carnet est vide", style = Gc.type.body.copy(fontWeight = FontWeight.SemiBold))
         Text(
-            "Vos vols spiral apparaissent ici après l'atterrissage. Vous pouvez aussi importer un fichier IGC.",
+            "Vos vols Wind Glider apparaissent ici après l'atterrissage. Vous pouvez aussi importer un fichier IGC.",
             style = if (Gc.social) Gc.type.subhead.copy(color = c.dim) else Gc.type.bodySmall,
         )
         if (onLoadDemo != null) {
@@ -464,7 +497,7 @@ internal fun ProfileEditScreen(
                     EditField(username, { username = Usernames.normalize(it).take(Usernames.MAX) }, "Pseudo", prefix = "@", tag = "field-username")
                     Text(
                         Usernames.problem(username)
-                            ?: "Unique sur spiral, réservé à l'activation du compte en ligne.",
+                            ?: "Unique sur Wind Glider, réservé à l'activation du compte en ligne.",
                         style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = if (Usernames.problem(username) != null) c.warn else c.faint),
                     )
                 }
@@ -493,7 +526,7 @@ internal fun ProfileEditScreen(
                 }
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        EditField(hours, { hours = it.filter(Char::isDigit).take(6) }, "Heures de vol avant spiral", keyboard = KeyboardType.Number, tag = "field-hours")
+                        EditField(hours, { hours = it.filter(Char::isDigit).take(6) }, "Heures de vol avant Wind Glider", keyboard = KeyboardType.Number, tag = "field-hours")
                         Text(
                             "Ajoutées au total d'heures du profil.",
                             style = Gc.type.bodySmall.copy(fontSize = 12.sp, color = c.faint),
@@ -615,3 +648,6 @@ private fun formatKm(meters: Long): String = when {
     meters >= 10_000_000 -> "%.0fk".format(Locale.FRANCE, meters / 1_000_000.0)
     else -> "%.0f".format(Locale.FRANCE, meters / 1000.0)
 }
+
+/** V20 — encre bleu nuit de l'univers « Wind Glider » (icônes posées sur les illustrations). */
+private val WgInk = Color(0xFF1D3550)

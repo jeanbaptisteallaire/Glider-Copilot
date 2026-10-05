@@ -201,8 +201,8 @@ class FlightEngine(
                 date = start.atZone(ZoneOffset.UTC).toLocalDate(),
                 gliderType = own?.aircraftModel.orEmpty(),
                 gliderId = own?.registration.orEmpty(),
-                appVersion = "SPIRAL ${BuildConfig.VERSION_NAME}",
-                comment = if (replay) "SPIRAL REJEU du vol de demonstration : capteurs simules" else null,
+                appVersion = "WINDGLIDER ${BuildConfig.VERSION_NAME}",
+                comment = if (replay) "WINDGLIDER REJEU du vol de demonstration : capteurs simules" else null,
             )
         },
     )
