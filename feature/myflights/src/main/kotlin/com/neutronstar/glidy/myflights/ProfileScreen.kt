@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.neutronstar.glidercopilot.designsystem.GcLegalLinks
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcButton
 import com.neutronstar.glidercopilot.designsystem.GcCard
@@ -157,6 +158,8 @@ internal fun ProfileScreen(
                 modifier = Modifier.padding(top = 6.dp),
             )
         }
+        // V19 — confidentialité, conditions et suppression du compte toujours accessibles (Google Play)
+        item(span = { GridItemSpan(maxLineSpan) }) { GcLegalLinks(Modifier.padding(top = 4.dp)) }
     }
 }
 

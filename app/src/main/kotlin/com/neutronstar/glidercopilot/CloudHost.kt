@@ -35,7 +35,7 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
     private val client = SupabaseClient(config, UrlConnectionTransport(), PrefsSessionStore(context.applicationContext))
     private val sync = FlightSyncService(client, flights.repository) { call -> withContext(Dispatchers.IO) { call() } }
 
-    private val _state = MutableStateFlow(AccountCardState(configured = config.isConfigured, email = client.session?.email, googleAvailable = GoogleSignIn.available))
+    private val _state = MutableStateFlow(AccountCardState(configured = config.isConfigured, email = client.session?.email, googleAvailable = GoogleSignIn.available, emailAvailable = BuildConfig.EMAIL_LOGIN || !GoogleSignIn.available))
     val state: StateFlow<AccountCardState> = _state.asStateFlow()
 
     /** Incrémenté quand le carnet local a changé (vols restaurés) : l'écran Mes vols se relit. */

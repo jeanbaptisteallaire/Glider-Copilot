@@ -14,4 +14,5 @@
 - OGN (à venir) : ODbL, respect des choix DDB, pas de redistribution > 24 h.
 - Modules JVM purs (`core:domain`, `data:precog`) : sans dépendance tierce, testables hors ligne.
 - Secrets : jamais dans le dépôt (dépôt public). Clé openAIP = secret GitHub `OPENAIP_KEY`.
+- V19 : textes légaux dans `site/` (GitHub Pages, `pages.yml`), adresses dans `GcLegal` ; conformité Play : `docs/play-store/CONFORMITE-GOOGLE-PLAY.md`. Toute nouvelle donnée collectée = mettre à jour la politique et le formulaire Sécurité des données.
 - CI : `.github/workflows/android.yml` publie journal, résultats de tests, APK et captures sur la branche `ci-data`.

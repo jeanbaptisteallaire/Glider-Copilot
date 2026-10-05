@@ -19,7 +19,7 @@ android {
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
         // S18 Lite (lancement Play Store rapide) : Prévol (météo + cartes), Pilotage, Mes vols. Édition complète :
         // ./gradlew -Pglidy.edition=full …  (Feed, Check-lists, Carte, planeur FLARM/OGN dans Prévol).
-        versionName = if (lite) "1.7.0-lite" else "0.13.2"
+        versionName = if (lite) "1.9.0-lite" else "0.14.0"
         buildConfigField("boolean", "LITE", lite.toString())
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
@@ -32,6 +32,10 @@ android {
         // voir docs/supabase/SETUP.md). Vide = bouton Google masqué, connexion par code e-mail seulement.
         buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${System.getenv("GOOGLE_WEB_CLIENT_ID").orEmpty().trim()}\"")
         buildConfigField("String", "PRECOG_API_KEY", "\"${System.getenv("PRECOG_API_KEY").orEmpty().trim()}\"")
+        // V19 — connexion par code e-mail masquée tant qu'un SMTP n'est pas configuré dans Supabase (le SMTP par
+        // défaut n'écrit qu'aux membres de l'équipe : refus Google Play pour fonction cassée). Variable EMAIL_LOGIN=true
+        // (variable GitHub) pour la réactiver. Sans Google configuré, le code e-mail reste proposé (forks, essais).
+        buildConfigField("boolean", "EMAIL_LOGIN", (System.getenv("EMAIL_LOGIN")?.trim() == "true").toString())
     }
     // Clé d'upload Play App Signing (S8) : jamais dans le dépôt (public), lue via 4 secrets d'environnement
     // (KEYSTORE_BASE64 encodé en base64, KEYSTORE_PASSWORD, KEY_ALIAS, KEY_PASSWORD). Tant qu'ils sont absents

@@ -51,6 +51,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -60,6 +61,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import com.neutronstar.glidercopilot.designsystem.GcLegal
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
@@ -207,7 +209,9 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
                         Spacer(Modifier.height(14.dp))
                     }
                     WelcomeButton(text = "Continuer en invité", enabled = !leaving) { leaving = true; onContinue() }
-                    Spacer(Modifier.height(with(density) { (h * 0.09f).toDp() }))
+                    Spacer(Modifier.height(16.dp))
+                    LegalNotice()
+                    Spacer(Modifier.height(with(density) { (h * 0.09f).toDp() - 40.dp }.coerceAtLeast(12.dp)))
                 }
             }
         }
@@ -268,5 +272,29 @@ private fun LightStatusBar() {
             controller.isAppearanceLightStatusBars = status
             controller.isAppearanceLightNavigationBars = nav
         }
+    }
+}
+
+/** V19 — mention légale sous les boutons : conditions et confidentialité ouvertes dans le navigateur. */
+@Composable
+private fun LegalNotice() {
+    val c = Gc.colors
+    val uri = LocalUriHandler.current
+    val style = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, color = c.ink)
+    Row(
+        Modifier.clip(CircleShape).background(c.panel.copy(alpha = 0.72f)).padding(horizontal = 12.dp, vertical = 2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            "Conditions",
+            style = style.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier.clickable(role = Role.Button) { uri.openUri(GcLegal.TERMS) }.padding(vertical = 8.dp, horizontal = 4.dp),
+        )
+        Text("·", style = style.copy(color = c.dim))
+        Text(
+            "Confidentialité",
+            style = style.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier.clickable(role = Role.Button) { uri.openUri(GcLegal.PRIVACY) }.padding(vertical = 8.dp, horizontal = 4.dp),
+        )
     }
 }

@@ -298,17 +298,16 @@ class OgnLiveRepository(
     private fun signed(n: Int) = (if (n >= 0) "+" else "−") + kotlin.math.abs(n)
 
     /**
-     * Numéro aléatoire tiré au premier lancement et gardé localement (S9) : sert seulement à composer
-     * l'indicatif APRS en lecture seule « GLIDYnnnn ». Plus d'ANDROID_ID (identifiant matériel
-     * déconseillé par la Play Store, et à déclarer dans le formulaire Sécurité des données).
+     * Numéro aléatoire servant seulement à composer l'indicatif APRS en lecture seule « GLIDYnnnn ».
+     * V19 : tiré à chaque lancement et jamais enregistré — ce n'est plus un identifiant d'installation
+     * (rien à déclarer dans « Sécurité des données » de Google Play). S9 : plus d'ANDROID_ID.
      */
+    private val sessionId: Long by lazy { java.security.SecureRandom().nextInt(Int.MAX_VALUE).toLong() }
+
     private fun installId(): Long {
-        val sp = context.getSharedPreferences("glidy_install", Context.MODE_PRIVATE)
-        val known = sp.getLong("install_id", -1L)
-        if (known >= 0) return known
-        val fresh = java.security.SecureRandom().nextInt(Int.MAX_VALUE).toLong()
-        sp.edit { putLong("install_id", fresh) }
-        return fresh
+        // efface l'ancien identifiant persistant des versions ≤ 1.7 (S9 à V18.7)
+        context.getSharedPreferences("glidy_install", Context.MODE_PRIVATE).edit { remove("install_id") }
+        return sessionId
     }
 
     @Suppress("unused")

@@ -305,5 +305,16 @@ sleep 10
 for i in 1 2 3 4 5 6 7 8; do adb shell input swipe 540 1700 540 400 300; sleep 1; done
 sleep 2
 timeout 20 adb exec-out screencap -p > "$OUT/27-lite-prevol-appairage.png"
+# V19 — conformité Google Play : liens Confidentialité / Conditions / Suppression en bas de Mes vols,
+# puis l'encart d'information affiché avant la connexion au compte
+P=$(tap_text "Mes vols"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 8; }
+for i in 1 2 3 4 5 6; do adb shell input swipe 540 1700 540 400 300; sleep 1; done
+sleep 2
+timeout 20 adb exec-out screencap -p > "$OUT/28-lite-mes-vols-legal.png"
+for i in 1 2 3 4 5 6; do adb shell input swipe 540 500 540 1700 300; sleep 1; done
+P=$(tap_text "Menu du profil"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
+P=$(tap_text "Voir le compte"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+P=$(tap_text "Se connecter"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+timeout 20 adb exec-out screencap -p > "$OUT/29-lite-compte-information.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

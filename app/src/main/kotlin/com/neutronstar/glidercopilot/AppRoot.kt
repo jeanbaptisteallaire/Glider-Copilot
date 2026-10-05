@@ -37,6 +37,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,6 +62,7 @@ import com.neutronstar.glidercopilot.designsystem.LocalGcThemeToggle
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import androidx.compose.runtime.CompositionLocalProvider
 import com.neutronstar.glidercopilot.designsystem.GlidyFlightTheme
+import com.neutronstar.glidercopilot.designsystem.GcLegalLinks
 import com.neutronstar.glidercopilot.designsystem.GlidyFlightLightColors
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.designsystem.GlidyColors
@@ -174,15 +176,30 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         // GPS accordé après le démarrage du moteur : on relance pour s'abonner
         container.flight.stop(); container.flight.start()
     }
+    // V19 (Google Play) : information claire avant la demande système — à quoi sert la position, quand elle est lue,
+    // qu'elle reste sur le téléphone. Aucune demande de localisation en arrière-plan (ACCESS_BACKGROUND_LOCATION).
+    var locationInfo by rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(asked) {
         if (!asked && !context.hasLocationPermission()) {
-            container.prefs.setLocationAsked()
-            val perms = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION) +
-                if (android.os.Build.VERSION.SDK_INT >= 33) listOf(Manifest.permission.POST_NOTIFICATIONS) else emptyList()
-            launcher.launch(perms.toTypedArray())
+            locationInfo = true
         } else if (!asked) {
             scope.launch { container.prefs.setLocationAsked() }
         }
+    }
+    if (locationInfo) {
+        LocationDisclosure(
+            onContinue = {
+                locationInfo = false
+                scope.launch { container.prefs.setLocationAsked() }
+                val perms = listOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION) +
+                    if (android.os.Build.VERSION.SDK_INT >= 33) listOf(Manifest.permission.POST_NOTIFICATIONS) else emptyList()
+                launcher.launch(perms.toTypedArray())
+            },
+            onLater = {
+                locationInfo = false
+                scope.launch { container.prefs.setLocationAsked() }
+            },
+        )
     }
 
     // S10 — rejeu 3D d'un vol du carnet : plein écran, barre d'onglets masquée, retour système = retour au carnet
@@ -316,6 +333,41 @@ private fun SystemBarsFor(light: Boolean) {
     }
 }
 
+/** V19 — divulgation de la localisation (règles Google Play « Prominent disclosure »), avant la boîte système. */
+@Composable
+private fun LocationDisclosure(onContinue: () -> Unit, onLater: () -> Unit) {
+    GlidyAdaptiveTheme(light = true) {
+        val c = Gc.colors
+        androidx.compose.material3.AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Position GPS", style = Gc.type.headline) },
+            text = {
+                Text(
+                    "spiral utilise la position de votre téléphone pour trouver le terrain le plus proche et, en vol, pour " +
+                        "calculer vario, marge de sécurité, distance au terrain et enregistrer votre trace IGC.\n\n" +
+                        "Pendant un vol, la position continue d'être lue écran éteint ; une notification permanente " +
+                        "l'indique et le service s'arrête quand vous quittez Pilotage (hors vol enregistré).\n\n" +
+                        "La position reste sur ce téléphone. Elle n'est envoyée en ligne que dans les vols que vous " +
+                        "choisissez de sauvegarder avec un compte. Les notifications servent à afficher ce service de vol.",
+                    style = Gc.type.subhead.copy(color = c.dim),
+                )
+            },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = onContinue, modifier = Modifier.testTag("location-continue")) {
+                    Text("Continuer", style = Gc.type.headline.copy(color = c.route))
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.TextButton(onClick = onLater) {
+                    Text("Plus tard", style = Gc.type.subhead.copy(color = c.dim))
+                }
+            },
+            containerColor = c.panel,
+            shape = RoundedCornerShape(16.dp),
+        )
+    }
+}
+
 @Composable
 private fun Disclaimer(onAccept: () -> Unit) {
     val c = Gc.colors
@@ -335,7 +387,9 @@ private fun Disclaimer(onAccept: () -> Unit) {
             "Données : Météo-France via precog, OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
             style = Gc.type.bodySmall,
         )
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(8.dp))
+        GcLegalLinks(color = c.ok, withDeletion = false)
+        Spacer(Modifier.height(16.dp))
         Button(
             onClick = onAccept,
             modifier = Modifier.fillMaxWidth().height(52.dp),

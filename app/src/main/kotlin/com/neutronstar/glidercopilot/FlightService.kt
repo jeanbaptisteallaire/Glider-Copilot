@@ -115,7 +115,8 @@ class FlightService : Service() {
         /** À appeler app visible : Android refuse un service de localisation lancé depuis l'arrière-plan. */
         fun start(context: Context, replay: Boolean) {
             if (running) return
-            if (!replay && !context.hasLocationPermission()) return
+            // V19 : jamais de service « location » sans autorisation de localisation (Android 14+ : SecurityException)
+            if (!context.hasLocationPermission()) return
             runCatching { ContextCompat.startForegroundService(context, Intent(context, FlightService::class.java)) }
                 .onFailure { Log.w(TAG, "démarrage du service impossible", it) }
         }

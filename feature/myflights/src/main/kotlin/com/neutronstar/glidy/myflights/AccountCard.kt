@@ -55,6 +55,8 @@ data class AccountCardState(
     val canSync: Boolean = true,
     /** S18.2 — bouton « Continuer avec Google » proposé (ID client Google fourni au build). */
     val googleAvailable: Boolean = false,
+    /** V19 — connexion par code e-mail proposée (SMTP configuré). */
+    val emailAvailable: Boolean = true,
 )
 
 interface AccountActions {
@@ -117,18 +119,31 @@ private fun SignIn(state: AccountCardState, actions: AccountActions) {
             GcButton("Se connecter", onClick = { open = true }, primary = true, enabled = !state.busy, modifier = Modifier.fillMaxWidth().testTag("account-sign-in"))
         }
         else -> {
+            // V19 — information avant la connexion (Google Play : données personnelles et de localisation)
+            Text(
+                "En vous connectant, votre adresse e-mail et vos vols (fichiers IGC : traces GPS, horaires, altitudes) " +
+                    "sont enregistrés sur notre serveur sécurisé en Irlande (UE). Vous pouvez tout supprimer à tout moment (voir « Politique de confidentialité » en bas de page).",
+                style = Gc.type.footnote.copy(color = c.dim),
+                modifier = Modifier.testTag("account-disclosure"),
+            )
             if (state.googleAvailable) {
                 GoogleButton(enabled = !state.busy) { actions.signInWithGoogle(context) }
+            }
+            if (state.googleAvailable && state.emailAvailable) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     HorizontalDivider(Modifier.weight(1f), thickness = 0.5.dp, color = c.line)
                     Text("ou", style = Gc.type.bodySmall.copy(color = c.faint), modifier = Modifier.padding(horizontal = 10.dp))
                     HorizontalDivider(Modifier.weight(1f), thickness = 0.5.dp, color = c.line)
                 }
             }
-            Field(email, { email = it }, "Adresse e-mail", KeyboardType.Email, "account-email")
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                GcButton("Recevoir un code", onClick = { actions.sendCode(email) }, primary = !state.googleAvailable, enabled = !state.busy && email.contains('@'), modifier = Modifier.weight(1f))
-                GcButton("Annuler", onClick = { open = false }, modifier = Modifier.weight(1f))
+            if (state.emailAvailable) {
+                Field(email, { email = it }, "Adresse e-mail", KeyboardType.Email, "account-email")
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    GcButton("Recevoir un code", onClick = { actions.sendCode(email) }, primary = !state.googleAvailable, enabled = !state.busy && email.contains('@'), modifier = Modifier.weight(1f))
+                    GcButton("Annuler", onClick = { open = false }, modifier = Modifier.weight(1f))
+                }
+            } else {
+                GcButton("Annuler", onClick = { open = false }, modifier = Modifier.fillMaxWidth())
             }
         }
     }

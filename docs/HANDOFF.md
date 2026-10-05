@@ -1,5 +1,21 @@
 # HANDOFF — état du projet (spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 19 — conformité Google Play + textes réglementaires, V1.9.0-lite (05/10/2026)
+- Compte Google Play Developer de JB passé en **organisation** (éditeur : Jean-Baptiste Allaire, EI).
+- Audit complet et réponses Play Console : `docs/play-store/CONFORMITE-GOOGLE-PLAY.md` (URL à saisir, formulaire
+  Sécurité des données, déclaration du service de premier plan, public cible, points bloquants avant examen).
+- Textes publiés par GitHub Pages depuis `site/` (`.github/workflows/pages.yml`) : `confidentialite.html`,
+  `conditions.html`, `suppression-compte.html`, `index.html` (FR + EN). Adresses dans `GcLegal` (designsystem).
+- Code :
+  - divulgation « Position GPS » avant la demande d'autorisation (AppRoot `LocationDisclosure`) ;
+  - liens Conditions · Confidentialité sur la page d'accueil, l'avertissement et en bas de Mes vols (`GcLegalLinks`) ;
+  - encart d'information au-dessus des boutons de connexion du compte ;
+  - connexion par code e-mail masquée tant que le SMTP n'est pas configuré (`BuildConfig.EMAIL_LOGIN`, variable `EMAIL_LOGIN`) ;
+  - indicatif OGN tiré à chaque lancement, plus d'identifiant d'installation enregistré ;
+  - `FlightService` jamais lancé sans autorisation de localisation (même en rejeu).
+- CI : captures `28-lite-mes-vols-legal`, `29-lite-compte-information`.
+- Reste (JB) : publier l'écran de consentement OAuth, client Android pour le SHA-1 Play App Signing, SMTP, SIREN/adresse.
+
 ## Session 18.7 — Pilotage sur fond blanc + carte façon carte VFR papier, V1.7.0-lite (03/10/2026)
 - **Accord explicite de JB** : Pilotage passe sur fond blanc (thème clair, par défaut). Mêmes fonctions, mêmes
   tailles ; seules les couleurs s'inversent : `GlidyFlightLightColors` (Theme.kt) — encre noire pure pour les
