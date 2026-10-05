@@ -1,90 +1,83 @@
-    (() => {
-      'use strict';
-      const FPS = 10;
-      const FRAMES = 100;              // 10 seconds, then an intentional restart.
-      const FRAME_MS = 1000 / FPS;
-      const ocean = document.getElementById('ocean');
-      const cloud = document.getElementById('cloud');
-      const farPlane = document.getElementById('far-plane');
-      const nearPlane = document.getElementById('near-plane');
-      const flecks = [...document.querySelectorAll('.fleck')];
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      const TAU = Math.PI * 2;
-      let lastFrame = -1;
-      let startedAt = performance.now();
-      let paused = false;
+(() => {
+  'use strict';
 
-      function setFrame(frame) {
-        frame = ((Math.floor(frame) % FRAMES) + FRAMES) % FRAMES;
-        if (frame === lastFrame) return;
-        lastFrame = frame;
-        const u = frame / (FRAMES - 1);
+  const DURATION_MS = 10000;
+  const ocean = document.getElementById('ocean');
+  const cloud = document.getElementById('cloud');
+  const farPlane = document.getElementById('far-plane');
+  const nearPlane = document.getElementById('near-plane');
+  const flecks = [...document.querySelectorAll('.fleck')];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let startedAt = performance.now();
+  let paused = false;
 
-        // Only these sampled positions reach the DOM; there is no in-between motion.
-        const oceanX = -25 * u + 1.5 * Math.sin(TAU * u);
-        const oceanY = 155 * u + 2 * Math.sin(TAU * u * 1.2);
-        ocean.setAttribute('transform', `translate(${oceanX.toFixed(2)} ${oceanY.toFixed(2)})`);
+  const lerp = (from, to, progress) => from + (to - from) * progress;
+  const fmt = value => value.toFixed(3);
 
-        // The nearby cloud crosses the picture more than twice as fast as the distant sea.
-        const cloudX = -68 * u + 3 * Math.sin(TAU * u * 0.9);
-        const cloudY = 385 * u + 4 * Math.sin(TAU * u * 1.1);
-        const cloudScale = 1 + 0.055 * u;
-        cloud.setAttribute('transform',
-          `translate(${cloudX.toFixed(2)} ${cloudY.toFixed(2)}) ` +
-          `translate(360 710) scale(${cloudScale.toFixed(4)}) translate(-360 -710)`);
+  // Every intermediate pose is calculated from elapsed time, without frame sampling.
+  function setProgress(progress) {
+    const u = Math.min(1, Math.max(0, Number(progress) || 0));
+    const seconds = u * DURATION_MS / 1000;
 
-        const farX = 18 * (Math.sin(TAU * u * 1.15 + 0.4) - Math.sin(0.4)) + 11 * u;
-        const farY = 12 * Math.sin(TAU * u * 1.1) - 6 * u;
-        const farAngle = 0.75 * Math.sin(TAU * u * 1.1);
-        farPlane.setAttribute('transform',
-          `translate(${farX.toFixed(2)} ${farY.toFixed(2)}) rotate(${farAngle.toFixed(3)} 420 1180)`);
+    // The closer cloud travels about twice as far as the distant ocean.
+    ocean.setAttribute('transform',
+      `translate(${fmt(lerp(0, -16, u))} ${fmt(lerp(0, 108, u))})`);
+    cloud.setAttribute('transform',
+      `translate(${fmt(lerp(0, -29, u))} ${fmt(lerp(0, 215, u))})`);
 
-        const nearX = 2.6 * Math.sin(TAU * u * 0.9);
-        const nearY = 2.0 * (Math.sin(TAU * u * 1.1 + 0.2) - Math.sin(0.2));
-        const nearAngle = 0.14 * Math.sin(TAU * u);
-        nearPlane.setAttribute('transform',
-          `translate(${nearX.toFixed(2)} ${nearY.toFixed(2)}) rotate(${nearAngle.toFixed(3)} 500 1780)`);
+    farPlane.setAttribute('transform',
+      `translate(${fmt(lerp(0, 24, u))} ${fmt(lerp(0, -9, u))}) ` +
+      `rotate(${fmt(lerp(0, 0.55, u))} 420 1180)`);
+    nearPlane.setAttribute('transform',
+      `translate(${fmt(lerp(0, 3.5, u))} ${fmt(lerp(0, -1.5, u))}) ` +
+      `rotate(${fmt(lerp(0, 0.08, u))} 500 1780)`);
 
-        for (const [i, fleck] of flecks.entries()) {
-          const phase = Number(fleck.dataset.phase);
-          const period = Number(fleck.dataset.period);
-          const max = Number(fleck.dataset.max);
-          const wave = Math.sin(TAU * (frame + phase) / period);
-          const handVariation = 0.83 + 0.17 * Math.sin((frame + phase) * 2.17 + i * 0.71);
-          const opacity = max * Math.pow(Math.max(0, wave), 1.8) * handVariation;
-          fleck.setAttribute('opacity', opacity.toFixed(3));
-          const motion = Number(fleck.dataset.motion || 1);
-          const trembleX = Math.round(Math.sin((frame + phase) * 0.81) * motion);
-          const trembleY = Math.round(Math.cos((frame + phase) * 0.57) * motion * 0.65);
-          fleck.setAttribute('transform', `translate(${trembleX} ${trembleY})`);
-        }
-      }
+    // Short, linear fades make the painted marks live without any jitter.
+    for (const fleck of flecks) {
+      const phaseSeconds = Number(fleck.dataset.phase) / 10;
+      const periodSeconds = Number(fleck.dataset.period) / 10;
+      const maxOpacity = Number(fleck.dataset.max);
+      const motion = Number(fleck.dataset.motion || 1);
+      const localTime = (seconds + phaseSeconds) % periodSeconds;
+      const activeSeconds = Math.min(2.8, periodSeconds * 0.58);
+      const fadeSeconds = Math.min(0.7, activeSeconds * 0.35);
+      const envelope = localTime < activeSeconds
+        ? Math.max(0, Math.min(1, localTime / fadeSeconds,
+          (activeSeconds - localTime) / fadeSeconds))
+        : 0;
+      fleck.setAttribute('opacity', fmt(maxOpacity * envelope));
+      fleck.setAttribute('transform',
+        `translate(${fmt(motion * localTime / periodSeconds)} ` +
+        `${fmt(-motion * localTime / periodSeconds * 0.4)})`);
+    }
+  }
 
-      function tick(now) {
-        if (!paused && !reducedMotion.matches) {
-          setFrame(Math.floor(((now - startedAt) % 10000) / FRAME_MS));
-        }
-        requestAnimationFrame(tick);
-      }
+  function tick(now) {
+    if (!paused && !reducedMotion.matches) {
+      setProgress(((now - startedAt) % DURATION_MS) / DURATION_MS);
+    }
+    requestAnimationFrame(tick);
+  }
 
-      const onMotionPreferenceChange = () => {
-        startedAt = performance.now();
-        setFrame(0);
-      };
-      if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', onMotionPreferenceChange);
-      else if (reducedMotion.addListener) reducedMotion.addListener(onMotionPreferenceChange);
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) startedAt = performance.now();
-      });
+  function onMotionPreferenceChange() {
+    startedAt = performance.now();
+    setProgress(0);
+  }
+  if (reducedMotion.addEventListener) {
+    reducedMotion.addEventListener('change', onMotionPreferenceChange);
+  } else if (reducedMotion.addListener) {
+    reducedMotion.addListener(onMotionPreferenceChange);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) startedAt = performance.now();
+  });
 
-      // Tiny preview API for integration/QA; no visible controls in the app artwork.
-      window.windGliderAnimation = {
-        setFrame,
-        pause() { paused = true; },
-        play() { paused = false; startedAt = performance.now(); },
-        get fps() { return FPS; },
-        get durationMs() { return 10000; }
-      };
-      setFrame(0);
-      requestAnimationFrame(tick);
-    })();
+  window.windGliderAnimation = {
+    setProgress,
+    pause() { paused = true; },
+    play() { paused = false; startedAt = performance.now(); },
+    get durationMs() { return DURATION_MS; }
+  };
+  setProgress(0);
+  requestAnimationFrame(tick);
+})();

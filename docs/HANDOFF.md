@@ -1,7 +1,7 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
 ## Session 20.2 — couverture animée, titre « ailes de pilote », V2.0.2-lite (06/10/2026)
-- Couverture (et avertissement, page Tuto) : **animation HTML de JB** (« Session 20.1/animation » : océan et nuage peints
+- Couverture (et avertissement, page Tuto) : **animation HTML de JB, « variante turquoise fluide »** (mouvement continu ; océan et nuage peints
   qui glissent, deux planeurs, touches de gouache, 10 i/s) jouée dans une WebView depuis `assets/cover/` (calques
   convertis en WebP, ~480 Ko au lieu de 5,6 Mo), fond #073E60 (`COVER_SEA`), aucun toucher transmis. `CoverAnimation`.
 - Titre `BrandTitle` d'après la maquette : WIND au-dessus de GLIDER (lignes resserrées), G et R 16 % plus grands,
