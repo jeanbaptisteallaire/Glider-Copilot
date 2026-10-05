@@ -374,6 +374,22 @@
     </issue>
 
     <issue
+        id="ModifierParameter"
+        severity="Warning"
+        message="Modifier parameter should be the first optional parameter"
+        category="Correctness"
+        priority="3"
+        summary="Guidelines for Modifier parameters in a Composable function"
+        explanation="The first (or only) Modifier parameter in a Composable function should follow the following rules:&#xA;- Be named `modifier`&#xA;- Have a type of `Modifier`&#xA;- Either have no default value, or have a default value of `Modifier`&#xA;- If optional, be the first optional parameter in the parameter list"
+        errorLine1="private fun WelcomeButton(text: String, enabled: Boolean, leading: (@Composable () -> Unit)? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {"
+        errorLine2="                                                                                                     ~~~~~~~~">
+        <location
+            file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/WelcomeScreen.kt"
+            line="189"
+            column="102"/>
+    </issue>
+
+    <issue
         id="DiscouragedApi"
         severity="Warning"
         message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
@@ -691,7 +707,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/Guide.kt"
-            line="540"
+            line="546"
             column="37"/>
     </issue>
 
