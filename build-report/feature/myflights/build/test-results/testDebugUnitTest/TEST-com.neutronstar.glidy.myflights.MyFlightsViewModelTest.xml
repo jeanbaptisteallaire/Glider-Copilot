@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:32" hostname="runnervm8df0l" time="0.653">
+  <properties/>
+  <testcase name="cancelled deletion keeps the selected flight and file" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.443"/>
+  <testcase name="share result is exposed without changing selection" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.008"/>
+  <testcase name="share icon publishes then unpublishes a real flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.007"/>
+  <testcase name="example flight is never shared" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.01"/>
+  <testcase name="loading remains visible until repository responds" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.012"/>
+  <testcase name="selection opens and closes a known flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.006"/>
+  <testcase name="confirmed deletion removes only the requested flight" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.011"/>
+  <testcase name="five hundred flights are prepared without truncation" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.139"/>
+  <testcase name="repository failure produces a retryable error state" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.003"/>
+  <testcase name="flights are ordered from newest to oldest and missing files remain visible" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.004"/>
+  <testcase name="profile is loaded, saved and cleared through the store" classname="com.neutronstar.glidy.myflights.MyFlightsViewModelTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.domain.SafetyTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:15" hostname="runnervm8df0l" time="0.332">
+  <properties/>
+  <testcase name="replayedScenarioAlertsAtTheRightTime" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.287"/>
+  <testcase name="groundSpeedWithWind" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.0"/>
+  <testcase name="noMarginAlertsInTheCircuit" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.006"/>
+  <testcase name="projectionStraightAndCircling" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.0"/>
+  <testcase name="fieldSelectionWithHysteresis" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.002"/>
+  <testcase name="fieldLabels" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.014"/>
+  <testcase name="windFromCircling" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.001"/>
+  <testcase name="glideToFieldFlatTerrain" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.001"/>
+  <testcase name="windVectorConvention" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.0"/>
+  <testcase name="ridgeOnTheRouteRaisesRequirement" classname="com.neutronstar.glidercopilot.domain.SafetyTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
