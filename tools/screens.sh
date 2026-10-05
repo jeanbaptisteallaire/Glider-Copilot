@@ -319,17 +319,26 @@ P=$(tap_text "Menu du profil"); [ -n "$P" ] && { timeout 10 adb shell input tap 
 P=$(tap_text "Voir le compte"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 P=$(tap_text "Se connecter"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/29-lite-compte-information.png"
-# V19.1 — tutoriel : onglet Tuto (début, Pilotage, bas avec le champ de commentaire), puis case « Tutoriel » du menu
-P=$(tap_text "Tuto"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 5; }
-timeout 20 adb exec-out screencap -p > "$OUT/30-tuto-debut.png"
-for i in 1 2 3 4 5 6; do adb shell input swipe 540 1700 540 500 300; sleep 0.5; done
-sleep 2
-timeout 20 adb exec-out screencap -p > "$OUT/31-tuto-pilotage.png"
-for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do adb shell input swipe 540 1700 540 400 250; sleep 0.5; done
-sleep 2
-timeout 20 adb exec-out screencap -p > "$OUT/32-tuto-avis.png"
-adb shell input keyevent 4 || true
-sleep 3
-timeout 20 adb exec-out screencap -p > "$OUT/33-menu-tutoriel.png"
+# V19.1b — tutoriel en visite guidée : cadre lumineux sur les vraies pages, « Suivant » (Next en anglais)
+next_step() {
+  P=$(tap_text "Next"); [ -z "$P" ] && P=$(tap_text "Suivant")
+  [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 2; }
+}
+P=$(tap_text "Tuto"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 4; }
+timeout 20 adb exec-out screencap -p > "$OUT/30-tuto-club.png"
+next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/31-tuto-appairage.png"
+next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/32-tuto-marge.png"
+next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/33-tuto-terrain.png"
+next_step; next_step; next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/34-tuto-replier.png"
+next_step; next_step; next_step
+timeout 20 adb exec-out screencap -p > "$OUT/35-tuto-3d.png"
+next_step
+timeout 20 adb exec-out screencap -p > "$OUT/36-tuto-avis.png"
+P=$(tap_text "Done"); [ -z "$P" ] && P=$(tap_text "Terminer"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
+timeout 20 adb exec-out screencap -p > "$OUT/37-apres-tuto.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

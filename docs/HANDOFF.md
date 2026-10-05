@@ -1,5 +1,12 @@
 # HANDOFF — état du projet (spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 19.1b — tutoriel en visite guidée (cadre lumineux sur les vraies pages), V1.9.2-lite (06/10/2026)
+- Refonte de la forme demandée par JB (contenu inchangé) : `TutorialScreen` plein écran, captures pleine page
+  (`drawable-nodpi/tour_*.webp`, Prévol recomposé en une longue page qui défile), voile noir 50 %, cadre bleu clair
+  lumineux pulsé (#5AC8FA) qui glisse de zone en zone, texte blanc au-dessus ou au-dessous, Passer / Précédent /
+  Suivant, globe FR/EN, dernière étape « Votre avis ». Onglet Tuto ou case « Tutoriel » → plein écran ; fermeture →
+  onglet précédent ou menu. Anciennes vignettes `tuto_*` supprimées.
+
 ## Session 19.1 — page « en développement », tutoriel FR/EN et avis, V1.9.1-lite (06/10/2026)
 - Publication Play **en pause** à la demande de JB (fiche non créée). Visuels prêts : `Planneur APP/Session 19/Play Store`.
 - `app/Guide.kt` :

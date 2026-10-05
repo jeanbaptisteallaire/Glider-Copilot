@@ -137,6 +137,8 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var tab by rememberSaveable { mutableStateOf(startTab) }
+    // V19.1b : onglet à retrouver en quittant le tutoriel (null : ouvert depuis le menu → retour au menu)
+    var tutorialReturn by rememberSaveable { mutableStateOf<Tab?>(null) }
     // V18.5 : retour système → menu d'accueil (les retours internes, rejeu 3D par exemple, restent prioritaires)
     BackHandler(onBack = onHome)
     val prevolVm: PrevolViewModel = viewModel(factory = PrevolViewModel.Factory(container.weather, container.clubs, container.glider))
@@ -240,20 +242,25 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         return
     }
 
+    // V19.1b : tutoriel en plein écran (visite guidée sur les vraies pages), barre d'onglets masquée
+    if (tab == Tab.TUTO) {
+        val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
+        TutorialScreen(
+            lang = guideLang(savedLang),
+            onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
+            onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
+            onClose = { val back = tutorialReturn; if (back == null) onHome() else tab = back },
+        )
+        return
+    }
+
     Column(Modifier.fillMaxSize().background(if (social) (if (tab == Tab.PILOTAGE) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
         // S15 : l'interrupteur clair/sombre est dans l'en-tête de chaque écran (jamais sur Pilotage)
         val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
-                Tab.TUTO -> {
-                    val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
-                    TutorialScreen(
-                        lang = guideLang(savedLang),
-                        onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
-                        onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
-                    )
-                }
+                Tab.TUTO -> Unit // plein écran, voir plus haut
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
@@ -301,7 +308,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     visibleTabs.forEach { t ->
-                        TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { tab = t }
+                        TabButton(t.label, icon(t), t == tab, Modifier.weight(1f)) { if (t == Tab.TUTO) tutorialReturn = tab; tab = t }
                     }
                 }
             }

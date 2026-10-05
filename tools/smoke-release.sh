@@ -60,6 +60,7 @@ tap "Feed"; sleep 6
 timeout 20 adb exec-out screencap -p > "$OUT/95-release-feed.png"
 tap "Tuto"; sleep 6   # V19.1 : tutoriel (onglet le plus à gauche)
 timeout 20 adb exec-out screencap -p > "$OUT/96-release-tuto.png"
+adb shell input keyevent 4; sleep 3   # retour : quitte le tutoriel plein écran
 tap "Prévol"; sleep 8
 timeout 30 adb logcat -d > "$OUT/release-logcat.txt" || true
 ALIVE=$(adb shell pidof $PKG | tr -d '\r')
