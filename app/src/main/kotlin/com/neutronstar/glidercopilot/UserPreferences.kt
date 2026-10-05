@@ -38,6 +38,12 @@ interface UserPreferences {
     /** V20 — tutoriel obligatoire du premier lancement terminé. */
     val tutorialDone: Flow<Boolean>
     suspend fun setTutorialDone()
+    /**
+     * V20.1 — profils (« guest » ou empreinte d'un compte) ayant terminé le tutoriel sur ce téléphone :
+     * tout nouveau compte connecté refait le tutoriel complet une première fois.
+     */
+    val tutorialSeen: Flow<Set<String>>
+    suspend fun markTutorialSeen(key: String)
     suspend fun setDevNoticeSeen(version: Int)
     suspend fun setGuideLanguage(lang: String)
     suspend fun acknowledgeDisclaimer(version: Int)
@@ -102,6 +108,14 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override suspend fun setGuideLanguage(lang: String) { store.edit { it[kGuideLang] = lang } }
     override val tutorialDone: Flow<Boolean> = store.data.map { it[kTutorialDone] ?: false }
     override suspend fun setTutorialDone() { store.edit { it[kTutorialDone] = true } }
+    private val kTutorialSeen = stringSetPreferencesKey("tutorial_seen_profiles")
+    // migration V20 → V20.1 : l'ancien « tutoriel fait » vaut pour l'usage invité de ce téléphone
+    override val tutorialSeen: Flow<Set<String>> = store.data.map { p ->
+        (p[kTutorialSeen] ?: emptySet()) + (if (p[kTutorialDone] == true) setOf(TUTORIAL_GUEST) else emptySet())
+    }
+    override suspend fun markTutorialSeen(key: String) {
+        store.edit { p -> p[kTutorialSeen] = (p[kTutorialSeen] ?: emptySet()) + key; if (key == TUTORIAL_GUEST) p[kTutorialDone] = true }
+    }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }
@@ -140,4 +154,14 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override suspend fun setFollowEnabled(on: Boolean) { store.edit { it[kFollow] = on } }
     override suspend fun setFollowRegistration(registration: String) { store.edit { it[kFollowReg] = registration } }
     override suspend fun setLightMode(on: Boolean) { store.edit { it[kLightMode] = on } }
+}
+
+/** V20.1 — clé du profil invité pour le tutoriel obligatoire. */
+const val TUTORIAL_GUEST = "guest"
+
+/** V20.1 — clé d'un compte pour le tutoriel obligatoire : empreinte SHA-256 de l'e-mail (rien de lisible stocké). */
+fun tutorialKeyFor(email: String?): String {
+    if (email.isNullOrBlank()) return TUTORIAL_GUEST
+    val d = java.security.MessageDigest.getInstance("SHA-256").digest(email.trim().lowercase().toByteArray())
+    return "acct:" + d.joinToString("") { "%02x".format(it) }.take(24)
 }

@@ -317,7 +317,9 @@ private fun liveFrame(s: com.neutronstar.glidercopilot.domain.flight.FlightSnaps
     val pts = s.trace.takeLast(240)
     val trace = pts.zipWithNext().map { (a, b) -> Triple(a.position, b.position, c.vario(b.climbMs)) }
     val g = s.gps!!
-    return GeoFrame(g.position, g.trackDeg ?: 0.0, trace, field)
+    // V20.1 — zoom spirale : spirale détectée par le moteur, tour complet bouclé, montée moyenne positive
+    val thermal = remember(s.now) { com.neutronstar.glidercopilot.domain.flight.ThermalZoom.view(s.trace, s.circling, s.circlingSince, s.now) }
+    return GeoFrame(g.position, g.trackDeg ?: 0.0, trace, field, thermal = thermal)
 }
 
 private data class Sample(val t: Double, val alt: Double, val need: Double, val v: Double)

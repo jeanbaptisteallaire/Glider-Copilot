@@ -196,7 +196,20 @@ internal fun PilotNoticeScreen(lang: String, onLanguage: (String) -> Unit, onOk:
     GlidyAdaptiveTheme(light = true) {
         val fr = lang == "fr"
         Box(Modifier.fillMaxSize().testTag("pilot-notice")) {
-            ScenicBackground(R.drawable.wg_cockpit, 1081, 1455, Color(0xFF579EE4))
+            // V20.1 : illustration calée en HAUT sur toute la largeur, pour que le support à ventouse du téléphone
+            // (milieu droit du dessin) reste visible au-dessus de la carte de texte ; dessous, le gris du cockpit.
+            BoxWithConstraints(Modifier.fillMaxSize().background(Color(0xFF3B3F45))) {
+                val drawnH = maxWidth * (1455f / 1081f)
+                Image(
+                    painterResource(R.drawable.wg_cockpit), contentDescription = null,
+                    contentScale = ContentScale.FillWidth, alignment = Alignment.TopCenter,
+                    modifier = Modifier.fillMaxWidth().height(drawnH).align(Alignment.TopCenter),
+                )
+                Box(
+                    Modifier.fillMaxWidth().height(96.dp).align(Alignment.TopCenter).offset(y = drawnH - 96.dp)
+                        .background(Brush.verticalGradient(listOf(Color(0x003B3F45), Color(0xFF3B3F45)))),
+                )
+            }
             Column(Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
                 Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
                     LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }

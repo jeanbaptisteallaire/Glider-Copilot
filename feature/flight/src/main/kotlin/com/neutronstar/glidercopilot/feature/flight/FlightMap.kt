@@ -24,6 +24,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.neutronstar.glidercopilot.carto.MapStyle
 import com.neutronstar.glidercopilot.domain.LatLon
+import com.neutronstar.glidercopilot.domain.flight.ThermalView
+import com.neutronstar.glidercopilot.domain.flight.ThermalZoom
 import org.maplibre.android.MapLibre
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -96,6 +98,8 @@ data class GeoFrame(
     /** Trace recalée de la dérive du vent (vue centrage). */
     val airTrace: List<Triple<LatLon, LatLon, Color>> = emptyList(),
     val core: CoreMark? = null,
+    /** V20.1 — spirale montante après un tour complet : la carte se resserre sur le dernier cercle. */
+    val thermal: ThermalView? = null,
 )
 
 /** Orientation de la carte : AUTO (route en haut, nord en haut en spirale), nord en haut, route en haut. */
@@ -134,8 +138,23 @@ class MapController {
     var latitude by mutableDoubleStateOf(44.0)
         internal set
 
-    fun zoomIn() { map?.animateCamera(CameraUpdateFactory.zoomIn(), 250) }
-    fun zoomOut() { map?.animateCamera(CameraUpdateFactory.zoomOut(), 250) }
+    /** V20.1 — zoom automatique sur la spirale en cours (cercles aux 2/3 de la carte). */
+    var thermalActive by mutableStateOf(false)
+        internal set
+    /** Réglage du pilote pendant le zoom spirale (+/− d'un cran), oublié à la sortie de la spirale. */
+    internal var thermalBias = 0.0
+    /** Fin de l'animation d'entrée ou de sortie du zoom spirale (ms) : la caméra n'est pas recalée pendant ce temps. */
+    internal var transitionUntil = 0L
+    internal var smoothLat = 0.0
+    internal var smoothLon = 0.0
+    internal var smoothZoom = 0.0
+
+    fun zoomIn() {
+        if (thermalActive) thermalBias = (thermalBias + 1).coerceAtMost(3.0) else map?.animateCamera(CameraUpdateFactory.zoomIn(), 250)
+    }
+    fun zoomOut() {
+        if (thermalActive) thermalBias = (thermalBias - 1).coerceAtLeast(-3.0) else map?.animateCamera(CameraUpdateFactory.zoomOut(), 250)
+    }
     fun recenter() { follow = true }
 
     /** Échelle graphique : distance ronde et longueur en dp (MapLibre : 512 dp par tuile au niveau 0). */
@@ -223,7 +242,9 @@ internal fun LiveMap(
             }
             map.addOnCameraMoveListener {
                 // le zoom choisi par le pilote n'est mémorisé que pour ses propres gestes : la vue centrage zoome sans l'écraser
-                if (!controller.centering) controller.zoom = map.cameraPosition.zoom
+                if (!controller.centering && !controller.thermalActive && System.currentTimeMillis() > controller.transitionUntil) {
+                    controller.zoom = map.cameraPosition.zoom
+                }
                 controller.shownZoom = map.cameraPosition.zoom
                 controller.latitude = map.cameraPosition.target?.latitude ?: controller.latitude
             }
@@ -265,7 +286,48 @@ internal fun LiveMap(
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRAFFIC)?.setGeoJson(trafficJson(traffic.aircraft))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(thermalsJson(traffic.thermals, thermalColor))
         val map = controller.map
-        if (controller.follow && map != null) {
+        val thermal = frame.thermal
+        if (controller.follow && map != null && !centering && (thermal != null || controller.thermalActive)) {
+            // V20.1 — zoom spirale : centre du dernier cercle, cercles aux deux tiers de la carte, nord en haut
+            val now = System.currentTimeMillis()
+            if (thermal != null) {
+                val density = mapView.resources.displayMetrics.density
+                val minSidePts = minOf(mapView.width, mapView.height).coerceAtLeast(1) / density.toDouble()
+                val z = ThermalZoom.zoomFor(thermal, minSidePts) + controller.thermalBias
+                val bearing = if (controller.orientation == MapOrientation.TRACK) frame.headingDeg else 0.0
+                if (!controller.thermalActive) {
+                    controller.thermalActive = true
+                    controller.smoothLat = thermal.centre.lat; controller.smoothLon = thermal.centre.lon; controller.smoothZoom = z
+                    controller.transitionUntil = now + 900
+                    map.easeCamera(CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().target(LatLng(thermal.centre.lat, thermal.centre.lon)).zoom(z).bearing(bearing).padding(0.0, 0.0, 0.0, 0.0).build(),
+                    ), 900)
+                } else if (now > controller.transitionUntil) {
+                    // lissage : le centre et le zoom suivent le cercle sans à-coups (≈ 4 images/s)
+                    val k = 0.25
+                    controller.smoothLat += (thermal.centre.lat - controller.smoothLat) * k
+                    controller.smoothLon += (thermal.centre.lon - controller.smoothLon) * k
+                    controller.smoothZoom += (z - controller.smoothZoom) * k
+                    map.moveCamera(CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().target(LatLng(controller.smoothLat, controller.smoothLon)).zoom(controller.smoothZoom).bearing(bearing).padding(0.0, 0.0, 0.0, 0.0).build(),
+                    ))
+                }
+                controller.shownZoom = map.cameraPosition.zoom
+                return@SideEffect
+            }
+            // sortie de spirale : retour en douceur à la vue du pilote
+            controller.thermalActive = false
+            controller.thermalBias = 0.0
+            controller.transitionUntil = now + 900
+            val bearing = if (controller.orientation == MapOrientation.NORTH) 0.0 else frame.headingDeg
+            val padTop = if (bearing == 0.0) 0.0 else mapView.height * 0.34
+            map.easeCamera(CameraUpdateFactory.newCameraPosition(
+                CameraPosition.Builder().target(LatLng(frame.glider.lat, frame.glider.lon)).zoom(controller.zoom).bearing(bearing).padding(0.0, padTop, 0.0, 0.0).build(),
+            ), 900)
+            return@SideEffect
+        }
+        if (controller.thermalActive && (thermal == null || !controller.follow)) { controller.thermalActive = false; controller.thermalBias = 0.0 }
+        if (controller.follow && map != null && System.currentTimeMillis() > controller.transitionUntil) {
             // route en haut en transition, nord en haut en spirale (une carte qui tourne à 14°/s est illisible)
             val bearing = when {
                 centering || controller.orientation == MapOrientation.NORTH -> 0.0

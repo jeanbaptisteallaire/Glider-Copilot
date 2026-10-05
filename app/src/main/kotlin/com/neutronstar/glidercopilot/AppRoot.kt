@@ -109,7 +109,13 @@ fun AppRoot(container: AppContainer) {
     val ack by container.prefs.acknowledgedDisclaimer.collectAsState(initial = -1)
     val notice by container.prefs.devNoticeSeen.collectAsState(initial = -1)
     val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
-    val tutorialDone by container.prefs.tutorialDone.collectAsState(initial = null)
+    // V20.1 : tutoriel obligatoire par profil — invité une fois par téléphone, puis chaque NOUVEAU compte connecté
+    val tutorialSeen by container.prefs.tutorialSeen.collectAsState(initial = null)
+    val account by container.cloud.state.collectAsState()
+    val tutorialKey = tutorialKeyFor(account.email)
+    val liveForTuto by container.flight.live.collectAsState()
+    val flyingNow = liveForTuto.snapshot?.recording == true
+    val tutorialDone: Boolean? = tutorialSeen?.let { seen -> tutorialKey in seen || flyingNow }
     val scope = rememberCoroutineScope()
     when {
         ack == -1 || notice == -1 || tutorialDone == null -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
@@ -125,7 +131,7 @@ fun AppRoot(container: AppContainer) {
             lang = guideLang(savedLang),
             onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
             onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
-            onClose = { scope.launch { container.prefs.setTutorialDone() } },
+            onClose = { scope.launch { container.prefs.markTutorialSeen(tutorialKey) } },
             mandatory = true,
         )
         else -> {

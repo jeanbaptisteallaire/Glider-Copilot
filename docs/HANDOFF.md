@@ -1,5 +1,17 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 20.1 — zoom spirale, tutoriel par compte, cockpit recadré, V2.0.1-lite (06/10/2026)
+- **Zoom automatique sur la spirale** (Pilotage, accord JB, garde-fou régénéré) : `core:domain/flight/ThermalZoom`
+  (pur, testé `ThermalZoomTest`) — actif quand le moteur détecte une spirale, qu'un tour complet (≥ 330°) est bouclé et
+  que la montée moyenne de ce tour est positive. La carte se centre sur le dernier cercle, nord en haut (route en haut si
+  RTE), cercle = 2/3 du plus petit côté de la carte, animation d'entrée/sortie 0,9 s, lissage ensuite ; les boutons
+  +/− ajustent d'un cran pendant la spirale ; retour au zoom du pilote à la sortie. Trace colorée par le vario visible.
+- **Tutoriel obligatoire par profil** : `UserPreferences.tutorialSeen` (invité + empreinte SHA-256 de l'e-mail de
+  chaque compte) — tout nouveau compte connecté (Google ou e-mail) refait le tutoriel complet une fois, jamais pendant
+  un vol enregistré.
+- **Cockpit** : page « Avant de voler » avec l'illustration calée en haut sur toute la largeur (support à ventouse
+  visible) ; carte Pilotage du menu recadrée sur le téléphone et la ventouse.
+
 ## Session 20 — « Wind Glider » : nouveau nom, nouvel univers illustré, V2.0.0-lite (06/10/2026)
 - **Nom : Wind Glider** (remplace spiral partout où c'est visible : nom de l'app, pages, notification, IGC
   `HFFTYFRTYPE:WINDGLIDER`, pages légales). `applicationId` inchangé.

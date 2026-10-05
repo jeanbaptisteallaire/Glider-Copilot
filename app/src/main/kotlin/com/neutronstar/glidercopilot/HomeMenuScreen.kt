@@ -124,7 +124,7 @@ internal fun HomeMenuScreen(
             PhotoCard(
                 if (fr) "Pilotage" else "Flight",
                 if (fr) "Les données utiles, à leur place dans le cockpit." else "The data you need, right where it belongs in the cockpit.",
-                R.drawable.wg_cockpit, Alignment.TopCenter, "Ouvrir Pilotage", onPilotage,
+                R.drawable.wg_cockpit, androidx.compose.ui.BiasAlignment(0f, 0.12f), "Ouvrir Pilotage", onPilotage, // V20.1 : téléphone et ventouse visibles
             )
             PhotoCard(
                 if (fr) "Mes vols" else "My flights",

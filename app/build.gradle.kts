@@ -19,7 +19,7 @@ android {
         versionCode = (System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1)
         // S18 Lite (lancement Play Store rapide) : Prévol (météo + cartes), Pilotage, Mes vols. Édition complète :
         // ./gradlew -Pglidy.edition=full …  (Feed, Check-lists, Carte, planeur FLARM/OGN dans Prévol).
-        versionName = if (lite) "2.0.0-lite" else "0.15.0"
+        versionName = if (lite) "2.0.1-lite" else "0.15.1"
         buildConfigField("boolean", "LITE", lite.toString())
         // MapLibre embarque du code natif : téléphones arm64 et émulateurs x86_64 uniquement
         ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
