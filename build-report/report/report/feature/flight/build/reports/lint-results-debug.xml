@@ -13,7 +13,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt"
-            line="333"
+            line="395"
             column="15"/>
     </issue>
 
@@ -29,7 +29,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt"
-            line="346"
+            line="408"
             column="15"/>
     </issue>
 
@@ -45,7 +45,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt"
-            line="371"
+            line="433"
             column="15"/>
     </issue>
 
@@ -61,7 +61,7 @@
         errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt"
-            line="384"
+            line="446"
             column="15"/>
     </issue>
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.precog.RealDataTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:40" hostname="runnervm8df0l" time="0.205">
+<testsuite name="com.neutronstar.glidercopilot.precog.RealDataTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T18:39:21" hostname="runnervm8df0l" time="0.184">
   <properties/>
-  <testcase name="realRepositoryDay" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.112"/>
-  <testcase name="realVigilance" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.013"/>
-  <testcase name="realForecastSurface" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.031"/>
-  <testcase name="realProfileAnalysis" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.044"/>
+  <testcase name="realRepositoryDay" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.113"/>
+  <testcase name="realVigilance" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.008"/>
+  <testcase name="realForecastSurface" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.026"/>
+  <testcase name="realProfileAnalysis" classname="com.neutronstar.glidercopilot.precog.RealDataTest" time="0.034"/>
   <system-out><![CDATA[  2026-09-16T09:00:00Z plafond 1219 m BLUE montée 0.6
   2026-09-16T12:00:00Z plafond 2078 m CUMULUS montée 1.1
   2026-09-16T15:00:00Z plafond 2140 m BLUE montée 0.5
