@@ -1,5 +1,11 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 20.3 — correctif couverture vide, V2.0.3-lite (06/10/2026)
+
+- Sur téléphone, la couverture animée restait **bleu uni** (calques WebP non chargés depuis `file:///android_asset`).
+  `CoverAnimation` charge désormais la page via `WebViewAssetLoader` (`https://appassets.androidplatform.net/assets/cover/index.html`),
+  comme le rejeu 3D ; WebView en MATCH_PARENT. Dépendance `androidx.webkit` ajoutée à `:app`.
+
 ## Session 20.2 — couverture animée, titre « ailes de pilote », V2.0.2-lite (06/10/2026)
 - Couverture (et avertissement, page Tuto) : **animation HTML de JB, « variante turquoise fluide »** (mouvement continu ; océan et nuage peints
   qui glissent, deux planeurs, touches de gouache, 10 i/s) jouée dans une WebView depuis `assets/cover/` (calques

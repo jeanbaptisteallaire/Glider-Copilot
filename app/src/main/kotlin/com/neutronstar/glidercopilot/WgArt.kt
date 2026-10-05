@@ -118,8 +118,22 @@ internal fun CoverAnimation(modifier: Modifier = Modifier) {
     val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
     val context = androidx.compose.ui.platform.LocalContext.current
     val web = androidx.compose.runtime.remember {
+        // V20.2b : les calques ne s'affichaient pas en file:///android_asset (fond bleu uni sur téléphone) —
+        // chargement par WebViewAssetLoader (origine https locale), comme le rejeu 3D.
+        val assets = androidx.webkit.WebViewAssetLoader.Builder()
+            .addPathHandler("/assets/", androidx.webkit.WebViewAssetLoader.AssetsPathHandler(context))
+            .build()
         android.webkit.WebView(context).apply {
+            layoutParams = android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            )
             setBackgroundColor(0xFF073E60.toInt())
+            webViewClient = object : android.webkit.WebViewClient() {
+                override fun shouldInterceptRequest(
+                    view: android.webkit.WebView,
+                    request: android.webkit.WebResourceRequest,
+                ): android.webkit.WebResourceResponse? = assets.shouldInterceptRequest(request.url)
+            }
             settings.javaScriptEnabled = true
             settings.allowFileAccess = false
             settings.allowContentAccess = false
@@ -129,7 +143,7 @@ internal fun CoverAnimation(modifier: Modifier = Modifier) {
             isFocusable = false
             setOnTouchListener { _, _ -> true }
             importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
-            loadUrl("file:///android_asset/cover/index.html")
+            loadUrl("https://appassets.androidplatform.net/assets/cover/index.html")
         }
     }
     androidx.compose.runtime.DisposableEffect(lifecycle, web) {
