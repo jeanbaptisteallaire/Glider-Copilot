@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.ChecklistTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:11" hostname="runnervm8df0l" time="0.066">
+<testsuite name="com.neutronstar.glidercopilot.domain.ChecklistTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:33" hostname="runnervm8df0l" time="0.024">
   <properties/>
-  <testcase name="cablePlanRulesFollowJavascript" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.024"/>
-  <testcase name="countsMatchTheMockup" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.027"/>
-  <testcase name="progressAndCompletion" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.006"/>
+  <testcase name="cablePlanRulesFollowJavascript" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.011"/>
+  <testcase name="countsMatchTheMockup" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.007"/>
+  <testcase name="progressAndCompletion" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.002"/>
   <testcase name="defaultCablePlan" classname="com.neutronstar.glidercopilot.domain.ChecklistTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

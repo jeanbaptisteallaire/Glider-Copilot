@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.OgnDdbTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:28" hostname="runnervm8df0l" time="1.337">
+<testsuite name="com.neutronstar.glidercopilot.ogn.OgnDdbTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:37" hostname="runnervm8df0l" time="0.764">
   <properties/>
-  <testcase name="parsesAndSkipsEmptyRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.002"/>
+  <testcase name="parsesAndSkipsEmptyRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.001"/>
   <testcase name="lookupRespectsTrackingChoiceAndCaches" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.007"/>
-  <testcase name="leanParserReadsLargeBaseQuickly" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="1.294"/>
-  <testcase name="normalizesRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.0"/>
-  <testcase name="findsFlarmFirstWithTolerantKey" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.011"/>
-  <testcase name="offlineFallsBackToLastCopy" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.008"/>
-  <testcase name="leanParserHandlesEscapesNumbersAndCompactJson" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.002"/>
+  <testcase name="leanParserReadsLargeBaseQuickly" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.734"/>
+  <testcase name="normalizesRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.001"/>
+  <testcase name="findsFlarmFirstWithTolerantKey" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.005"/>
+  <testcase name="offlineFallsBackToLastCopy" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.014"/>
+  <testcase name="leanParserHandlesEscapesNumbersAndCompactJson" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

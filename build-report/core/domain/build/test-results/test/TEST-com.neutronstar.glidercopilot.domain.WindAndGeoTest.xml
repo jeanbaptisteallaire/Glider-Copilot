@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.WindAndGeoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:16" hostname="runnervm8df0l" time="0.015">
+<testsuite name="com.neutronstar.glidercopilot.domain.WindAndGeoTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:35" hostname="runnervm8df0l" time="0.008">
   <properties/>
   <testcase name="componentsRoundTrip" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.0"/>
-  <testcase name="interpolatesLayers" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.007"/>
+  <testcase name="interpolatesLayers" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.004"/>
   <testcase name="northWindBlowsSouth" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.0"/>
   <testcase name="nearestClub" classname="com.neutronstar.glidercopilot.domain.WindAndGeoTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>

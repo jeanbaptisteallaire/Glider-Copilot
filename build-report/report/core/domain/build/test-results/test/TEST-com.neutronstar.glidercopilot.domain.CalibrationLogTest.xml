@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.CalibrationLogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:10" hostname="runnervm8df0l" time="0.242">
+<testsuite name="com.neutronstar.glidercopilot.domain.CalibrationLogTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:32" hostname="runnervm8df0l" time="0.136">
   <properties/>
-  <testcase name="recorderWritesHeaderThenCountsSamples" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.183"/>
-  <testcase name="headerAndBlankLinesAreIgnored" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.001"/>
-  <testcase name="baroRoundTrip" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.006"/>
-  <testcase name="replayedLogDrivesTheSameFilterAsLiveCalls" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.037"/>
-  <testcase name="accelRoundTrip" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.001"/>
-  <testcase name="gpsRoundTripWithAllFields" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.001"/>
-  <testcase name="gpsRoundTripWithMissingOptionalFields" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.0"/>
+  <testcase name="recorderWritesHeaderThenCountsSamples" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.09"/>
+  <testcase name="headerAndBlankLinesAreIgnored" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.004"/>
+  <testcase name="baroRoundTrip" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.001"/>
+  <testcase name="replayedLogDrivesTheSameFilterAsLiveCalls" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.033"/>
+  <testcase name="accelRoundTrip" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.0"/>
+  <testcase name="gpsRoundTripWithAllFields" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.004"/>
+  <testcase name="gpsRoundTripWithMissingOptionalFields" classname="com.neutronstar.glidercopilot.domain.CalibrationLogTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

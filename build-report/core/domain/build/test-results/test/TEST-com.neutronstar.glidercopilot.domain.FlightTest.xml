@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.FlightTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-03T14:25:15" hostname="runnervm8df0l" time="0.853">
+<testsuite name="com.neutronstar.glidercopilot.domain.FlightTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:35" hostname="runnervm8df0l" time="0.322">
   <properties/>
-  <testcase name="takeoffAndLandingDetected" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.004"/>
-  <testcase name="accelerometerReactsFasterThanBaroOnly" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.163"/>
-  <testcase name="filterOnReplayTracksClimbAndDetectsFlight" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.432"/>
-  <testcase name="replayProducesSensorStreams" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.115"/>
-  <testcase name="stationaryNoiseIsLow" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.071"/>
-  <testcase name="sensorStatsMeasuresRateAndNoise" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.0"/>
-  <testcase name="biasIsLearned" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.009"/>
-  <testcase name="verticalAccelerationSign" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.001"/>
+  <testcase name="takeoffAndLandingDetected" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.0"/>
+  <testcase name="accelerometerReactsFasterThanBaroOnly" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.071"/>
+  <testcase name="filterOnReplayTracksClimbAndDetectsFlight" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.16"/>
+  <testcase name="replayProducesSensorStreams" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.048"/>
+  <testcase name="stationaryNoiseIsLow" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.02"/>
+  <testcase name="sensorStatsMeasuresRateAndNoise" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.001"/>
+  <testcase name="biasIsLearned" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.004"/>
+  <testcase name="verticalAccelerationSign" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.0"/>
   <testcase name="isaRoundTrip" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.0"/>
-  <testcase name="igcWriteParseRoundTrip" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.017"/>
-  <testcase name="announcementsHaveHysteresisAndCooldown" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.012"/>
-  <testcase name="kalmanConvergesOnSteadyClimb" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.015"/>
-  <testcase name="igcRecordFormat" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.003"/>
+  <testcase name="igcWriteParseRoundTrip" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.002"/>
+  <testcase name="announcementsHaveHysteresisAndCooldown" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.006"/>
+  <testcase name="kalmanConvergesOnSteadyClimb" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.006"/>
+  <testcase name="igcRecordFormat" classname="com.neutronstar.glidercopilot.domain.FlightTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
