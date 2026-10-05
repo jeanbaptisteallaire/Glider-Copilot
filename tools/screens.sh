@@ -76,6 +76,9 @@ sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/00-accueil.png"
 pass_welcome
 sleep 4
+# V19.1 : page « spiral est en développement », une seule fois après l'accueil (langue du téléphone)
+timeout 20 adb exec-out screencap -p > "$OUT/01a-info-developpement.png"
+P=$(tap_text "Continuer"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/01-avertissement.png"
 dismiss_anr
 P=$(tap_text "J'ai compris"); [ -n "$P" ] && timeout 10 adb shell input tap $P
@@ -316,5 +319,17 @@ P=$(tap_text "Menu du profil"); [ -n "$P" ] && { timeout 10 adb shell input tap 
 P=$(tap_text "Voir le compte"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 P=$(tap_text "Se connecter"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 3; }
 timeout 20 adb exec-out screencap -p > "$OUT/29-lite-compte-information.png"
+# V19.1 — tutoriel : onglet Tuto (début, Pilotage, bas avec le champ de commentaire), puis case « Tutoriel » du menu
+P=$(tap_text "Tuto"); [ -n "$P" ] && { timeout 10 adb shell input tap $P; sleep 5; }
+timeout 20 adb exec-out screencap -p > "$OUT/30-tuto-debut.png"
+for i in 1 2 3 4 5 6; do adb shell input swipe 540 1700 540 500 300; sleep 0.5; done
+sleep 2
+timeout 20 adb exec-out screencap -p > "$OUT/31-tuto-pilotage.png"
+for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do adb shell input swipe 540 1700 540 400 250; sleep 0.5; done
+sleep 2
+timeout 20 adb exec-out screencap -p > "$OUT/32-tuto-avis.png"
+adb shell input keyevent 4 || true
+sleep 3
+timeout 20 adb exec-out screencap -p > "$OUT/33-menu-tutoriel.png"
 timeout 30 adb logcat -d -t 600 > "$OUT/logcat.txt" || true
 ls -la "$OUT"

@@ -49,6 +49,7 @@ private class FakeSupabase : CloudTransport {
             path.startsWith("/storage/v1/object/authenticated/igc/") -> CloudResponse(200, storage[path.removePrefix("/storage/v1/object/authenticated/igc/")]!!)
             path == "/storage/v1/object/list/igc" -> json(200, storage.keys.map { mapOf("name" to it.substringAfter('/')) })
             path == "/storage/v1/object/igc" && request.method == "DELETE" -> { storage.clear(); json(200, emptyList<Any>()) }
+            path == "/rest/v1/feedback" -> { rows += MiniJson.parse(request.body!!.toString(Charsets.UTF_8)).obj(); CloudResponse(201, ByteArray(0)) }
             path == "/rest/v1/rpc/delete_my_account" -> { rows.clear(); CloudResponse(204, ByteArray(0)) }
             else -> json(404, mapOf("message" to "route inconnue $path"))
         }
@@ -128,6 +129,19 @@ class SupabaseClientTest {
         assertEquals(FakeSupabase.USER, s.userId)
         assertEquals("jb@example.org", s.email)
         assertEquals(s, store.load())
+    }
+
+    @Test fun feedbackAsGuestUsesAnonKeyAndTrims() {
+        val server = FakeSupabase()
+        val client = SupabaseClient(config, server, MemorySessionStore()) { 1_000 }
+        assertTrue(client.sendFeedback("  Super appli, ajoutez les balises  ", "fr", "1.9.1-lite") is CloudResult.Ok)
+        val req = server.requests.single()
+        assertEquals("${FakeSupabase.BASE}/rest/v1/feedback", req.url)
+        assertEquals("Bearer ${config.anonKey}", req.headers["Authorization"])
+        assertEquals("return=minimal", req.headers["Prefer"])
+        assertEquals("Super appli, ajoutez les balises", server.rows.single()["message"])
+        assertTrue(client.sendFeedback("   ", "fr", "x") is CloudResult.Failed)
+        assertEquals(1, server.requests.size)
     }
 
     @Test fun googleSignInIsInactiveWithoutConfiguration() {

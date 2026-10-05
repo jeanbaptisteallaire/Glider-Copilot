@@ -158,6 +158,25 @@ class SupabaseClient(
         CloudResult.Ok(Unit)
     }
 
+    /**
+     * V19.1 — commentaire libre du tutoriel (table `feedback`, écriture seule). Invité : clé publique ;
+     * connecté : jeton de session, le compte est alors rattaché (`user_id = auth.uid()` côté serveur).
+     */
+    fun sendFeedback(message: String, lang: String, appVersion: String): CloudResult<Unit> = guarded {
+        val text = message.trim().take(2000)
+        if (text.isEmpty()) return@guarded CloudResult.Failed("commentaire vide", retryable = false)
+        val token = (freshSession() as? CloudResult.Ok)?.value?.accessToken
+        val r = transport.send(
+            CloudRequest(
+                "POST", "${config.base}/rest/v1/feedback",
+                headers(token) + mapOf("Content-Type" to "application/json", "Prefer" to "return=minimal"),
+                MiniJson.write(mapOf("message" to text, "lang" to lang, "app_version" to appVersion.take(40))).toByteArray(),
+            ),
+        )
+        if (!r.ok) return@guarded fail(r)
+        CloudResult.Ok(Unit)
+    }
+
     // ------------------------------------------------------------------------------------------------
 
     private fun <T> guarded(block: () -> CloudResult<T>): CloudResult<T> {

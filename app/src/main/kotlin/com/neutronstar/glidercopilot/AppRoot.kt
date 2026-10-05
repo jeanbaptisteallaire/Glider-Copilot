@@ -84,9 +84,10 @@ private const val DISCLAIMER_VERSION = 1
 
 /** Onglets de la maquette v8, dans l'ordre du vol : préparer, vérifier, piloter. */
 /** S18 Lite : seuls Prévol (météo + cartes), Pilotage et Mes vols. Édition complète : tous les onglets. */
-private val visibleTabs: List<Tab> get() = if (BuildConfig.LITE) listOf(Tab.PREVOL, Tab.PILOTAGE, Tab.MES_VOLS) else Tab.entries
+/** V19.1 : onglet Tuto tout à gauche, dans les deux éditions. */
+private val visibleTabs: List<Tab> get() = if (BuildConfig.LITE) listOf(Tab.TUTO, Tab.PREVOL, Tab.PILOTAGE, Tab.MES_VOLS) else Tab.entries
 
-private enum class Tab(val label: String) { FEED("Feed"), PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
+private enum class Tab(val label: String) { TUTO("Tuto"), FEED("Feed"), PREVOL("Prévol"), CHECKLIST("Check-lists"), PILOTAGE("Pilotage"), CARTE("Carte"), MES_VOLS("Mes vols") }
 
 @Composable
 fun AppRoot(container: AppContainer) {
@@ -98,9 +99,17 @@ fun AppRoot(container: AppContainer) {
         return
     }
     val ack by container.prefs.acknowledgedDisclaimer.collectAsState(initial = -1)
+    val notice by container.prefs.devNoticeSeen.collectAsState(initial = -1)
+    val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
     when {
-        ack == -1 -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
+        ack == -1 || notice == -1 -> Box(Modifier.fillMaxSize().background(Gc.colors.background))
+        // V19.1 : page « spiral est en développement », une seule fois, juste après la connexion
+        notice < DEV_NOTICE_VERSION -> DevNoticeScreen(
+            lang = guideLang(savedLang),
+            onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
+            onContinue = { scope.launch { container.prefs.setDevNoticeSeen(DEV_NOTICE_VERSION) } },
+        )
         ack < DISCLAIMER_VERSION -> Disclaimer { scope.launch { container.prefs.acknowledgeDisclaimer(DISCLAIMER_VERSION) } }
         else -> {
             // V18.5 : menu d'accueil spiral à chaque ouverture ; le retour système y ramène depuis les onglets
@@ -113,6 +122,7 @@ fun AppRoot(container: AppContainer) {
                     onPrevol = { section = Tab.PREVOL },
                     onPilotage = { section = Tab.PILOTAGE },
                     onMyFlights = { section = Tab.MES_VOLS },
+                    onTutorial = { section = Tab.TUTO },
                 )
             } else {
                 MainScaffold(container, startTab = current, onHome = { section = null })
@@ -236,6 +246,14 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
+                Tab.TUTO -> {
+                    val savedLang by container.prefs.guideLanguage.collectAsState(initial = null)
+                    TutorialScreen(
+                        lang = guideLang(savedLang),
+                        onLanguage = { l -> scope.launch { container.prefs.setGuideLanguage(l) } },
+                        onSendFeedback = { text, lang -> container.cloud.sendFeedback(text, lang) },
+                    )
+                }
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
@@ -295,6 +313,7 @@ private fun icon(t: Tab): ImageVector = when (t) {
     Tab.FEED -> GcIcons.Tab.Feed
     Tab.PREVOL -> GcIcons.Tab.Prevol
     Tab.CHECKLIST -> GcIcons.Tab.Checklist
+    Tab.TUTO -> GcIcons.Tab.Tuto
     Tab.PILOTAGE -> GcIcons.Tab.Pilotage
     Tab.CARTE -> GcIcons.Tab.Carte
     Tab.MES_VOLS -> GcIcons.Tab.MesVols

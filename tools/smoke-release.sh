@@ -41,6 +41,8 @@ for i in 1 2 3 4 5 6 7 8; do
   sleep 4
 done
 sleep 3
+tap "Continuer"   # V19.1 : page « spiral est en développement » (une fois)
+sleep 3
 tap "J'ai compris"
 sleep 4
 tap "Ouvrir Prévol"   # V18.5 : menu d'accueil → onglet Prévol
@@ -56,6 +58,8 @@ tap "Mes vols"; sleep 8
 timeout 20 adb exec-out screencap -p > "$OUT/94-release-mes-vols.png"
 tap "Feed"; sleep 6
 timeout 20 adb exec-out screencap -p > "$OUT/95-release-feed.png"
+tap "Tuto"; sleep 6   # V19.1 : tutoriel (onglet le plus à gauche)
+timeout 20 adb exec-out screencap -p > "$OUT/96-release-tuto.png"
 tap "Prévol"; sleep 8
 timeout 30 adb logcat -d > "$OUT/release-logcat.txt" || true
 ALIVE=$(adb shell pidof $PKG | tr -d '\r')

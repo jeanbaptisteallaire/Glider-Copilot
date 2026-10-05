@@ -39,6 +39,7 @@ object GcIcons {
     val SoundOff = stroke("soundOff", 2f, "M4 9h4l5-4v14l-5-4H4z", "M16.5 9.5l5 5M21.5 9.5l-5 5")
     val ChevronDown = stroke("chevronDown", 2f, "M6 9l6 6 6-6")
     val ChevronUp = stroke("chevronUp", 2f, "M6 15l6-6 6 6")
+    val ChevronRight = stroke("chevronRight", 2f, "M9 6l6 6-6 6")
     val WindArrow = stroke("wind", 2.4f, "M12 20V5M6 10l6-6 6 6")
     /** Onglet Carte : carte pliée, trait au trait comme les autres onglets. */
     val Carte = stroke("carte", 1.8f, "M9 4.5 3.5 6.8v12.7L9 17.2l6 2.3 5.5-2.3V4.5L15 6.8z", "M9 4.5v12.7M15 6.8v12.7")
@@ -93,6 +94,14 @@ object GcIcons {
         }.build()
 
     /** V18.1 — barre d'onglets : pictogrammes pleins, lumineux, inspirés d'Apple. */
+    /** V19.1 — globe : choix de la langue (tutoriel, page d'information). */
+    val Language = glyph(
+        "language",
+        emptyList(),
+        listOf("M12 3a9 9 0 1 1 0 18a9 9 0 1 1 0-18z", "M3 12h18", "M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9s1.2-6.4 3.7-9z"),
+        1.6f,
+    )
+
     object Tab {
         /** Soleil plein. */
         val Prevol = glyph(
@@ -131,6 +140,13 @@ object GcIcons {
                 "M5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13A2.5 2.5 0 0 1 5.5 3z" +
                     "M7.3 12.4l1.5-1.5 2.1 2.1 4.3-4.3 1.5 1.5-5.8 5.8z",
             ),
+        )
+        /** V19.1 — toque d'écolier (mortier) : le tutoriel. */
+        val Tuto = glyph(
+            "tabTuto",
+            listOf("M12 3.2 23 8.6 12 14 1 8.6z", "M5.8 11.4v4.4c0 1.8 2.8 3.4 6.2 3.4s6.2-1.6 6.2-3.4v-4.4l-6.2 3z"),
+            listOf("M21.2 9.6v5.6"),
+            1.8f,
         )
         /** Carte pliée en trois volets pleins. */
         val Carte = glyph(

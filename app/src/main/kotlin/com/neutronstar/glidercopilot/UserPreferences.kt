@@ -31,6 +31,12 @@ interface UserPreferences {
     val followRegistration: Flow<String?>
     /** Mode clair (V7.2) : s'applique à Prévol, Check-lists et Carte. Pilotage reste noir, toujours. */
     val lightMode: Flow<Boolean>
+    /** V19.1 — page « spiral est en développement » vue (version de la page, 0 = jamais). */
+    val devNoticeSeen: Flow<Int>
+    /** V19.1 — langue choisie pour le tutoriel et la page d'info (« fr », « en ») ; null = langue du téléphone. */
+    val guideLanguage: Flow<String?>
+    suspend fun setDevNoticeSeen(version: Int)
+    suspend fun setGuideLanguage(lang: String)
     suspend fun acknowledgeDisclaimer(version: Int)
     suspend fun setSelectedClub(id: String)
     suspend fun pushRegistration(registration: String)
@@ -66,6 +72,8 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     private val kFollowReg = stringPreferencesKey("follow_registration")
     // S15 : thème clair « social » par défaut pour tous (nouvelle clé : l'ancien choix V7.2 n'est pas repris)
     private val kLightMode = booleanPreferencesKey("light_mode_social")
+    private val kDevNotice = intPreferencesKey("dev_notice_seen")
+    private val kGuideLang = stringPreferencesKey("guide_language")
 
     override val acknowledgedDisclaimer: Flow<Int> = store.data.map { it[kAck] ?: 0 }
     override val selectedClubId: Flow<String?> = store.data.map { it[kClub] }
@@ -84,6 +92,10 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override val followEnabled: Flow<Boolean> = store.data.map { it[kFollow] ?: false }
     override val followRegistration: Flow<String?> = store.data.map { it[kFollowReg] }
     override val lightMode: Flow<Boolean> = store.data.map { it[kLightMode] ?: true }
+    override val devNoticeSeen: Flow<Int> = store.data.map { it[kDevNotice] ?: 0 }
+    override val guideLanguage: Flow<String?> = store.data.map { it[kGuideLang] }
+    override suspend fun setDevNoticeSeen(version: Int) { store.edit { it[kDevNotice] = version } }
+    override suspend fun setGuideLanguage(lang: String) { store.edit { it[kGuideLang] = lang } }
 
     override suspend fun acknowledgeDisclaimer(version: Int) { store.edit { it[kAck] = version } }
     override suspend fun setSelectedClub(id: String) { store.edit { it[kClub] = id } }

@@ -16,10 +16,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcFonts
+import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
 import com.neutronstar.glidercopilot.feature.prevol.PrevolDayPreview
 import com.neutronstar.glidercopilot.feature.prevol.PrevolViewModel
@@ -56,6 +59,7 @@ internal fun HomeMenuScreen(
     onPrevol: () -> Unit,
     onPilotage: () -> Unit,
     onMyFlights: () -> Unit,
+    onTutorial: () -> Unit,
 ) {
     GlidyAdaptiveTheme(light = true) {
         val c = Gc.colors
@@ -73,6 +77,23 @@ internal fun HomeMenuScreen(
                 Image(painterResource(R.drawable.spiral_logo), contentDescription = null, modifier = Modifier.height(40.dp).alpha(0.6f))
                 Spacer(Modifier.width(14.dp))
                 Text("spiral", style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Normal, fontSize = 30.sp, color = c.faint))
+            }
+
+            // V19.1 — case fine « Tutoriel », tout en haut
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(c.panel)
+                    .semantics { contentDescription = "Ouvrir le tutoriel" }
+                    .clickable(role = Role.Button, onClick = onTutorial)
+                    .padding(horizontal = 18.dp, vertical = 11.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(GcIcons.Tab.Tuto, contentDescription = null, tint = c.route, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(10.dp))
+                Text("Tutoriel", style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 17.sp, color = c.ink), modifier = Modifier.weight(1f))
+                Icon(GcIcons.ChevronRight, contentDescription = null, tint = c.faint, modifier = Modifier.size(14.dp))
             }
 
             // 1° — carte blanche : titre puis aperçu réel de la journée

@@ -51,6 +51,7 @@ Les pages viennent du dossier `site/` du dépôt et sont publiées par `.github/
 | Infos personnelles → **Nom** | Oui (nom Google, nom du pilote dans l'IGC) | Non | Non | Facultative | Fonctionnalités de l'appli, Gestion du compte |
 | Infos personnelles → **ID utilisateur** | Oui (identifiant du compte) | Non | Non | Facultative | Gestion du compte |
 | Fichiers et documents → **Fichiers et documents** | Oui (fichiers IGC) | Non | Non | Facultative | Fonctionnalités de l'appli |
+| Activité dans l'appli → **Autre contenu généré par l'utilisateur** | Oui (V19.1 : commentaire libre du tutoriel) | Non | Non | Facultative | Fonctionnalités de l'appli |
 
 Non déclarés (et pourquoi) : la position approximative, les capteurs, les vols non sauvegardés et le profil local restent sur
 le téléphone (non « collectés » au sens de Google) ; aucune donnée d'activité, de diagnostic, d'identifiant d'appareil,

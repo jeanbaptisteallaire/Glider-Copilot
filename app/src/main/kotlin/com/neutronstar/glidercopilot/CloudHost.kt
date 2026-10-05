@@ -42,6 +42,13 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
     private val _changes = MutableStateFlow(0)
     val changes: StateFlow<Int> = _changes.asStateFlow()
 
+    /** V19.1 — commentaire libre du tutoriel ; vrai si le serveur l'a enregistré. Invité accepté. */
+    suspend fun sendFeedback(message: String, lang: String): Boolean = withContext(Dispatchers.IO) {
+        val r = client.sendFeedback(message, lang, BuildConfig.VERSION_NAME)
+        if (r !is CloudResult.Ok) Log.w(TAG, "commentaire non envoyé : $r")
+        r is CloudResult.Ok
+    }
+
     /** Appelé à chaque affichage de l'onglet Mes vols : compteurs à jour, sauvegarde si connecté et au sol. */
     fun onShown() {
         refreshCounts()

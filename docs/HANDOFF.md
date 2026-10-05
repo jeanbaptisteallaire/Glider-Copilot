@@ -1,5 +1,20 @@
 # HANDOFF — état du projet (spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 19.1 — page « en développement », tutoriel FR/EN et avis, V1.9.1-lite (06/10/2026)
+- Publication Play **en pause** à la demande de JB (fiche non créée). Visuels prêts : `Planneur APP/Session 19/Play Store`.
+- `app/Guide.kt` :
+  - `DevNoticeScreen` : page blanche FR/EN (bouton globe), une seule fois après la page de connexion
+    (`UserPreferences.devNoticeSeen`, `DEV_NOTICE_VERSION`) — invite à laisser un avis sur le Play Store ;
+  - `TutorialScreen` : Prévol (club, carte hors ligne, appairage FLARM, détection du décollage), Pilotage (marge,
+    coupe, finesse, terrain, orientation, sources GPS/BARO/DATA, pompes OGN, vario, repli), Mes vols (traces
+    automatiques, carnet, rejeu 3D). Une capture réelle par étape (`drawable-nodpi/tuto_*.webp`, recadrées depuis
+    la CI 80), langue du téléphone par défaut, choix retenu (`guideLanguage`).
+  - Champ « Votre avis » en bas → table Supabase `feedback` (écriture seule, invités compris, rattachée au compte si
+    connecté, effacée avec le compte). JB lit les avis dans Supabase → Table Editor → `feedback`.
+- Accès : onglet **Tuto** (toque d'écolier) tout à gauche de la barre, et case fine « Tutoriel » en haut du menu.
+- Politique de confidentialité, page de suppression et formulaire Sécurité des données mis à jour (commentaires).
+- CI : captures `01a-info-developpement`, `30`–`33` (tutoriel, avis, menu), `96-release-tuto`.
+
 ## Session 19 — conformité Google Play + textes réglementaires, V1.9.0-lite (05/10/2026)
 - Compte Google Play Developer de JB passé en **organisation** (éditeur : Jean-Baptiste Allaire, EI).
 - Audit complet et réponses Play Console : `docs/play-store/CONFORMITE-GOOGLE-PLAY.md` (URL à saisir, formulaire
