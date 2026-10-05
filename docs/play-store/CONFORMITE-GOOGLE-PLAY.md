@@ -96,5 +96,4 @@ de contact, de photo, de santé ou de paiement n'est transmise. Supabase et Goog
 4. **Compte organisation** : l'obligation de test fermé (12 testeurs pendant 14 jours) ne vise, d'après Google, que les comptes
    personnels créés après le 13/11/2023 ; une diffusion directe en production est possible. Recommandé quand même : un test
    interne rapide pour vérifier la connexion Google avec la clé Play.
-5. **Mentions légales (France)** : pour une activité professionnelle, la loi (LCEN) demande d'indiquer l'adresse et le numéro
-   SIREN de l'éditeur. À ajouter dans `site/index.html` si l'appli est diffusée dans le cadre de l'EI.
+5. **Mentions légales** : nom de développeur Google Play (IcarusOne) et adresse ajoutés aux pages (V19). SIREN à ajouter si souhaité.
