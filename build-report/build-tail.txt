@@ -1,96 +1,69 @@
-> Task :feature:myflights:preDebugAndroidTestBuild UP-TO-DATE
-> Task :feature:myflights:generateDebugAndroidTestResValues FROM-CACHE
-> Task :feature:flight:generateDebugAndroidTestLintModel
-> Task :feature:flight:generateDebugUnitTestLintModel
-> Task :feature:flight:lintAnalyzeDebugAndroidTest
-> Task :feature:myflights:generateDebugAndroidTestLintModel
-> Task :feature:myflights:generateDebugUnitTestLintModel
-> Task :feature:flight:lintAnalyzeDebugUnitTest
-> Task :feature:prevol:preDebugAndroidTestBuild UP-TO-DATE
-> Task :feature:prevol:generateDebugAndroidTestResValues FROM-CACHE
-> Task :feature:prevol:generateDebugAndroidTestLintModel
-> Task :feature:myflights:lintAnalyzeDebugAndroidTest
-> Task :feature:prevol:generateDebugUnitTestLintModel
-> Task :feature:prevol:lintAnalyzeDebugAndroidTest
-> Task :feature:prevol:lintAnalyzeDebugUnitTest
-> Task :feature:replay3d:preDebugAndroidTestBuild UP-TO-DATE
-> Task :feature:replay3d:generateDebugAndroidTestResValues FROM-CACHE
+> Task :feature:myflights:lintAnalyzeDebugAndroidTest FROM-CACHE
+> Task :feature:myflights:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :feature:replay3d:generateDebugAndroidTestLintModel
-> Task :feature:replay3d:generateDebugUnitTestLintModel
-> Task :feature:myflights:lintAnalyzeDebugUnitTest
-> Task :feature:replay3d:lintAnalyzeDebugAndroidTest
 > Task :core:designsystem:generateDebugLintReportModel
+> Task :feature:replay3d:generateDebugUnitTestLintModel
+> Task :feature:replay3d:lintAnalyzeDebugAndroidTest FROM-CACHE
+> Task :feature:replay3d:lintAnalyzeDebugUnitTest FROM-CACHE
 > Task :data:flightarchive:generateDebugLintReportModel
-> Task :feature:checklist:generateDebugLintReportModel
-> Task :feature:feed:generateDebugLintReportModel
-> Task :feature:flight:generateDebugLintReportModel
-> Task :feature:myflights:generateDebugLintReportModel
-> Task :feature:prevol:generateDebugLintReportModel
-> Task :feature:replay3d:generateDebugLintReportModel
-> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
-> Task :app:mergeDebugShaders
-> Task :app:compileDebugShaders NO-SOURCE
-> Task :app:generateDebugAssets UP-TO-DATE
-> Task :app:mergeDebugAssets
-> Task :data:flightarchive:lintAnalyzeDebug
-> Task :app:compressDebugAssets
-> Task :data:flightarchive:lintReportDebug
-> Task :data:flightarchive:lintDebug
-> Task :feature:replay3d:lintAnalyzeDebugUnitTest
-> Task :app:desugarDebugFileDependencies
-> Task :feature:checklist:bundleLibRuntimeToDirDebug
-> Task :feature:prevol:bundleLibRuntimeToDirDebug
-> Task :core:designsystem:lintAnalyzeDebug
-> Task :feature:flight:bundleLibRuntimeToDirDebug
-> Task :app:dexBuilderDebug
-> Task :feature:checklist:lintAnalyzeDebug
-> Task :app:mergeDebugGlobalSynthetics
-> Task :feature:myflights:bundleLibRuntimeToDirDebug
-> Task :feature:feed:lintAnalyzeDebug
-> Task :feature:flight:lintAnalyzeDebug
 > Task :core:designsystem:lintReportDebug
 > Task :core:designsystem:lintDebug
-> Task :feature:checklist:lintReportDebug
-> Task :feature:checklist:lintDebug
+> Task :data:flightarchive:lintReportDebug
+> Task :data:flightarchive:lintDebug
+> Task :feature:checklist:generateDebugLintReportModel
+> Task :feature:feed:generateDebugLintReportModel
 > Task :feature:feed:lintReportDebug
 > Task :feature:feed:lintDebug
+> Task :feature:flight:generateDebugLintReportModel
+> Task :feature:checklist:lintReportDebug
+> Task :feature:checklist:lintDebug
+> Task :feature:myflights:generateDebugLintReportModel
 
 > Task :feature:flight:lintReportDebug
 Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/flight/build/reports/lint-results-debug.html
 
 > Task :feature:flight:lintDebug
-> Task :app:mergeDebugJavaResource
-> Task :app:checkDebugDuplicateClasses
-> Task :feature:replay3d:lintAnalyzeDebug
-> Task :feature:myflights:lintAnalyzeDebug
-
-> Task :feature:replay3d:lintReportDebug
-Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/replay3d/build/reports/lint-results-debug.html
-
-> Task :feature:replay3d:lintDebug
+> Task :feature:prevol:generateDebugLintReportModel
 > Task :feature:myflights:lintReportDebug
 > Task :feature:myflights:lintDebug
-> Task :feature:feed:bundleLibRuntimeToDirDebug
-> Task :feature:replay3d:bundleLibRuntimeToDirDebug
-> Task :core:designsystem:bundleLibRuntimeToDirDebug
-> Task :data:flightarchive:bundleLibRuntimeToDirDebug
-> Task :feature:prevol:lintAnalyzeDebug
-> Task :app:mergeProjectDexDebug
+> Task :feature:replay3d:generateDebugLintReportModel
 
 > Task :feature:prevol:lintReportDebug
 Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/prevol/build/reports/lint-results-debug.html
 
 > Task :feature:prevol:lintDebug
-> Task :app:mergeLibDexDebug
-> Task :app:mergeDebugJniLibFolders
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:mergeDebugShaders
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+
+> Task :feature:replay3d:lintReportDebug
+Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feature/replay3d/build/reports/lint-results-debug.html
+
+> Task :feature:replay3d:lintDebug
+> Task :app:mergeDebugAssets
+> Task :app:compressDebugAssets FROM-CACHE
+> Task :app:desugarDebugFileDependencies FROM-CACHE
+> Task :feature:checklist:bundleLibRuntimeToDirDebug
+> Task :feature:prevol:bundleLibRuntimeToDirDebug
+> Task :app:checkDebugDuplicateClasses
+> Task :feature:flight:bundleLibRuntimeToDirDebug
+> Task :feature:myflights:bundleLibRuntimeToDirDebug
+> Task :feature:feed:bundleLibRuntimeToDirDebug
+> Task :feature:replay3d:bundleLibRuntimeToDirDebug
+> Task :core:designsystem:bundleLibRuntimeToDirDebug
+> Task :data:flightarchive:bundleLibRuntimeToDirDebug
+> Task :app:mergeExtDexDebug FROM-CACHE
 > Task :core:designsystem:copyDebugJniLibsProjectOnly
 > Task :data:flightarchive:copyDebugJniLibsProjectOnly
-> Task :feature:feed:copyDebugJniLibsProjectOnly
+> Task :app:mergeLibDexDebug FROM-CACHE
 > Task :feature:checklist:copyDebugJniLibsProjectOnly
-> Task :feature:flight:copyDebugJniLibsProjectOnly
-> Task :feature:prevol:copyDebugJniLibsProjectOnly
+> Task :feature:feed:copyDebugJniLibsProjectOnly
+> Task :app:mergeDebugJniLibFolders
 > Task :feature:myflights:copyDebugJniLibsProjectOnly
+> Task :feature:flight:copyDebugJniLibsProjectOnly
 > Task :feature:replay3d:copyDebugJniLibsProjectOnly
+> Task :feature:prevol:copyDebugJniLibsProjectOnly
 > Task :core:designsystem:bundleDebugAar
 > Task :core:designsystem:assembleDebug
 > Task :data:flightarchive:bundleDebugAar
@@ -128,24 +101,23 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:prevol:mergeReleaseJniLibFolders
 > Task :feature:prevol:mergeReleaseNativeLibs NO-SOURCE
 > Task :feature:prevol:copyReleaseJniLibsProjectOnly
-> Task :app:mergeExtDexDebug
 > Task :feature:replay3d:mergeReleaseJniLibFolders
 > Task :feature:replay3d:mergeReleaseNativeLibs NO-SOURCE
-> Task :feature:checklist:mergeReleaseGeneratedProguardFiles
 > Task :feature:replay3d:copyReleaseJniLibsProjectOnly
-> Task :feature:prevol:mergeReleaseGeneratedProguardFiles
+> Task :feature:checklist:mergeReleaseGeneratedProguardFiles
 > Task :feature:checklist:exportReleaseConsumerProguardFiles
+> Task :feature:prevol:mergeReleaseGeneratedProguardFiles
 > Task :feature:prevol:exportReleaseConsumerProguardFiles
 > Task :feature:flight:mergeReleaseGeneratedProguardFiles
-> Task :feature:myflights:mergeReleaseGeneratedProguardFiles
 > Task :feature:flight:exportReleaseConsumerProguardFiles
+> Task :feature:myflights:mergeReleaseGeneratedProguardFiles
 > Task :feature:myflights:exportReleaseConsumerProguardFiles
 > Task :feature:feed:mergeReleaseGeneratedProguardFiles
 > Task :feature:feed:exportReleaseConsumerProguardFiles
 > Task :feature:replay3d:mergeReleaseGeneratedProguardFiles
+> Task :feature:replay3d:exportReleaseConsumerProguardFiles
 > Task :core:designsystem:mergeReleaseGeneratedProguardFiles
 > Task :core:designsystem:exportReleaseConsumerProguardFiles
-> Task :feature:replay3d:exportReleaseConsumerProguardFiles
 > Task :data:flightarchive:mergeReleaseGeneratedProguardFiles
 > Task :data:flightarchive:exportReleaseConsumerProguardFiles
 > Task :core:designsystem:prepareReleaseArtProfile
@@ -155,233 +127,261 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/feat
 > Task :feature:flight:prepareReleaseArtProfile
 > Task :feature:myflights:prepareReleaseArtProfile
 > Task :feature:prevol:prepareReleaseArtProfile
-> Task :core:designsystem:mergeReleaseShaders
 > Task :feature:replay3d:prepareReleaseArtProfile
+> Task :core:designsystem:mergeReleaseShaders
 > Task :core:designsystem:compileReleaseShaders NO-SOURCE
 > Task :core:designsystem:generateReleaseAssets UP-TO-DATE
-> Task :data:flightarchive:mergeReleaseShaders
 > Task :core:designsystem:mergeReleaseAssets
+> Task :data:flightarchive:mergeReleaseShaders
 > Task :data:flightarchive:compileReleaseShaders NO-SOURCE
 > Task :data:flightarchive:generateReleaseAssets UP-TO-DATE
 > Task :data:flightarchive:mergeReleaseAssets
 > Task :feature:checklist:mergeReleaseShaders
 > Task :feature:checklist:compileReleaseShaders NO-SOURCE
 > Task :feature:checklist:generateReleaseAssets UP-TO-DATE
-> Task :feature:feed:mergeReleaseShaders
 > Task :feature:checklist:mergeReleaseAssets
+> Task :feature:feed:mergeReleaseShaders
 > Task :feature:feed:compileReleaseShaders NO-SOURCE
 > Task :feature:feed:generateReleaseAssets UP-TO-DATE
 > Task :feature:feed:mergeReleaseAssets
 > Task :feature:flight:mergeReleaseShaders
 > Task :feature:flight:compileReleaseShaders NO-SOURCE
 > Task :feature:flight:generateReleaseAssets UP-TO-DATE
+> Task :feature:flight:mergeReleaseAssets
 > Task :feature:myflights:mergeReleaseShaders
 > Task :feature:myflights:compileReleaseShaders NO-SOURCE
 > Task :feature:myflights:generateReleaseAssets UP-TO-DATE
-> Task :feature:flight:mergeReleaseAssets
 > Task :feature:myflights:mergeReleaseAssets
 > Task :feature:prevol:mergeReleaseShaders
-> Task :feature:replay3d:mergeReleaseShaders
 > Task :feature:prevol:compileReleaseShaders NO-SOURCE
-> Task :feature:replay3d:compileReleaseShaders NO-SOURCE
 > Task :feature:prevol:generateReleaseAssets UP-TO-DATE
-> Task :feature:replay3d:generateReleaseAssets UP-TO-DATE
 > Task :feature:prevol:mergeReleaseAssets
-> Task :core:designsystem:createFullJarRelease
+> Task :feature:replay3d:mergeReleaseShaders
+> Task :feature:replay3d:compileReleaseShaders NO-SOURCE
+> Task :feature:replay3d:generateReleaseAssets UP-TO-DATE
 > Task :feature:replay3d:mergeReleaseAssets
-> Task :data:flightarchive:createFullJarRelease
+> Task :core:designsystem:createFullJarRelease
 > Task :core:designsystem:generateReleaseLintModel
+> Task :data:flightarchive:createFullJarRelease
 > Task :data:flightarchive:generateReleaseLintModel
 > Task :feature:checklist:createFullJarRelease
-> Task :feature:feed:createFullJarRelease
+> Task :app:validateSigningDebug
 > Task :feature:checklist:generateReleaseLintModel
+> Task :feature:feed:createFullJarRelease
 > Task :feature:feed:generateReleaseLintModel
 > Task :feature:flight:createFullJarRelease
-> Task :feature:myflights:createFullJarRelease
 > Task :feature:flight:generateReleaseLintModel
-> Task :feature:myflights:generateReleaseLintModel
-> Task :feature:prevol:createFullJarRelease
-> Task :feature:replay3d:createFullJarRelease
-> Task :feature:prevol:generateReleaseLintModel
-> Task :feature:checklist:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:checklist:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:checklist:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:replay3d:generateReleaseLintModel
-> Task :feature:prevol:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:checklist:extractReleaseAnnotations
-> Task :feature:prevol:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:checklist:mergeReleaseConsumerProguardFiles
-> Task :feature:prevol:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:checklist:mergeReleaseJavaResource
-> Task :feature:prevol:extractReleaseAnnotations
-> Task :feature:checklist:syncReleaseLibJars
-> Task :feature:prevol:mergeReleaseConsumerProguardFiles
-> Task :feature:checklist:bundleReleaseLocalLintAar
-> Task :feature:prevol:mergeReleaseJavaResource
-> Task :feature:flight:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:flight:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:flight:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:flight:extractReleaseAnnotations
-> Task :feature:flight:mergeReleaseConsumerProguardFiles
-> Task :feature:flight:mergeReleaseJavaResource
-> Task :feature:prevol:syncReleaseLibJars
-> Task :feature:prevol:bundleReleaseLocalLintAar
-> Task :feature:flight:syncReleaseLibJars
-> Task :feature:flight:bundleReleaseLocalLintAar
-> Task :feature:myflights:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:myflights:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:myflights:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:feed:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:feed:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:feed:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:myflights:extractReleaseAnnotations
-> Task :feature:myflights:mergeReleaseConsumerProguardFiles
-> Task :feature:myflights:mergeReleaseJavaResource
-> Task :feature:feed:extractReleaseAnnotations
-> Task :feature:feed:mergeReleaseConsumerProguardFiles
-> Task :feature:feed:mergeReleaseJavaResource
-> Task :feature:feed:syncReleaseLibJars
-> Task :feature:feed:bundleReleaseLocalLintAar
-> Task :feature:replay3d:stripReleaseDebugSymbols NO-SOURCE
-> Task :feature:replay3d:copyReleaseJniLibsProjectAndLocalJars
-> Task :feature:replay3d:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:myflights:syncReleaseLibJars
-> Task :feature:myflights:bundleReleaseLocalLintAar
-> Task :feature:replay3d:extractReleaseAnnotations
-> Task :feature:replay3d:mergeReleaseConsumerProguardFiles
-> Task :feature:replay3d:mergeReleaseJavaResource
-> Task :feature:replay3d:syncReleaseLibJars
-> Task :core:designsystem:stripReleaseDebugSymbols NO-SOURCE
-> Task :core:designsystem:copyReleaseJniLibsProjectAndLocalJars
-> Task :core:designsystem:extractDeepLinksForAarRelease FROM-CACHE
-> Task :feature:replay3d:bundleReleaseLocalLintAar
-> Task :core:designsystem:extractReleaseAnnotations
-> Task :core:designsystem:mergeReleaseConsumerProguardFiles
-> Task :core:designsystem:mergeReleaseJavaResource
-> Task :data:flightarchive:stripReleaseDebugSymbols NO-SOURCE
-> Task :data:flightarchive:copyReleaseJniLibsProjectAndLocalJars
-> Task :data:flightarchive:extractDeepLinksForAarRelease FROM-CACHE
-> Task :core:designsystem:syncReleaseLibJars
-> Task :data:flightarchive:extractReleaseAnnotations
-> Task :data:flightarchive:mergeReleaseConsumerProguardFiles
-> Task :core:designsystem:bundleReleaseLocalLintAar
-> Task :data:flightarchive:mergeReleaseJavaResource
-> Task :data:flightarchive:syncReleaseLibJars
-> Task :data:flightarchive:bundleReleaseLocalLintAar
-> Task :core:designsystem:writeReleaseLintModelMetadata
-> Task :app:validateSigningDebug
+> Task :feature:myflights:createFullJarRelease
+> Task :app:writeDebugAppMetadata
+> Task :app:writeDebugSigningConfigVersions
+> Task :app:mergeReleaseJniLibFolders
 > Task :app:mergeDebugNativeLibs
+> Task :app:mergeReleaseNativeLibs
 
 > Task :app:stripDebugDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
 
-> Task :app:writeDebugAppMetadata
-> Task :app:writeDebugSigningConfigVersions
-> Task :data:flightarchive:lintVitalAnalyzeRelease
-> Task :app:mergeReleaseJniLibFolders
-> Task :core:designsystem:lintVitalAnalyzeRelease
 > Task :app:checkReleaseDuplicateClasses
-> Task :app:mergeReleaseNativeLibs
-> Task :data:flightarchive:writeReleaseLintModelMetadata
-> Task :app:packageDebug
-> Task :app:mergeReleaseArtProfile
-> Task :app:createDebugApkListingFileRedirect
-> Task :feature:checklist:writeReleaseLintModelMetadata
-> Task :app:assembleDebug
 
 > Task :app:stripReleaseDebugSymbols
 Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so, libmaplibre.so. Run with --info option to learn more.
 
-> Task :app:extractReleaseNativeSymbolTables
+> Task :feature:myflights:generateReleaseLintModel
+> Task :feature:prevol:createFullJarRelease
+> Task :feature:prevol:generateReleaseLintModel
+> Task :feature:replay3d:createFullJarRelease
+> Task :app:mergeReleaseArtProfile
+> Task :app:extractReleaseNativeSymbolTables FROM-CACHE
+> Task :feature:replay3d:generateReleaseLintModel
 > Task :app:mergeReleaseNativeDebugMetadata NO-SOURCE
-> Task :feature:checklist:lintVitalAnalyzeRelease
-> Task :app:mergeReleaseGeneratedProguardFiles
-> Task :feature:feed:lintVitalAnalyzeRelease
+> Task :feature:checklist:stripReleaseDebugSymbols NO-SOURCE
 > Task :app:mergeReleaseStartupProfile
+> Task :feature:checklist:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:checklist:extractDeepLinksForAarRelease FROM-CACHE
 > Task :app:mergeReleaseShaders
 > Task :app:compileReleaseShaders NO-SOURCE
 > Task :app:generateReleaseAssets UP-TO-DATE
+> Task :feature:checklist:extractReleaseAnnotations FROM-CACHE
+> Task :feature:checklist:mergeReleaseConsumerProguardFiles
 > Task :app:mergeReleaseAssets
-> Task :app:expandReleaseArtProfileWildcards
-> Task :app:compressReleaseAssets
-> Task :feature:feed:writeReleaseLintModelMetadata
+> Task :feature:checklist:mergeReleaseJavaResource
+> Task :feature:checklist:syncReleaseLibJars FROM-CACHE
+> Task :app:compressReleaseAssets FROM-CACHE
+> Task :feature:checklist:bundleReleaseLocalLintAar
+> Task :feature:prevol:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:prevol:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:prevol:extractDeepLinksForAarRelease FROM-CACHE
 > Task :app:extractReleaseVersionControlInfo
-> Task :app:mergeReleaseJavaResource
+> Task :feature:flight:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:flight:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:flight:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:flight:extractReleaseAnnotations FROM-CACHE
+> Task :feature:prevol:extractReleaseAnnotations FROM-CACHE
+> Task :feature:flight:mergeReleaseConsumerProguardFiles
+> Task :feature:prevol:mergeReleaseConsumerProguardFiles
+> Task :feature:flight:mergeReleaseJavaResource
+> Task :feature:prevol:mergeReleaseJavaResource
+> Task :feature:flight:syncReleaseLibJars FROM-CACHE
+> Task :feature:prevol:syncReleaseLibJars FROM-CACHE
+> Task :feature:flight:bundleReleaseLocalLintAar
+> Task :feature:prevol:bundleReleaseLocalLintAar
+> Task :feature:myflights:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:myflights:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:myflights:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:myflights:extractReleaseAnnotations FROM-CACHE
+> Task :feature:myflights:mergeReleaseConsumerProguardFiles
+> Task :feature:myflights:mergeReleaseJavaResource
+> Task :feature:feed:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:feed:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:myflights:syncReleaseLibJars FROM-CACHE
+> Task :feature:feed:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:myflights:bundleReleaseLocalLintAar
+> Task :feature:feed:extractReleaseAnnotations FROM-CACHE
+> Task :feature:feed:mergeReleaseConsumerProguardFiles
+> Task :feature:feed:mergeReleaseJavaResource
+> Task :feature:replay3d:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:replay3d:copyReleaseJniLibsProjectAndLocalJars
+> Task :feature:feed:syncReleaseLibJars FROM-CACHE
+> Task :feature:replay3d:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:feed:bundleReleaseLocalLintAar
+> Task :feature:replay3d:extractReleaseAnnotations FROM-CACHE
+> Task :core:designsystem:stripReleaseDebugSymbols NO-SOURCE
+> Task :feature:replay3d:mergeReleaseConsumerProguardFiles
+> Task :core:designsystem:copyReleaseJniLibsProjectAndLocalJars
+> Task :core:designsystem:extractDeepLinksForAarRelease FROM-CACHE
+> Task :feature:replay3d:mergeReleaseJavaResource
+> Task :feature:replay3d:syncReleaseLibJars FROM-CACHE
+> Task :core:designsystem:extractReleaseAnnotations FROM-CACHE
+> Task :core:designsystem:mergeReleaseConsumerProguardFiles
+> Task :feature:replay3d:bundleReleaseLocalLintAar
+> Task :core:designsystem:mergeReleaseJavaResource
+> Task :core:designsystem:syncReleaseLibJars FROM-CACHE
+> Task :data:flightarchive:stripReleaseDebugSymbols NO-SOURCE
+> Task :core:designsystem:bundleReleaseLocalLintAar
+> Task :data:flightarchive:copyReleaseJniLibsProjectAndLocalJars
+> Task :data:flightarchive:extractDeepLinksForAarRelease FROM-CACHE
+> Task :data:flightarchive:extractReleaseAnnotations FROM-CACHE
+> Task :core:designsystem:lintVitalAnalyzeRelease FROM-CACHE
+> Task :data:flightarchive:mergeReleaseConsumerProguardFiles
+> Task :core:designsystem:writeReleaseLintModelMetadata
+> Task :data:flightarchive:mergeReleaseJavaResource
+> Task :feature:checklist:lintVitalAnalyzeRelease FROM-CACHE
+> Task :data:flightarchive:syncReleaseLibJars FROM-CACHE
+> Task :feature:checklist:writeReleaseLintModelMetadata
+> Task :data:flightarchive:bundleReleaseLocalLintAar
+> Task :feature:feed:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:feed:writeReleaseLintModelMetadata
+> Task :data:flightarchive:lintVitalAnalyzeRelease FROM-CACHE
+> Task :data:flightarchive:writeReleaseLintModelMetadata
+> Task :feature:flight:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:myflights:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:flight:writeReleaseLintModelMetadata
-> Task :app:generateReleaseLintVitalReportModel
-> Task :feature:myflights:lintVitalAnalyzeRelease
 > Task :feature:myflights:writeReleaseLintModelMetadata
-> Task :feature:flight:lintVitalAnalyzeRelease
+> Task :feature:prevol:lintVitalAnalyzeRelease FROM-CACHE
+> Task :feature:replay3d:lintVitalAnalyzeRelease FROM-CACHE
 > Task :feature:prevol:writeReleaseLintModelMetadata
-> Task :feature:replay3d:lintVitalAnalyzeRelease
 > Task :feature:replay3d:writeReleaseLintModelMetadata
-> Task :core:designsystem:generateReleaseLintVitalModel
 > Task :data:flightarchive:generateReleaseLintVitalModel
-> Task :feature:checklist:generateReleaseLintVitalModel
+> Task :core:designsystem:generateReleaseLintVitalModel
 > Task :feature:feed:generateReleaseLintVitalModel
-> Task :feature:flight:generateReleaseLintVitalModel
+> Task :feature:checklist:generateReleaseLintVitalModel
 > Task :feature:myflights:generateReleaseLintVitalModel
-> Task :feature:prevol:generateReleaseLintVitalModel
+> Task :feature:flight:generateReleaseLintVitalModel
 > Task :feature:replay3d:generateReleaseLintVitalModel
+> Task :feature:prevol:generateReleaseLintVitalModel
+> Task :core:designsystem:bundleReleaseAar
+> Task :core:designsystem:mapReleaseSourceSetPaths
 > Task :app:collectReleaseDependencies
+> Task :core:designsystem:mergeReleaseResources FROM-CACHE
+> Task :core:designsystem:verifyReleaseResources FROM-CACHE
+> Task :core:designsystem:assembleRelease
+> Task :data:flightarchive:bundleReleaseAar
+> Task :data:flightarchive:mapReleaseSourceSetPaths
+> Task :data:flightarchive:mergeReleaseResources FROM-CACHE
 > Task :app:sdkReleaseDependencyData
 > Task :app:validateSigningRelease
 > Task :app:writeReleaseAppMetadata
 > Task :app:writeReleaseSigningConfigVersions
-> Task :core:designsystem:bundleReleaseAar
-> Task :core:designsystem:mapReleaseSourceSetPaths
-> Task :core:designsystem:mergeReleaseResources
-> Task :feature:prevol:lintVitalAnalyzeRelease
-> Task :core:designsystem:verifyReleaseResources
-> Task :core:designsystem:assembleRelease
-> Task :data:flightarchive:bundleReleaseAar
-> Task :data:flightarchive:mapReleaseSourceSetPaths
-> Task :data:flightarchive:mergeReleaseResources
-> Task :data:flightarchive:verifyReleaseResources
+> Task :data:flightarchive:verifyReleaseResources FROM-CACHE
 > Task :data:flightarchive:assembleRelease
 > Task :feature:checklist:bundleReleaseAar
-> Task :core:designsystem:compileReleaseLibraryResources
 > Task :feature:checklist:mapReleaseSourceSetPaths
-> Task :feature:checklist:mergeReleaseResources
-> Task :feature:checklist:verifyReleaseResources
-> Task :feature:checklist:assembleRelease
+> Task :core:designsystem:compileReleaseLibraryResources FROM-CACHE
 > Task :feature:feed:bundleReleaseAar
 > Task :feature:feed:mapReleaseSourceSetPaths
-> Task :feature:feed:mergeReleaseResources
-> Task :feature:feed:verifyReleaseResources
-> Task :feature:feed:assembleRelease
+> Task :feature:checklist:mergeReleaseResources FROM-CACHE
+> Task :feature:feed:mergeReleaseResources FROM-CACHE
+> Task :feature:checklist:verifyReleaseResources FROM-CACHE
+> Task :feature:checklist:assembleRelease
 > Task :feature:flight:bundleReleaseAar
+> Task :feature:feed:verifyReleaseResources FROM-CACHE
+> Task :feature:feed:assembleRelease
 > Task :feature:flight:mapReleaseSourceSetPaths
-> Task :feature:flight:mergeReleaseResources
-> Task :feature:flight:verifyReleaseResources
-> Task :feature:flight:assembleRelease
 > Task :feature:myflights:bundleReleaseAar
 > Task :feature:myflights:mapReleaseSourceSetPaths
-> Task :feature:myflights:mergeReleaseResources
-> Task :feature:myflights:verifyReleaseResources
+> Task :feature:flight:mergeReleaseResources FROM-CACHE
+> Task :feature:myflights:mergeReleaseResources FROM-CACHE
+> Task :feature:flight:verifyReleaseResources FROM-CACHE
+> Task :feature:flight:assembleRelease
+> Task :feature:myflights:verifyReleaseResources FROM-CACHE
 > Task :feature:myflights:assembleRelease
 > Task :feature:prevol:bundleReleaseAar
 > Task :feature:prevol:mapReleaseSourceSetPaths
-> Task :feature:prevol:mergeReleaseResources
-> Task :feature:prevol:verifyReleaseResources
-> Task :feature:prevol:assembleRelease
 > Task :feature:replay3d:bundleReleaseAar
 > Task :feature:replay3d:mapReleaseSourceSetPaths
-> Task :app:lintAnalyzeDebug
-> Task :feature:replay3d:mergeReleaseResources
-> Task :feature:replay3d:verifyReleaseResources
-> Task :feature:replay3d:assembleRelease
+> Task :feature:prevol:mergeReleaseResources FROM-CACHE
+> Task :feature:prevol:verifyReleaseResources FROM-CACHE
+> Task :feature:prevol:assembleRelease
 > Task :app:configureReleaseDependencies
-> Task :app:parseReleaseIntegrityConfig
+> Task :app:parseReleaseIntegrityConfig FROM-CACHE
+> Task :feature:replay3d:mergeReleaseResources FROM-CACHE
+> Task :feature:replay3d:verifyReleaseResources FROM-CACHE
+> Task :feature:replay3d:assembleRelease
+> Task :app:compileReleaseKotlin
+> Task :app:compileDebugKotlin
+> Task :app:compileReleaseJavaWithJavac
+> Task :app:compileDebugJavaWithJavac
+> Task :app:processDebugJavaRes
+> Task :app:bundleDebugClassesToCompileJar
+> Task :app:bundleDebugClassesToRuntimeJar
+> Task :app:compileDebugUnitTestKotlin NO-SOURCE
+> Task :app:bundleReleaseClassesToRuntimeJar
+> Task :app:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :app:bundleReleaseClassesToCompileJar
+> Task :app:processDebugUnitTestJavaRes NO-SOURCE
+> Task :app:testDebugUnitTest NO-SOURCE
+> Task :app:compileReleaseUnitTestKotlin NO-SOURCE
+> Task :app:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :app:processReleaseJavaRes
+> Task :app:processReleaseUnitTestJavaRes NO-SOURCE
+> Task :app:testReleaseUnitTest NO-SOURCE
+> Task :app:test UP-TO-DATE
+> Task :app:generateDebugAndroidTestLintModel
+> Task :app:generateDebugLintReportModel
+> Task :app:generateDebugUnitTestLintModel
+> Task :app:lintAnalyzeDebugUnitTest
+> Task :app:lintAnalyzeDebugAndroidTest
+> Task :app:dexBuilderDebug
+> Task :app:mergeDebugGlobalSynthetics FROM-CACHE
+> Task :app:mergeProjectDexDebug
+> Task :app:mergeReleaseGeneratedProguardFiles
+> Task :app:mergeDebugJavaResource
+> Task :app:expandReleaseArtProfileWildcards
+> Task :app:generateReleaseLintVitalReportModel
+> Task :app:packageDebug
+> Task :app:mergeReleaseJavaResource
+> Task :app:createDebugApkListingFileRedirect
+> Task :app:assembleDebug
+> Task :app:lintAnalyzeDebug
 > Task :app:lintVitalAnalyzeRelease
 > Task :app:lintVitalReportRelease
 > Task :app:lintVitalRelease
+> Task :app:minifyReleaseWithR8
 
 > Task :app:lintReportDebug
 Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/build/reports/lint-results-debug.html
 
 > Task :app:lintDebug
-> Task :app:minifyReleaseWithR8
 > Task :app:buildReleasePreBundle
 > Task :app:compileReleaseArtProfile
 > Task :app:convertShrunkResourcesToBinaryRelease
@@ -394,7 +394,7 @@ Wrote HTML report to file:///home/runner/work/Glider-Copilot/Glider-Copilot/app/
 > Task :app:produceReleaseBundleIdeListingFile
 > Task :app:createReleaseBundleListingFileRedirect
 > Task :app:bundleRelease
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791236462884.json
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/gradle-1791238076719.json
 
-BUILD SUCCESSFUL in 6m 18s
-825 actionable tasks: 690 executed, 135 from cache
+BUILD SUCCESSFUL in 2m 35s
+825 actionable tasks: 476 executed, 349 from cache
