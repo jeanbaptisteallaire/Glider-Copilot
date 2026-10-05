@@ -22,6 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.clickable
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -99,3 +103,127 @@ internal fun WgButton(text: String, onClick: () -> Unit, modifier: Modifier = Mo
 }
 
 internal val WG_INK = Color(0xFF1D3550)
+
+/*
+ * V20.2 — couverture animée : l'animation HTML de JB (« Session 20.1/animation » : océan et nuage peints qui glissent,
+ * deux planeurs biplaces, touches de gouache, 10 images/s) jouée telle quelle dans une WebView, depuis les assets
+ * (`assets/cover/`, calques en WebP). Fond #073E60 identique à celui de l'animation : aucun flash au chargement.
+ * Les touchers ne sont pas transmis à la page (elle n'a aucune commande).
+ */
+internal val COVER_SEA = Color(0xFF073E60)
+
+@android.annotation.SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
+@Composable
+internal fun CoverAnimation(modifier: Modifier = Modifier) {
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current.lifecycle
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val web = androidx.compose.runtime.remember {
+        android.webkit.WebView(context).apply {
+            setBackgroundColor(0xFF073E60.toInt())
+            settings.javaScriptEnabled = true
+            settings.allowFileAccess = false
+            settings.allowContentAccess = false
+            isVerticalScrollBarEnabled = false
+            isHorizontalScrollBarEnabled = false
+            overScrollMode = android.view.View.OVER_SCROLL_NEVER
+            isFocusable = false
+            setOnTouchListener { _, _ -> true }
+            importantForAccessibility = android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+            loadUrl("file:///android_asset/cover/index.html")
+        }
+    }
+    androidx.compose.runtime.DisposableEffect(lifecycle, web) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, e ->
+            when (e) {
+                androidx.lifecycle.Lifecycle.Event.ON_RESUME -> web.onResume()
+                androidx.lifecycle.Lifecycle.Event.ON_PAUSE -> web.onPause()
+                else -> Unit
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer); web.stopLoading(); web.destroy() }
+    }
+    Box(modifier.fillMaxSize().background(COVER_SEA)) {
+        androidx.compose.ui.viewinterop.AndroidView(factory = { web }, modifier = Modifier.fillMaxSize())
+    }
+}
+
+/**
+ * V20.2 — titre de marque d'après la maquette de JB : « WIND » au-dessus de « GLIDER », lignes resserrées, G et R
+ * légèrement plus grands, et de chaque côté de GLIDER trois traits en « ailes de pilote ». Inter Medium, capitales.
+ */
+@Composable
+internal fun BrandTitle(size: TextUnit = 46.sp, color: Color = Color.White, modifier: Modifier = Modifier) {
+    val base = TextStyle(
+        fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = size, lineHeight = size,
+        letterSpacing = size * 0.07f, color = color, shadow = Shadow(Color(0x40001A2A), blurRadius = 16f),
+        platformStyle = androidx.compose.ui.text.PlatformTextStyle(includeFontPadding = false),
+        lineHeightStyle = androidx.compose.ui.text.style.LineHeightStyle(
+            androidx.compose.ui.text.style.LineHeightStyle.Alignment.Center, androidx.compose.ui.text.style.LineHeightStyle.Trim.Both,
+        ),
+    )
+    val big = base.copy(fontSize = size * 1.16f, lineHeight = size * 1.16f)
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    val wingW = with(density) { (size * 0.95f).toDp() }
+    val wingH = with(density) { (size * 0.6f).toDp() }
+    androidx.compose.foundation.layout.Column(
+        modifier.semantics { contentDescription = "Wind Glider" },
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        androidx.compose.material3.Text("WIND", style = base)
+        androidx.compose.foundation.layout.Spacer(Modifier.height(with(density) { (size * 0.16f).toDp() }))
+        androidx.compose.foundation.layout.Row(verticalAlignment = Alignment.CenterVertically) {
+            PilotWing(left = true, color = color, modifier = Modifier.size(wingW, wingH))
+            androidx.compose.foundation.layout.Spacer(Modifier.width(with(density) { (size * 0.12f).toDp() }))
+            androidx.compose.material3.Text(
+                androidx.compose.ui.text.buildAnnotatedString {
+                    withStyle(big.toSpanStyle().copy(baselineShift = androidx.compose.ui.text.style.BaselineShift(-0.07f))) { append("G") }
+                    append("LIDE")
+                    withStyle(big.toSpanStyle().copy(letterSpacing = 0.sp, baselineShift = androidx.compose.ui.text.style.BaselineShift(-0.07f))) { append("R") }
+                },
+                style = base,
+            )
+            androidx.compose.foundation.layout.Spacer(Modifier.width(with(density) { (size * 0.12f).toDp() }))
+            PilotWing(left = false, color = color, modifier = Modifier.size(wingW, wingH))
+        }
+    }
+}
+
+/** Trois traits d'aile, du plus long (haut) au plus court (bas), extrémité extérieure biseautée. */
+@Composable
+private fun PilotWing(left: Boolean, color: Color, modifier: Modifier) {
+    androidx.compose.foundation.Canvas(modifier) {
+        val t = size.height * 0.2f // épaisseur ≈ fût des lettres
+        val gap = (size.height - 3 * t) / 2f
+        val slant = t * 0.9f
+        for (i in 0 until 3) {
+            val len = size.width * (1f - 0.17f * i)
+            val y = i * (t + gap)
+            val path = androidx.compose.ui.graphics.Path().apply {
+                if (left) {
+                    moveTo(size.width - len, y); lineTo(size.width, y); lineTo(size.width, y + t); lineTo(size.width - len + slant, y + t)
+                } else {
+                    moveTo(0f, y); lineTo(len, y); lineTo(len - slant, y + t); lineTo(0f, y + t)
+                }
+                close()
+            }
+            drawPath(path, color)
+        }
+    }
+}
+
+/** V20.2 — apparition en fondu (et légère montée) après [delayMs] : rythme de la couverture animée. */
+@Composable
+internal fun rememberFadeIn(delayMs: Long, durationMs: Int = 650): androidx.compose.runtime.State<Float> {
+    val a = androidx.compose.runtime.remember { androidx.compose.animation.core.Animatable(0f) }
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(delayMs)
+        a.animateTo(1f, androidx.compose.animation.core.tween(durationMs, easing = androidx.compose.animation.core.FastOutSlowInEasing))
+    }
+    return a.asState()
+}
+
+/** Modificateur d'apparition : opacité [p] et montée de 10 dp. */
+internal fun Modifier.fadeUp(p: Float): Modifier = this.then(
+    Modifier.graphicsLayer { alpha = p; translationY = (1f - p) * 10.dp.toPx() },
+)

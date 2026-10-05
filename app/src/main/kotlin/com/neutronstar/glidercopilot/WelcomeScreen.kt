@@ -96,9 +96,11 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
     }
 
     val density = LocalDensity.current
-    // V20 : respiration très lente de l'illustration (zoom de 4 % sur 20 s), à peine perceptible
-    val rise = remember { Animatable(0f) }
-    LaunchedEffect(Unit) { rise.animateTo(1f, tween(durationMillis = 20_000, easing = FastOutSlowInEasing)) }
+    // V20.2 : rythme de l'animation — titre et « Continuer avec Google » à 0,5 s, « invité » à 0,75 s, en fondu
+    val titleIn by rememberFadeIn(500)
+    val googleIn by rememberFadeIn(500)
+    val guestIn by rememberFadeIn(750)
+    val legalIn by rememberFadeIn(1000)
     var touch by remember { mutableStateOf(Offset.Zero) }
     val parallax by animateOffsetAsState(
         targetValue = touch,
@@ -111,7 +113,7 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
         BoxWithConstraints(
             Modifier
                 .fillMaxSize()
-                .background(c.brandSky)
+                .background(COVER_SEA)
                 .pointerInput(Unit) {
                     awaitEachGesture {
                         val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
@@ -134,14 +136,11 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
         ) {
             val h = constraints.maxHeight.toFloat()
             val shift = with(density) { 8.dp.toPx() }
-            // V20 « Wind Glider » : couverture illustrée (prairie, planeur, manche à air), ciel prolongé en haut
-            ScenicBackground(
-                R.drawable.wg_cover, 941, 1954, c.brandSky,
-                imageModifier = Modifier.graphicsLayer {
-                    val z = 1.04f + 0.04f * rise.value
-                    scaleX = z
-                    scaleY = z
-                    transformOrigin = androidx.compose.ui.graphics.TransformOrigin(0.5f, 1f)
+            // V20.2 : couverture animée de JB (océan, nuage et planeurs peints) ; parallaxe très légère au toucher
+            CoverAnimation(
+                Modifier.graphicsLayer {
+                    scaleX = 1.04f
+                    scaleY = 1.04f
                     translationX = -parallax.x * shift
                     translationY = -parallax.y * shift
                 },
@@ -151,11 +150,9 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
                 Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.height(with(density) { (h * 0.09f).toDp() }))
-                Text(
-                    "WIND\nGLIDER",
-                    style = brandTitleStyle(),
-                    modifier = Modifier.graphicsLayer { translationX = parallax.x * shift * 0.5f },
+                Spacer(Modifier.height(with(density) { (h * 0.07f).toDp() }))
+                BrandTitle(
+                    modifier = Modifier.fadeUp(titleIn).graphicsLayer { translationX = parallax.x * shift * 0.5f },
                 )
                 Spacer(Modifier.weight(1f))
                 if (!signedInAtStart) {
@@ -172,13 +169,15 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
                             text = "Continuer avec Google",
                             enabled = !account.busy && !leaving,
                             leading = { GoogleMark(busy = account.busy) },
+                            modifier = Modifier.fadeUp(googleIn),
                         ) { (context as? Activity)?.let { cloud.signInWithGoogle(it) } }
                         Spacer(Modifier.height(16.dp))
                     }
-                    WelcomeButton(text = "Continuer en invité", enabled = !leaving) { leaving = true; onContinue() }
-                    Spacer(Modifier.height(18.dp))
-                    LegalNotice()
-                    Spacer(Modifier.height(with(density) { (h * 0.06f).toDp() }))
+                    WelcomeButton(text = "Continuer en invité", enabled = !leaving, modifier = Modifier.fadeUp(guestIn)) { leaving = true; onContinue() }
+                    Spacer(Modifier.height(14.dp))
+                    Box(Modifier.fadeUp(legalIn)) { LegalNotice() }
+                    // boutons au-dessus du planeur du premier plan, qui reste visible en bas de l'animation
+                    Spacer(Modifier.height(with(density) { (h * 0.2f).toDp() }))
                 }
             }
         }
@@ -187,10 +186,10 @@ internal fun WelcomeScreen(cloud: CloudHost, onContinue: () -> Unit) {
 
 /** V20 — bouton de la couverture : carte blanche aux coins doux, texte bleu nuit (maquette « Wind Glider »). */
 @Composable
-private fun WelcomeButton(text: String, enabled: Boolean, leading: (@Composable () -> Unit)? = null, onClick: () -> Unit) {
+private fun WelcomeButton(text: String, enabled: Boolean, leading: (@Composable () -> Unit)? = null, modifier: Modifier = Modifier, onClick: () -> Unit) {
     val c = Gc.colors
     Box(
-        Modifier
+        modifier
             .fillMaxWidth(0.74f)
             .height(56.dp)
             .shadow(10.dp, RoundedCornerShape(14.dp), ambientColor = Color(0x33102030), spotColor = Color(0x33102030))

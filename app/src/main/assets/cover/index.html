@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#073e60">
+  <title>Wind Glider — ciel vivant</title>
+  <!-- V20.2 : animation de JB (« Session 20.1/animation »), fond de la couverture et de la page Tuto. Calques en WebP. -->
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: #073e60; }
+    svg { display: block; width: 100vw; height: 100vh; height: 100dvh; }
+    .paint { pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) {
+      svg { animation: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Visible portrait crop: 872 × 1841 ≈ 9:19. The longer painted sheet remains outside the frame for motion. -->
+  <svg id="scene" viewBox="0 194 872 1841" preserveAspectRatio="xMidYMid slice"
+       role="img" aria-label="Deux planeurs biplaces avancent doucement au-dessus d'un nuage et de l'océan peints à la main">
+    <defs>
+      <linearGradient id="plateFade" x1="0" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+        <stop offset="0" stop-color="black"/>
+        <stop offset="0.055" stop-color="white"/>
+        <stop offset="1" stop-color="white"/>
+      </linearGradient>
+      <mask id="plateMask" maskContentUnits="objectBoundingBox">
+        <rect x="0" y="0" width="1" height="1" fill="url(#plateFade)"/>
+      </mask>
+      <clipPath id="farPlaneArea"><rect x="25" y="1065" width="780" height="270"/></clipPath>
+      <clipPath id="nearPlaneArea"><rect x="0" y="1550" width="872" height="485"/></clipPath>
+    </defs>
+
+    <rect width="872" height="2035" fill="#073e60"/>
+
+    <!-- The long ocean sheet has room to travel; the cloud is a separate, faster plane. -->
+    <g id="ocean">
+      <image href="extension-ocean.webp" x="-24" y="-1588" width="928" height="1918" preserveAspectRatio="none"/>
+      <image href="ocean-sans-nuage.webp" x="-24" y="210" width="928" height="1918"
+             preserveAspectRatio="none" mask="url(#plateMask)"/>
+      <g class="paint">
+      <path class="fleck" data-phase="25" data-period="49" data-max=".12" fill="#127e93"
+            d="M666 1038l33-17 19-1-14 9 24-6-17 10-45 15z"/>
+      <path class="fleck" data-phase="58" data-period="67" data-max=".14" fill="#075a78"
+            d="M291 1244q36-15 58-14l-24 11 37-7-41 19-39 9 18-11z"/>
+      <path class="fleck" data-phase="12" data-period="61" data-max=".11" fill="#1399a2"
+            d="M537 1308l31-16 22-3-17 9 20-4-15 12-43 15z"/>
+      <path class="fleck" data-phase="42" data-period="79" data-max=".09" fill="#045777"
+            d="M103 1395q31-19 63-21l-16 11 21-6-27 18-46 12z"/>
+      <path class="fleck" data-phase="73" data-period="52" data-max=".13" fill="#1aa5a8"
+            d="M719 1511q32-18 54-20l-17 10 22-4-23 15-44 14z"/>
+      <path class="fleck" data-phase="21" data-period="68" data-max=".10" fill="#075c77"
+            d="M226 1765l43-19 23-2-21 11 28-6-29 19-49 13z"/>
+      <path class="fleck" data-phase="49" data-period="83" data-max=".11" fill="#1a8b98"
+            d="M636 1890q37-17 59-18l-25 11 27-5-29 17-39 9z"/>
+      <path class="fleck" data-phase="7" data-period="45" data-motion="2" data-max=".10" fill="#4caeb0"
+            d="M603 355l26-8 17 2-16 5 26-3-25 10-34 4z"/>
+      <path class="fleck" data-phase="31" data-period="57" data-motion="2" data-max=".08" fill="#0c7790"
+            d="M741 568q17-13 34-15l-7 7 18-5-15 11-33 10z"/>
+      <path class="fleck" data-phase="51" data-period="39" data-motion="2" data-max=".09" fill="#5db4b6"
+            d="M355 846l28-11 18-1-15 7 26-6-30 13-30 5z"/>
+      <path class="fleck" data-phase="14" data-period="55" data-motion="2" data-max=".08" fill="#83c4c2"
+            d="M566 1009q18-8 40-7l-11 5 18-2-21 8-31 4z"/>
+      <path class="fleck" data-phase="65" data-period="43" data-motion="3" data-max=".08" fill="#0b7188"
+            d="M118 1120l25-13 20-1-14 9 22-7-18 13-42 12z"/>
+      <path class="fleck" data-phase="34" data-period="61" data-motion="2" data-max=".09" fill="#35a4a8"
+            d="M454 1551q22-13 46-12l-16 7 21-5-20 12-37 9z"/>
+      </g>
+    </g>
+
+    <g id="cloud">
+      <image href="nuage-transparent.webp" x="0" y="233" width="872" height="1802"/>
+      <g class="paint">
+      <path class="fleck" data-phase="9" data-period="47" data-max=".14" fill="#edf6ed"
+            d="M84 514q24-10 45-7l-14 6 19 3q-31-1-57 9l13-7z"/>
+      <path class="fleck" data-phase="30" data-period="63" data-max=".11" fill="#c9e3e1"
+            d="M249 559q31-16 49-13l-8 8 23-3-30 13-36 7 11-7z"/>
+      <path class="fleck" data-phase="17" data-period="54" data-max=".12" fill="#ffffff"
+            d="M435 591q30-7 61-1l-23 3 31 5-47-1-27 8 12-10z"/>
+      <path class="fleck" data-phase="40" data-period="71" data-max=".10" fill="#e2f2ec"
+            d="M597 680q23-11 43-9l-11 7 19 1-30 7-29 6 11-7z"/>
+      <path class="fleck" data-phase="6" data-period="57" data-max=".13" fill="#d8eeec"
+            d="M139 728l25-11 21 1-16 7 19-1-28 11-30 4z"/>
+      <path class="fleck" data-phase="53" data-period="77" data-max=".08" fill="#f6faf1"
+            d="M452 771q29-17 58-17l-17 8 21-3-19 9-44 11 13-10z"/>
+      <path class="fleck" data-phase="18" data-period="41" data-motion="3" data-max=".11" fill="#f8fcf3"
+            d="M55 482q30-14 52-13l-14 6 21-1-32 13-29 5z"/>
+      <path class="fleck" data-phase="47" data-period="53" data-motion="4" data-max=".10" fill="#e3f1ee"
+            d="M329 524q17-10 40-8l-10 5 23 1-28 7-30 7z"/>
+      <path class="fleck" data-phase="3" data-period="37" data-motion="3" data-max=".08" fill="#d0e9e8"
+            d="M662 638q18-9 37-9l-11 6 20-3-24 11-28 3z"/>
+      <path class="fleck" data-phase="71" data-period="59" data-motion="4" data-max=".10" fill="#f7fbf2"
+            d="M522 851q27-13 48-11l-18 7 24-3-22 10-38 8z"/>
+      <path class="fleck" data-phase="26" data-period="47" data-motion="3" data-max=".10" fill="#d8edeb"
+            d="M102 933q24-10 46-8l-13 5 20-1-24 11-34 7z"/>
+      <path class="fleck" data-phase="55" data-period="65" data-motion="4" data-max=".08" fill="#edf7ed"
+            d="M677 752q17-12 37-11l-12 8 22-4-21 11-31 6z"/>
+      </g>
+    </g>
+
+    <!-- One transparent source is clipped into two independent aircraft layers. -->
+    <g id="far-plane" clip-path="url(#farPlaneArea)">
+      <image href="planeurs-transparents.webp" x="0" y="231" width="872" height="1804"/>
+    </g>
+    <g id="near-plane" clip-path="url(#nearPlaneArea)">
+      <image href="planeurs-transparents.webp" x="0" y="231" width="872" height="1804"/>
+    </g>
+  </svg>
+
+  <script src="animation.js"></script>
+</body>
+</html>

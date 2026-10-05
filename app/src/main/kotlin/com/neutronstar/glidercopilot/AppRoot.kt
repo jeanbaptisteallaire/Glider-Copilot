@@ -439,7 +439,7 @@ private fun Disclaimer(onAccept: () -> Unit) {
     GlidyAdaptiveTheme(light = true) {
         val c = Gc.colors
         Box(Modifier.fillMaxSize()) {
-            ScenicBackground(R.drawable.wg_cover, 941, 1954, c.brandSky)
+            CoverAnimation() // V20.2 : même couverture animée que l'ouverture
             Column(
                 Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.Bottom,

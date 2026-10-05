@@ -165,26 +165,32 @@ internal fun DevNoticeScreen(lang: String, onLanguage: (String) -> Unit, onConti
 internal fun TutoHomeScreen(lang: String, onLanguage: (String) -> Unit, onTutorial: () -> Unit, onFeedback: () -> Unit) {
     GlidyAdaptiveTheme(light = true) {
         val fr = lang == "fr"
-        Box(Modifier.fillMaxSize().testTag("tuto-home")) {
-            ScenicBackground(R.drawable.wg_tuto_bg, 941, 1672, Color(0xFF88BBF5))
-            Column(Modifier.fillMaxSize().padding(horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        // V20.2 : même couverture animée et même rythme que l'ouverture (titre et 1er bouton à 0,5 s, 2e à 0,75 s)
+        val titleIn by rememberFadeIn(500)
+        val firstIn by rememberFadeIn(500)
+        val secondIn by rememberFadeIn(750)
+        BoxWithConstraints(Modifier.fillMaxSize().testTag("tuto-home")) {
+            val h = maxHeight
+            CoverAnimation()
+            Column(Modifier.fillMaxSize().statusBarsPadding().padding(horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Row(Modifier.fillMaxWidth().padding(top = 12.dp), horizontalArrangement = Arrangement.End) {
                     LanguageButton(lang, dark = true) { onLanguage(if (fr) "en" else "fr") }
                 }
-                Spacer(Modifier.height(28.dp))
-                Text(if (fr) "AIDE\n& AVIS" else "HELP\n& FEEDBACK", style = brandTitleStyle(44.sp))
-                Spacer(Modifier.height(10.dp))
+                Spacer(Modifier.height(h * 0.03f))
+                BrandTitle(size = 46.sp, modifier = Modifier.fadeUp(titleIn))
+                Spacer(Modifier.height(18.dp))
                 Text(
                     if (fr) "Découvrez l'app pas à pas, ou dites-nous ce que vous en pensez."
                     else "Discover the app step by step, or tell us what you think.",
-                    style = Gc.type.subhead.copy(color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center, shadow = androidx.compose.ui.graphics.Shadow(Color(0x55000000), blurRadius = 8f)),
-                    modifier = Modifier.fillMaxWidth(0.85f),
+                    style = Gc.type.subhead.copy(color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center, shadow = androidx.compose.ui.graphics.Shadow(Color(0x66000000), blurRadius = 8f)),
+                    modifier = Modifier.fillMaxWidth(0.85f).fadeUp(titleIn),
                 )
                 Spacer(Modifier.weight(1f))
-                WgButton(if (fr) "Tutoriel" else "Tutorial", onTutorial, Modifier.fillMaxWidth(0.78f), tag = "tuto-start")
+                WgButton(if (fr) "Tutoriel" else "Tutorial", onTutorial, Modifier.fillMaxWidth(0.78f).fadeUp(firstIn), tag = "tuto-start")
                 Spacer(Modifier.height(16.dp))
-                WgButton(if (fr) "Donner mon avis" else "Give feedback", onFeedback, Modifier.fillMaxWidth(0.78f), tag = "tuto-feedback")
-                Spacer(Modifier.height(36.dp))
+                WgButton(if (fr) "Donner mon avis" else "Give feedback", onFeedback, Modifier.fillMaxWidth(0.78f).fadeUp(secondIn), tag = "tuto-feedback")
+                // au-dessus du planeur du premier plan
+                Spacer(Modifier.height(h * 0.2f))
             }
         }
     }

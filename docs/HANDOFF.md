@@ -1,5 +1,15 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 20.2 — couverture animée, titre « ailes de pilote », V2.0.2-lite (06/10/2026)
+- Couverture (et avertissement, page Tuto) : **animation HTML de JB** (« Session 20.1/animation » : océan et nuage peints
+  qui glissent, deux planeurs, touches de gouache, 10 i/s) jouée dans une WebView depuis `assets/cover/` (calques
+  convertis en WebP, ~480 Ko au lieu de 5,6 Mo), fond #073E60 (`COVER_SEA`), aucun toucher transmis. `CoverAnimation`.
+- Titre `BrandTitle` d'après la maquette : WIND au-dessus de GLIDER (lignes resserrées), G et R 16 % plus grands,
+  trois traits « ailes de pilote » de chaque côté, Inter Medium capitales.
+- Rythme : titre et « Continuer avec Google » en fondu à 0,5 s, « Continuer en invité » à 0,75 s (`rememberFadeIn`,
+  `fadeUp`) ; même chose sur la page Tuto (Tutoriel 0,5 s, Donner mon avis 0,75 s). Boutons placés au-dessus du
+  planeur du premier plan. Anciennes images `wg_cover`, `wg_tuto_bg` retirées.
+
 ## Session 20.1 — zoom spirale, tutoriel par compte, cockpit recadré, V2.0.1-lite (06/10/2026)
 - **Zoom automatique sur la spirale** (Pilotage, accord JB, garde-fou régénéré) : `core:domain/flight/ThermalZoom`
   (pur, testé `ThermalZoomTest`) — actif quand le moteur détecte une spirale, qu'un tour complet (≥ 330°) est bouclé et
