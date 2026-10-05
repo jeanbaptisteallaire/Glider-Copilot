@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.flightcloud.SupabaseClientTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-02T08:47:50" hostname="runnervm8df0l" time="0.41">
+<testsuite name="com.neutronstar.glidy.flightcloud.SupabaseClientTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-05T13:33:22" hostname="runnervm8df0l" time="0.171">
   <properties/>
-  <testcase name="miniJsonRoundTrip" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.102"/>
-  <testcase name="codeSignInStoresSessionAndUsesAnonKey" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.052"/>
-  <testcase name="expiredSessionIsRefreshedBeforeUse" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.012"/>
-  <testcase name="failedUploadIsMarkedForRetry" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.152"/>
-  <testcase name="syncUploadsRealFlightsOnlyThenRestoresOnANewPhone" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.044"/>
-  <testcase name="uploadIsGzippedInThePilotFolderAndIdempotent" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.025"/>
+  <testcase name="miniJsonRoundTrip" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.047"/>
+  <testcase name="codeSignInStoresSessionAndUsesAnonKey" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.023"/>
+  <testcase name="expiredSessionIsRefreshedBeforeUse" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.002"/>
+  <testcase name="failedUploadIsMarkedForRetry" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.079"/>
+  <testcase name="syncUploadsRealFlightsOnlyThenRestoresOnANewPhone" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.01"/>
+  <testcase name="uploadIsGzippedInThePilotFolderAndIdempotent" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.004"/>
   <testcase name="googleSignInIsInactiveWithoutConfiguration" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.001"/>
-  <testcase name="deleteAccountRemovesFilesThenAccountAndSignsOut" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.006"/>
+  <testcase name="deleteAccountRemovesFilesThenAccountAndSignsOut" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.001"/>
   <testcase name="disabledWithoutConfigurationAndSendsNothing" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.0"/>
-  <testcase name="googleSignInExchangesIdTokenWithRawNonce" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.002"/>
+  <testcase name="googleSignInExchangesIdTokenWithRawNonce" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.0"/>
+  <testcase name="feedbackAsGuestUsesAnonKeyAndTrims" classname="com.neutronstar.glidy.flightcloud.SupabaseClientTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
