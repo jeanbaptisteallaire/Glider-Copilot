@@ -1,5 +1,5 @@
 + date -u
-Mon Oct  5 17:33:22 UTC 2026
+Mon Oct  5 18:44:01 UTC 2026
 ++ ls apk/app-debug.apk
 ++ head -1
 + APK=apk/app-debug.apk
@@ -9,8 +9,8 @@ Success
 + adb shell pm clear com.neutronstar.glidercopilot
 Success
 + adb logcat -c
-+ adb logcat -v time
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_FINE_LOCATION
++ adb logcat -v time
 + adb shell pm grant com.neutronstar.glidercopilot android.permission.ACCESS_COARSE_LOCATION
 + adb emu geo fix 3.78167 43.80028 183
 OK
@@ -476,7 +476,7 @@ pack installé après 18 s
 + timeout 20 adb exec-out screencap -p
 + adb shell am force-stop com.neutronstar.glidercopilot
 ++ date +%s
-+ T0=1791221944
++ T0=1791226188
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity --ez glidy.flight.replay true --ef glidy.flight.speed 6
 Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity (has extras) }
 + pass_welcome
@@ -542,109 +542,109 @@ menu passé
 avant-vol passé
 + sleep 3
 ++ date +%s
-+ '[' 38 -lt 105 ']'
++ '[' 37 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 40 -lt 105 ']'
++ '[' 39 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 42 -lt 105 ']'
++ '[' 41 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 44 -lt 105 ']'
++ '[' 43 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 46 -lt 105 ']'
++ '[' 45 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 48 -lt 105 ']'
++ '[' 47 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 50 -lt 105 ']'
++ '[' 49 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 52 -lt 105 ']'
++ '[' 51 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 54 -lt 105 ']'
++ '[' 53 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 56 -lt 105 ']'
++ '[' 55 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 58 -lt 105 ']'
++ '[' 57 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 60 -lt 105 ']'
++ '[' 59 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 62 -lt 105 ']'
++ '[' 61 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 64 -lt 105 ']'
++ '[' 63 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 66 -lt 105 ']'
++ '[' 65 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 68 -lt 105 ']'
++ '[' 67 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 70 -lt 105 ']'
++ '[' 69 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 72 -lt 105 ']'
++ '[' 71 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 74 -lt 105 ']'
++ '[' 73 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 76 -lt 105 ']'
++ '[' 75 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 78 -lt 105 ']'
++ '[' 77 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 80 -lt 105 ']'
++ '[' 79 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 82 -lt 105 ']'
++ '[' 81 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 84 -lt 105 ']'
++ '[' 83 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 86 -lt 105 ']'
++ '[' 85 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 88 -lt 105 ']'
++ '[' 87 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 90 -lt 105 ']'
++ '[' 89 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 92 -lt 105 ']'
++ '[' 91 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 94 -lt 105 ']'
++ '[' 93 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 96 -lt 105 ']'
++ '[' 95 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 98 -lt 105 ']'
++ '[' 97 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 100 -lt 105 ']'
++ '[' 99 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 102 -lt 105 ']'
++ '[' 101 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 104 -lt 105 ']'
++ '[' 103 -lt 105 ']'
 + sleep 2
 ++ date +%s
-+ '[' 106 -lt 105 ']'
++ '[' 105 -lt 105 ']'
 + timeout 20 adb exec-out screencap -p
 ++ tap_text 'Zoom arrière'
 ++ rm -f /tmp/ui.xml
@@ -802,141 +802,138 @@ avant-vol passé
 + sleep 2
 + timeout 20 adb exec-out screencap -p
 ++ date +%s
-+ '[' 188 -lt 390 ']'
++ '[' 196 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 193 -lt 390 ']'
++ '[' 201 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 198 -lt 390 ']'
++ '[' 206 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 203 -lt 390 ']'
++ '[' 211 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 208 -lt 390 ']'
++ '[' 216 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 213 -lt 390 ']'
++ '[' 221 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 218 -lt 390 ']'
++ '[' 226 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 223 -lt 390 ']'
++ '[' 231 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 228 -lt 390 ']'
++ '[' 236 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 233 -lt 390 ']'
++ '[' 241 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 238 -lt 390 ']'
++ '[' 246 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 243 -lt 390 ']'
++ '[' 251 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 248 -lt 390 ']'
++ '[' 256 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 253 -lt 390 ']'
++ '[' 261 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 258 -lt 390 ']'
++ '[' 266 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 263 -lt 390 ']'
++ '[' 271 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 268 -lt 390 ']'
++ '[' 276 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 273 -lt 390 ']'
++ '[' 281 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 278 -lt 390 ']'
++ '[' 286 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 283 -lt 390 ']'
++ '[' 291 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 288 -lt 390 ']'
++ '[' 296 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 293 -lt 390 ']'
++ '[' 301 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 298 -lt 390 ']'
++ '[' 306 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 303 -lt 390 ']'
++ '[' 311 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 308 -lt 390 ']'
++ '[' 316 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 313 -lt 390 ']'
++ '[' 321 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 318 -lt 390 ']'
++ '[' 326 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 323 -lt 390 ']'
++ '[' 331 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 328 -lt 390 ']'
++ '[' 336 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 333 -lt 390 ']'
++ '[' 341 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 338 -lt 390 ']'
++ '[' 346 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 343 -lt 390 ']'
++ '[' 351 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 348 -lt 390 ']'
++ '[' 356 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 353 -lt 390 ']'
++ '[' 361 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 358 -lt 390 ']'
++ '[' 366 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 363 -lt 390 ']'
++ '[' 371 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 368 -lt 390 ']'
++ '[' 376 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 373 -lt 390 ']'
++ '[' 381 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 378 -lt 390 ']'
++ '[' 386 -lt 390 ']'
 + sleep 5
 ++ date +%s
-+ '[' 383 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 388 -lt 390 ']'
-+ sleep 5
-++ date +%s
-+ '[' 393 -lt 390 ']'
++ '[' 391 -lt 390 ']'
 + adb shell input swipe 540 1150 540 1400 300
 + sleep 3
 + timeout 20 adb exec-out screencap -p
 + mkdir -p screens/igc
 + timeout 30 adb pull /sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/. screens/igc/
-/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/./: 1 file pulled, 0 skipped. 1.6 MB/s (70693 bytes in 0.043s)
-+ ls screens/igc/2026-10-05-XXX-GLY-01.igc
-+ python3 tools/flight/check_igc.py screens/igc/2026-10-05-XXX-GLY-01.igc
+adb: error: failed to stat remote object '/sdcard/Android/data/com.neutronstar.glidercopilot/files/igc-rejeu/.': No such file or directory
++ true
++ ls 'screens/igc/*.igc'
+++ adb shell run-as com.neutronstar.glidercopilot ls files/igc-rejeu
+++ tr -d '\r'
++ python3 tools/flight/check_igc.py 'screens/igc/*.igc'
++ true
 + cat screens/igc-controle.txt
-screens/igc/2026-10-05-XXX-GLY-01.igc : 1914 lignes, 1898 points B, altitude GNSS 183–1609 m
-  OK
+aucune trace IGC trouvée
 + adb shell am force-stop com.neutronstar.glidercopilot
 + adb shell am start -n com.neutronstar.glidercopilot/.MainActivity
 Starting: Intent { cmp=com.neutronstar.glidercopilot/.MainActivity }
@@ -1431,10 +1428,10 @@ menu passé
 ++ timeout 15 adb pull /sdcard/ui.xml /tmp/ui.xml
 ++ '[' -f /tmp/ui.xml ']'
 ++ python3 - 'Vol du 19 septembre 2026*'
-+ P='540 2129'
-+ '[' -z '540 2129' ']'
-+ '[' -n '540 2129' ']'
-+ timeout 10 adb shell input tap 540 2129
++ P='201 2129'
++ '[' -z '201 2129' ']'
++ '[' -n '201 2129' ']'
++ timeout 10 adb shell input tap 201 2129
 + sleep 4
 + timeout 20 adb exec-out screencap -p
 + opened=
@@ -1835,65 +1832,65 @@ menu passé
 + timeout 20 adb exec-out screencap -p
 + timeout 30 adb logcat -d -t 600
 + ls -la screens
-total 61204
-drwxr-xr-x  3 runner runner     4096 Oct  5 17:58 .
-drwxr-xr-x 18 runner runner     4096 Oct  5 17:33 ..
--rw-r--r--  1 runner runner  2260379 Oct  5 17:33 00-accueil.png
--rw-r--r--  1 runner runner  1082965 Oct  5 17:36 00b-menu.png
--rw-r--r--  1 runner runner  1333421 Oct  5 17:34 01-avertissement.png
--rw-r--r--  1 runner runner  1343417 Oct  5 17:34 01a-info-developpement.png
--rw-r--r--  1 runner runner   220919 Oct  5 17:36 02-prevol.png
--rw-r--r--  1 runner runner   220503 Oct  5 17:37 03-prevol-appairage.png
--rw-r--r--  1 runner runner   226207 Oct  5 17:38 04-prevol-carte.png
--rw-r--r--  1 runner runner   220372 Oct  5 17:38 05-prevol-ogn-direct.png
--rw-r--r--  1 runner runner   274375 Oct  5 17:38 06-prevol-espaces.png
--rw-r--r--  1 runner runner   274375 Oct  5 17:38 07-checklists.png
--rw-r--r--  1 runner runner   274220 Oct  5 17:39 07b-checklists-suite.png
--rw-r--r--  1 runner runner  1637650 Oct  5 17:40 08-pilotage-vol-rejeu.png
--rw-r--r--  1 runner runner  1675543 Oct  5 17:41 09-pilotage-vol-large.png
--rw-r--r--  1 runner runner  1787406 Oct  5 17:41 10-pilotage-vol-plein.png
--rw-r--r--  1 runner runner   271861 Oct  5 17:42 11-prevol-capteurs-en-vol.png
--rw-r--r--  1 runner runner   284629 Oct  5 17:45 12-prevol-vol-enregistre.png
--rw-r--r--  1 runner runner   942049 Oct  5 17:46 12b-pilotage-terrain-au-sol.png
--rw-r--r--  1 runner runner  1647621 Oct  5 17:48 13-pilotage-mode-demo.png
--rw-r--r--  1 runner runner   958925 Oct  5 17:48 14-pilotage-choix-terrain.png
--rw-r--r--  1 runner runner  1640801 Oct  5 17:48 15-pilotage-demo-f10.png
--rw-r--r--  1 runner runner   225702 Oct  5 17:49 16-prevol-suivi-debug.png
--rw-r--r--  1 runner runner  1601331 Oct  5 17:49 17-pilotage-suivi.png
--rw-r--r--  1 runner runner   224537 Oct  5 17:51 18-carte-sud-france.png
--rw-r--r--  1 runner runner   224778 Oct  5 17:51 19-carte-fiche-aeronef.png
--rw-r--r--  1 runner runner   224778 Oct  5 17:51 20-carte-pistes.png
--rw-r--r--  1 runner runner   766415 Oct  5 17:52 21-mes-vols-liste.png
--rw-r--r--  1 runner runner   766415 Oct  5 17:52 21b-profil-vol-partage.png
--rw-r--r--  1 runner runner   183026 Oct  5 17:52 21c-profil-edition.png
--rw-r--r--  1 runner runner   178960 Oct  5 17:52 22-mes-vols-detail.png
--rw-r--r--  1 runner runner    51339 Oct  5 17:53 23-rejeu-3d.png
--rw-r--r--  1 runner runner  2363267 Oct  5 17:54 23b-rejeu-3d-suite.png
--rw-r--r--  1 runner runner  2262331 Oct  5 17:54 23c-rejeu-3d-spirale.png
--rw-r--r--  1 runner runner  2344747 Oct  5 17:54 23d-rejeu-3d-spirale-suite.png
--rw-r--r--  1 runner runner   179573 Oct  5 17:54 24-mes-vols-retour.png
--rw-r--r--  1 runner runner   178668 Oct  5 17:54 25-feed-vide.png
--rw-r--r--  1 runner runner   178668 Oct  5 17:54 25b-feed-grille.png
--rw-r--r--  1 runner runner   180634 Oct  5 17:55 25c-feed-defilement.png
--rw-r--r--  1 runner runner   180226 Oct  5 17:55 25d-feed-recherche.png
--rw-r--r--  1 runner runner  1601435 Oct  5 17:56 26-lite-pilotage-rec.png
--rw-r--r--  1 runner runner  1602036 Oct  5 17:56 26b-lite-pilotage-rec-on.png
--rw-r--r--  1 runner runner   767780 Oct  5 17:56 26c-lite-mes-vols.png
--rw-r--r--  1 runner runner   273212 Oct  5 17:57 27-lite-prevol-appairage.png
--rw-r--r--  1 runner runner   208675 Oct  5 17:57 28-lite-mes-vols-legal.png
--rw-r--r--  1 runner runner   773606 Oct  5 17:58 29-lite-compte-information.png
--rw-r--r--  1 runner runner   513498 Oct  5 17:34 30-tuto-club.png
--rw-r--r--  1 runner runner   523886 Oct  5 17:34 31-tuto-appairage.png
--rw-r--r--  1 runner runner  1542384 Oct  5 17:34 32-tuto-marge.png
--rw-r--r--  1 runner runner  1062682 Oct  5 17:35 33-tuto-terrain.png
--rw-r--r--  1 runner runner  1403311 Oct  5 17:35 34-tuto-replier.png
--rw-r--r--  1 runner runner  1992686 Oct  5 17:35 35-tuto-3d.png
--rw-r--r--  1 runner runner    94253 Oct  5 17:35 36-tuto-avis.png
--rw-r--r--  1 runner runner  1754424 Oct  5 17:58 37-tuto-accueil.png
--rw-r--r--  1 runner runner    95601 Oct  5 17:58 38-avis-direct.png
--rw-r--r--  1 runner runner  1084115 Oct  5 17:58 39-menu.png
-drwxr-xr-x  2 runner runner     4096 Oct  5 17:45 igc
--rw-r--r--  1 runner runner      100 Oct  5 17:45 igc-controle.txt
--rw-r--r--  1 runner runner 16241644 Oct  5 17:58 logcat-live.txt
--rw-r--r--  1 runner runner    71443 Oct  5 17:58 logcat.txt
--rw-r--r--  1 runner runner    49673 Oct  5 17:58 trace.txt
+total 56352
+drwxr-xr-x  3 runner runner     4096 Oct  5 19:08 .
+drwxr-xr-x 18 runner runner     4096 Oct  5 18:44 ..
+-rw-r--r--  1 runner runner  2259201 Oct  5 18:44 00-accueil.png
+-rw-r--r--  1 runner runner  1306149 Oct  5 18:46 00b-menu.png
+-rw-r--r--  1 runner runner  1332720 Oct  5 18:44 01-avertissement.png
+-rw-r--r--  1 runner runner  1343040 Oct  5 18:44 01a-info-developpement.png
+-rw-r--r--  1 runner runner   220184 Oct  5 18:47 02-prevol.png
+-rw-r--r--  1 runner runner   220763 Oct  5 18:48 03-prevol-appairage.png
+-rw-r--r--  1 runner runner   225781 Oct  5 18:49 04-prevol-carte.png
+-rw-r--r--  1 runner runner   217397 Oct  5 18:49 05-prevol-ogn-direct.png
+-rw-r--r--  1 runner runner   274007 Oct  5 18:49 06-prevol-espaces.png
+-rw-r--r--  1 runner runner   274007 Oct  5 18:49 07-checklists.png
+-rw-r--r--  1 runner runner   273952 Oct  5 18:49 07b-checklists-suite.png
+-rw-r--r--  1 runner runner  1605719 Oct  5 18:51 08-pilotage-vol-rejeu.png
+-rw-r--r--  1 runner runner   598174 Oct  5 18:51 09-pilotage-vol-large.png
+-rw-r--r--  1 runner runner  1784497 Oct  5 18:52 10-pilotage-vol-plein.png
+-rw-r--r--  1 runner runner   276600 Oct  5 18:53 11-prevol-capteurs-en-vol.png
+-rw-r--r--  1 runner runner   288988 Oct  5 18:56 12-prevol-vol-enregistre.png
+-rw-r--r--  1 runner runner   942511 Oct  5 18:57 12b-pilotage-terrain-au-sol.png
+-rw-r--r--  1 runner runner  1646813 Oct  5 18:58 13-pilotage-mode-demo.png
+-rw-r--r--  1 runner runner   952898 Oct  5 18:59 14-pilotage-choix-terrain.png
+-rw-r--r--  1 runner runner  1643907 Oct  5 18:59 15-pilotage-demo-f10.png
+-rw-r--r--  1 runner runner   224839 Oct  5 19:00 16-prevol-suivi-debug.png
+-rw-r--r--  1 runner runner  1600999 Oct  5 19:00 17-pilotage-suivi.png
+-rw-r--r--  1 runner runner   224971 Oct  5 19:01 18-carte-sud-france.png
+-rw-r--r--  1 runner runner   225735 Oct  5 19:02 19-carte-fiche-aeronef.png
+-rw-r--r--  1 runner runner   225735 Oct  5 19:02 20-carte-pistes.png
+-rw-r--r--  1 runner runner   761433 Oct  5 19:03 21-mes-vols-liste.png
+-rw-r--r--  1 runner runner   761433 Oct  5 19:03 21b-profil-vol-partage.png
+-rw-r--r--  1 runner runner   183386 Oct  5 19:03 21c-profil-edition.png
+-rw-r--r--  1 runner runner   179522 Oct  5 19:03 22-mes-vols-detail.png
+-rw-r--r--  1 runner runner    51230 Oct  5 19:04 23-rejeu-3d.png
+-rw-r--r--  1 runner runner    60744 Oct  5 19:04 23b-rejeu-3d-suite.png
+-rw-r--r--  1 runner runner  2362447 Oct  5 19:04 23c-rejeu-3d-spirale.png
+-rw-r--r--  1 runner runner  1207810 Oct  5 19:05 23d-rejeu-3d-spirale-suite.png
+-rw-r--r--  1 runner runner   179328 Oct  5 19:05 24-mes-vols-retour.png
+-rw-r--r--  1 runner runner   179328 Oct  5 19:05 25-feed-vide.png
+-rw-r--r--  1 runner runner   179328 Oct  5 19:05 25b-feed-grille.png
+-rw-r--r--  1 runner runner   181243 Oct  5 19:05 25c-feed-defilement.png
+-rw-r--r--  1 runner runner   181243 Oct  5 19:05 25d-feed-recherche.png
+-rw-r--r--  1 runner runner  1601421 Oct  5 19:06 26-lite-pilotage-rec.png
+-rw-r--r--  1 runner runner  1601657 Oct  5 19:06 26b-lite-pilotage-rec-on.png
+-rw-r--r--  1 runner runner   761734 Oct  5 19:07 26c-lite-mes-vols.png
+-rw-r--r--  1 runner runner   273177 Oct  5 19:07 27-lite-prevol-appairage.png
+-rw-r--r--  1 runner runner   198150 Oct  5 19:08 28-lite-mes-vols-legal.png
+-rw-r--r--  1 runner runner   757861 Oct  5 19:08 29-lite-compte-information.png
+-rw-r--r--  1 runner runner   513533 Oct  5 18:45 30-tuto-club.png
+-rw-r--r--  1 runner runner   523830 Oct  5 18:45 31-tuto-appairage.png
+-rw-r--r--  1 runner runner  1542426 Oct  5 18:45 32-tuto-marge.png
+-rw-r--r--  1 runner runner  1062984 Oct  5 18:45 33-tuto-terrain.png
+-rw-r--r--  1 runner runner  1403188 Oct  5 18:46 34-tuto-replier.png
+-rw-r--r--  1 runner runner  1992693 Oct  5 18:46 35-tuto-3d.png
+-rw-r--r--  1 runner runner    93971 Oct  5 18:46 36-tuto-avis.png
+-rw-r--r--  1 runner runner  1754847 Oct  5 19:08 37-tuto-accueil.png
+-rw-r--r--  1 runner runner    96100 Oct  5 19:08 38-avis-direct.png
+-rw-r--r--  1 runner runner  1308631 Oct  5 19:08 39-menu.png
+drwxr-xr-x  2 runner runner     4096 Oct  5 18:56 igc
+-rw-r--r--  1 runner runner       26 Oct  5 18:56 igc-controle.txt
+-rw-r--r--  1 runner runner 15314986 Oct  5 19:08 logcat-live.txt
+-rw-r--r--  1 runner runner    72829 Oct  5 19:08 logcat.txt
+-rw-r--r--  1 runner runner    49580 Oct  5 19:08 trace.txt
