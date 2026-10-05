@@ -3,7 +3,7 @@
 ## Session 19.1b — tutoriel en visite guidée (cadre lumineux sur les vraies pages), V1.9.2-lite (06/10/2026)
 - Refonte de la forme demandée par JB (contenu inchangé) : `TutorialScreen` plein écran, captures pleine page
   (`drawable-nodpi/tour_*.webp`, Prévol recomposé en une longue page qui défile), voile noir 50 %, cadre bleu clair
-  lumineux pulsé (#5AC8FA) qui glisse de zone en zone, texte blanc au-dessus ou au-dessous, Passer / Précédent /
+  lumineux pulsé (#5AC8FA) qui glisse de zone en zone, texte blanc dans une bulle sombre (78 %) au-dessus ou au-dessous, Passer / Précédent /
   Suivant, globe FR/EN, dernière étape « Votre avis ». Onglet Tuto ou case « Tutoriel » → plein écran ; fermeture →
   onglet précédent ou menu. Anciennes vignettes `tuto_*` supprimées.
 

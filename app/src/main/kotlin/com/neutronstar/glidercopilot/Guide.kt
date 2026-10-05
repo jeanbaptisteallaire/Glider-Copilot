@@ -341,7 +341,13 @@ private fun SpotlightPage(
         val spaceBelow = hPx - with(density) { 120.dp.toPx() } - bottom
         val below = spaceBelow >= top
         val textBlock: @Composable () -> Unit = {
-            Column(Modifier.padding(horizontal = 24.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            // bulle sombre derrière le texte blanc : lisible même au-dessus d'une page chargée
+            Column(
+                Modifier.padding(horizontal = 16.dp).fillMaxWidth()
+                    .background(Color.Black.copy(alpha = 0.78f), RoundedCornerShape(18.dp))
+                    .padding(horizontal = 18.dp, vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
                 Text(
                     "${if (fr) part.fr else part.en} · $position / $total",
                     style = Gc.type.footnote.copy(color = GLOW, fontWeight = FontWeight.SemiBold),
