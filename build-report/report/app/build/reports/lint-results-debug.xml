@@ -691,7 +691,7 @@
         errorLine2="                                    ~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/Guide.kt"
-            line="276"
+            line="432"
             column="37"/>
     </issue>
 
