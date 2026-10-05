@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.feed.FeedViewModelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-05T17:27:43" hostname="runnervm8df0l" time="0.647">
-  <properties/>
-  <testcase name="search is debounced and accent insensitive" classname="com.neutronstar.glidy.feed.FeedViewModelTest" time="0.461"/>
-  <testcase name="infinite scroll appends pages until the end" classname="com.neutronstar.glidy.feed.FeedViewModelTest" time="0.105"/>
-  <testcase name="empty feed shows suggestions, following fills the grid" classname="com.neutronstar.glidy.feed.FeedViewModelTest" time="0.079"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
