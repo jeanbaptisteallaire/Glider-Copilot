@@ -1,0 +1,50 @@
+=== FRANÇAIS (fr-FR) ===
+
+Nom de l'appli (30 max) :
+Wind Glider – vol à voile
+
+Description courte (80 max) :
+Météo vol à voile, finesse et sécurité, pompes repérées par OGN, rejeu 3D.
+
+Description complète :
+Wind Glider, l'assistant du vélivole.
+
+☁ Météo vol à voile
+Déclenchement, plafond et fin des thermiques, heure par heure, sur votre terrain.
+
+⟶ Calculateur de finesse et de sécurité
+Finesse requise, hauteur d'arrivée et marge de sécurité vers le terrain choisi, vent compris.
+
+◎ Recherche et centrage des pompes
+Les aéronefs présents sur zone (OGN) révèlent les ascendances exploitées. En spirale, la carte zoome sur votre cercle pour vous aider à centrer.
+
+▶ Enregistrement et rejeu 3D
+Trace IGC de chaque vol, rejouée en 3D sur le relief.
+
+Aide secondaire au vol à voile, non certifiée : ne remplace ni les instruments de bord, ni le FLARM, ni la veille extérieure. Le commandant de bord reste seul responsable.
+
+
+=== ENGLISH (en-US) ===
+
+App name (30 max):
+Wind Glider – Gliding
+
+Short description (80 max):
+Soaring forecast, glide & safety computer, OGN thermal finder, 3D flight replay.
+
+Full description:
+Wind Glider, the glider pilot's companion.
+
+☁ Soaring forecast
+Thermal trigger time, cloud base and end of the day, hour by hour, at your airfield.
+
+⟶ Final glide & safety computer
+Required glide ratio, arrival height and safety margin to your chosen field, wind included.
+
+◎ Thermal finder & centering
+Nearby aircraft (OGN) reveal where the lift is. While circling, the map zooms on your turn to help you center the thermal.
+
+▶ Flight recording & 3D replay
+IGC log of every flight, replayed in 3D over the terrain.
+
+Secondary soaring aid, not certified: does not replace flight instruments, FLARM or lookout. The pilot in command remains solely responsible.

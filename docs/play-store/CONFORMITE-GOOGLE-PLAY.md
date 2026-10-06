@@ -1,4 +1,4 @@
-# spiral — conformité Google Play (V19, 05/10/2026)
+# Wind Glider — conformité Google Play (V19, 05/10/2026)
 
 Éditeur : Jean-Baptiste Allaire (EI), compte Google Play Developer **organisation** ·
 paquet `com.neutronstar.glidercopilot` · édition publiée : **Lite** (versionName `1.9.0-lite`).
@@ -63,7 +63,7 @@ de contact, de photo, de santé ou de paiement n'est transmise. Supabase et Goog
 - Type : **Localisation** (`FOREGROUND_SERVICE_LOCATION`)
 - Cas d'usage : *Navigation / suivi d'activité initié par l'utilisateur* (« user-initiated location tracking for navigation and activity recording »).
 - Description à coller :
-  > spiral is a gliding flight computer. When the pilot opens the flight screen (Pilotage) or records a flight, a foreground
+  > Wind Glider is a gliding flight computer. When the pilot opens the flight screen (Pilotage) or records a flight, a foreground
   > service with a persistent notification reads GPS, barometer and accelerometer to compute variometer, safety margin and
   > glide to the home airfield, give audio and vibration alerts and record the IGC flight log while the screen is off.
   > Interrupting or deferring the task would silence safety alerts in flight and lose the flight recording.
