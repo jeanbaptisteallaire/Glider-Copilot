@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.CenteringTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:12" hostname="runnervm8df0l" time="0.777">
+<testsuite name="com.neutronstar.glidercopilot.domain.CenteringTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-06T14:44:26" hostname="runnervm8df0l" time="0.855">
   <properties/>
-  <testcase name="centredWhenTheCoreIsUnderTheCircle" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.024"/>
-  <testcase name="findsTheOffCentreCoreWithoutWind" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.002"/>
-  <testcase name="driftCorrectionMovesDownwind" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.008"/>
-  <testcase name="cueCountsSecondsToTheCore" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.008"/>
+  <testcase name="centredWhenTheCoreIsUnderTheCircle" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.027"/>
+  <testcase name="findsTheOffCentreCoreWithoutWind" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.003"/>
+  <testcase name="driftCorrectionMovesDownwind" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.001"/>
+  <testcase name="cueCountsSecondsToTheCore" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.009"/>
   <testcase name="firstTurnIsAnalysing" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.001"/>
   <testcase name="fadingThermalAndCeiling" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.001"/>
-  <testcase name="windDriftIsRemovedBeforeEstimating" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.01"/>
-  <testcase name="turnRateFromTrace" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.006"/>
-  <testcase name="estimatesCoresAlongTheDemoFlight" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.659"/>
-  <testcase name="networkThermalPicksTheBestNearby" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.052"/>
-  <testcase name="decisionGaugeAndTransitionBand" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.002"/>
+  <testcase name="windDriftIsRemovedBeforeEstimating" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.018"/>
+  <testcase name="turnRateFromTrace" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.007"/>
+  <testcase name="estimatesCoresAlongTheDemoFlight" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.736"/>
+  <testcase name="networkThermalPicksTheBestNearby" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.043"/>
+  <testcase name="decisionGaugeAndTransitionBand" classname="com.neutronstar.glidercopilot.domain.CenteringTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

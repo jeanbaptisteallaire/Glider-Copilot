@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.RealOgnTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:24" hostname="runnervm8df0l" time="0.1">
+<testsuite name="com.neutronstar.glidercopilot.ogn.RealOgnTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T14:45:08" hostname="runnervm8df0l" time="0.247">
   <properties/>
-  <testcase name="parsesEveryGliderFrame" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.045"/>
-  <testcase name="findsRealThermalsOnly" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.03"/>
-  <testcase name="realCadenceIsAFewSeconds" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.024"/>
+  <testcase name="parsesEveryGliderFrame" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.077"/>
+  <testcase name="findsRealThermalsOnly" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.102"/>
+  <testcase name="realCadenceIsAFewSeconds" classname="com.neutronstar.glidercopilot.ogn.RealOgnTest" time="0.062"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <system-err><![CDATA[Exception in thread "Thread-7" java.net.SocketException: Socket is closed
+	at java.base/java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.neutronstar.glidercopilot.ogn.OgnLiveTest$serverRefusalIsTreatedAsAFailure$1.invokeSuspend$lambda$2(OgnLiveTest.kt:204)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+]]></system-err>
 </testsuite>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.domain.FlightEngineTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:13" hostname="runnervm8df0l" time="1.253">
+<testsuite name="com.neutronstar.glidercopilot.domain.FlightEngineTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-06T14:44:27" hostname="runnervm8df0l" time="1.141">
   <properties/>
-  <testcase name="ognFallbackWithoutBarometer" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.0"/>
-  <testcase name="demoFlightEndToEnd" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.703"/>
-  <testcase name="demoFlightSafetyAlertsAreQuietAtTakeoffAndLanding" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.537"/>
-  <testcase name="manualChronoWhenAutoDisabled" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.005"/>
+  <testcase name="ognFallbackWithoutBarometer" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.002"/>
+  <testcase name="demoFlightEndToEnd" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.645"/>
+  <testcase name="demoFlightSafetyAlertsAreQuietAtTakeoffAndLanding" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.486"/>
+  <testcase name="manualChronoWhenAutoDisabled" classname="com.neutronstar.glidercopilot.domain.FlightEngineTest" time="0.007"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

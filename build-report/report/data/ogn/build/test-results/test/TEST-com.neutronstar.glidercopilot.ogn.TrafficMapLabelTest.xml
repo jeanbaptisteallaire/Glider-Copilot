@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-05T21:43:24" hostname="runnervm8df0l" time="0.004">
+<testsuite name="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-06T14:45:09" hostname="runnervm8df0l" time="0.012">
   <properties/>
-  <testcase name="shortLabelForTheMapTab" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.002"/>
-  <testcase name="farAwayAircraftKeepOnlyTheirLastFixes" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.001"/>
-  <testcase name="anonymousDevicesKeepTheirAddressLabel" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.001"/>
+  <testcase name="shortLabelForTheMapTab" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.001"/>
+  <testcase name="farAwayAircraftKeepOnlyTheirLastFixes" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.005"/>
+  <testcase name="anonymousDevicesKeepTheirAddressLabel" classname="com.neutronstar.glidercopilot.ogn.TrafficMapLabelTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
