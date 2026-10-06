@@ -58,6 +58,9 @@ jobs:
             echo "sans clé              : $(curl -s -o /dev/null -m 30 -w '%{http_code}' "$U")"
             echo "Authorization: Bearer : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "Authorization: Bearer $PRECOG_API_KEY" "$U")"
             echo "X-API-Key (comme l'app): $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "X-API-Key: $PRECOG_API_KEY" "$U")"
+            F="temperature_2m,dewpoint_2m,pressure_surface,shortwave_radiation_net,solar_radiation,total_cloud_cover,low_cloud_cover,cape,wind_speed_10m,wind_direction_10m"
+            echo "V20.4 ?fields= de l'app : $(curl -s -o /dev/null -m 30 -w '%{http_code}' -H "X-API-Key: $PRECOG_API_KEY" "$U&fields=$F")"
+            echo "V20.4 taille gzip        : $(curl -s --compressed -o /dev/null -m 30 -w '%{size_download} octets' -H "X-API-Key: $PRECOG_API_KEY" "$U&fields=$F")"
           } > report/precog-auth.txt
           cat report/precog-auth.txt
       - name: Rapport (ci-data)

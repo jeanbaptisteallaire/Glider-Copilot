@@ -1,5 +1,24 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 20.4 — conditions PRECOG, bouton « i » Sources, recherche de club, V2.0.4-lite (06/10/2026)
+
+Déploiement Play **en pause** (demande JB). Rien d'autre ne change dans l'app.
+
+1. **Conditions d'utilisation et guide d'intégration de l'API PRECOG (06/10/2026)** :
+   - mention obligatoire « Données : PRECOG — precog-api.com » (`PRECOG_CREDIT`, data:precog) + attribution et `license`
+     du producteur recopiées telles que servies (`SourceInfo.license`) : carte Sources, fenêtre « i », aperçu du menu,
+     avertissement de premier lancement, pages `site/conditions.html` et `site/confidentialite.html` ;
+   - bas volume (§3) : `Accept-Encoding: gzip` (décompression dans `UrlConnectionHttpClient`), `?fields=` sur
+     `/arpege/forecast` (`SURFACE_FIELDS`, 10 champs lus par `ForecastMapper`), copie servie sans réseau si reçue il y a
+     moins de 30 min (ARPEGE) / 15 min (Vigilance) — `PrecogApi.recommendedFreshness`, puis revalidation ETag ;
+   - `429` / `503` : `Retry-After` respecté (aucun appel avant l'échéance, copie gardée, jamais de boucle) ;
+   - clé `X-API-Key` conservée dans l'app publiée : **décision de Romain (PRECOG), relayée par JB** (pas d'App Check).
+   - CI : le diagnostic precog vérifie aussi la requête `?fields=` de l'app (code HTTP) et sa taille gzip.
+2. **Prévol** : le bouton « mode sombre » est remplacé par **« i »** → fenêtre « Sources météo » (produits du jour, réseau,
+   heure de réception, attribution/licence, avertissement « en l'état »). Le mode sombre reste dans Mes vols → profil.
+3. **Choix du club** : barre de recherche — sigle de 4 lettres (OACI du terrain ou sigle du club) ou mots du nom, de la
+   ville, du terrain ; insensible aux accents (`ClubSearch`, core:domain, testé).
+
 ## Session 20.3 — correctif couverture vide, V2.0.3-lite (06/10/2026)
 
 - Sur téléphone, la couverture animée restait **bleu uni** (calques WebP non chargés depuis `file:///android_asset`).

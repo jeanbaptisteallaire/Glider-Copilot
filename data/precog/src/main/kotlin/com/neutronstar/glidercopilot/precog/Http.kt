@@ -7,7 +7,8 @@ import java.net.URL
 import java.security.MessageDigest
 import java.time.Instant
 
-data class HttpResult(val code: Int, val body: String?, val etag: String?)
+/** [retryAfterS] : en-tête `Retry-After` (429 / 503), en secondes. */
+data class HttpResult(val code: Int, val body: String?, val etag: String?, val retryAfterS: Long? = null)
 
 fun interface HttpClient {
     /** GET avec revalidation conditionnelle. Lève IOException si le réseau est indisponible. */
@@ -34,13 +35,30 @@ class UrlConnectionHttpClient(
             c.setRequestProperty("Accept", "application/json")
             if (ifNoneMatch != null) c.setRequestProperty("If-None-Match", ifNoneMatch)
             if (apiKey.isNotBlank()) c.setRequestProperty("X-API-Key", apiKey)
+            // V20.4 (guide PRECOG §3) : réponses compressées, décompressées ici (l'ETag est gardé tel quel, suffixe -gzip compris)
+            c.setRequestProperty("Accept-Encoding", "gzip")
             val code = c.responseCode
-            val body = if (code in 200..299) c.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() } else null
-            return HttpResult(code, body, c.getHeaderField("ETag"))
+            val body = if (code in 200..299) {
+                val raw = c.inputStream
+                val stream = if (c.contentEncoding.equals("gzip", ignoreCase = true)) java.util.zip.GZIPInputStream(raw) else raw
+                stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+            } else null
+            return HttpResult(code, body, c.getHeaderField("ETag"), parseRetryAfter(c.getHeaderField("Retry-After")))
         } finally {
             c.disconnect()
         }
     }
+}
+
+/** `Retry-After` : nombre de secondes ou date HTTP. Null si absent ou illisible. */
+fun parseRetryAfter(v: String?, now: Instant = Instant.now()): Long? {
+    val t = v?.trim().orEmpty()
+    if (t.isEmpty()) return null
+    t.toLongOrNull()?.let { return it.coerceAtLeast(0) }
+    return runCatching {
+        val at = java.time.ZonedDateTime.parse(t, java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME).toInstant()
+        java.time.Duration.between(now, at).seconds.coerceAtLeast(0)
+    }.getOrNull()
 }
 
 data class CachedResponse(val body: String, val etag: String?, val fetchedAt: Instant)

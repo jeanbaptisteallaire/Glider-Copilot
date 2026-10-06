@@ -25,6 +25,8 @@ class AppContainer(app: Application) {
         PrecogApi(
             UrlConnectionHttpClient(userAgent = userAgent, apiKey = BuildConfig.PRECOG_API_KEY),
             FileResponseCache(File(app.cacheDir, "precog")),
+            // V20.4 : cadences du guide PRECOG (ARPEGE 30 min, Vigilance 15 min) — limite les pics de demande
+            freshFor = { PrecogApi.recommendedFreshness(it) },
         ),
     )
     val glider = GliderRepository(

@@ -98,4 +98,52 @@ class PrecogTest {
         assertTrue(day.sources.size >= 2)
         assertTrue(h.winds.isNotEmpty())
     }
+
+    private class MutableClock(var now: Instant) : Clock() {
+        override fun getZone() = ZoneOffset.UTC
+        override fun withZone(zone: java.time.ZoneId?) = this
+        override fun instant() = now
+    }
+
+    @Test fun freshCopyServedWithoutNetwork() {
+        val http = FakeHttp(mapOf("/arpege/forecast" to fixture("arpege_forecast_synth.json")))
+        val clock = MutableClock(Instant.parse("2026-09-16T08:00:00Z"))
+        val api = PrecogApi(http, MemoryResponseCache(), clock = clock, freshFor = { PrecogApi.recommendedFreshness(it) })
+        assertTrue(api.get("/arpege/forecast?lat=1&lon=2") is Fetch.Ok)
+        clock.now = clock.now.plusSeconds(20 * 60)
+        assertTrue(api.get("/arpege/forecast?lat=1&lon=2") is Fetch.Ok)
+        assertEquals(1, http.calls)
+        clock.now = clock.now.plusSeconds(15 * 60)
+        assertTrue(api.get("/arpege/forecast?lat=1&lon=2") is Fetch.Ok)
+        assertEquals(2, http.calls)
+    }
+
+    @Test fun retryAfterIsRespected() {
+        var calls = 0
+        var busy = false
+        val http = HttpClient { _, _ ->
+            calls++
+            if (busy) HttpResult(503, null, null, retryAfterS = 120) else HttpResult(200, fixture("vigilance_synth.json"), "\"v1\"")
+        }
+        val clock = MutableClock(Instant.parse("2026-09-16T08:00:00Z"))
+        val api = PrecogApi(http, MemoryResponseCache(), clock = clock)
+        assertTrue(api.get("/vigilance") is Fetch.Ok)
+        busy = true
+        val kept = api.get("/vigilance") as Fetch.Ok
+        assertTrue(kept.offline)
+        assertEquals(2, calls)
+        clock.now = clock.now.plusSeconds(60)
+        assertTrue((api.get("/vigilance") as Fetch.Ok).offline)
+        assertEquals(2, calls) // pas de nouvel essai avant la fin du Retry-After
+        clock.now = clock.now.plusSeconds(61)
+        busy = false
+        assertTrue(!(api.get("/vigilance") as Fetch.Ok).offline)
+        assertEquals(3, calls)
+    }
+
+    @Test fun parsesRetryAfter() {
+        assertEquals(120L, parseRetryAfter("120"))
+        assertNull(parseRetryAfter(null))
+        assertEquals(60L, parseRetryAfter("Wed, 16 Sep 2026 08:01:00 GMT", Instant.parse("2026-09-16T08:00:00Z")))
+    }
 }

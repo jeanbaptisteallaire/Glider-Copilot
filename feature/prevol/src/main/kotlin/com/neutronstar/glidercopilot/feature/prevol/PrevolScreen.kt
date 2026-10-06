@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +25,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -53,9 +57,9 @@ import com.neutronstar.glidercopilot.designsystem.GcKpi
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.designsystem.metricText
 import com.neutronstar.glidercopilot.designsystem.gcHeading
-import com.neutronstar.glidercopilot.designsystem.GcThemeToggleButton
 import com.neutronstar.glidercopilot.domain.DayQuality
 import com.neutronstar.glidercopilot.domain.LiftType
+import com.neutronstar.glidercopilot.precog.PRECOG_CREDIT
 import com.neutronstar.glidercopilot.precog.DayWeather
 import com.neutronstar.glidercopilot.precog.HourWeather
 
@@ -74,13 +78,14 @@ fun PrevolScreen(
     val ogn by ognSource.network.collectAsStateWithLifecycle()
     val sensors by sensorsSource.sensors.collectAsStateWithLifecycle()
     var picking by remember { mutableStateOf(false) }
+    var showSources by remember { mutableStateOf(false) }
     val c = Gc.colors
     val social = Gc.social
     // V18.1 : couleur d'interaction = bleu ciel sur pages blanches, vert de la charte en sombre
     val action = if (social) c.route else c.ok
 
     Column(modifier.fillMaxSize().background(c.background)) {
-        Header(state, onPickClub = { picking = true }, onRefresh = viewModel::refresh)
+        Header(state, onPickClub = { picking = true }, onRefresh = viewModel::refresh, onInfo = { showSources = true })
         LazyColumn(
             Modifier.fillMaxSize(),
             contentPadding = if (social) PaddingValues(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 32.dp)
@@ -142,6 +147,7 @@ fun PrevolScreen(
     if (picking) {
         ClubPicker(state, onDismiss = { picking = false }, onPick = { viewModel.selectClub(it); picking = false })
     }
+    if (showSources) SourcesDialog(state, onDismiss = { showSources = false })
 }
 
 @Composable
@@ -153,7 +159,7 @@ private fun Centered(content: @Composable () -> Unit) {
 
 /** En-tête v8 : titre à gauche, date et terrain à droite (le terrain ouvre le choix du club). */
 @Composable
-private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -> Unit) {
+private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -> Unit, onInfo: () -> Unit) {
     val c = Gc.colors
     val social = Gc.social
     Row(
@@ -180,7 +186,10 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
                 Icon(GcIcons.ChevronDown, contentDescription = "Changer de club", tint = c.route, modifier = Modifier.padding(start = 3.dp).size(if (social) 14.dp else 12.dp))
             }
         }
-        GcThemeToggleButton(Modifier.padding(start = 8.dp))
+        // V20.4 : le bouton « mode sombre » laisse la place à « i » — sources météo du jour (conditions PRECOG, art. 3)
+        IconButton(onClick = onInfo, modifier = Modifier.padding(start = 4.dp)) {
+            Icon(Icons.Filled.Info, contentDescription = "Sources météo", tint = if (social) c.route else c.ink)
+        }
         IconButton(onClick = onRefresh, enabled = !state.loading) {
             if (state.loading) CircularProgressIndicator(Modifier.size(18.dp), color = if (social) c.route else c.ok, strokeWidth = 2.dp)
             else Icon(Icons.Filled.Refresh, contentDescription = "Actualiser", tint = c.ink)
@@ -374,6 +383,7 @@ private fun VigilanceCard(day: DayWeather) {
 private fun SourcesCard(day: DayWeather, state: PrevolUiState) {
     val c = Gc.colors
     GcCard(title = "Sources") {
+        Text(PRECOG_CREDIT, style = (if (Gc.social) Gc.type.subhead else Gc.type.body).copy(color = c.ink, fontWeight = FontWeight.SemiBold))
         day.sources.forEach { s ->
             val stale = s.isStale(state.now)
             Column(Modifier.fillMaxWidth()) {
@@ -385,6 +395,7 @@ private fun SourcesCard(day: DayWeather, state: PrevolUiState) {
                 Text(
                     listOfNotNull(
                         s.attribution,
+                        s.license,
                         s.referenceTime?.let { "réseau ${Fmt.hm(it)}" },
                         "reçu ${Fmt.hm(s.fetchedAt)}",
                         if (s.offline) "hors ligne" else null,
@@ -398,6 +409,66 @@ private fun SourcesCard(day: DayWeather, state: PrevolUiState) {
     }
 }
 
+/**
+ * V20.4 — fenêtre « i » de Prévol : sources météo réellement utilisées ce jour (réseau, heure de réception, attribution et
+ * licence recopiées telles que precog les sert) et mention obligatoire « Données : PRECOG — precog-api.com ».
+ */
+@Composable
+private fun SourcesDialog(state: PrevolUiState, onDismiss: () -> Unit) {
+    val c = Gc.colors
+    val social = Gc.social
+    val day = state.day
+    val body = if (social) Gc.type.subhead else Gc.type.body
+    val small = if (social) Gc.type.footnote else Gc.type.monoSmall
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = if (social) c.panel else c.control,
+        title = { Text("Sources météo", style = if (social) Gc.type.title2 else Gc.type.title) },
+        text = {
+            LazyColumn(Modifier.heightIn(max = 460.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                item { Text(PRECOG_CREDIT, style = body.copy(color = c.ink, fontWeight = FontWeight.SemiBold)) }
+                if (day == null) {
+                    item { Text("Aucune prévision chargée pour le moment : choisissez un club pour afficher la météo du terrain.", style = body.copy(color = c.dim)) }
+                } else {
+                    item {
+                        Text(
+                            "Utilisées pour le ${Fmt.day.format(day.date)}" + (state.club?.let { " · ${it.airfieldIcao ?: it.shortName ?: it.name}" } ?: ""),
+                            style = small.copy(color = c.dim),
+                        )
+                    }
+                    items(day.sources) { s ->
+                        Column {
+                            Text(s.product, style = body.copy(color = c.ink, fontWeight = FontWeight.SemiBold))
+                            Text(listOfNotNull(s.attribution, s.license).joinToString(" · "), style = small.copy(color = c.ink))
+                            Text(
+                                listOfNotNull(
+                                    s.referenceTime?.let { "Réseau de ${Fmt.hm(it)}" },
+                                    "reçu à ${Fmt.hm(s.fetchedAt)}",
+                                    if (s.offline) "copie hors ligne" else null,
+                                    if (s.isStale(state.now)) "périmé" else null,
+                                ).joinToString(" · "),
+                                style = small.copy(color = c.dim),
+                            )
+                        }
+                    }
+                }
+                if (day == null || day.sources.any { "Météo-France" in it.attribution }) item {
+                    Text("Météo-France : Licence Ouverte Etalab 2.0.", style = small.copy(color = c.dim))
+                }
+                item {
+                    Text(
+                        "Plafond, base des cumulus et force des thermiques sont des estimations de Wind Glider calculées sur le profil " +
+                            "ARPEGE. Données fournies en l'état, sans garantie d'exactitude ni de disponibilité : elles ne remplacent " +
+                            "ni les avis officiels (Vigilance Météo-France) ni le jugement du pilote.",
+                        style = small.copy(color = c.faint),
+                    )
+                }
+            }
+        },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Fermer") } },
+    )
+}
+
 @Composable
 private fun ClubPicker(state: PrevolUiState, onDismiss: () -> Unit, onPick: (String) -> Unit) {
     val c = Gc.colors
@@ -407,15 +478,42 @@ private fun ClubPicker(state: PrevolUiState, onDismiss: () -> Unit, onPick: (Str
         containerColor = if (social) c.panel else c.control,
         title = { Text("Club", style = if (social) Gc.type.title2 else Gc.type.title) },
         text = {
-            LazyColumn(Modifier.heightIn(max = 420.dp)) {
-                items(state.clubs, key = { it.id }) { club ->
+            // V20.4 : recherche par sigle de 4 lettres (OACI du terrain ou sigle du club) et par mot du nom ou de la ville
+            var query by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf("") }
+            val found = androidx.compose.runtime.remember(state.clubs, query) {
+                com.neutronstar.glidercopilot.domain.ClubSearch.search(state.clubs, query)
+            }
+            Column {
+            androidx.compose.material3.OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("Sigle (LFNL, ACAM…) ou nom", style = Gc.type.body.copy(color = c.faint)) },
+                leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = c.dim) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { query = "" }) { Icon(Icons.Filled.Close, contentDescription = "Effacer la recherche", tint = c.dim) }
+                    }
+                },
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    capitalization = androidx.compose.ui.text.input.KeyboardCapitalization.Characters,
+                    imeAction = androidx.compose.ui.text.input.ImeAction.Search,
+                ),
+                textStyle = Gc.type.body.copy(color = c.ink),
+            )
+            Spacer(Modifier.height(8.dp))
+            if (found.isEmpty()) Text("Aucun club trouvé.", style = Gc.type.subhead.copy(color = c.dim), modifier = Modifier.padding(vertical = 12.dp))
+            LazyColumn(Modifier.heightIn(max = 380.dp)) {
+                items(found, key = { it.id }) { club ->
                     Column(
                         Modifier.fillMaxWidth().clickable { onPick(club.id) }.padding(vertical = 8.dp),
                     ) {
                         Text(club.name, style = Gc.type.body.copy(color = if (club.id == state.club?.id) (if (social) c.route else c.ok) else c.ink))
-                        Text(listOfNotNull(club.airfieldIcao, club.city, club.postcode.take(2)).joinToString(" · "), style = Gc.type.monoSmall)
+                        Text(listOfNotNull(club.airfieldIcao, club.shortName, club.city, club.postcode.take(2)).joinToString(" · "), style = Gc.type.monoSmall)
                     }
                 }
+            }
             }
         },
         confirmButton = { TextButton(onClick = onDismiss) { Text("Fermer") } },
@@ -442,11 +540,12 @@ fun PrevolDayPreview(viewModel: PrevolViewModel, modifier: Modifier = Modifier) 
                 }
                 CeilingChart(day.hours, state.selectedHour) { }
                 Text(
-                    listOfNotNull(state.club?.name, "ARPEGE · Météo-France").joinToString(" · "),
+                    listOfNotNull(state.club?.name, "ARPEGE · Source : Météo-France").joinToString(" · "),
                     style = Gc.type.caption1.copy(color = c.faint),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+                Text(PRECOG_CREDIT, style = Gc.type.caption1.copy(color = c.faint), maxLines = 1)
             }
             state.loading -> Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp, color = c.route)

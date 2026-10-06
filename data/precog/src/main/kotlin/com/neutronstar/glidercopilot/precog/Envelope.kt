@@ -8,6 +8,7 @@ data class FieldSemantics(val stepType: String?, val accumFrom: String?, val per
 class Envelope(val root: Json) {
     val referenceTime: Instant? = root["reference_time"]?.str?.let(::parseInstant)
     val attribution: String? = root["attribution"]?.str
+    val license: String? = root["license"]?.str
     val units: Map<String, String> =
         root["units"]?.obj?.map?.mapNotNull { (k, v) -> v.str?.let { k to it } }?.toMap() ?: emptyMap()
     val semantics: Map<String, FieldSemantics> = root["semantics"]?.obj?.map?.mapValues { (_, v) ->

@@ -37,6 +37,8 @@ data class SourceInfo(
     val referenceTime: Instant?,
     val fetchedAt: Instant,
     val offline: Boolean,
+    /** Licence du producteur, recopiée telle que la réponse la porte (champ `license`), quand elle est présente. */
+    val license: String? = null,
 ) {
     /** Périmée : copie hors ligne, ou réseau de plus de 12 h. */
     fun isStale(now: Instant): Boolean =
@@ -53,10 +55,18 @@ data class DayWeather(
     val sources: List<SourceInfo>,
 )
 
+/** Mention obligatoire des conditions d'utilisation PRECOG (art. 3), à côté de l'attribution de chaque producteur. */
+const val PRECOG_CREDIT = "Données : PRECOG — precog-api.com"
+
 sealed interface WeatherResult {
     data class Success(val day: DayWeather) : WeatherResult
     data class Error(val message: String) : WeatherResult
 }
+
+/** V20.4 — `?fields=` (guide PRECOG §3) : seuls les champs lus par [ForecastMapper.surface] sont demandés. */
+internal const val SURFACE_FIELDS =
+    "temperature_2m,dewpoint_2m,pressure_surface,shortwave_radiation_net,solar_radiation," +
+        "total_cloud_cover,low_cloud_cover,cape,wind_speed_10m,wind_direction_10m"
 
 class WeatherRepository(
     private val api: PrecogApi,
@@ -77,7 +87,7 @@ class WeatherRepository(
 
     private suspend fun load(position: LatLon, departement: String?, date: LocalDate): WeatherResult {
         val q = String.format(Locale.ROOT, "lat=%.5f&lon=%.5f", position.lat, position.lon)
-        val forecast = when (val f = api.get("/arpege/forecast?$q")) {
+        val forecast = when (val f = api.get("/arpege/forecast?$q&fields=$SURFACE_FIELDS")) {
             is Fetch.Ok -> f
             Fetch.NotAvailable -> return WeatherResult.Error("Prévision indisponible pour ce point (hors de l'emprise France ?)")
             is Fetch.Failed -> return WeatherResult.Error("Météo inaccessible : ${f.reason}")
@@ -90,7 +100,7 @@ class WeatherRepository(
         if (surfaces.isEmpty()) return WeatherResult.Error("Aucune échéance pour le $date dans le réseau servi")
 
         val sources = mutableListOf(
-            SourceInfo("ARPEGE surface", env.attribution ?: "Source : Météo-France", env.referenceTime, forecast.fetchedAt, forecast.offline),
+            SourceInfo("ARPEGE surface", env.attribution ?: "Source : Météo-France", env.referenceTime, forecast.fetchedAt, forecast.offline, env.license),
         )
 
         val limiter = Semaphore(3)
@@ -111,7 +121,7 @@ class WeatherRepository(
             val pe = Envelope(p.json)
             sources += SourceInfo(
                 "ARPEGE profil vertical", pe.attribution ?: "Source : Météo-France", pe.referenceTime, p.fetchedAt,
-                profiles.any { it.third?.offline == true },
+                profiles.any { it.third?.offline == true }, pe.license,
             )
         }
 
@@ -129,7 +139,7 @@ class WeatherRepository(
                 vigilance = VigilanceMapper.forDepartement(v.json, departement)
                 sources += SourceInfo(
                     "Vigilance", v.json["attribution"]?.str ?: "Source : Météo-France",
-                    v.json["update_time"]?.str?.let(Envelope::parseInstant), v.fetchedAt, v.offline,
+                    v.json["update_time"]?.str?.let(Envelope::parseInstant), v.fetchedAt, v.offline, v.json["license"]?.str,
                 )
             }
         }

@@ -457,7 +457,7 @@ private fun Disclaimer(onAccept: () -> Unit) {
                     )
                     Spacer(Modifier.height(10.dp))
                     Text(
-                        "Données : Météo-France via precog, OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
+                        "Données météo : PRECOG — precog-api.com (Source : Météo-France). Trafic : OGN (ODbL). Estimations thermiques calculées dans l'app : à confronter au ciel.",
                         style = Gc.type.footnote.copy(color = c.brandInk.copy(alpha = 0.7f)),
                     )
                     Spacer(Modifier.height(6.dp))

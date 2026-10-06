@@ -56,7 +56,7 @@ Seul l'éditeur peut le lire. N'y mettez pas d'informations personnelles. Conser
 <p>Pour afficher la météo, le trafic et les cartes, l'application interroge des services tiers. Ces requêtes contiennent la position du
 <strong>terrain choisi</strong> (pas la vôtre) et, comme toute requête Internet, l'adresse IP de votre connexion :</p>
 <ul>
-<li>precog (prévisions météo issues de Météo-France) ;</li>
+<li>PRECOG — precog-api.com (prévisions météo, Source : Météo-France) : l'app n'envoie que les coordonnées du terrain choisi ;</li>
 <li>Open Glider Network — serveurs APRS et base des appareils (trafic en lecture seule ; Wind Glider n'émet jamais votre position sur ce réseau) ;</li>
 <li>GitHub (téléchargement des cartes hors ligne : OpenStreetMap, openAIP, relief Copernicus) ;</li>
 <li>Service SOFIA de la DGAC, uniquement si vous ouvrez le lien NOTAM dans votre navigateur.</li>
@@ -126,7 +126,7 @@ Technical connection data (IP address, session tokens) is processed for security
 (legitimate interest). Messages are anonymous, or linked to your account if you are signed in, readable only by the publisher, kept 2 years at most or until account deletion.
 Please don't include personal information.</p>
 <h2>Other online services</h2>
-<p>Weather (precog / Météo-France), glider traffic (Open Glider Network, read-only — Wind Glider never broadcasts your position) and offline map downloads (GitHub)
+<p>Weather (PRECOG — precog-api.com / Source: Météo-France), glider traffic (Open Glider Network, read-only — Wind Glider never broadcasts your position) and offline map downloads (GitHub)
 are queried with the <strong>selected airfield's</strong> position, not yours, plus your IP address as with any internet request.</p>
 <h2>Sharing</h2>
 <p>No advertising, no analytics, no tracking, no sale of data. Processors: Supabase (hosting) and Google (sign-in only if you use it). Transfers to the US, if any, rely on EU Standard Contractual Clauses.</p>
