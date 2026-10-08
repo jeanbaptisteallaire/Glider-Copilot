@@ -11,7 +11,7 @@
 <main>
 <header><a href="index.html">Wind Glider</a></header>
 <h1>Politique de confidentialité</h1>
-<p class="meta">Application Android « Wind Glider » (identifiant <code>com.neutronstar.glidercopilot</code>) · Dernière mise à jour : 6 octobre 2026</p>
+<p class="meta">Application Android « Wind Glider » (identifiant <code>com.neutronstar.glidercopilot</code>) · Dernière mise à jour : 8 octobre 2026</p>
 <nav class="lang"><a href="#en">English version below</a></nav>
 
 <div class="box">
@@ -29,7 +29,7 @@ Contact pour toute question ou demande relative à vos données : <a href="mailt
 <h3>2.1 Sans compte (usage par défaut)</h3>
 <table>
 <tr><th>Donnée</th><th>Utilisation</th><th>Où</th></tr>
-<tr><td>Position GPS précise et approximative</td><td>Trouver le terrain le plus proche ; en vol : vario, marge de sécurité, distance et cap vers le terrain, enregistrement de la trace IGC. Pendant un vol, la position est lue écran éteint par un service de premier plan signalé par une notification permanente.</td><td>Uniquement sur le téléphone</td></tr>
+<tr><td>Position GPS précise et approximative</td><td>Trouver le terrain le plus proche (seules les coordonnées de ce terrain quittent le téléphone, voir 2.4) ; en vol : vario, marge de sécurité, distance et cap vers le terrain, enregistrement de la trace IGC. Pendant un vol, la position est lue écran éteint par un service de premier plan signalé par une notification permanente.</td><td>Uniquement sur le téléphone</td></tr>
 <tr><td>Capteurs (baromètre, accéléromètre)</td><td>Vario et altitude</td><td>Uniquement sur le téléphone</td></tr>
 <tr><td>Vols (fichiers IGC : trace, horaires, altitudes, nom du pilote et du planeur si renseignés)</td><td>Carnet de vols, rejeu 3D</td><td>Uniquement sur le téléphone</td></tr>
 <tr><td>Profil (nom affiché, immatriculation, club), réglages, terrain et planeur choisis</td><td>Personnalisation</td><td>Uniquement sur le téléphone</td></tr>
@@ -54,9 +54,12 @@ Seul l'éditeur peut le lire. N'y mettez pas d'informations personnelles. Conser
 
 <h3>2.4 Services en ligne consultés sans donnée personnelle</h3>
 <p>Pour afficher la météo, le trafic et les cartes, l'application interroge des services tiers. Ces requêtes contiennent la position du
-<strong>terrain choisi</strong> (pas la vôtre) et, comme toute requête Internet, l'adresse IP de votre connexion :</p>
+<strong>terrain choisi</strong>, jamais votre position GPS exacte, et, comme toute requête Internet, l'adresse IP de votre connexion.
+Par défaut, le terrain choisi est celui le plus proche de vous : ses coordonnées révèlent donc votre <strong>position approximative</strong>
+(à l'échelle de la région du terrain). Elle sert uniquement à fournir la météo et le trafic, n'est ni conservée par Wind Glider ni partagée à d'autres fins.
+Vous pouvez refuser la localisation et choisir votre club à la main.</p>
 <ul>
-<li>PRECOG — precog-api.com (prévisions météo, Source : Météo-France) : l'app n'envoie que les coordonnées du terrain choisi ;</li>
+<li>PRECOG — precog-api.com (prévisions météo, Source : Météo-France) : coordonnées du terrain choisi ;</li>
 <li>Open Glider Network — serveurs APRS et base des appareils (trafic en lecture seule ; Wind Glider n'émet jamais votre position sur ce réseau) ;</li>
 <li>GitHub (téléchargement des cartes hors ligne : OpenStreetMap, openAIP, relief Copernicus) ;</li>
 <li>Service SOFIA de la DGAC, uniquement si vous ouvrez le lien NOTAM dans votre navigateur.</li>
@@ -109,7 +112,7 @@ nécessite l'accord d'un titulaire de l'autorité parentale.</p>
 <hr>
 <section id="en" lang="en">
 <h1>Privacy Policy (English)</h1>
-<p class="meta">Android app “Wind Glider” (package <code>com.neutronstar.glidercopilot</code>) · Last updated: 6 October 2026</p>
+<p class="meta">Android app “Wind Glider” (package <code>com.neutronstar.glidercopilot</code>) · Last updated: 8 October 2026</p>
 <h2>Controller</h2>
 <p>Jean-Baptiste Allaire, sole trader (Google Play developer name: <strong>IcarusOne</strong>), 8 rue Eugène Lisbonne, 34000 Montpellier, France, publisher of Wind Glider. Contact: <a href="mailto:jb.allaire91@gmail.com">jb.allaire91@gmail.com</a>.</p>
 <h2>Without an account (default)</h2>
@@ -127,7 +130,9 @@ Technical connection data (IP address, session tokens) is processed for security
 Please don't include personal information.</p>
 <h2>Other online services</h2>
 <p>Weather (PRECOG — precog-api.com / Source: Météo-France), glider traffic (Open Glider Network, read-only — Wind Glider never broadcasts your position) and offline map downloads (GitHub)
-are queried with the <strong>selected airfield's</strong> position, not yours, plus your IP address as with any internet request.</p>
+are queried with the <strong>selected airfield's</strong> position, never your exact GPS position, plus your IP address as with any internet request.
+By default the selected airfield is the one nearest to you, so its coordinates reveal your <strong>approximate location</strong> (the airfield's area).
+It is used only to provide weather and traffic, is not stored by Wind Glider and is not shared for any other purpose. You can deny location access and pick your club manually.</p>
 <h2>Sharing</h2>
 <p>No advertising, no analytics, no tracking, no sale of data. Processors: Supabase (hosting) and Google (sign-in only if you use it). Transfers to the US, if any, rely on EU Standard Contractual Clauses.</p>
 <h2>Retention and deletion</h2>
