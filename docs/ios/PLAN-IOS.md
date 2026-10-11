@@ -83,7 +83,8 @@ essais réels de la sauvegarde ; la logique commune avant le trafic, car OGN se 
 2. **Compte Apple Developer** (payant, 99 €/an) : Team ID, identifiant d'app définitif (proposé :
    `com.neutronstar.glidercopilot`, comme Android), capacité « Sign in with Apple ». Indispensable pour Apple Login,
    l'essai sur iPhone et TestFlight.
-3. **Google Cloud** (projet du login Android) : création d'un identifiant OAuth « iOS » pour l'identifiant d'app
+3. **Google Cloud** (projet du login Android : **GLIDY**, ID `glidy-510417` ; clients OAuth Web « GLIDY Supabase » et
+   Android « GLIDY Android (clé d'upload) ») : création d'un identifiant OAuth « iOS » pour l'identifiant d'app
    ci-dessus, puis ajout de cet identifiant dans Supabase (Auth → Google → Authorized Client IDs).
 4. **Clé PRECOG** pour les essais réels de la météo.
 5. Un **iPhone de test** branché au Mac (baromètre, arrière-plan, son, connexions réelles).

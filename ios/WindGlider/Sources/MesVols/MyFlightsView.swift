@@ -23,6 +23,7 @@ struct PilotProfile: Codable, Equatable {
 /// import d'IGC, carnet en grille de 3 colonnes. Pas de sauvegarde en ligne ni de partage dans l'édition Lite.
 struct MyFlightsView: View {
     @EnvironmentObject var app: AppModel
+    @EnvironmentObject var account: AccountModel
     @State private var profile = PilotProfile.load()
     @State private var editing = false
     @State private var importing = false
@@ -63,6 +64,8 @@ struct MyFlightsView: View {
                         }
                     }
                     if let e = importError { Text(e).font(WG.footnote).foregroundStyle(WG.bad) }
+                    // comme Android : sauvegarde en ligne dans les deux éditions (le partage reste réservé à la complète)
+                    AccountCard()
                     HStack(alignment: .firstTextBaseline) {
                         Text("Vols").font(WG.title.weight(.bold)).foregroundStyle(WG.brandInk)
                         Spacer()
@@ -88,7 +91,12 @@ struct MyFlightsView: View {
             .background(WG.brandPaper)
             .toolbar(.hidden, for: .navigationBar)
             .refreshable { app.refreshFlights() }
-            .onAppear { app.refreshFlights() }
+            .onAppear {
+                app.refreshFlights()
+                account.isRecording = { [weak app] in app?.pilot.recording ?? false }
+                account.onShown()
+            }
+            .onChange(of: account.restoredTick) { _, _ in app.refreshFlights() }
             .sheet(isPresented: $editing) { ProfileEditor(profile: $profile) }
             .fileImporter(isPresented: $importing, allowedContentTypes: [UTType(filenameExtension: "igc") ?? .data, .data, .plainText]) { result in
                 importError = nil

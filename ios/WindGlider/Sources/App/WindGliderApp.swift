@@ -1,15 +1,19 @@
+import GoogleSignIn
 import SwiftUI
 
 @main
 struct WindGliderApp: App {
     @StateObject private var app = AppModel()
     @StateObject private var mapControl = MapControl()
+    @StateObject private var account = AccountModel()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(app)
                 .environmentObject(mapControl)
+                .environmentObject(account)
+                .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
                 .environment(\.locale, Locale(identifier: "fr_FR"))
                 .task { app.startEngine() }
         }
@@ -24,9 +28,13 @@ struct RootView: View {
     @State private var tab = 0
     @State private var pilotNoticeSeen = false
     @Environment(\.scenePhase) private var phase
+    /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
+    @State private var welcomeDone = false
 
     var body: some View {
-        if disclaimerVersion < DisclaimerView.version {
+        if !welcomeDone {
+            WelcomeView { welcomeDone = true }
+        } else if disclaimerVersion < DisclaimerView.version {
             DisclaimerView { disclaimerVersion = DisclaimerView.version }
         } else {
             TabView(selection: $tab) {

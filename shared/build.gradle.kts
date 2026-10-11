@@ -16,6 +16,7 @@ kotlin {
             export(project(":core:domain"))
             export(project(":data:precog"))
             export(project(":data:carto"))
+            export(project(":data:flightcloud"))
             xcf.add(this)
         }
     }
@@ -24,6 +25,7 @@ kotlin {
             api(project(":core:domain"))
             api(project(":data:precog"))
             api(project(":data:carto"))
+            api(project(":data:flightcloud"))
         }
     }
 }

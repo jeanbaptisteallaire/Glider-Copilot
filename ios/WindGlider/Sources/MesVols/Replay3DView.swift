@@ -65,12 +65,13 @@ struct Replay3DView: UIViewRepresentable {
 final class AssetSchemeHandler: NSObject, WKURLSchemeHandler {
     private static let types = ["html": "text/html", "mjs": "text/javascript", "js": "text/javascript", "css": "text/css",
                                 "json": "application/json", "png": "image/png", "bin": "application/octet-stream",
-                                "wasm": "application/wasm", "svg": "image/svg+xml"]
+                                "wasm": "application/wasm", "svg": "image/svg+xml", "webp": "image/webp"]
 
     func webView(_ webView: WKWebView, start task: WKURLSchemeTask) {
         guard let url = task.request.url, let base = Bundle.main.resourceURL else { task.didFailWithError(URLError(.badURL)); return }
         let file = base.appendingPathComponent(url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/")))
-        guard file.standardizedFileURL.path.hasPrefix(base.appendingPathComponent("replay3d").path),
+        // seules les pages embarquées (rejeu 3D, couverture animée) sont servies
+        guard ["replay3d", "cover"].contains(where: { file.standardizedFileURL.path.hasPrefix(base.appendingPathComponent($0).path + "/") }),
               let data = try? Data(contentsOf: file) else {
             task.didReceive(HTTPURLResponse(url: url, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!)
             task.didFinish(); return

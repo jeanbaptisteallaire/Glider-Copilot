@@ -5,6 +5,10 @@ options:
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
+packages:
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: 9.0.0
 configFiles:
   Debug: WindGlider/Config.xcconfig
   Release: WindGlider/Config.xcconfig
@@ -35,6 +39,10 @@ targetTemplates:
       - path: ../feature/replay3d/src/main/assets/replay3d
         type: folder
         buildPhase: resources
+      # couverture animée : même page que l'app Android (assets cover)
+      - path: ../app/src/main/assets/cover
+        type: folder
+        buildPhase: resources
       # données d'essai (build de développement, argument -testData) : réponses synthétiques des tests precog
       - path: ../data/precog/src/jvmTest/resources/fixtures
         type: folder
@@ -43,6 +51,7 @@ targetTemplates:
       path: WindGlider/${target_name}-Info.plist
       properties:
         CFBundleDisplayName: Wind Glider
+        CFBundleName: Wind Glider
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
         UILaunchScreen: { UIColorName: LaunchBackground }
@@ -51,10 +60,23 @@ targetTemplates:
         SUPABASE_URL: $(SUPABASE_URL)
         SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
         WG_EDITION: $(WG_EDITION)
+        # Google Sign-In : client iOS du projet Google Cloud GLIDY (glidy-510417), client Web = celui de Supabase
+        GIDClientID: $(GOOGLE_IOS_CLIENT_ID)
+        GIDServerClientID: $(GOOGLE_WEB_CLIENT_ID)
+        CFBundleURLTypes:
+          - CFBundleURLName: google
+            CFBundleURLSchemes: [$(GOOGLE_IOS_URL_SCHEME)]
         NSLocationWhenInUseUsageDescription: "Position GPS du planeur pendant le vol : marge de sécurité, trace IGC et club le plus proche. Elle reste sur le téléphone."
         NSMotionUsageDescription: "Baromètre et accéléromètre du téléphone pour le vario."
         UIBackgroundModes: [audio, location]
         UIAppFonts: [font/inter_regular.ttf, font/inter_medium.ttf, font/inter_semibold.ttf, font/inter_bold.ttf]
+    dependencies:
+      - package: GoogleSignIn
+        product: GoogleSignIn
+    entitlements:
+      path: WindGlider/WindGlider.entitlements
+      properties:
+        com.apple.developer.applesignin: [Default]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.neutronstar.glidercopilot

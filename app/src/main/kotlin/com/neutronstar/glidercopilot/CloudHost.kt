@@ -11,6 +11,7 @@ import com.neutronstar.glidy.flightcloud.FlightSyncService
 import com.neutronstar.glidy.flightcloud.SessionStore
 import com.neutronstar.glidy.flightcloud.SupabaseClient
 import com.neutronstar.glidy.flightcloud.UrlConnectionTransport
+import com.neutronstar.glidy.flightcloud.userMessage
 import com.neutronstar.glidy.myflights.AccountActions
 import com.neutronstar.glidy.myflights.AccountCardState
 import kotlinx.coroutines.CoroutineScope
@@ -141,13 +142,6 @@ class CloudHost(context: Context, private val flights: FlightArchiveHost, privat
             _state.update { it.copy(busy = true, message = busyMessage) }
             try { block() } finally { _state.update { it.copy(busy = false) } }
         }
-    }
-
-    private fun CloudResult<*>.userMessage(): String = when (this) {
-        is CloudResult.Failed -> "Échec : $reason"
-        CloudResult.SignedOut -> "Session expirée"
-        CloudResult.NotConfigured -> "Sauvegarde cloud non configurée"
-        is CloudResult.Ok -> ""
     }
 
     private class PrefsSessionStore(context: Context) : SessionStore {

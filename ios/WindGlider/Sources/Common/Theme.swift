@@ -8,6 +8,7 @@ enum WG {
 
     // marque (V20)
     static let brandInk = rgb(0x1D3550)
+    static let coverSea = rgb(0x073E60)     // fond de la couverture animée (COVER_SEA)
     static let brandPaper = rgb(0xF6F3EE)
     static let sky = rgb(0x0A84FF)          // sélection, liens
     static let card = Color.white
@@ -17,6 +18,7 @@ enum WG {
     // sens (charte Pilotage, thème clair)
     static let good = rgb(0x1E8E3E)         // marge positive
     static let bad = rgb(0xD93025)          // marge négative, alerte
+    static let warn = rgb(0xC25E00)         // message à lire (Gc.colors.warn, thème clair)
     static let climb = rgb(0xFF9F43)        // orange montée (v8)
     static let sink = rgb(0x2E7D32)
     static let route = rgb(0x7B3FE4)        // route vers le terrain, cap

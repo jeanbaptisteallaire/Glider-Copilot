@@ -67,7 +67,7 @@ class SupabaseClient(
         if (rawNonce != null) body["nonce"] = rawNonce
         val r = transport.send(post("/auth/v1/token?grant_type=id_token", body, token = null))
         if (!r.ok) return@guarded fail(r)
-        val s = sessionFrom(MiniJson.parse(r.text).obj(), fallbackEmail = "Compte Google")
+        val s = sessionFrom(MiniJson.parse(r.text).obj(), fallbackEmail = if (provider == "apple") "Compte Apple" else "Compte Google")
             ?: return@guarded CloudResult.Failed("réponse de connexion illisible", retryable = false)
         sessions.save(s)
         CloudResult.Ok(s)
@@ -253,3 +253,11 @@ class SupabaseClient(
 /** Gzip des IGC du stockage : java.util.zip sur Android (inchangé), Okio sur iOS. */
 internal expect fun gzipBytes(bytes: ByteArray): ByteArray
 internal expect fun gunzipBytes(bytes: ByteArray): ByteArray
+
+/** Message affiché au pilote pour un échec (commun Android / iOS). */
+fun CloudResult<*>.userMessage(): String = when (this) {
+    is CloudResult.Failed -> "Échec : $reason"
+    CloudResult.SignedOut -> "Session expirée"
+    CloudResult.NotConfigured -> "Sauvegarde cloud non configurée"
+    is CloudResult.Ok -> ""
+}
