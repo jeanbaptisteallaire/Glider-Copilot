@@ -22,7 +22,7 @@
     <issue
         id="AndroidGradlePluginVersion"
         severity="Warning"
-        message="A newer version of Gradle than 8.11.1 is available: 8.14.5"
+        message="A newer version of Gradle than 8.11.1 is available: 8.14.6"
         category="Correctness"
         priority="4"
         summary="Obsolete Android Gradle Plugin Version"
@@ -529,7 +529,7 @@
         errorLine2="                                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="236"
+            line="244"
             column="88"/>
     </issue>
 
@@ -545,7 +545,7 @@
         errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="386"
+            line="394"
             column="26"/>
     </issue>
 
@@ -561,7 +561,7 @@
         errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="438"
+            line="446"
             column="23"/>
     </issue>
 
@@ -577,7 +577,7 @@
         errorLine2="                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="526"
+            line="534"
             column="84"/>
     </issue>
 
@@ -593,7 +593,7 @@
         errorLine2="                                                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="541"
+            line="549"
             column="61"/>
     </issue>
 
@@ -609,7 +609,7 @@
         errorLine2="                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="571"
+            line="579"
             column="84"/>
     </issue>
 
@@ -625,7 +625,7 @@
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="590"
+            line="598"
             column="27"/>
     </issue>
 
@@ -641,7 +641,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="/home/runner/work/Glider-Copilot/Glider-Copilot/app/src/main/kotlin/com/neutronstar/glidercopilot/FlightEngine.kt"
-            line="672"
+            line="680"
             column="9"/>
     </issue>
 

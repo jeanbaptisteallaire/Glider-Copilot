@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.RealDdbTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-06T14:45:08" hostname="runnervm8df0l" time="0.041">
+<testsuite name="com.neutronstar.glidercopilot.ogn.RealDdbTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-11T12:55:36" hostname="runnervmmprz5" time="0.05">
   <properties/>
-  <testcase name="findsRealGlider" classname="com.neutronstar.glidercopilot.ogn.RealDdbTest" time="0.028"/>
-  <testcase name="parsesRealSample" classname="com.neutronstar.glidercopilot.ogn.RealDdbTest" time="0.003"/>
+  <testcase name="findsRealGlider" classname="com.neutronstar.glidercopilot.ogn.RealDdbTest" time="0.035"/>
+  <testcase name="parsesRealSample" classname="com.neutronstar.glidercopilot.ogn.RealDdbTest" time="0.01"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
