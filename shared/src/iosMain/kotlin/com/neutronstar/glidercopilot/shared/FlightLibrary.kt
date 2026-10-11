@@ -14,6 +14,9 @@ import kotlinx.datetime.toLocalDateTime
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
+/** Point du profil d'altitude : minutes depuis le début, altitude (m). */
+data class AltDot(val minutes: Double, val altM: Double)
+
 /** Vol du carnet : statistiques lues dans le fichier IGC fermé (même règle qu'Android : Mes vols ne reçoit que des IGC fermés). */
 data class FlightEntry(
     val path: String,
@@ -30,6 +33,11 @@ data class FlightEntry(
     val distanceKm: Double,
     /** Vignette de la grille : « 31 min · 55,9 km » (comme Mes vols Android). */
     val gridLine: String,
+    /** Profil d'altitude allégé (~300 points), source « GPS » ou « Baro », altitudes min et max. */
+    val altProfile: List<AltDot>,
+    val altSource: String,
+    val minAltM: Double,
+    val maxAltM: Double,
 )
 
 /** Carnet Mes vols de l'édition Lite iOS : fichiers IGC du dossier de l'app, du plus récent au plus ancien. */
@@ -76,9 +84,23 @@ class FlightLibrary(private val dir: String) {
             track = track,
             durationS = dur,
             distanceKm = dist,
+            altProfile = profileOf(fixes),
+            altSource = if (fixes.any { (it.gnssAltM ?: 0) != 0 }) "GPS" else "Baro",
+            minAltM = alts.minOrNull()?.toDouble() ?: 0.0,
+            maxAltM = alts.maxOrNull()?.toDouble() ?: 0.0,
             gridLine = (if (dur >= 3600) "${dur / 3600} h ${(dur % 3600 / 60).toString().padStart(2, '0')}" else "${dur / 60} min") +
                 " · " + formatFixed(dist, 1, decimalComma = true) + " km",
         )
+    }
+
+    private fun profileOf(fixes: List<com.neutronstar.glidercopilot.domain.flight.IgcFix>): List<AltDot> {
+        val withAlt = fixes.filter { (it.gnssAltM ?: 0) != 0 || (it.pressureAltM ?: 0) != 0 }
+        if (withAlt.isEmpty()) return emptyList()
+        val t0 = withAlt.first().time
+        val step = maxOf(1, withAlt.size / 300)
+        return withAlt.filterIndexed { i, _ -> i % step == 0 || i == withAlt.lastIndex }.map {
+            AltDot(secondsBetween(t0, it.time) / 60.0, (it.gnssAltM?.takeIf { a -> a != 0 } ?: it.pressureAltM ?: 0).toDouble())
+        }
     }
 
     fun delete(path: String) { runCatching { fs.delete(path.toPath()) } }

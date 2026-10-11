@@ -27,6 +27,10 @@ targets:
         buildPhase: resources
       - path: ../app/src/main/res/drawable-nodpi/wg_logo.webp
         buildPhase: resources
+      - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_flights_header.webp
+        buildPhase: resources
+      - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_avatar.webp
+        buildPhase: resources
       # rejeu 3D : même page que l'app Android (assets replay3d)
       - path: ../feature/replay3d/src/main/assets/replay3d
         type: folder
