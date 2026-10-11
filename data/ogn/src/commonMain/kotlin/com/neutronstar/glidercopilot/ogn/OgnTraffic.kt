@@ -2,8 +2,13 @@ package com.neutronstar.glidercopilot.ogn
 
 import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
-import java.time.Duration
-import java.time.Instant
+import com.neutronstar.glidercopilot.domain.formatFixed
+import com.neutronstar.glidercopilot.domain.secondsBetween
+import kotlinx.datetime.Instant
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max
@@ -42,7 +47,7 @@ data class NetworkThermal(
     val lastSeen: Instant,
     val aircraftCount: Int,
 ) {
-    fun ageMinutes(now: Instant): Long = Duration.between(lastSeen, now).toMinutes()
+    fun ageMinutes(now: Instant): Long = (secondsBetween(lastSeen, now) / 60)
 }
 
 /** Spirale d'un aéronef, détectée sur sa trajectoire. */
@@ -65,7 +70,7 @@ object ThermalDetector {
     const val MIN_TURN_RATE_DEG_S = 4.0
     const val MAX_GAP_S = 25L
 
-    fun episodes(fixes: List<OgnFix>, minTurnDeg: Double = 540.0, minDuration: Duration = Duration.ofSeconds(30)): List<CirclingEpisode> {
+    fun episodes(fixes: List<OgnFix>, minTurnDeg: Double = 540.0, minDuration: Duration = 30.seconds): List<CirclingEpisode> {
         val out = ArrayList<CirclingEpisode>()
         val sorted = fixes.sortedBy { it.time }
         var run = ArrayList<OgnFix>()
@@ -74,7 +79,7 @@ object ThermalDetector {
 
         fun close() {
             if (run.size >= 3) {
-                val dur = Duration.between(run.first().time, run.last().time)
+                val dur = (run.last().time - run.first().time)
                 if (abs(turn) >= minTurnDeg && dur >= minDuration) {
                     val alts = run.mapNotNull { it.altitudeM }
                     val climb = if (alts.size >= 2 && dur.seconds > 0) {
@@ -98,7 +103,7 @@ object ThermalDetector {
             val f = sorted[i]
             val prev = sorted.getOrNull(i - 1)
             if (prev == null) { run.add(f); continue }
-            val dt = Duration.between(prev.time, f.time).seconds
+            val dt = secondsBetween(prev.time, f.time)
             if (dt <= 0) continue
             if (dt > MAX_GAP_S) { close(); run.add(f); continue }
             val rate = turnRate(prev, f, dt)
@@ -137,21 +142,21 @@ object ThermalDetector {
     }
 
     /** Regroupe les spirales proches (même pompe) : distance < [mergeKm] et moins de [mergeWindow] d'écart. */
-    fun thermals(episodes: List<CirclingEpisode>, minClimbMs: Double = 0.3, mergeKm: Double = 1.2, mergeWindow: Duration = Duration.ofMinutes(15)): List<NetworkThermal> {
+    fun thermals(episodes: List<CirclingEpisode>, minClimbMs: Double = 0.3, mergeKm: Double = 1.2, mergeWindow: Duration = 15.minutes): List<NetworkThermal> {
         val groups = ArrayList<MutableList<CirclingEpisode>>()
         for (e in episodes.filter { it.climbMs >= minClimbMs }.sortedBy { it.end }) {
             val g = groups.firstOrNull { grp ->
                 val last = grp.maxBy { it.end }
-                Geo.distanceKm(last.center, e.center) < mergeKm && Duration.between(last.end, e.end).abs() <= mergeWindow
+                Geo.distanceKm(last.center, e.center) < mergeKm && (e.end - last.end).absoluteValue <= mergeWindow
             }
             if (g != null) g += e else groups += mutableListOf(e)
         }
         return groups.map { g ->
-            val weight = g.sumOf { Duration.between(it.start, it.end).seconds.toDouble() }.coerceAtLeast(1.0)
+            val weight = g.sumOf { secondsBetween(it.start, it.end).toDouble() }.coerceAtLeast(1.0)
             NetworkThermal(
-                position = LatLon(g.sumOf { it.center.lat * Duration.between(it.start, it.end).seconds } / weight,
-                    g.sumOf { it.center.lon * Duration.between(it.start, it.end).seconds } / weight),
-                climbMs = g.sumOf { it.climbMs * Duration.between(it.start, it.end).seconds } / weight,
+                position = LatLon(g.sumOf { it.center.lat * secondsBetween(it.start, it.end) } / weight,
+                    g.sumOf { it.center.lon * secondsBetween(it.start, it.end) } / weight),
+                climbMs = g.sumOf { it.climbMs * secondsBetween(it.start, it.end) } / weight,
                 topAltitudeM = g.mapNotNull { it.topAltitudeM }.maxOrNull(),
                 lastSeen = g.maxOf { it.end },
                 aircraftCount = g.map { it.address }.distinct().size,
@@ -171,8 +176,8 @@ fun interface DeviceDirectory {
  */
 class TrafficStore(
     private val directory: DeviceDirectory = DeviceDirectory { null },
-    private val trackWindow: Duration = Duration.ofMinutes(30),
-    private val thermalWindow: Duration = Duration.ofMinutes(45),
+    private val trackWindow: Duration = 30.minutes,
+    private val thermalWindow: Duration = 45.minutes,
     /** Centre de la zone d'intérêt : au-delà de [detailRadiusKm], seule la dernière position est gardée. */
     private val centre: () -> com.neutronstar.glidercopilot.domain.LatLon? = { null },
     private val detailRadiusKm: Double = 60.0,
@@ -195,7 +200,7 @@ class TrafficStore(
         labels[fix.address] = device?.takeIf { it.identified }?.let { it.competitionNumber ?: it.registration }
         val q = tracks.getOrPut(fix.address) { ArrayDeque() }
         // même trame relayée par plusieurs récepteurs, ou trame plus ancienne arrivée en retard
-        q.lastOrNull()?.let { if (!fix.time.isAfter(it.time)) return false }
+        q.lastOrNull()?.let { if (fix.time <= it.time) return false }
         q.addLast(fix)
         // au loin (carte du sud de la France), la trajectoire n'apporte rien : on ne garde que les dernières positions
         val c = centre()
@@ -212,10 +217,10 @@ class TrafficStore(
         val it = tracks.entries.iterator()
         while (it.hasNext()) {
             val e = it.next()
-            while (e.value.isNotEmpty() && e.value.first().time.isBefore(horizon)) e.value.removeFirst()
+            while (e.value.isNotEmpty() && e.value.first().time < horizon) e.value.removeFirst()
             if (e.value.isEmpty()) { it.remove(); labels.remove(e.key); lastAnalysis.remove(e.key) }
         }
-        episodes.removeAll { it.end.isBefore(now.minus(thermalWindow)) || it.end.isBefore(now.minus(Duration.ofHours(24))) }
+        episodes.removeAll { it.end < now - thermalWindow || it.end < now - 24.hours }
     }
 
     /**
@@ -239,17 +244,17 @@ class TrafficStore(
     }
 
     @Synchronized
-    fun aircraft(now: Instant, maxAge: Duration = Duration.ofMinutes(2), exclude: Set<String> = emptySet()): List<TrafficAircraft> =
+    fun aircraft(now: Instant, maxAge: Duration = 2.minutes, exclude: Set<String> = emptySet()): List<TrafficAircraft> =
         tracks.mapNotNull { (addr, q) ->
             val last = q.lastOrNull() ?: return@mapNotNull null
-            if (addr in exclude || Duration.between(last.time, now) > maxAge) return@mapNotNull null
-            val circling = episodes.any { it.address == addr && Duration.between(it.end, last.time).seconds <= 20 }
+            if (addr in exclude || (now - last.time) > maxAge) return@mapNotNull null
+            val circling = episodes.any { it.address == addr && secondsBetween(it.end, last.time) <= 20 }
             TrafficAircraft(addr, last.aircraftType, labels[addr], last, circling)
         }
 
     @Synchronized
     fun thermals(now: Instant, exclude: Set<String> = emptySet()): List<NetworkThermal> =
-        ThermalDetector.thermals(episodes.filter { it.address !in exclude && !it.end.isBefore(now.minus(thermalWindow)) })
+        ThermalDetector.thermals(episodes.filter { it.address !in exclude && it.end >= now - thermalWindow })
 
     @Synchronized
     fun track(address: String): List<OgnFix> = tracks[address]?.toList().orEmpty()
@@ -265,14 +270,14 @@ data class OwnGliderStatus(
     val medianLatencyS: Double?,
     val frames: Int,
 ) {
-    fun isFresh(now: Instant, max: Duration = Duration.ofSeconds(60)) = Duration.between(last.received, now) <= max
+    fun isFresh(now: Instant, max: Duration = 60.seconds) = (now - last.received) <= max
 }
 
 object OwnGlider {
     fun status(fixes: List<OgnFix>): OwnGliderStatus? {
         val sorted = fixes.sortedBy { it.time }
         val last = sorted.lastOrNull() ?: return null
-        val intervals = sorted.zipWithNext { a, b -> Duration.between(a.time, b.time).seconds.toDouble() }.filter { it > 0 && it < 600 }
+        val intervals = sorted.zipWithNext { a, b -> secondsBetween(a.time, b.time).toDouble() }.filter { it > 0 && it < 600 }
         val latencies = sorted.takeLast(30).map { it.latency.toMillis() / 1000.0 }
         return OwnGliderStatus(last, median(intervals), median(latencies), sorted.size)
     }
@@ -283,7 +288,7 @@ object OwnGlider {
 
     /** Filtre APRS-IS : zone autour du terrain + mes appareils où qu'ils soient (b/ = indicatif exact). */
     fun aprsFilter(center: LatLon, radiusKm: Int, ownAddresses: List<Pair<AddressType, String>>): String {
-        val zone = "r/%.4f/%.4f/%d".format(java.util.Locale.ROOT, center.lat, center.lon, radiusKm)
+        val zone = "r/${formatFixed(center.lat, 4)}/${formatFixed(center.lon, 4)}/$radiusKm"
         if (ownAddresses.isEmpty()) return zone
         val calls = ownAddresses.flatMap { (type, addr) ->
             when (type) {

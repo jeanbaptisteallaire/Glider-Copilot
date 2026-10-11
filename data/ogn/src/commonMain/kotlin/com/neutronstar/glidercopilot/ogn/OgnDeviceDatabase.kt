@@ -4,7 +4,9 @@ import com.neutronstar.glidercopilot.domain.flarm.Registration
 import com.neutronstar.glidercopilot.precog.CachedResponse
 import com.neutronstar.glidercopilot.precog.HttpClient
 import com.neutronstar.glidercopilot.precog.ResponseCache
-import java.io.IOException
+import com.neutronstar.glidercopilot.precog.PlatformLock
+import okio.IOException
+import kotlin.concurrent.Volatile
 import com.neutronstar.glidercopilot.domain.EPOCH
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -211,7 +213,7 @@ class OgnDeviceDatabase(
         var idx = index?.second
         if (idx == null || nowMs - indexCheckedAt > 600_000) {
             // une seule reconstruction à la fois : les trames arrivées pendant ce temps restent sans nom (adresse brute)
-            if (!indexBuilding.compareAndSet(false, true)) return idx?.get(address.uppercase())
+            if (!buildLock.withLock { if (indexBuilding) false else { indexBuilding = true; true } }) return idx?.get(address.uppercase())
             try {
                 indexCheckedAt = nowMs
                 val cached = cache.read(url)
@@ -219,25 +221,26 @@ class OgnDeviceDatabase(
                 else index?.takeIf { it.first == cached.fetchedAt }?.second
                     ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
                 if (cached == null) index = EPOCH to idx
-            } finally { indexBuilding.set(false) }
+            } finally { buildLock.withLock { indexBuilding = false } }
         }
         return idx?.get(address.uppercase())
     }
 
     @Volatile private var indexCheckedAt = 0L
 
-    private val parseLock = Any()
+    private val parseLock = PlatformLock()
 
     /** Une seule lecture à la fois (S9) : les appels concurrents attendent et réutilisent le résultat. */
     private fun devicesOf(c: CachedResponse): List<DdbDevice> {
         parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }
-        synchronized(parseLock) {
-            parsed?.let { (at, list) -> if (at == c.fetchedAt) return list }
-            return DdbParser.parse(c.body).also { parsed = c.fetchedAt to it }
+        return parseLock.withLock {
+            parsed?.takeIf { it.first == c.fetchedAt }?.second ?: DdbParser.parse(c.body).also { parsed = c.fetchedAt to it }
         }
     }
 
-    private val indexBuilding = java.util.concurrent.atomic.AtomicBoolean(false)
+    // reconstruction de l'index : une seule à la fois (ancien AtomicBoolean)
+    private val buildLock = PlatformLock()
+    private var indexBuilding = false
 
     companion object {
         const val DDB_URL = "https://ddb.glidernet.org/download/?j=1&t=1"
