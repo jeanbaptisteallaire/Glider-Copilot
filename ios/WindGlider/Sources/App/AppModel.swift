@@ -37,8 +37,8 @@ final class AppModel: ObservableObject {
     @Published var finesse: Int = 20 { didSet { engine.setFinesse(value: Int32(finesse)) } }
     @Published var demo = false { didSet { engine.setDemo(on: demo) } }
     private var lastPosition: CLLocationCoordinate2D?
-    /// Édition complète : trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
-    let traffic: IosTraffic?
+    /// Trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
+    let traffic: IosTraffic?  // jamais nil ; optionnel pour garder les appels existants
     @Published var trafficSnap: TrafficSnapshot?
     private var tick = 0
 
@@ -54,7 +54,7 @@ final class AppModel: ObservableObject {
         engine = IosFlightEngine(igcDir: AppModel.igcDir, appVersion: version)
         library = FlightLibrary(dir: AppModel.igcDir)
         weatherApi = AppModel.makeWeather(version: version)
-        traffic = Edition.full ? IosTraffic(cacheDir: NSTemporaryDirectory(), installId: AppModel.installId, appVersion: version) : nil
+        traffic = IosTraffic(cacheDir: NSTemporaryDirectory(), installId: AppModel.installId, appVersion: version)   // comme la 2.0.4 Lite : trafic OGN dans Pilotage
         pilot = engine.ui()
         let d = UserDefaults.standard
         soundOn = d.bool(forKey: "varioSound")
