@@ -25,7 +25,7 @@ struct WindGliderApp: App {
 struct RootView: View {
     @EnvironmentObject var app: AppModel
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
-    @State private var tab: AppTab = .home
+    @State private var tab: AppTab = .prevol
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
     @State private var pilotNoticeSeen = false
     @Environment(\.scenePhase) private var phase
@@ -62,14 +62,11 @@ struct RootView: View {
 extension RootView {
     @ViewBuilder func screen(_ t: AppTab) -> some View {
         switch t {
-        case .home: HomeMenuView { tab = $0 }
         case .tuto: TutoHomeView()
         case .prevol: PrevolView()
         case .pilotage: if pilotNoticeSeen { PilotView() } else { PilotNoticeView { pilotNoticeSeen = true } }
         case .mesVols: MyFlightsView()
-        case .carte: TrafficMapView()
         case .checklist: ChecklistView()
-        case .feed: FeedView()
         }
     }
 }

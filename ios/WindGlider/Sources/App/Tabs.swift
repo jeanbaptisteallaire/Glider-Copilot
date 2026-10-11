@@ -1,41 +1,33 @@
 import SwiftUI
 
-/// Onglets (Tab d'AppRoot.kt) : Lite = Accueil, Tuto, Prévol, Pilotage, Mes vols ; complète = tous.
-/// iOS : l'accueil est un onglet (Android y revient par le retour système) ; au-delà de cinq, iOS range le reste dans « Plus ».
+/// Onglets de la version Android publiée (V20.4, édition Lite) : Tuto, Prévol, Pilotage, Mes vols — et rien d'autre.
+/// Les autres onglets d'Android (Feed, Carte, Check-lists) ne sont pas dans la version publiée : pas sur iOS non plus.
 enum AppTab: Int, CaseIterable, Identifiable {
-    case home, prevol, pilotage, carte, mesVols, checklist, feed, tuto
+    case tuto, prevol, pilotage, mesVols, checklist
     var id: Int { rawValue }
 
     static var visible: [AppTab] {
-        // complète : les quatre onglets de vol en barre, accueil (ouvert au lancement), Check-lists, Feed et Tuto dans « Plus »
-        Edition.full ? [.prevol, .pilotage, .carte, .mesVols, .home, .checklist, .feed, .tuto]
-                     : [.home, .tuto, .prevol, .pilotage, .mesVols]
+        [.tuto, .prevol, .pilotage, .mesVols]
     }
 
     func label(_ lang: String) -> String {
         let fr = lang == "fr"
         switch self {
-        case .home: return fr ? "Accueil" : "Home"
+        case .tuto: return "Tuto"
         case .prevol: return fr ? "Prévol" : "Pre-flight"
         case .pilotage: return fr ? "Pilotage" : "Flight"
-        case .carte: return fr ? "Carte" : "Map"
         case .mesVols: return fr ? "Mes vols" : "My flights"
         case .checklist: return fr ? "Check-lists" : "Checklists"
-        case .feed: return "Feed"
-        case .tuto: return "Tuto"
         }
     }
 
     var icon: String {
         switch self {
-        case .home: return "house"
+        case .tuto: return "graduationcap"
         case .prevol: return "sun.max"
         case .pilotage: return "airplane"
-        case .carte: return "map"
         case .mesVols: return "person"
         case .checklist: return "checklist"
-        case .feed: return "person.2"
-        case .tuto: return "graduationcap"
         }
     }
 }
