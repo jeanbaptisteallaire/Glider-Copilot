@@ -20,8 +20,17 @@
 	<string>0.1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Position GPS du planeur pendant le vol : marge de sécurité, trace IGC et club le plus proche. Elle reste sur le téléphone.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Baromètre et accéléromètre du téléphone pour le vario.</string>
 	<key>PRECOG_API_KEY</key>
 	<string>$(PRECOG_API_KEY)</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>location</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

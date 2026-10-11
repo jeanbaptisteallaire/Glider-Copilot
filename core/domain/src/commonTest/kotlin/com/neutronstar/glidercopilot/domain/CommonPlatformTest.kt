@@ -34,6 +34,15 @@ class CommonPlatformTest {
         assertEquals("HFDTEDATE:140726,01", Igc.headerLines(Igc.Header(LocalDate(2026, 7, 14)))[1])
     }
 
+    @Test fun igcHeaderNamesThePlatform() {
+        val android = Igc.headerLines(Igc.Header(LocalDate(2026, 7, 14)))
+        assertEquals("HFRHWHARDWAREVERSION:Android", android[8])   // Android : en-tête inchangé
+        assertEquals("HFFTYFRTYPE:WINDGLIDER,Android", android[9])
+        val ios = Igc.headerLines(Igc.Header(LocalDate(2026, 7, 14), platform = "iOS"))
+        assertEquals("HFRHWHARDWAREVERSION:iOS", ios[8])
+        assertEquals("HFGPSRECEIVER:iOS,telephone", ios[10])
+    }
+
     @Test fun igcParseRoundTripsAndCrossesMidnight() {
         val text = "HFDTEDATE:310126,01\nB2359590000000N00000000EA0000000000\nB0000010000000N00000000EA0000000000\n"
         val fixes = Igc.parse(text)

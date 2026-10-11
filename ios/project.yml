@@ -3,7 +3,7 @@ name: WindGlider
 options:
   bundleIdPrefix: com.neutronstar
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.0"
   createIntermediateGroups: true
 configFiles:
   Debug: WindGlider/Config.xcconfig
@@ -16,6 +16,13 @@ targets:
       - WindGlider/Sources
       - path: WindGlider/Resources
         optional: true
+      # même annuaire FFVP que l'app Android (pas de copie)
+      - path: ../app/src/main/assets/clubs_fr.json
+        buildPhase: resources
+      # données d'essai (build de développement, argument -testData) : réponses synthétiques des tests precog
+      - path: ../data/precog/src/jvmTest/resources/fixtures
+        type: folder
+        buildPhase: resources
     info:
       path: WindGlider/Info.plist
       properties:
@@ -25,6 +32,9 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         PRECOG_API_KEY: $(PRECOG_API_KEY)
+        NSLocationWhenInUseUsageDescription: "Position GPS du planeur pendant le vol : marge de sécurité, trace IGC et club le plus proche. Elle reste sur le téléphone."
+        NSMotionUsageDescription: "Baromètre et accéléromètre du téléphone pour le vario."
+        UIBackgroundModes: [audio, location]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.neutronstar.windglider.lite

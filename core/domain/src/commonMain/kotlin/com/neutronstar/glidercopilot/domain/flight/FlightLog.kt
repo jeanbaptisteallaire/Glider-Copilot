@@ -114,6 +114,8 @@ object Igc {
         /** ELL : hauteur ellipsoïdale (Android) ; GEO : altitude géoïde. */
         val gnssDatum: String = "ELL",
         val comment: String? = null,
+        /** Plateforme de l'enregistreur (iOS / KMP) : « Android » par défaut, en-tête Android inchangé. */
+        val platform: String = "Android",
     )
 
     fun headerLines(h: Header): List<String> = listOf(
@@ -125,10 +127,10 @@ object Igc {
         "HFGIDGLIDERID:${clean(h.gliderId)}",
         "HFDTMGPSDATUM:WGS84",
         "HFRFWFIRMWAREVERSION:${clean(h.appVersion)}",
-        "HFRHWHARDWAREVERSION:Android",
-        "HFFTYFRTYPE:WINDGLIDER,Android",
-        "HFGPSRECEIVER:Android,telephone",
-        "HFPRSPRESSALTSENSOR:Android,telephone",
+        "HFRHWHARDWAREVERSION:${clean(h.platform)}",
+        "HFFTYFRTYPE:WINDGLIDER,${clean(h.platform)}",
+        "HFGPSRECEIVER:${clean(h.platform)},telephone",
+        "HFPRSPRESSALTSENSOR:${clean(h.platform)},telephone",
         "HFALGALTGPS:${clean(h.gnssDatum)}",
         "HFALPALTPRESSURE:ISA",
         "LXXXWINDGLIDER enregistreur non approuve : trace indicative",
