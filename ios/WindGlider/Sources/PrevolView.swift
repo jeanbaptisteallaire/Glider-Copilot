@@ -36,6 +36,7 @@ struct PrevolView: View {
                         Text("Prévision \(day.sources.first?.product ?? "ARPEGE") · \(WeatherRepositoryKt.PRECOG_CREDIT)")
                             .font(WG.caption).foregroundStyle(WG.dim)
                     }
+                    PackCard()
                     FlightSettingsCard()
                 }
                 .padding(16)
@@ -283,3 +284,37 @@ struct SourcesSheet: View {
         }
     }
 }
+
+/// Cartes hors ligne : relief Copernicus et terrains openAIP de la région du club (sécurité sans réseau).
+struct PackCard: View {
+    @EnvironmentObject var app: AppModel
+    @ObservedObject private var packs: PackStore
+
+    init() { _packs = ObservedObject(wrappedValue: PackStoreHolder.current) }
+
+    var body: some View {
+        WGCard(title: "Carte hors ligne", systemImage: "map", tint: WG.good) {
+            if let a = packs.active {
+                Text("\(a.name) · \(a.airportCount) terrains · relief \(a.reliefLoaded ? "chargé" : "absent")").font(WG.subhead)
+                if a.aeroExpired { Text("Données aéro périmées : mettez la carte à jour avant le vol").font(WG.caption).foregroundStyle(WG.bad) }
+            } else if let p = packs.available {
+                Text("\(p.name) : relief et terrains, \(packs.neededMB) Mo").font(WG.subhead)
+                Text("Sans carte, la marge ne connaît ni le relief ni les terrains de dégagement.").font(WG.caption).foregroundStyle(WG.dim)
+            } else {
+                Text(packs.catalogError ?? "Aucune carte pour cette région").font(WG.subhead).foregroundStyle(WG.dim)
+            }
+            if let pr = packs.progress {
+                ProgressView(value: pr) { Text("Téléchargement \(Int(pr * 100)) %").font(WG.caption) }
+                Button("Annuler") { packs.cancel() }.font(WG.subhead)
+            } else if packs.available != nil && (packs.installed == nil || packs.updateAvailable) {
+                Button(packs.updateAvailable ? "Mettre à jour" : "Télécharger (\(packs.neededMB) Mo)") { packs.download(club: app.club) }
+                    .font(WG.subhead).buttonStyle(.borderedProminent).tint(WG.sky)
+            }
+            if let e = packs.error { Text(e).font(WG.caption).foregroundStyle(WG.bad) }
+            Text("Relief Copernicus GLO-30 · terrains openAIP · vérifiez SUP AIP et NOTAM avant le vol").font(WG.caption).foregroundStyle(WG.dim)
+        }
+    }
+}
+
+/// Accès au PackStore de l'app pour les vues qui l'observent directement.
+@MainActor enum PackStoreHolder { static var current: PackStore! }

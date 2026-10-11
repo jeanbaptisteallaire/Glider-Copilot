@@ -19,6 +19,15 @@ Décision JB : Wind Glider sur iOS — KMP pour le métier, SwiftUI pour l'inter
    iPhone 18 Pro : appel réel à precog-api.com via Ktor ; 401 sans clé (attendu : `ios/WindGlider/Secrets.xcconfig` à créer).
 4. CI : `.github/workflows/ios.yml` (macOS-15).
 
+**Suite de la session 21 (même jour)** : édition Lite iOS opérationnelle sur simulateur —
+- Prévol : club (le plus proche ou choisi, recherche), journée, heure par heure, vents par tranches, vigilance, sources « i »,
+  carte hors ligne (pack régional : relief + openAIP, SHA-256), réglages (départ auto, son, voix, tests).
+- Pilotage : marge, ALT/SÉCU, distance, finesse F20/F15/F10, terrain auto/manuel et cap, coupe avec relief, carte MapKit
+  (trace colorée vario, route, vent estimé en spirale, zoom spirale), vario + Spirale/Pompe/Jour, son, REC, mode DÉMO.
+  Démo vérifiée : marge +809 m, terrain 183 m (openAIP), vent 300°/15, comme Android.
+- Mes vols : carnet des IGC (en-tête `platform = iOS`), détail avec trace.
+- data:carto en KMP (Okio, zlib natif) ; tests communs du relief réel exécutés sur le simulateur iOS.
+
 **Prochaine session (iOS)** : clé PRECOG locale et police Inter embarquée dans l'app ; choix du club (`ClubSearch`) ; cartes
 (data:carto en KMP) ; puis Pilotage Lite (moteur `FlightEngineCore` déjà commun : capteurs CoreLocation/CoreMotion/baromètre
 à brancher), Mes vols (core:flightarchive en KMP). Avant publication : compte Apple Developer, bundle id définitif,

@@ -3,7 +3,7 @@ package com.neutronstar.glidercopilot.carto
 import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.precog.Json
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /** Fichier d'un pack : fond, relief, courbes ou aéro. */
 data class PackFile(val role: String, val name: String, val url: String, val size: Long, val sha256: String)
@@ -27,7 +27,7 @@ data class PackInfo(
     val center: LatLon get() = LatLon((bbox[1] + bbox[3]) / 2, (bbox[0] + bbox[2]) / 2)
 
     /** Données aéro périmées : la carte reste utilisable, l'app le signale. */
-    fun aeroExpired(now: Instant): Boolean = aeroValidUntil?.let { now.isAfter(it) } ?: true
+    fun aeroExpired(now: Instant): Boolean = aeroValidUntil?.let { now > it } ?: true
 
     override fun equals(other: Any?) = other is PackInfo && other.id == id && other.version == version
     override fun hashCode() = id.hashCode() * 31 + version.hashCode()

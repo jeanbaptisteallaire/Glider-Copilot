@@ -1,5 +1,5 @@
 // iOS / KMP — framework unique « WindGliderShared » pour l'app SwiftUI (ios/). Aucune cible Android :
-// Android consomme directement core:domain et data:precog. Modules à ajouter plus tard : data:ogn, data:carto,
+// Android consomme directement core:domain et data:precog. Modules à ajouter plus tard : data:ogn,
 // core:flightarchive (voir CLAUDE.md, section iOS / KMP).
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
@@ -15,6 +15,7 @@ kotlin {
             isStatic = true
             export(project(":core:domain"))
             export(project(":data:precog"))
+            export(project(":data:carto"))
             xcf.add(this)
         }
     }
@@ -22,6 +23,7 @@ kotlin {
         iosMain.dependencies {
             api(project(":core:domain"))
             api(project(":data:precog"))
+            api(project(":data:carto"))
         }
     }
 }

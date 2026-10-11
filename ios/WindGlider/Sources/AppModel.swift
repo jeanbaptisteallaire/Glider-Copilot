@@ -11,6 +11,8 @@ final class AppModel: ObservableObject {
     let clubs: ClubDirectory
     let engine: IosFlightEngine
     let library: FlightLibrary
+    let packs = PackStore()
+    private var packSink: AnyCancellable?
     private let weatherApi: WindGliderWeather
     private(set) var sensors: Sensors!
     private let tone = VarioTone()
@@ -62,6 +64,9 @@ final class AppModel: ObservableObject {
         club = clubs.current(chosenId: d.string(forKey: "clubId"), lat: 0, lon: 0, hasPosition: false)
         engine.setClub(c: club)
         refreshFlights()
+        PackStoreHolder.current = packs
+        packSink = packs.$active.sink { [weak self] p in self?.engine.setPack(p: p) }
+        Task { await packs.refresh(for: club) }
     }
 
     /// Météo PRECOG ; build de développement lancé avec `-testData` : données d'essai synthétiques, sans réseau.
@@ -98,6 +103,7 @@ final class AppModel: ObservableObject {
         club = c
         engine.setClub(c: c)
         Task { await loadWeather() }
+        Task { await packs.refresh(for: c) }
     }
 
     private func positionChanged(_ p: CLLocationCoordinate2D) {
@@ -109,6 +115,7 @@ final class AppModel: ObservableObject {
             club = near
             engine.setClub(c: near)
             Task { await loadWeather() }
+            Task { await packs.refresh(for: near) }
         }
     }
 
@@ -156,4 +163,5 @@ final class AppModel: ObservableObject {
     func delete(_ f: FlightEntry) { library.delete(path: f.path); refreshFlights() }
 }
 
+import Combine
 import CoreLocation

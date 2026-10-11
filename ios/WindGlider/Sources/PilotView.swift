@@ -8,6 +8,7 @@ import WindGliderShared
 /// Fond blanc (V18.7). Calculs : moteur commun (FlightEngineCore + SafetyEngine).
 struct PilotView: View {
     @EnvironmentObject var app: AppModel
+    @State private var choosingField = false
 
     var body: some View {
         let p = app.pilot
@@ -27,6 +28,7 @@ struct PilotView: View {
             varioBar(p)
         }
         .background(WG.card)
+        .sheet(isPresented: $choosingField) { FieldPicker().environmentObject(app).presentationDetents([.medium]) }
         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
     }
@@ -48,12 +50,12 @@ struct PilotView: View {
             Spacer()
             VStack(spacing: 2) {
                 Text("Distance").font(WG.footnote).foregroundStyle(WG.dim)
-                Text(p.distanceText).font(WG.number(34))
+                Text(p.distanceText).font(WG.number(34)).minimumScaleFactor(0.6).lineLimit(1)
                 Text("km").font(WG.footnote)
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 6) {
-                Text("Finesse · \(p.windText)").font(WG.caption).foregroundStyle(WG.dim)
+                Text("Finesse · \(p.windText)").font(WG.caption).foregroundStyle(WG.dim).lineLimit(1).fixedSize()
                 HStack(spacing: 2) {
                     ForEach([20, 15, 10], id: \.self) { f in
                         Button { app.finesse = f } label: {
@@ -64,11 +66,16 @@ struct PilotView: View {
                         }
                     }
                 }
-                HStack(spacing: 6) {
-                    Text(p.autoField ? "AUTO" : "MANU").font(WG.caption).foregroundStyle(WG.route)
-                    Text(p.fieldCode).font(WG.headline)
-                    Text(p.bearingText).font(WG.number(18)).foregroundStyle(WG.route)
+                Button { choosingField = true } label: {
+                    HStack(spacing: 6) {
+                        Text(p.autoField ? "AUTO" : "MANU").font(WG.caption).foregroundStyle(WG.route)
+                        Text(p.fieldCode).font(WG.headline).foregroundStyle(WG.brandInk)
+                        Text(p.bearingText).font(WG.number(18)).foregroundStyle(WG.route)
+                        Image(systemName: "chevron.down").font(.caption).foregroundStyle(WG.route)
+                    }
+                    .lineLimit(1).fixedSize()
                 }
+                .accessibilityLabel("Choisir le terrain de référence")
             }
         }
         .padding(.horizontal, 16).padding(.top, 8)
@@ -257,6 +264,37 @@ struct FlightMapView: View {
             } else if p.fieldLat != 0 {
                 camera = .camera(MapCamera(centerCoordinate: .init(latitude: p.fieldLat, longitude: p.fieldLon), distance: 15000, heading: 0))
             }
+        }
+    }
+}
+
+/// Terrain de référence : automatique (meilleure marge, retour au club) ou choisi à la main.
+struct FieldPicker: View {
+    @EnvironmentObject var app: AppModel
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Button("Automatique (meilleure marge)") { app.engine.selectField(id: nil); dismiss() }
+                ForEach(app.engine.fieldChoices(), id: \.id) { f in
+                    Button { app.engine.selectField(id: f.id); dismiss() } label: {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(f.code).font(WG.headline).foregroundStyle(WG.brandInk)
+                                Text(f.name).font(WG.caption).foregroundStyle(WG.dim)
+                            }
+                            Spacer()
+                            VStack(alignment: .trailing) {
+                                Text(f.distanceText).font(WG.subhead.monospacedDigit())
+                                if !f.marginText.isEmpty { Text(f.marginText).font(WG.caption.monospacedDigit()).foregroundStyle(f.reachable ? WG.good : WG.bad) }
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Terrain")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

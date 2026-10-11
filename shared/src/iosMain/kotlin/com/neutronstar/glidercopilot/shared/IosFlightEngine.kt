@@ -44,6 +44,9 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.nanoseconds
 
+/** Terrain proposé au choix (Pilotage → appui sur le terrain). */
+data class FieldChoice(val id: String, val code: String, val name: String, val distanceText: String, val marginText: String, val reachable: Boolean)
+
 /** Point de trace pour la carte Swift (couleur selon la montée). */
 data class TraceDot(val lat: Double, val lon: Double, val climbMs: Double)
 
@@ -108,6 +111,8 @@ data class PilotUi(
     val soundOn: Boolean,
     /** Origine de l'altitude du terrain (hypothèse affichée sous la coupe). */
     val fieldElevText: String,
+    /** Relief du pack chargé : coupe et marge sur le relief réel. */
+    val reliefLoaded: Boolean,
 )
 
 /**
@@ -172,7 +177,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     )
 
     private fun newSafety() = SafetyEngine(
-        terrain = { Terrain.NONE },
+        terrain = { pack?.terrain ?: Terrain.NONE },
         fields = { fields },
         alert = { a: SafetyAlert -> onSpeak(a.text, a.level.ordinal) },
         forecastWind = { forecastWind() },
@@ -183,9 +188,20 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     /** Altitude du terrain et son origine ; null = inconnue (la marge n'est alors pas calculée). */
     private var fieldElevation: Double? = null
     private var fieldElevationSource = ""
+    /** Altitude du sol du modèle ARPEGE au club : dernier recours sans pack. */
+    private var modelElevation: Double? = null
+    private var pack: ActivePack? = null
+
+    /** Pack hors ligne de la région (relief + openAIP) ; null = aucun. */
+    fun setPack(p: ActivePack?) {
+        if (p === pack) return
+        pack?.close()
+        pack = p
+        rebuildFields()
+    }
 
     fun setClub(c: Club?) {
-        if (c?.id != club?.id) { fieldElevation = null; fieldElevationSource = "" }
+        if (c?.id != club?.id) modelElevation = null
         club = c
         rebuildFields()
     }
@@ -198,18 +214,55 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         forecastDay = day
         val g = day?.hours?.firstOrNull()?.analysis?.groundAltitudeM
         if (g != null && day.location == club?.position) {
-            fieldElevation = g; fieldElevationSource = "modèle ARPEGE"
+            modelElevation = g
             rebuildFields()
         }
     }
 
+    /**
+     * Même règle qu'Android (FlightEngine.updateField) : terrains openAIP du pack (sans hélistations, hydrobases, terrains
+     * fermés) + terrain du club. Altitude du terrain du club : openAIP, sinon relief Copernicus du pack, sinon sol du modèle
+     * ARPEGE (hypothèse affichée) ; inconnue = pas de marge calculée.
+     */
     private fun rebuildFields() {
         val c = club
-        val p = c?.position
+        val icao = c?.airfieldIcao
+        val terrain = pack?.terrain ?: Terrain.NONE
+        val airports = pack?.aero?.airports.orEmpty().filter { it.type !in setOf(4, 7, 8, 10) }
+        val clubAirport = icao?.let { i -> airports.firstOrNull { it.icao == i } }
+        val clubPos = c?.position
+        val reliefElev = clubPos?.let { terrain.elevationM(it) }
+        when {
+            clubAirport?.elevationM != null -> { fieldElevation = clubAirport.elevationM!!.toDouble(); fieldElevationSource = "openAIP" }
+            reliefElev != null -> { fieldElevation = reliefElev; fieldElevationSource = "relief Copernicus" }
+            modelElevation != null -> { fieldElevation = modelElevation; fieldElevationSource = "modèle ARPEGE" }
+            else -> { fieldElevation = null; fieldElevationSource = "" }
+        }
+        val list = airports.mapNotNull { a ->
+            val elev = a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: return@mapNotNull null
+            FieldOption(a.icao ?: a.id, FieldOption.prettyName(a.name), a.position, elev, isClub = a === clubAirport, icao = a.icao)
+        }.toMutableList()
         val e = fieldElevation
-        fields = if (c == null || p == null || e == null) emptyList() else listOf(
-            FieldOption(c.airfieldIcao ?: "CLUB", FieldOption.prettyName(c.airfieldName ?: c.name), p, e, isClub = true, icao = c.airfieldIcao),
-        )
+        if (clubAirport == null && clubPos != null && e != null) {
+            list += FieldOption(icao ?: "CLUB", FieldOption.prettyName(c.airfieldName ?: c.name), clubPos, e, isClub = true, icao = icao)
+        }
+        fields = list
+    }
+
+    /** Terrains proposés au choix : alternatives calculées par la sécurité, sinon les plus proches. */
+    fun fieldChoices(): List<FieldChoice> {
+        safetyState?.alternatives?.takeIf { it.isNotEmpty() }?.let { l ->
+            return l.take(8).map { r -> FieldChoice(r.field.id, r.field.code, r.field.name, formatFixed(r.distanceKm, 1, decimalComma = true) + " km", signed(r.marginM.roundToInt()) + " m", r.marginM >= 0) }
+        }
+        val from = core.snapshot(clockNs(), clockNow()).gps?.position ?: club?.position ?: return emptyList()
+        return fields.sortedBy { Geo.distanceKm(from, it.position) }.take(8).map { f ->
+            FieldChoice(f.id, f.code, f.name, formatFixed(Geo.distanceKm(from, f.position), 1, decimalComma = true) + " km", "", true)
+        }
+    }
+
+    /** Terrain choisi à la main ; null = choix automatique. */
+    fun selectField(id: String?) {
+        safety.selector.manual = id?.let { i -> fields.firstOrNull { it.id == i } }
     }
     fun setFinesse(value: Int) { finesse = value }
     fun setSound(on: Boolean) { soundOn = on; if (!on) onTone(0.0) }
@@ -435,7 +488,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             },
             igcPoints = snap?.igcFixes ?: 0,
             soundOn = soundOn,
-            fieldElevText = fieldElevation?.let { "terrain ≈ ${it.roundToInt()} m ($fieldElevationSource)" } ?: "altitude du terrain inconnue : marge non calculée",
+            fieldElevText = fieldElevation?.let { "terrain ${if (fieldElevationSource == "openAIP") "" else "≈ "}${it.roundToInt()} m ($fieldElevationSource)" } ?: "altitude du terrain inconnue : marge non calculée",
+            reliefLoaded = pack?.reliefLoaded == true,
         )
     }
 

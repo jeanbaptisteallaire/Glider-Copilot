@@ -2,11 +2,19 @@ package com.neutronstar.glidercopilot.carto
 
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.domain.Terrain
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.RandomAccessFile
-import java.util.zip.GZIPInputStream
-import java.util.zip.Inflater
+import com.neutronstar.glidercopilot.domain.toRadians
+import com.neutronstar.glidercopilot.precog.PlatformLock
+import com.neutronstar.glidercopilot.precog.systemFileSystem
+import okio.Buffer
+import okio.Closeable
+import okio.FileHandle
+import okio.FileSystem
+import okio.GzipSource
+import okio.Inflater
+import okio.InflaterSource
+import okio.Path
+import okio.buffer
+import okio.use
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.floor
@@ -17,8 +25,9 @@ import kotlin.math.tan
  * Lecteur PMTiles v3 (lecture seule, fichier local) : en-tête, répertoires compressés gzip, répertoires feuilles,
  * identifiants de tuiles en courbe de Hilbert. Suffisant pour les packs GLIDY (tuiles non compressées).
  */
-class PmTiles(private val file: File) : AutoCloseable {
-    private val raf = RandomAccessFile(file, "r")
+class PmTiles(private val path: Path, fs: FileSystem = systemFileSystem) : Closeable {
+    private val handle: FileHandle = fs.openReadOnly(path)
+    private val lock = PlatformLock()
     val minZoom: Int
     val maxZoom: Int
     private val rootOffset: Long
@@ -28,15 +37,13 @@ class PmTiles(private val file: File) : AutoCloseable {
     private val internalCompression: Int
     private val tileCompression: Int
     private val root: List<Entry>
-    private val leaves = object : LinkedHashMap<Long, List<Entry>>(8, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, List<Entry>>?) = size > 8
-    }
+    private val leaves = Lru<Long, List<Entry>>(8)
 
     data class Entry(val tileId: Long, val offset: Long, val length: Int, val runLength: Int)
 
     init {
         val h = read(0, 127)
-        require(String(h, 0, 7, Charsets.US_ASCII) == "PMTiles" && h[7].toInt() == 3) { "PMTiles v3 attendu : ${file.name}" }
+        require(h.decodeToString(0, 7) == "PMTiles" && h[7].toInt() == 3) { "PMTiles v3 attendu : ${path.name}" }
         fun u64(at: Int): Long { var v = 0L; for (i in 7 downTo 0) v = (v shl 8) or (h[at + i].toLong() and 0xff); return v }
         rootOffset = u64(8); rootLength = u64(16)
         leafOffset = u64(40); dataOffset = u64(56)
@@ -46,10 +53,15 @@ class PmTiles(private val file: File) : AutoCloseable {
         root = parseDirectory(decompress(read(rootOffset, rootLength.toInt()), internalCompression))
     }
 
-    @Synchronized private fun read(offset: Long, length: Int): ByteArray {
+    private fun read(offset: Long, length: Int): ByteArray = lock.withLock {
         val b = ByteArray(length)
-        raf.seek(offset); raf.readFully(b)
-        return b
+        var got = 0
+        while (got < length) {
+            val r = handle.read(offset + got, b, got, length - got)
+            require(r > 0) { "fin de fichier PMTiles inattendue" }
+            got += r
+        }
+        b
     }
 
     fun tile(z: Int, x: Int, y: Int): ByteArray? {
@@ -59,7 +71,7 @@ class PmTiles(private val file: File) : AutoCloseable {
         repeat(4) {
             val e = find(dir, id) ?: return null
             if (e.runLength > 0) return decompress(read(dataOffset + e.offset, e.length), tileCompression)
-            dir = synchronized(leaves) { leaves[e.offset] } ?: parseDirectory(decompress(read(leafOffset + e.offset, e.length), internalCompression)).also { d -> synchronized(leaves) { leaves[e.offset] = d } }
+            dir = lock.withLock { leaves[e.offset] } ?: parseDirectory(decompress(read(leafOffset + e.offset, e.length), internalCompression)).also { d -> lock.withLock { leaves[e.offset] = d } }
         }
         return null
     }
@@ -80,7 +92,7 @@ class PmTiles(private val file: File) : AutoCloseable {
         return null
     }
 
-    override fun close() = raf.close()
+    override fun close() = handle.close()
 
     companion object {
         fun tileId(z: Int, x: Int, y: Int): Long {
@@ -105,7 +117,7 @@ class PmTiles(private val file: File) : AutoCloseable {
 
         private fun decompress(b: ByteArray, compression: Int): ByteArray = when (compression) {
             0, 1 -> b
-            2 -> GZIPInputStream(b.inputStream()).use { it.readBytes() }
+            2 -> GzipSource(Buffer().write(b)).buffer().use { it.readByteArray() }
             else -> error("compression PMTiles $compression non prise en charge")
         }
 
@@ -144,11 +156,11 @@ object Png {
         var pos = 8
         var w = 0; var h = 0; var colorType = 0; var bitDepth = 0; var interlace = 0
         var palette = IntArray(0)
-        val idat = ByteArrayOutputStream()
+        val idat = Buffer()
         fun u32(at: Int) = ((bytes[at].toInt() and 0xff) shl 24) or ((bytes[at + 1].toInt() and 0xff) shl 16) or ((bytes[at + 2].toInt() and 0xff) shl 8) or (bytes[at + 3].toInt() and 0xff)
         while (pos + 8 <= bytes.size) {
             val len = u32(pos)
-            val type = String(bytes, pos + 4, 4, Charsets.US_ASCII)
+            val type = bytes.decodeToString(pos + 4, pos + 8)
             val data = pos + 8
             when (type) {
                 "IHDR" -> { w = u32(data); h = u32(data + 4); bitDepth = bytes[data + 8].toInt(); colorType = bytes[data + 9].toInt(); interlace = bytes[data + 12].toInt() }
@@ -160,24 +172,24 @@ object Png {
         }
         require(bitDepth == 8 && interlace == 0) { "PNG 8 bits non entrelacé attendu" }
         val bpp = when (colorType) { 0 -> 1; 2 -> 3; 3 -> 1; 4 -> 2; 6 -> 4; else -> error("type de couleur PNG $colorType") }
-        val inflater = Inflater()
-        inflater.setInput(idat.toByteArray())
         val stride = w * bpp
         val raw = ByteArray((stride + 1) * h)
-        var got = 0
-        while (got < raw.size && !inflater.finished()) {
-            val r = inflater.inflate(raw, got, raw.size - got)
-            if (r == 0 && (inflater.needsInput() || inflater.needsDictionary())) break
-            got += r
+        // flux zlib des IDAT ; un flux tronqué laisse la fin à zéro, comme l'ancien java.util.zip.Inflater
+        InflaterSource(idat, Inflater()).buffer().use { src ->
+            var got = 0
+            while (got < raw.size) {
+                val r = runCatching { src.read(raw, got, raw.size - got) }.getOrDefault(-1)
+                if (r <= 0) break
+                got += r
+            }
         }
-        inflater.end()
         val out = IntArray(w * h)
         var prev = ByteArray(stride)
         var line = ByteArray(stride)
         for (row in 0 until h) {
             val base = row * (stride + 1)
             val filter = raw[base].toInt()
-            System.arraycopy(raw, base + 1, line, 0, stride)
+            raw.copyInto(line, 0, base + 1, base + 1 + stride)
             for (i in 0 until stride) {
                 val a = if (i >= bpp) line[i - bpp].toInt() and 0xff else 0
                 val b = prev[i].toInt() and 0xff
@@ -217,16 +229,14 @@ object Png {
  */
 class TerrariumTerrain(private val tiles: PmTiles, private val cacheSize: Int = 9) : Terrain {
     private val zoom = tiles.maxZoom
-    private val cache = object : LinkedHashMap<Long, FloatArray?>(cacheSize, 0.75f, true) {
-        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Long, FloatArray?>?) = size > cacheSize
-    }
+    private val cache = Lru<Long, FloatArray?>(cacheSize)
     private var tileSize = 512
 
     override fun elevationM(p: LatLon): Double? {
         if (abs(p.lat) > 85) return null
         val n = (1 shl zoom).toDouble()
         val fx = (p.lon + 180.0) / 360.0 * n
-        val latR = Math.toRadians(p.lat)
+        val latR = toRadians(p.lat)
         val fy = (1.0 - ln(tan(latR) + 1.0 / kotlin.math.cos(latR)) / PI) / 2.0 * n
         val gx = fx * tileSize - 0.5
         val gy = fy * tileSize - 0.5
@@ -240,15 +250,19 @@ class TerrariumTerrain(private val tiles: PmTiles, private val cacheSize: Int = 
     }
 
     private fun sample(px: Long, py: Long): Double? {
-        val tx = Math.floorDiv(px, tileSize.toLong()).toInt()
-        val ty = Math.floorDiv(py, tileSize.toLong()).toInt()
+        val tx = px.floorDiv(tileSize.toLong()).toInt()
+        val ty = py.floorDiv(tileSize.toLong()).toInt()
         val grid = tile(tx, ty) ?: return null
-        val ix = Math.floorMod(px, tileSize.toLong()).toInt()
-        val iy = Math.floorMod(py, tileSize.toLong()).toInt()
+        val ix = px.mod(tileSize.toLong()).toInt()
+        val iy = py.mod(tileSize.toLong()).toInt()
         return grid[iy * tileSize + ix].toDouble()
     }
 
-    @Synchronized private fun tile(x: Int, y: Int): FloatArray? {
+    private val lock = PlatformLock()
+
+    private fun tile(x: Int, y: Int): FloatArray? = lock.withLock { tileLocked(x, y) }
+
+    private fun tileLocked(x: Int, y: Int): FloatArray? {
         val key = (x.toLong() shl 32) or (y.toLong() and 0xffffffffL)
         if (cache.containsKey(key)) return cache[key]
         val grid = tiles.tile(zoom, x, y)?.let { bytes ->
@@ -261,5 +275,29 @@ class TerrariumTerrain(private val tiles: PmTiles, private val cacheSize: Int = 
         }
         cache[key] = grid
         return grid
+    }
+}
+
+/**
+ * Cache LRU commun : même règle que l'ancien LinkedHashMap en ordre d'accès (lecture et écriture rafraîchissent l'entrée,
+ * la plus ancienne sort au-delà de [max]). Non synchronisé : les appelants tiennent leur verrou.
+ */
+internal class Lru<K, V>(private val max: Int) {
+    private val m = LinkedHashMap<K, V>()
+
+    fun containsKey(k: K): Boolean = m.containsKey(k)
+
+    @Suppress("UNCHECKED_CAST")
+    operator fun get(k: K): V? {
+        if (!m.containsKey(k)) return null
+        val v = m.remove(k) as V
+        m[k] = v
+        return v
+    }
+
+    operator fun set(k: K, v: V) {
+        m.remove(k)
+        m[k] = v
+        while (m.size > max) m.remove(m.keys.first())
     }
 }

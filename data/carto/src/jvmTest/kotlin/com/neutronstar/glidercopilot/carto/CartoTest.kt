@@ -17,7 +17,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.security.MessageDigest
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 class CartoTest {
     private fun res(name: String) = javaClass.classLoader!!.getResource(name)!!.readText()
@@ -39,7 +39,7 @@ class CartoTest {
         assertEquals("LFMT", d.airports[0].icao)
         assertEquals("VOR-DME", d.navaids[0].typeLabel)
         assertEquals(1, d.reportingPoints.size)
-        assertEquals(kotlinx.datetime.Instant.parse("2026-09-16T20:30:00Z"), d.fetched)
+        assertEquals(Instant.parse("2026-09-16T20:30:00Z"), d.fetched)
         val tma = d.airspaces.first { it.id == "a1" }
         assertEquals("TMA", tma.typeLabel)
         assertEquals("D", tma.classLetter)

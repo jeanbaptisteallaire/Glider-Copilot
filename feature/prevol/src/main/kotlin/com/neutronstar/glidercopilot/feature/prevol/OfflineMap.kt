@@ -5,7 +5,6 @@ import com.neutronstar.glidercopilot.domain.aero.Airspace
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toJavaInstant
 
 /** Carte hors ligne du club, fournie par l'app (téléchargement, validité, espaces aériens autour du terrain). */
 interface OfflineMapSource {
@@ -32,5 +31,5 @@ data class OfflineMapUi(
     val now: Instant = Clock.System.now(),
 ) {
     val updateAvailable: Boolean get() = installed != null && available != null && available.version != installed.version
-    val aeroExpired: Boolean get() = installed?.aeroExpired(now.toJavaInstant()) ?: false
+    val aeroExpired: Boolean get() = installed?.aeroExpired(now) ?: false
 }

@@ -20,7 +20,7 @@
 ## iOS / KMP
 
 - Décision (JB, 11/10/2026) : version iOS de Wind Glider. Métier partagé en **Kotlin Multiplatform**, interface iOS en **SwiftUI**, **édition Lite d'abord** (Prévol météo + cartes, Pilotage, Mes vols).
-- Ordre de migration KMP : ✅ `core:domain`, ✅ `data:precog` (étape 1) ; puis `data:ogn`, `data:carto`, `core:flightarchive`. Les modules `feature:*` et `app` restent Android (Compose).
+- Ordre de migration KMP : ✅ `core:domain`, ✅ `data:precog` (étape 1), ✅ `data:carto` (lecture des packs : PMTiles, PNG Terrarium, openAIP ; téléchargement et style MapLibre restent en `jvmMain`) ; puis `data:ogn`, `core:flightarchive`. Les modules `feature:*` et `app` restent Android (Compose).
 - Disposition : `src/commonMain` (métier), `src/jvmMain` (Android), `src/iosMain` (iOS), `src/commonTest` (lancé sur JVM **et** simulateur iOS), `src/jvmTest` (tests historiques JUnit). Cible `jvm()` consommée telle quelle par Android, cibles `iosArm64` + `iosSimulatorArm64`.
 - Règle d'or : **comportement Android inchangé**. Tout remplaçant d'une API Java rend exactement la même valeur, prouvé par un `JavaParityTest` (jvmTest) ; formats de fichier conservés (cache precog, IGC à l'octet près).
 - Dans `commonMain`, jamais de `java.*` :
@@ -31,7 +31,9 @@
   - réseau : interface commune `HttpClient` ; JVM = `UrlConnectionHttpClient` (inchangé, gzip compris), iOS = `KtorHttpClient` (Ktor, moteur Darwin).
   - tout le reste passe par `expect`/`actual` dans `Platform.kt` (domain) ou `Http.kt` (precog).
 - Côté Android, les écrans (prevol, app) convertissent aux frontières (`toJavaInstant()`, `toJavaLocalDate()`) : l'affichage java.time ne change pas.
-- `:shared` : framework iOS statique **WindGliderShared** (exporte core:domain + data:precog) et façades Swift (`WindGliderWeather`). Pas de cible Android.
+- `:shared` : framework iOS statique **WindGliderShared** (exporte core:domain, data:precog, data:carto) et façades Swift : `WindGliderWeather` (météo), `IosFlightEngine` (équivalent de FlightEngine.kt : cœur de vol, sécurité, démo, IGC), `ClubDirectory`, `FlightLibrary` (carnet), `IosPacks` (cartes hors ligne). Pas de cible Android. Toute fonction appelée depuis Swift ne doit jamais lever d'exception Kotlin (sinon arrêt de l'app) : `runCatching` ou `@Throws`.
+- Altitude du terrain sur iOS : openAIP du pack, sinon relief Copernicus, sinon sol du modèle ARPEGE (affiché comme hypothèse) ; inconnue = pas de marge. iOS ne télécharge que `relief` + `aero` du pack (le fond vectoriel attend MapLibre iOS ; carte = MapKit en attendant).
+- Build de développement : argument de lancement `-testData` = météo d'essai (réponses synthétiques des tests precog, bandeau rouge « DONNÉES D'ESSAI »), jamais en version publiée.
 - `ios/` : app SwiftUI. Projet généré par **XcodeGen** (`cd ios && xcodegen`), `.xcodeproj` non versionné ; la phase de build appelle `./gradlew :shared:embedAndSignAppleFrameworkForXcode`. Jetons de charte dans `ios/WindGlider/Sources/Theme.swift`, miroir de `Theme.kt` : jamais de couleur ni de police codée dans une vue. Clé PRECOG dans `ios/WindGlider/Secrets.xcconfig` (ignoré par git, modèle `Secrets.example.xcconfig`).
 - Mêmes règles qu'Android : aucune fonction de sécurité ne dépend du réseau, toute valeur affichée porte sa source et son hypothèse, mention `PRECOG_CREDIT`.
 - Poste local : `JAVA_HOME` = JBR d'Android Studio, `ANDROID_HOME=~/Library/Android/sdk`, Xcode sélectionné (`xcode-select -p`). Kotlin 2.1.20 compile avec Xcode 27.
