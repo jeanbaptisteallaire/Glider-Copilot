@@ -50,6 +50,7 @@ enum WG {
     static let subhead = Font.custom("Inter", size: 15, relativeTo: .subheadline)
     static let footnote = Font.custom("Inter", size: 13, relativeTo: .footnote)
     static let caption = Font.custom("Inter", size: 12, relativeTo: .caption)
+    static let callout = Font.custom("Inter", size: 16, relativeTo: .callout)
     static let caption2 = Font.custom("Inter", size: 11, relativeTo: .caption2)
     static func number(_ size: CGFloat) -> Font { Font.custom("Inter", size: size).weight(.semibold).monospacedDigit() }
 }

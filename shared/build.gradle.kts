@@ -19,6 +19,7 @@ kotlin {
             export(project(":data:flightcloud"))
             export(project(":data:ogn"))
             export(project(":logic:tutorial"))
+            export(project(":core:social"))
             xcf.add(this)
         }
     }
@@ -30,6 +31,7 @@ kotlin {
             api(project(":data:flightcloud"))
             api(project(":data:ogn"))
             api(project(":logic:tutorial"))
+            api(project(":core:social"))
         }
     }
 }

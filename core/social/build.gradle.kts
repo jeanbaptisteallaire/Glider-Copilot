@@ -8,7 +8,10 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
     sourceSets {
-        commonMain.dependencies { api(project(":core:common")) }
+        commonMain.dependencies {
+            api(project(":core:common"))
+            api(libs.kotlinx.coroutines.core)
+        }
         commonTest.dependencies { implementation(kotlin("test")) }
         jvmTest.dependencies {
             implementation(libs.junit)

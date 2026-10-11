@@ -400,13 +400,8 @@ private val AVATAR = 42.dp
 
 private fun Modifier.rotateLeft(): Modifier = this.rotate(90f)
 
-internal fun formatDuration(seconds: Long): String {
-    val h = seconds / 3600
-    val m = seconds % 3600 / 60
-    return if (h == 0L) "$m min" else "%d h %02d".format(Locale.FRANCE, h, m)
-}
+internal fun formatDuration(seconds: Long): String = com.neutronstar.glidy.social.FeedFormat.duration(seconds)
 
-internal fun formatKm(meters: Long): String =
-    if (meters >= 100_000) "%.0f km".format(Locale.FRANCE, meters / 1000.0) else "%.1f km".format(Locale.FRANCE, meters / 1000.0)
+internal fun formatKm(meters: Long): String = com.neutronstar.glidy.social.FeedFormat.km(meters)
 
 private val DATE = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", Locale.FRANCE)

@@ -25,7 +25,8 @@ struct WindGliderApp: App {
 struct RootView: View {
     @EnvironmentObject var app: AppModel
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
-    @State private var tab = 0
+    @State private var tab: AppTab = .home
+    @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
     @State private var pilotNoticeSeen = false
     @Environment(\.scenePhase) private var phase
     /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
@@ -46,18 +47,29 @@ struct RootView: View {
             }
         } else {
             TabView(selection: $tab) {
-                TutoHomeView().tabItem { Label("Tuto", systemImage: "graduationcap") }.tag(3)
-                PrevolView().tabItem { Label("Prévol", systemImage: "sun.max") }.tag(0)
-                Group {
-                    if pilotNoticeSeen { PilotView() } else { PilotNoticeView { pilotNoticeSeen = true } }
+                ForEach(AppTab.visible) { t in
+                    screen(t).tabItem { Label(t.label(lang), systemImage: t.icon) }.tag(t)
                 }
-                .tabItem { Label("Pilotage", systemImage: "airplane") }.tag(1)
-                MyFlightsView().tabItem { Label("Mes vols", systemImage: "person") }.tag(2)
             }
             .tint(WG.sky)
             .onChange(of: phase) { _, p in
                 if p == .background { app.enterBackground() } else if p == .active { app.enterForeground() }
             }
+        }
+    }
+}
+
+extension RootView {
+    @ViewBuilder func screen(_ t: AppTab) -> some View {
+        switch t {
+        case .home: HomeMenuView { tab = $0 }
+        case .tuto: TutoHomeView()
+        case .prevol: PrevolView()
+        case .pilotage: if pilotNoticeSeen { PilotView() } else { PilotNoticeView { pilotNoticeSeen = true } }
+        case .mesVols: MyFlightsView()
+        case .carte: TrafficMapView()
+        case .checklist: ChecklistView()
+        case .feed: FeedView()
         }
     }
 }
