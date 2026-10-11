@@ -22,7 +22,7 @@ struct PilotView: View {
             }
             .font(WG.caption).padding(.horizontal, 16).padding(.vertical, 2)
             ZStack(alignment: .top) {
-                FlightMapView(p: p)
+                FlightMapView(p: p, airspaces: app.airspaces)
                 mapOverlay(p)
             }
             varioBar(p)
@@ -205,12 +205,18 @@ struct ProfileStrip: View {
 /// Carte : trace colorée par la montée, planeur, terrain et route ; zoom automatique sur la spirale (ThermalZoom commun).
 struct FlightMapView: View {
     let p: PilotUi
+    var airspaces: [AirspaceShape] = []
     @State private var camera: MapCameraPosition = .automatic
 
     var body: some View {
         let me = CLLocationCoordinate2D(latitude: p.lat, longitude: p.lon)
         let field = CLLocationCoordinate2D(latitude: p.fieldLat, longitude: p.fieldLon)
         Map(position: $camera) {
+            ForEach(airspaces, id: \.id) { a in
+                MapPolygon(coordinates: coords(a))
+                    .foregroundStyle(WG.airspace(a.family).opacity(0.06))
+                    .stroke(WG.airspace(a.family), style: StrokeStyle(lineWidth: 1.5, dash: a.family == 1 ? [6, 4] : []))
+            }
             ForEach(Array(segments.enumerated()), id: \.offset) { _, s in
                 MapPolyline(coordinates: s.coords).stroke(WG.vario(s.climb), lineWidth: 4)
             }
@@ -229,6 +235,11 @@ struct FlightMapView: View {
         .mapStyle(.standard(elevation: .flat, pointsOfInterest: .excludingAll))
         .onChange(of: cameraKey) { _, _ in updateCamera() }
         .onAppear { updateCamera() }
+    }
+
+    private func coords(_ a: AirspaceShape) -> [CLLocationCoordinate2D] {
+        let c = a.coords.map { $0.doubleValue }
+        return stride(from: 0, to: c.count - 1, by: 2).map { CLLocationCoordinate2D(latitude: c[$0], longitude: c[$0 + 1]) }
     }
 
     private struct Segment { let coords: [CLLocationCoordinate2D]; let climb: Double }

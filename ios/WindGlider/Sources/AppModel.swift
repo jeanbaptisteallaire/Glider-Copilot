@@ -24,6 +24,8 @@ final class AppModel: ObservableObject {
     @Published var pilot: PilotUi
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
+    /// Espaces aériens à moins de 40 km du club (pack hors ligne), pour la carte et Prévol.
+    @Published var airspaces: [AirspaceShape] = []
     @Published var soundOn: Bool { didSet { UserDefaults.standard.set(soundOn, forKey: "varioSound"); engine.setSound(on: soundOn); soundOn ? tone.start() : tone.stop() } }
     @Published var voiceOn: Bool { didSet { UserDefaults.standard.set(voiceOn, forKey: "voice"); voice.enabled = voiceOn } }
     @Published var autoTakeoff: Bool { didSet { UserDefaults.standard.set(autoTakeoff, forKey: "autoTakeoff"); engine.setAutoTakeoff(on: autoTakeoff) } }
@@ -66,7 +68,10 @@ final class AppModel: ObservableObject {
         engine.setClub(c: club)
         refreshFlights()
         PackStoreHolder.current = packs
-        packSink = packs.$active.sink { [weak self] p in self?.engine.setPack(p: p) }
+        packSink = packs.$active.sink { [weak self] p in
+            self?.engine.setPack(p: p)
+            self?.updateAirspaces(p)
+        }
         Task { await packs.refresh(for: club) }
     }
 
@@ -115,6 +120,11 @@ final class AppModel: ObservableObject {
         if soundOn { tone.start() }
     }
 
+    private func updateAirspaces(_ p: ActivePack?) {
+        guard let p, let pos = club?.position else { airspaces = []; return }
+        airspaces = p.airspacesAround(lat: pos.lat, lon: pos.lon, km: 40, max: 60)
+    }
+
     // MARK: club
 
     func choose(_ c: Club) {
@@ -122,7 +132,7 @@ final class AppModel: ObservableObject {
         club = c
         engine.setClub(c: c)
         Task { await loadWeather() }
-        Task { await packs.refresh(for: c) }
+        Task { await packs.refresh(for: c); updateAirspaces(packs.active) }
     }
 
     private func positionChanged(_ p: CLLocationCoordinate2D) {

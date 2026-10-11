@@ -298,6 +298,20 @@ struct PackCard: View {
             if let a = packs.active {
                 Text("\(a.name) · \(a.airportCount) terrains · relief \(a.reliefLoaded ? "chargé" : "absent")").font(WG.subhead)
                 if a.aeroExpired { Text("Données aéro périmées : mettez la carte à jour avant le vol").font(WG.caption).foregroundStyle(WG.bad) }
+                if !app.airspaces.isEmpty {
+                    DisclosureGroup("Espaces aériens autour du terrain (\(app.airspaces.count))") {
+                        ForEach(app.airspaces.prefix(12), id: \.id) { s in
+                            HStack(alignment: .top) {
+                                RoundedRectangle(cornerRadius: 2).fill(WG.airspace(s.family)).frame(width: 4, height: 30)
+                                VStack(alignment: .leading) {
+                                    Text(s.name + (s.byNotam ? " · par NOTAM" : "")).font(WG.subhead)
+                                    Text("\(s.label) · \(s.vertical)").font(WG.caption).foregroundStyle(WG.dim)
+                                }
+                            }
+                        }
+                    }
+                    .font(WG.subhead).tint(WG.brandInk)
+                }
             } else if let p = packs.available {
                 Text("\(p.name) : relief et terrains, \(packs.neededMB) Mo").font(WG.subhead)
                 Text("Sans carte, la marge ne connaît ni le relief ni les terrains de dégagement.").font(WG.caption).foregroundStyle(WG.dim)

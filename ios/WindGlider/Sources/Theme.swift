@@ -24,6 +24,11 @@ enum WG {
     static let altitude = rgb(0x5856D6)     // plafond, altitudes
     static let wind = rgb(0x0A84FF)
 
+    /// Familles d'espaces (charte Android, carte claire) : contrôlés bleu, réglementés rouge-magenta, information vert.
+    static func airspace(_ family: Int32) -> Color {
+        switch family { case 0: return rgb(0x1F5FBF); case 1: return rgb(0xC2185B); case 2: return rgb(0x2E9D57); default: return rgb(0x8A8A8A) }
+    }
+
     /// Échelle vario (−3 → +4 m/s), comme `vario()` de la charte : vert en descente, orange → rouge en montée.
     static func vario(_ ms: Double) -> Color {
         if ms < 0 { return rgb(0x2E9D57).opacity(min(1, 0.4 + -ms / 3 * 0.6)) }

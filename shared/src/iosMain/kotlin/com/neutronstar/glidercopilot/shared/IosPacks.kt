@@ -13,6 +13,9 @@ import kotlinx.datetime.Clock
 import okio.FileSystem
 import okio.Path.Companion.toPath
 
+/** Espace aérien pour l'affichage Swift : contour extérieur à plat (lat, lon, lat, lon…), famille 0 contrôlé, 1 réglementé, 2 information, 3 autre. */
+data class AirspaceShape(val id: String, val name: String, val label: String, val vertical: String, val family: Int, val coords: List<Double>, val byNotam: Boolean)
+
 /** Pack chargé : terrains openAIP et relief Copernicus, lus localement (aucune dépendance réseau en vol). */
 class ActivePack(val info: PackInfo, val aero: AeroData, val terrain: Terrain, internal val pm: PmTiles?) {
     val name: String get() = info.name
@@ -20,6 +23,17 @@ class ActivePack(val info: PackInfo, val aero: AeroData, val terrain: Terrain, i
     val airportCount: Int get() = aero.airports.size
     val reliefLoaded: Boolean get() = pm != null
     fun close() { runCatching { pm?.close() } }
+
+    /** Espaces à moins de [km] du point, les plus proches d'abord (même calcul que la carte Android « autour du terrain »). */
+    fun airspacesAround(lat: Double, lon: Double, km: Double, max: Int): List<AirspaceShape> =
+        runCatching {
+            aero.airspacesAround(LatLon(lat, lon), km).take(max).map { (a, _) ->
+                AirspaceShape(
+                    a.id, a.name, listOfNotNull(a.typeLabel, a.classLetter?.let { "classe $it" }).joinToString(" "), a.verticalLabel,
+                    a.family.ordinal, a.rings.firstOrNull().orEmpty().flatMap { listOf(it.lat, it.lon) }, a.byNotam,
+                )
+            }
+        }.getOrDefault(emptyList())
 }
 
 /**
