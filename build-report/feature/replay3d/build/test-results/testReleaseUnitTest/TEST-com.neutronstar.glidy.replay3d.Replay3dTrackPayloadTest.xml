@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-11T13:46:38" hostname="runnervmmprz5" time="0.455">
+<testsuite name="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-11T14:06:28" hostname="runnervmmprz5" time="0.773">
   <properties/>
-  <testcase name="straightLineCollapsesToItsEnds" classname="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" time="0.084"/>
-  <testcase name="simplifiesLongTracksButKeepsTheTurns" classname="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" time="0.361"/>
+  <testcase name="straightLineCollapsesToItsEnds" classname="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" time="0.098"/>
+  <testcase name="simplifiesLongTracksButKeepsTheTurns" classname="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" time="0.664"/>
   <testcase name="keepsEveryPointBelowTheLimitWithRealTimes" classname="com.neutronstar.glidy.replay3d.Replay3dTrackPayloadTest" time="0.004"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
