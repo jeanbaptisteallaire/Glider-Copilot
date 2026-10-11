@@ -49,16 +49,14 @@ struct PilotView: View {
 
     private func header(_ p: PilotUi) -> some View {
         let marginColor = p.marginKnown ? (p.marginM >= 0 ? WG.good : WG.bad) : WG.dim
-        return HStack(alignment: .top) {
+        return VStack(alignment: .leading, spacing: 2) {
+        HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 0) {
                 Text("Marge de sécurité").font(WG.footnote).foregroundStyle(marginColor)
                 // une seule ligne, quelle que soit la valeur ; unité en petit dessous
                 Text(p.marginText).font(WG.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
                 Text("m").font(WG.caption).foregroundStyle(WG.dim).padding(.top, -4)
-                HStack(spacing: 6) { Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16)) }
-                HStack(spacing: 6) { Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim); Text(p.secuText).font(WG.number(16)) }
-                Text(p.altRefText).font(WG.caption2).foregroundStyle(WG.dim)
             }
             .frame(maxWidth: 130, alignment: .leading)
             Spacer(minLength: 4)
@@ -99,6 +97,14 @@ struct PilotView: View {
                 }
                 .accessibilityLabel("Choisir le terrain de référence")
             }
+        }
+        // ALT, SÉCU et référence d'altitude sur une seule ligne (gain de hauteur)
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16))
+            Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim).padding(.leading, 8); Text(p.secuText).font(WG.number(16))
+            Text(p.altRefText).font(WG.caption2).foregroundStyle(WG.dim).padding(.leading, 8)
+        }
+        .lineLimit(1)
         }
         .padding(.horizontal, 14).padding(.top, 6).padding(.bottom, 4)
         .foregroundStyle(WG.brandInk)
