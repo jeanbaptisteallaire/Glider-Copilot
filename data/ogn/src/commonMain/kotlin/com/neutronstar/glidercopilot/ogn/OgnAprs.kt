@@ -1,11 +1,11 @@
 package com.neutronstar.glidercopilot.ogn
 
 import com.neutronstar.glidercopilot.domain.LatLon
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalTime
-import java.time.ZoneOffset
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.Instant
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 /** Type d'adresse radio (bits aa du champ id). */
 enum class AddressType { UNKNOWN, ICAO, FLARM, OGN }
@@ -36,7 +36,7 @@ data class OgnFix(
     val receiver: String?,
 ) {
     /** Retard réseau mesuré : réception − émission. */
-    val latency: Duration get() = Duration.between(time, received)
+    val latency: Duration get() = received - time
 
     /** Diffusion interdite par le pilote (furtif ou « no-tracking ») : la trame doit être ignorée. */
     val hidden: Boolean get() = stealth || noTracking
@@ -110,10 +110,11 @@ object OgnParser {
 
     /** L'heure HHMMSS UTC est rattachée au jour de réception, à ±12 h près (passage de minuit). */
     fun utcTime(hh: Int, mm: Int, ss: Int, reference: Instant): Instant {
-        val day = reference.truncatedTo(ChronoUnit.DAYS)
-        var t = day.plusSeconds(LocalTime.of(hh % 24, mm % 60, ss % 60).toSecondOfDay().toLong())
-        if (t.isAfter(reference.plus(Duration.ofHours(12)))) t = t.minus(Duration.ofDays(1))
-        else if (t.isBefore(reference.minus(Duration.ofHours(12)))) t = t.plus(Duration.ofDays(1))
+        // Instant.truncatedTo(DAYS) : minuit UTC du jour de référence
+        val day = Instant.fromEpochSeconds(reference.epochSeconds.floorDiv(86_400L) * 86_400L)
+        var t = day + ((hh % 24) * 3600L + (mm % 60) * 60L + (ss % 60)).seconds
+        if (t > reference + 12.hours) t -= 1.days
+        else if (t < reference - 12.hours) t += 1.days
         return t
     }
 
