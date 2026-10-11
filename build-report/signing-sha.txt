@@ -1,0 +1,6 @@
+== glider-copilot-debug.apk
+V2 Signer: certificate SHA-256 digest: 0021ae7d5d0ef51d8b46c0856752802543bb59813855908bca3c94c885692acb
+V2 Signer: certificate SHA-1 digest: 241ac15d2691a9ac60d83488ed5b697b4d118471
+== glidy-release.apk
+V2 Signer: certificate SHA-256 digest: 7afa25684dd8f9cbecfd6a130bc1ff415646b26ef599b8b56c554f40261d30f8
+V2 Signer: certificate SHA-1 digest: ed0f17973809edcbe6f8d43a9daa8c4ae8e7e5ee
