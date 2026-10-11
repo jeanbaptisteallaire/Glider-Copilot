@@ -14,3 +14,7 @@
 secrets.properties
 __pycache__/
 *.pyc
+
+# Secrets locaux, jamais dans le dépôt public
+Clé API Precog.rtf
+*.rtf

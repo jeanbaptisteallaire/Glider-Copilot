@@ -64,6 +64,7 @@ targetTemplates:
         FRAMEWORK_SEARCH_PATHS: $(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
         OTHER_LDFLAGS: [$(inherited), -framework, WindGliderShared]
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: Z9T8795U78
         # le framework Kotlin ne cible que iosSimulatorArm64 (Mac Apple Silicon) et iosArm64
         EXCLUDED_ARCHS[sdk=iphonesimulator*]: x86_64
     preBuildScripts:
