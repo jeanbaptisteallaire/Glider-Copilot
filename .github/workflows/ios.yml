@@ -26,9 +26,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Tests du métier sur simulateur iOS + framework
         run: ./gradlew --no-daemon iosSimulatorArm64Test :shared:linkDebugFrameworkIosSimulatorArm64
-      - name: App SwiftUI Lite (simulateur, sans signature)
+      - name: App SwiftUI Lite et complète (simulateur, sans signature)
         run: |
           brew install xcodegen
           cd ios && xcodegen generate
-          xcodebuild -project WindGlider.xcodeproj -scheme WindGlider -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+          for scheme in WindGlider WindGliderFull; do
+            xcodebuild -project WindGlider.xcodeproj -scheme "$scheme" -sdk iphonesimulator \
+              -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+          done

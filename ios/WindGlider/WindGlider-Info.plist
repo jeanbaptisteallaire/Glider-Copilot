@@ -26,6 +26,10 @@
 	<string>Baromètre et accéléromètre du téléphone pour le vario.</string>
 	<key>PRECOG_API_KEY</key>
 	<string>$(PRECOG_API_KEY)</string>
+	<key>SUPABASE_ANON_KEY</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
+	<key>SUPABASE_URL</key>
+	<string>$(SUPABASE_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>font/inter_regular.ttf</string>
@@ -47,5 +51,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>WG_EDITION</key>
+	<string>$(WG_EDITION)</string>
 </dict>
 </plist>
