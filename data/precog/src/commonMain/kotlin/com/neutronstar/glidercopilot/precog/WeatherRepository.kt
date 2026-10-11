@@ -158,15 +158,5 @@ class WeatherRepository(
 /** Coroutines d'E/S (Dispatchers.IO sur la JVM comme sur iOS ; non déclaré en commun par kotlinx.coroutines). */
 internal expect val ioDispatcher: CoroutineDispatcher
 
-/** `URLEncoder.encode(s, "UTF-8")` : lettres, chiffres et `.-*_` gardés, espace → `+`, le reste en %XX (UTF-8). */
-internal fun formUrlEncode(s: String): String = buildString {
-    for (b in s.encodeToByteArray()) {
-        val c = (b.toInt() and 0xFF)
-        val ch = c.toChar()
-        when {
-            ch in 'a'..'z' || ch in 'A'..'Z' || ch in '0'..'9' || ch == '.' || ch == '-' || ch == '*' || ch == '_' -> append(ch)
-            ch == ' ' -> append('+')
-            else -> { append('%'); append("0123456789ABCDEF"[c shr 4]); append("0123456789ABCDEF"[c and 0xF]) }
-        }
-    }
-}
+/** `URLEncoder.encode(s, "UTF-8")` (implémentation commune : core:common). */
+internal fun formUrlEncode(s: String): String = com.neutronstar.glidy.common.formUrlEncode(s)

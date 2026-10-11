@@ -1,10 +1,7 @@
 package com.neutronstar.glidy.flightcloud
 
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.net.URLEncoder
-import java.util.zip.GZIPInputStream
-import java.util.zip.GZIPOutputStream
+import kotlinx.datetime.Clock
+import okio.IOException
 
 /** Métadonnées d'un vol côté cloud (table public.flights, docs/supabase/schema.sql). */
 data class CloudFlightRecord(
@@ -41,7 +38,7 @@ class SupabaseClient(
     private val config: CloudConfig,
     private val transport: CloudTransport,
     private val sessions: SessionStore,
-    private val nowEpochSeconds: () -> Long = { System.currentTimeMillis() / 1000 },
+    private val nowEpochSeconds: () -> Long = { Clock.System.now().toEpochMilliseconds() / 1000 },
 ) {
     val isConfigured: Boolean get() = config.isConfigured
     val session: CloudSession? get() = sessions.load()
@@ -110,7 +107,7 @@ class SupabaseClient(
             CloudRequest(
                 "POST", "${config.base}/rest/v1/flights?on_conflict=user_id,sha256",
                 headers(s.accessToken) + mapOf("Content-Type" to "application/json", "Prefer" to "resolution=merge-duplicates,return=minimal"),
-                MiniJson.write(listOf(stored.toRow(s.userId))).toByteArray(),
+                MiniJson.write(listOf(stored.toRow(s.userId))).encodeToByteArray(),
             ),
         )
         if (row.ok) CloudResult.Ok(stored) else fail(row)
@@ -137,7 +134,7 @@ class SupabaseClient(
             CloudRequest(
                 "POST", "${config.base}/storage/v1/object/list/igc",
                 headers(s.accessToken) + ("Content-Type" to "application/json"),
-                MiniJson.write(mapOf("prefix" to s.userId, "limit" to 10_000)).toByteArray(),
+                MiniJson.write(mapOf("prefix" to s.userId, "limit" to 10_000)).encodeToByteArray(),
             ),
         )
         if (!listed.ok) return@withSession fail(listed)
@@ -147,7 +144,7 @@ class SupabaseClient(
                 CloudRequest(
                     "DELETE", "${config.base}/storage/v1/object/igc",
                     headers(s.accessToken) + ("Content-Type" to "application/json"),
-                    MiniJson.write(mapOf("prefixes" to names)).toByteArray(),
+                    MiniJson.write(mapOf("prefixes" to names)).encodeToByteArray(),
                 ),
             )
             if (!del.ok) return@withSession fail(del)
@@ -170,7 +167,7 @@ class SupabaseClient(
             CloudRequest(
                 "POST", "${config.base}/rest/v1/feedback",
                 headers(token) + mapOf("Content-Type" to "application/json", "Prefer" to "return=minimal"),
-                MiniJson.write(mapOf("message" to text, "lang" to lang, "app_version" to appVersion.take(40))).toByteArray(),
+                MiniJson.write(mapOf("message" to text, "lang" to lang, "app_version" to appVersion.take(40))).encodeToByteArray(),
             ),
         )
         if (!r.ok) return@guarded fail(r)
@@ -182,7 +179,7 @@ class SupabaseClient(
     private fun <T> guarded(block: () -> CloudResult<T>): CloudResult<T> {
         if (!config.isConfigured) return CloudResult.NotConfigured
         return try { block() } catch (e: IOException) {
-            CloudResult.Failed("réseau indisponible (${e.javaClass.simpleName})")
+            CloudResult.Failed("réseau indisponible (${e::class.simpleName})")
         } catch (e: RuntimeException) {
             CloudResult.Failed("réponse inattendue : ${e.message}", retryable = false)
         }
@@ -201,7 +198,7 @@ class SupabaseClient(
         mapOf("apikey" to config.anonKey, "Authorization" to "Bearer ${token ?: config.anonKey}")
 
     private fun post(path: String, body: Any?, token: String?) = CloudRequest(
-        "POST", config.base + path, headers(token) + ("Content-Type" to "application/json"), MiniJson.write(body).toByteArray(),
+        "POST", config.base + path, headers(token) + ("Content-Type" to "application/json"), MiniJson.write(body).encodeToByteArray(),
     )
 
     private fun fail(r: CloudResponse): CloudResult.Failed {
@@ -245,10 +242,14 @@ class SupabaseClient(
     )
 
     companion object {
-        fun gzip(bytes: ByteArray): ByteArray = ByteArrayOutputStream().also { out -> GZIPOutputStream(out).use { it.write(bytes) } }.toByteArray()
-        fun gunzip(bytes: ByteArray): ByteArray = GZIPInputStream(bytes.inputStream()).use { it.readBytes() }
+        fun gzip(bytes: ByteArray): ByteArray = gzipBytes(bytes)
+        fun gunzip(bytes: ByteArray): ByteArray = gunzipBytes(bytes)
 
         @Suppress("unused")
-        internal fun encode(s: String): String = URLEncoder.encode(s, "UTF-8")
+        internal fun encode(s: String): String = com.neutronstar.glidy.common.formUrlEncode(s)
     }
 }
+
+/** Gzip des IGC du stockage : java.util.zip sur Android (inchangé), Okio sur iOS. */
+internal expect fun gzipBytes(bytes: ByteArray): ByteArray
+internal expect fun gunzipBytes(bytes: ByteArray): ByteArray

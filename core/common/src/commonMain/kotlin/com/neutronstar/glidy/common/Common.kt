@@ -37,3 +37,21 @@ object ZeroPad { fun Int.pad(width: Int): String = zeroPad(width) }
 
 /** Décomposition canonique (NFD) de `java.text.Normalizer`. */
 expect fun normalizeNfd(s: String): String
+
+/** `URLEncoder.encode(s, "UTF-8")` : lettres, chiffres et `.-*_` gardés, espace → `+`, le reste en %XX (UTF-8). */
+fun formUrlEncode(s: String): String = buildString {
+    for (b in s.encodeToByteArray()) {
+        val c = (b.toInt() and 0xFF)
+        val ch = c.toChar()
+        when {
+            ch in 'a'..'z' || ch in 'A'..'Z' || ch in '0'..'9' || ch == '.' || ch == '-' || ch == '*' || ch == '_' -> append(ch)
+            ch == ' ' -> append('+')
+            else -> { append('%'); append(HEX[c shr 4]); append(HEX[c and 0xF]) }
+        }
+    }
+}
+
+/** `"%02x".format(b)` / `"\\u%04x".format(c)` : hexadécimal minuscule complété à [width] chiffres. */
+fun Int.toHexPadded(width: Int): String = toString(16).padStart(width, '0')
+
+private const val HEX = "0123456789ABCDEF"

@@ -1,5 +1,7 @@
 package com.neutronstar.glidy.flightcloud
 
+import com.neutronstar.glidy.common.toHexPadded
+
 /**
  * Lecture/écriture JSON minimales pour les réponses Supabase (module JVM sans dépendance tierce).
  * Objets → Map<String, Any?>, tableaux → List<Any?>, nombres → Double, true/false/null.
@@ -34,7 +36,7 @@ internal object MiniJson {
             ch == '\n' -> sb.append("\\n")
             ch == '\r' -> sb.append("\\r")
             ch == '\t' -> sb.append("\\t")
-            ch < ' ' -> sb.append("\\u%04x".format(ch.code))
+            ch < ' ' -> sb.append("\\u").append(ch.code.toHexPadded(4))
             else -> sb.append(ch)
         }
         sb.append('"')

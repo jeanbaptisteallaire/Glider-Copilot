@@ -1,27 +1,12 @@
 package com.neutronstar.glidy.flightcloud
 
-import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.zip.GZIPInputStream
+import java.util.zip.GZIPOutputStream
+import java.io.ByteArrayOutputStream
 
-data class CloudRequest(
-    val method: String,
-    val url: String,
-    val headers: Map<String, String> = emptyMap(),
-    val body: ByteArray? = null,
-)
-
-data class CloudResponse(val code: Int, val body: ByteArray) {
-    val text: String get() = body.toString(Charsets.UTF_8)
-    val ok: Boolean get() = code in 200..299
-}
-
-/** Transport HTTP bloquant (appelé hors du fil principal). Remplacé par un faux serveur dans les tests. */
-fun interface CloudTransport {
-    @Throws(IOException::class)
-    fun send(request: CloudRequest): CloudResponse
-}
-
+/** Transport Android (inchangé). */
 class UrlConnectionTransport(private val timeoutMs: Int = 30_000) : CloudTransport {
     override fun send(request: CloudRequest): CloudResponse {
         val c = URL(request.url).openConnection() as HttpURLConnection
@@ -43,3 +28,9 @@ class UrlConnectionTransport(private val timeoutMs: Int = 30_000) : CloudTranspo
         }
     }
 }
+
+/** Compression des IGC envoyés au stockage : code Java d'origine (Android inchangé). */
+internal actual fun gzipBytes(bytes: ByteArray): ByteArray =
+    ByteArrayOutputStream().also { out -> GZIPOutputStream(out).use { it.write(bytes) } }.toByteArray()
+
+internal actual fun gunzipBytes(bytes: ByteArray): ByteArray = GZIPInputStream(bytes.inputStream()).use { it.readBytes() }
