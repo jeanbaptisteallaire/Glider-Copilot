@@ -37,6 +37,7 @@ struct PrevolView: View {
                             .font(WG.caption).foregroundStyle(WG.dim)
                     }
                     PackCard()
+                    SensorsCard()
                     FlightSettingsCard()
                 }
                 .padding(16)
@@ -318,3 +319,27 @@ struct PackCard: View {
 
 /// Accès au PackStore de l'app pour les vues qui l'observent directement.
 @MainActor enum PackStoreHolder { static var current: PackStore! }
+
+/// Capteurs du téléphone (équivalent de SensorsCard d'Android) : source du vario, cadences, précision GPS, altitude.
+struct SensorsCard: View {
+    @EnvironmentObject var app: AppModel
+
+    var body: some View {
+        if let s = app.sensorsUi {
+            WGCard(title: "Capteurs", systemImage: "sensor", tint: WG.brandInk) {
+                Label(s.sourceLabel, systemImage: s.sourceOk ? "checkmark.circle.fill" : "exclamationmark.circle")
+                    .font(WG.subhead).foregroundStyle(s.sourceOk ? WG.good : WG.brandInk)
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 4) {
+                    GridRow { cell("Baromètre", s.baroHz); cell("Bruit baro", s.baroNoise) }
+                    GridRow { cell("Accéléromètre", s.accelHz); cell("GPS", s.gpsAccuracy) }
+                }
+                if !s.altitudeLine.isEmpty { Text(s.altitudeLine).font(WG.footnote) }
+                if !s.flightLine.isEmpty { Text(s.flightLine).font(WG.footnote).foregroundStyle(WG.dim) }
+            }
+        }
+    }
+
+    private func cell(_ l: String, _ v: String) -> some View {
+        VStack(alignment: .leading) { Text(l).font(WG.caption).foregroundStyle(WG.dim); Text(v).font(WG.subhead.monospacedDigit()) }
+    }
+}

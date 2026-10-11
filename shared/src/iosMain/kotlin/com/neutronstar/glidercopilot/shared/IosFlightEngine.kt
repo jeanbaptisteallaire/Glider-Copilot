@@ -47,6 +47,18 @@ import kotlin.time.Duration.Companion.nanoseconds
 /** Terrain proposé au choix (Pilotage → appui sur le terrain). */
 data class FieldChoice(val id: String, val code: String, val name: String, val distanceText: String, val marginText: String, val reachable: Boolean)
 
+/** Carte « Capteurs » de Prévol (équivalent de SensorsUi d'Android). */
+data class SensorsUi(
+    val sourceLabel: String,
+    val sourceOk: Boolean,
+    val baroHz: String,
+    val baroNoise: String,
+    val accelHz: String,
+    val gpsAccuracy: String,
+    val altitudeLine: String,
+    val flightLine: String,
+)
+
 /** Point de trace pour la carte Swift (couleur selon la montée). */
 data class TraceDot(val lat: Double, val lon: Double, val climbMs: Double)
 
@@ -492,6 +504,35 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             reliefLoaded = pack?.reliefLoaded == true,
         )
     }
+
+    /** [baroPresent] : CMAltimeter disponible ; [gpsAllowed] : autorisation de localisation accordée. */
+    fun sensors(baroPresent: Boolean, gpsAllowed: Boolean): SensorsUi {
+        val snap = if (running) core.snapshot(clockNs(), clockNow()) else null
+        return SensorsUi(
+            sourceLabel = when {
+                snap == null -> "Moteur de vol en pause (arrière-plan)"
+                demo -> "Démo : capteurs simulés"
+                else -> ui().varioLabel + if (!baroPresent) " · pas de baromètre sur ce téléphone" else ""
+            },
+            sourceOk = snap?.source == VarioSource.BARO_ACCEL || snap?.source == VarioSource.BARO,
+            baroHz = snap?.baroHz?.takeIf { it > 0 }?.let { "${it.roundToInt()} Hz" } ?: if (baroPresent) "—" else "absent",
+            baroNoise = snap?.baroNoiseCm?.let { "${it.roundToInt()} cm" } ?: "—",
+            accelHz = snap?.accelHz?.takeIf { it > 0 }?.let { "${it.roundToInt()} Hz" } ?: "—",
+            gpsAccuracy = (if (snap != null && (snap.gpsAgeS ?: 99.0) < 5) snap.gps?.accuracyM else null)?.let { "±${it.roundToInt()} m" }
+                ?: if (gpsAllowed || demo) "attente" else "refusé",
+            altitudeLine = snap?.altitudeM?.let { "Altitude ${grouped(it.roundToInt())} m · ${refLabel(snap.altitudeRef)}" + (fieldElevation?.let { e -> " · terrain ${e.roundToInt()} m" } ?: "") } ?: "",
+            flightLine = when {
+                snap == null -> ""
+                snap.recording -> "En vol · ${chrono(snap.flightSeconds)} · IGC ${snap.igcFixes} points"
+                snap.phase == FlightPhase.LANDED -> "Posé · vol de ${chrono(snap.flightSeconds)} enregistré"
+                autoTakeoff -> "Au sol · départ auto à 50 km/h"
+                else -> "Au sol · chrono manuel"
+            },
+        )
+    }
+
+    /** Vrai tant qu'un vol est enregistré : l'app garde capteurs et son en arrière-plan. */
+    val inFlight: Boolean get() = running && core.recording
 
     private fun refLabel(r: AltitudeRef) = when (r) {
         AltitudeRef.BARO_FIELD -> "calé terrain"

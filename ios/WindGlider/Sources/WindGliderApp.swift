@@ -21,6 +21,7 @@ struct RootView: View {
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
     @State private var tab = 0
     @State private var pilotNoticeSeen = false
+    @Environment(\.scenePhase) private var phase
 
     var body: some View {
         if disclaimerVersion < DisclaimerView.version {
@@ -35,6 +36,9 @@ struct RootView: View {
                 MyFlightsView().tabItem { Label("Mes vols", systemImage: "person") }.tag(2)
             }
             .tint(WG.sky)
+            .onChange(of: phase) { _, p in
+                if p == .background { app.enterBackground() } else if p == .active { app.enterForeground() }
+            }
         }
     }
 }

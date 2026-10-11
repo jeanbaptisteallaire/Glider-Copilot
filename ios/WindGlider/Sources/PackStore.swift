@@ -90,9 +90,11 @@ final class PackStore: ObservableObject {
             var attempt = 0
             while true {
                 do {
-                    let (tmp, resp) = try await URLSession.shared.download(from: URL(string: f.url)!, delegate: nil)
-                    guard (resp as? HTTPURLResponse)?.statusCode == 200 else { throw PackError("HTTP \((resp as? HTTPURLResponse)?.statusCode ?? 0)") }
                     let part = dir.appendingPathComponent(f.name + ".part")
+                    let before = done, fileBytes = Double(f.size)
+                    let tmp = try await Self.download(URL(string: f.url)!) { frac in
+                        Task { @MainActor in self.progress = (before + frac * fileBytes) / total }
+                    }
                     try? FileManager.default.removeItem(at: part)
                     try FileManager.default.moveItem(at: tmp, to: part)
                     guard size(part) == f.size else { throw PackError("fichier incomplet \(f.name)") }
@@ -117,6 +119,28 @@ final class PackStore: ObservableObject {
         for name in (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? [] where !keep.contains(name) {
             try? FileManager.default.removeItem(at: dir.appendingPathComponent(name))
         }
+    }
+
+    /// Téléchargement système (rapide, hors du fil principal) avec progression et annulation.
+    nonisolated private static func download(_ url: URL, onProgress: @escaping @Sendable (Double) -> Void) async throws -> URL {
+        final class Box: @unchecked Sendable { var task: URLSessionDownloadTask?; var obs: NSKeyValueObservation? }
+        let box = Box()
+        return try await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { (cont: CheckedContinuation<URL, Error>) in
+                let task = URLSession.shared.downloadTask(with: url) { tmp, resp, err in
+                    box.obs?.invalidate()
+                    if let err { cont.resume(throwing: (err as? URLError)?.code == .cancelled ? CancellationError() : err); return }
+                    let code = (resp as? HTTPURLResponse)?.statusCode ?? 0
+                    guard let tmp, code == 200 else { cont.resume(throwing: PackError("HTTP \(code)")); return }
+                    // le fichier temporaire disparaît au retour : on le déplace tout de suite
+                    let keep = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+                    do { try FileManager.default.moveItem(at: tmp, to: keep); cont.resume(returning: keep) } catch { cont.resume(throwing: error) }
+                }
+                box.task = task
+                box.obs = task.progress.observe(\.fractionCompleted) { p, _ in onProgress(p.fractionCompleted) }
+                task.resume()
+            }
+        } onCancel: { box.task?.cancel() }
     }
 
     private func size(_ url: URL) -> Int64 { ((try? FileManager.default.attributesOfItem(atPath: url.path)[.size]) as? NSNumber)?.int64Value ?? -1 }

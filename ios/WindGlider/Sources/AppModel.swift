@@ -23,6 +23,7 @@ final class AppModel: ObservableObject {
     @Published var weather: WeatherState = .idle
     @Published var pilot: PilotUi
     @Published var flights: [FlightEntry] = []
+    @Published var sensorsUi: SensorsUi?
     @Published var soundOn: Bool { didSet { UserDefaults.standard.set(soundOn, forKey: "varioSound"); engine.setSound(on: soundOn); soundOn ? tone.start() : tone.stop() } }
     @Published var voiceOn: Bool { didSet { UserDefaults.standard.set(voiceOn, forKey: "voice"); voice.enabled = voiceOn } }
     @Published var autoTakeoff: Bool { didSet { UserDefaults.standard.set(autoTakeoff, forKey: "autoTakeoff"); engine.setAutoTakeoff(on: autoTakeoff) } }
@@ -92,8 +93,26 @@ final class AppModel: ObservableObject {
         engine.start()
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.pilot = self?.engine.ui() ?? self!.pilot }
+            Task { @MainActor in
+                guard let self else { return }
+                self.pilot = self.engine.ui()
+                self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
+            }
         }
+    }
+
+    /// Arrière-plan : capteurs et son coupés hors vol (batterie) ; pendant un vol enregistré, tout continue écran éteint
+    /// (localisation en arrière-plan + audio, comme le service de premier plan d'Android).
+    func enterBackground() {
+        guard !engine.inFlight else { return }
+        engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
+        tone.stop()
+    }
+
+    func enterForeground() {
+        guard timer == nil else { return }
+        startEngine()
+        if soundOn { tone.start() }
     }
 
     // MARK: club
@@ -158,7 +177,14 @@ final class AppModel: ObservableObject {
         voice.speak("Essai des annonces vocales. " + (sensors.baroAvailable ? "Vario prêt." : "Pas de baromètre sur ce téléphone."), force: true)
     }
 
-    func refreshFlights() { flights = library.list() }
+    /// Lecture des IGC hors du fil principal (le carnet peut contenir de longs vols).
+    func refreshFlights() {
+        let lib = library
+        Task.detached(priority: .utility) {
+            let list = lib.list()
+            await MainActor.run { self.flights = list }
+        }
+    }
 
     func delete(_ f: FlightEntry) { library.delete(path: f.path); refreshFlights() }
 }
