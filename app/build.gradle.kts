@@ -100,6 +100,7 @@ dependencies {
     implementation(project(":data:flightarchive"))
     implementation(project(":feature:myflights"))
     implementation(project(":core:social"))
+    implementation(project(":logic:tutorial"))
     implementation(project(":feature:feed"))
     implementation(project(":feature:replay3d"))
     implementation(project(":data:flightcloud"))

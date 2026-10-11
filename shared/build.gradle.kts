@@ -18,6 +18,7 @@ kotlin {
             export(project(":data:carto"))
             export(project(":data:flightcloud"))
             export(project(":data:ogn"))
+            export(project(":logic:tutorial"))
             xcf.add(this)
         }
     }
@@ -28,6 +29,7 @@ kotlin {
             api(project(":data:carto"))
             api(project(":data:flightcloud"))
             api(project(":data:ogn"))
+            api(project(":logic:tutorial"))
         }
     }
 }

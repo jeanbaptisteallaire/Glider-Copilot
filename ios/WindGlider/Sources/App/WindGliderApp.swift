@@ -30,14 +30,23 @@ struct RootView: View {
     @Environment(\.scenePhase) private var phase
     /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
     @State private var welcomeDone = false
+    @EnvironmentObject var account: AccountModel
+    /// profils (« guest » ou identifiant du compte) ayant terminé le tutoriel sur cet iPhone (V20.1 d'Android)
+    @AppStorage("tutorialSeen") private var tutorialSeen = ""
 
     var body: some View {
         if !welcomeDone {
             WelcomeView { welcomeDone = true }
         } else if disclaimerVersion < DisclaimerView.version {
             DisclaimerView { disclaimerVersion = DisclaimerView.version }
+        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.pilot.recording {
+            // tutoriel complet et obligatoire au premier lancement de chaque profil (ni « Passer »)
+            TutorialView(mandatory: true) {
+                tutorialSeen = (tutorialSeen.isEmpty ? "" : tutorialSeen + ",") + account.tutorialKey
+            }
         } else {
             TabView(selection: $tab) {
+                TutoHomeView().tabItem { Label("Tuto", systemImage: "graduationcap") }.tag(3)
                 PrevolView().tabItem { Label("Prévol", systemImage: "sun.max") }.tag(0)
                 Group {
                     if pilotNoticeSeen { PilotView() } else { PilotNoticeView { pilotNoticeSeen = true } }
