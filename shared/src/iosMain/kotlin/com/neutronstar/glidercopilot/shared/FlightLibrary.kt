@@ -26,6 +26,10 @@ data class FlightEntry(
     val gainText: String,
     val startEpochS: Double,
     val track: List<TraceDot>,
+    val durationS: Long,
+    val distanceKm: Double,
+    /** Vignette de la grille : « 31 min · 55,9 km » (comme Mes vols Android). */
+    val gridLine: String,
 )
 
 /** Carnet Mes vols de l'édition Lite iOS : fichiers IGC du dossier de l'app, du plus récent au plus ancien. */
@@ -70,10 +74,31 @@ class FlightLibrary(private val dir: String) {
             gainText = IosFlightEngine.grouped(gain) + " m",
             startEpochS = first?.time?.toEpochMilliseconds()?.div(1000.0) ?: 0.0,
             track = track,
+            durationS = dur,
+            distanceKm = dist,
+            gridLine = (if (dur >= 3600) "${dur / 3600} h ${(dur % 3600 / 60).toString().padStart(2, '0')}" else "${dur / 60} min") +
+                " · " + formatFixed(dist, 1, decimalComma = true) + " km",
         )
     }
 
     fun delete(path: String) { runCatching { fs.delete(path.toPath()) } }
+
+    /**
+     * Import d'un IGC choisi par le pilote (Fichiers) : copié dans le carnet s'il contient au moins un point B lisible.
+     * Renvoie le chemin créé, ou null si le fichier n'est pas un IGC exploitable.
+     */
+    fun importIgc(sourcePath: String, name: String): String? = runCatching {
+        val text = fs.read(sourcePath.toPath()) { readUtf8() }
+        if (Igc.parse(text).isEmpty()) return null
+        val d = dir.toPath()
+        fs.createDirectories(d)
+        val base = name.substringBeforeLast('.').filter { it.isLetterOrDigit() || it == '-' || it == '_' }.ifEmpty { "import" }
+        var target = d / "$base.igc"
+        var i = 2
+        while (fs.exists(target)) target = d / "$base-${i++}.igc"
+        fs.write(target) { writeUtf8(text) }
+        target.toString()
+    }.getOrNull()
 
     /**
      * Données du rejeu 3D (page replay3d d'Android, identique) : même format que Replay3dTrackPayload —

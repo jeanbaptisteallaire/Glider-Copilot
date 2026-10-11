@@ -62,7 +62,13 @@ class WindGliderWeather private constructor(
                 "/vigilance" to read("vigilance_synth.json"),
             )
             val http = HttpClient { url, _ ->
-                val body = routes.entries.firstOrNull { url.contains(it.key) }?.value
+                var body = routes.entries.firstOrNull { url.contains(it.key) }?.value
+                // le profil synthétique n'a qu'une échéance (12 h UTC) : on le sert pour l'heure demandée (?at=),
+                // comme l'API réelle qui renvoie un profil par heure
+                if (body != null && url.contains("/arpege/profile")) {
+                    val at = url.substringAfter("&at=", "").substringBefore('&').replace("%3A", ":")
+                    if (at.isNotEmpty()) body = body.replace("2026-09-16T12:00:00Z", at)
+                }
                 if (body != null) HttpResult(200, body, "\"essai\"") else HttpResult(404, null, null)
             }
             val clock = object : Clock { override fun now() = Instant.parse("2026-09-16T07:00:00Z") }
