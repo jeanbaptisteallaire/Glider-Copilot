@@ -199,6 +199,15 @@ struct MapOverlay: View {
                     }
                     .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
                 }
+                // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
+                if let t = app.trafficSnap, t.connected {
+                    (Text("OGN ").fontWeight(.bold).foregroundColor(WG.brandInk) + Text(t.pill))
+                        .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(WG.dim)
+                        .padding(.horizontal, 8).padding(.vertical, 5)
+                        .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 10))
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
+                        .accessibilityLabel("Trafic OGN : \(t.pill)")
+                }
                 // panneaux masqués : pastilles indépendantes sur la carte
                 if !showProfile {
                     HStack(spacing: 4) {
@@ -381,6 +390,7 @@ struct FlightMapView: View {
     let p: PilotUi
     var airspaces: [AirspaceShape] = []
     @EnvironmentObject var map: MapControl
+    @EnvironmentObject var app: AppModel
     @State private var camera: MapCameraPosition = .automatic
     @Namespace private var scope
 
@@ -401,6 +411,19 @@ struct FlightMapView: View {
             }
             if p.fieldLat != 0 || p.fieldLon != 0 {
                 Annotation(p.fieldCode, coordinate: field) { Image(systemName: "flag.fill").foregroundStyle(WG.route) }
+            }
+            // trafic OGN (édition complète) : pompes du réseau puis aéronefs, comme FlightMap d'Android
+            if let t = app.trafficSnap {
+                ForEach(t.pumps, id: \.self) { pump in
+                    Annotation("", coordinate: CLLocationCoordinate2D(latitude: pump.lat, longitude: pump.lon)) {
+                        PumpMark(climb: pump.climbMs)
+                    }
+                }
+                ForEach(t.planes, id: \.id) { a in
+                    Annotation("", coordinate: CLLocationCoordinate2D(latitude: a.lat, longitude: a.lon)) {
+                        PlaneMark(plane: a, rotation: (a.trackDeg?.doubleValue ?? 0) - heading)
+                    }
+                }
             }
             if p.hasPosition {
                 Annotation("", coordinate: me) {
@@ -505,5 +528,44 @@ struct FieldPicker: View {
             .navigationTitle("Terrain")
             .navigationBarTitleDisplayMode(.inline)
         }
+    }
+}
+
+/// Aéronef OGN : flèche orientée (couleur du vario), étiquette DDB ou repli court, écart d'altitude.
+private struct PlaneMark: View {
+    let plane: TrafficPlane
+    let rotation: Double
+
+    var body: some View {
+        VStack(spacing: 1) {
+            Image(systemName: "location.north.fill").font(.system(size: 13))
+                .rotationEffect(.degrees(rotation))
+                .foregroundStyle(plane.circling ? WG.climb : WG.brandInk)
+            let name = plane.fullLabel.isEmpty ? (plane.shortLabel.isEmpty ? plane.typeLabel : plane.shortLabel) : plane.fullLabel
+            Text(name + (plane.relativeAltText.isEmpty ? "" : " " + plane.relativeAltText))
+                .font(WG.caption2.weight(.semibold)).monospacedDigit()
+                .padding(.horizontal, 4).padding(.vertical, 1)
+                .background(WG.card.opacity(0.85), in: RoundedRectangle(cornerRadius: 4))
+                .foregroundStyle(WG.brandInk)
+        }
+        .opacity(plane.ageS > 60 ? 0.5 : 1)
+        .accessibilityLabel("Aéronef \(plane.fullLabel.isEmpty ? plane.typeLabel : plane.fullLabel)")
+    }
+}
+
+/// Pompe repérée par le réseau : cercle coloré selon la montée moyenne.
+private struct PumpMark: View {
+    let climb: Double
+    var body: some View {
+        ZStack {
+            Circle().fill(WG.vario(climb).opacity(0.25)).frame(width: 30, height: 30)
+            Circle().stroke(WG.vario(climb), lineWidth: 2).frame(width: 30, height: 30)
+            Text(formatClimb(climb)).font(WG.caption2.weight(.bold)).foregroundStyle(WG.brandInk)
+        }
+        .accessibilityLabel("Pompe \(formatClimb(climb)) mètres par seconde")
+    }
+    private func formatClimb(_ v: Double) -> String {
+        let f = NumberFormatter(); f.locale = Locale(identifier: "fr_FR"); f.minimumFractionDigits = 1; f.maximumFractionDigits = 1
+        return (v >= 0 ? "+" : "") + (f.string(from: NSNumber(value: v)) ?? "")
     }
 }

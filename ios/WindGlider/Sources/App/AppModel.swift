@@ -37,6 +37,10 @@ final class AppModel: ObservableObject {
     @Published var finesse: Int = 20 { didSet { engine.setFinesse(value: Int32(finesse)) } }
     @Published var demo = false { didSet { engine.setDemo(on: demo) } }
     private var lastPosition: CLLocationCoordinate2D?
+    /// Édition complète : trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
+    let traffic: IosTraffic?
+    @Published var trafficSnap: TrafficSnapshot?
+    private var tick = 0
 
     static let igcDir: String = {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -50,6 +54,7 @@ final class AppModel: ObservableObject {
         engine = IosFlightEngine(igcDir: AppModel.igcDir, appVersion: version)
         library = FlightLibrary(dir: AppModel.igcDir)
         weatherApi = AppModel.makeWeather(version: version)
+        traffic = Edition.full ? IosTraffic(cacheDir: NSTemporaryDirectory(), installId: AppModel.installId, appVersion: version) : nil
         pilot = engine.ui()
         let d = UserDefaults.standard
         soundOn = d.bool(forKey: "varioSound")
@@ -100,6 +105,22 @@ final class AppModel: ObservableObject {
 
     var weatherIsTestData: Bool { weatherApi.isTestData }
 
+    /// Identifiant d'installation (indicatif APRS de lecture « GLIDYnnnn », comme installId d'Android).
+    static var installId: Int64 {
+        let d = UserDefaults.standard
+        if let v = d.object(forKey: "installId") as? Int64 { return v }
+        let v = Int64.random(in: 0..<Int64.max)
+        d.set(v, forKey: "installId")
+        return v
+    }
+
+    /// Centre du trafic : terrain du club, sinon la position.
+    private func startTraffic() {
+        guard let traffic else { return }
+        if let pos = club?.position { traffic.start(lat: pos.lat, lon: pos.lon) }
+        else if let l = lastPosition { traffic.start(lat: l.latitude, lon: l.longitude) }
+    }
+
     // MARK: cycle de vie
 
     func startEngine() {
@@ -113,6 +134,11 @@ final class AppModel: ObservableObject {
                 self.pilot = self.engine.ui()
                 self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
                 self.status.gps = self.sensors.authorized && CLLocationManager.locationServicesEnabled()
+                self.tick += 1
+                if let t = self.traffic, self.tick % 4 == 0 {
+                    if !t.running { self.startTraffic() }
+                    self.trafficSnap = t.snapshot(ownAltitudeM: self.pilot.hasData ? self.pilot.currentAltM : .nan)
+                }
             }
         }
     }
@@ -123,6 +149,7 @@ final class AppModel: ObservableObject {
         guard !engine.inFlight else { return }
         engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
         tone.stop()
+        traffic?.stop()   // pas de réseau OGN en arrière-plan hors vol (comme OgnLiveRepository.stop)
     }
 
     func enterForeground() {
@@ -142,6 +169,7 @@ final class AppModel: ObservableObject {
         UserDefaults.standard.set(c.id, forKey: "clubId")
         club = c
         engine.setClub(c: c)
+        startTraffic()
         Task { await loadWeather() }
         Task { await packs.refresh(for: c); updateAirspaces(packs.active) }
     }
