@@ -1,0 +1,2 @@
+// Clé PRECOG : jamais dans le dépôt (dépôt public). Copier Secrets.example.xcconfig en Secrets.xcconfig.
+#include? "Secrets.xcconfig"

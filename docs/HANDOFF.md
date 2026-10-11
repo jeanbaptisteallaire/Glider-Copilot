@@ -1,5 +1,29 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Session 21 — iOS étape 1 : core:domain et data:precog en Kotlin Multiplatform (11/10/2026)
+
+Décision JB : Wind Glider sur iOS — KMP pour le métier, SwiftUI pour l'interface, édition Lite d'abord. Voir CLAUDE.md « iOS / KMP ».
+
+1. **core:domain** et **data:precog** passent en KMP (`commonMain` + cibles jvm, iosArm64, iosSimulatorArm64) :
+   java.time → kotlinx-datetime (0.6.2), java.io → Okio (3.10.2), java.net → Ktor (3.1.3, iOS seulement ; Android garde
+   `UrlConnectionHttpClient` tel quel). `String.format`, `java.lang.Math`, `Normalizer`, `URLEncoder`, RFC 1123 : remplaçants
+   communs (`Platform.kt`, `Http.kt`, `formUrlEncode`).
+2. **Android inchangé** : 85 tests historiques verts (71 domain + 14 precog, passés en `jvmTest`), `JavaParityTest` (parité
+   bit à bit avec Math, String.format, Duration, URLEncoder, RFC_1123, cache disque écrit par l'ancienne version),
+   suite complète `test` (226 tests), lint, APK Lite debug/release (R8), édition complète.
+   Consommateurs adaptés aux frontières : app (FlightEngine, Glider/OgnLive/Carto repositories), feature:prevol (Fmt),
+   data:ogn (base DDB), data:carto (`AeroData.fetched`). **Pilotage** : 2 lignes de type dans `FlightScreen.kt`, accord JB,
+   empreintes régénérées.
+3. **Nouveau** : `:shared` (framework WindGliderShared, façade `WindGliderWeather`), `ios/` (XcodeGen + app SwiftUI Lite :
+   page Prévol de démonstration LFNL, KPI déclenchement/plafond/fin, carte Sources + mention PRECOG). Testée sur le simulateur
+   iPhone 18 Pro : appel réel à precog-api.com via Ktor ; 401 sans clé (attendu : `ios/WindGlider/Secrets.xcconfig` à créer).
+4. CI : `.github/workflows/ios.yml` (macOS-15).
+
+**Prochaine session (iOS)** : clé PRECOG locale et police Inter embarquée dans l'app ; choix du club (`ClubSearch`) ; cartes
+(data:carto en KMP) ; puis Pilotage Lite (moteur `FlightEngineCore` déjà commun : capteurs CoreLocation/CoreMotion/baromètre
+à brancher), Mes vols (core:flightarchive en KMP). Avant publication : compte Apple Developer, bundle id définitif,
+politique de confidentialité et fiche App Store.
+
 ## Session 20.4 — conditions PRECOG, bouton « i » Sources, recherche de club, V2.0.4-lite (06/10/2026)
 
 Déploiement Play **en pause** (demande JB). Rien d'autre ne change dans l'app.

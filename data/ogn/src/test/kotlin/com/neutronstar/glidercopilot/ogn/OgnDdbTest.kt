@@ -10,6 +10,7 @@ import org.junit.Test
 import java.io.IOException
 import java.time.Duration
 import java.time.Instant
+import kotlinx.datetime.toKotlinInstant
 
 class OgnDdbTest {
     private fun text(name: String) = javaClass.classLoader!!.getResource(name)!!.readText()
@@ -62,7 +63,7 @@ class OgnDdbTest {
     @Test fun lookupRespectsTrackingChoiceAndCaches() {
         var calls = 0
         var now = Instant.parse("2026-09-16T08:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> calls++; HttpResult(200, text("ddb_synth.json"), "\"e1\"") }, MemoryResponseCache(), { now })
+        val db = OgnDeviceDatabase({ _, _ -> calls++; HttpResult(200, text("ddb_synth.json"), "\"e1\"") }, MemoryResponseCache(), { now.toKotlinInstant() })
         val found = db.lookup("F-CJAB")
         assertTrue(found is PairingLookup.Found)
         assertEquals("DD1234", (found as PairingLookup.Found).devices.first().deviceId)
@@ -78,7 +79,7 @@ class OgnDdbTest {
         val cache = MemoryResponseCache()
         var online = true
         var now = Instant.parse("2026-09-16T08:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> if (online) HttpResult(200, text("ddb_synth.json"), null) else throw IOException("réseau") }, cache, { now })
+        val db = OgnDeviceDatabase({ _, _ -> if (online) HttpResult(200, text("ddb_synth.json"), null) else throw IOException("réseau") }, cache, { now.toKotlinInstant() })
         db.lookup("F-CJAB")
         online = false
         now = now.plus(Duration.ofDays(3))
@@ -116,7 +117,7 @@ class DdbIndexTest {
             override fun write(key: String, value: com.neutronstar.glidercopilot.precog.CachedResponse) = inner.write(key, value)
         }
         var now = java.time.Instant.parse("2026-09-17T12:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> com.neutronstar.glidercopilot.precog.HttpResult(200, text, null) }, cache, { now })
+        val db = OgnDeviceDatabase({ _, _ -> com.neutronstar.glidercopilot.precog.HttpResult(200, text, null) }, cache, { now.toKotlinInstant() })
         org.junit.Assert.assertNull(db.cachedDevice("DD1234"))   // pas encore téléchargée
         now = now.plusSeconds(700)
         db.lookup("F-CJAB")

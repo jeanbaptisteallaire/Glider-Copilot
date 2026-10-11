@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
-import java.time.Instant
+import kotlinx.datetime.Clock
 
 /** Carte hors ligne active : pack installé, dossier et données aéro déjà lues. */
 data class ActiveMap(val pack: PackInfo, val dir: File, val aeroText: String?, val aero: AeroData)
@@ -74,7 +74,7 @@ class CartoRepository(
             val r = http.get(PackCatalog.URL, cached?.etag)
             when {
                 r.code == 304 && cached != null -> cached.body
-                r.code in 200..299 && r.body != null -> r.body!!.also { catalogCache.write(PackCatalog.URL, CachedResponse(it, r.etag, Instant.now())) }
+                r.code in 200..299 && r.body != null -> r.body!!.also { catalogCache.write(PackCatalog.URL, CachedResponse(it, r.etag, Clock.System.now())) }
                 else -> cached?.body
             }
         } catch (e: IOException) {
@@ -103,7 +103,7 @@ class CartoRepository(
                 fieldLabel = club?.let { c -> c.airfieldIcao ?: c.shortName ?: c.name },
                 airspacesAround = around,
                 aeroFetched = active?.aero?.fetched,
-                now = Instant.now(),
+                now = Clock.System.now(),
             )
         }
     }
