@@ -1,6 +1,6 @@
 package com.neutronstar.glidercopilot.ogn
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -9,14 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.net.SocketTimeoutException
-import java.time.Clock
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import okio.IOException
 
 sealed interface AprsState {
     data object Idle : AprsState
@@ -28,6 +23,22 @@ sealed interface AprsState {
 data class AprsLine(val text: String, val received: Instant)
 
 /**
+ * Connexion TCP APRS-IS, propre à la plateforme (java.net.Socket sur Android, Ktor sockets sur iOS).
+ * [readLine] rend null après ~30 s sans donnée (comme soTimeout) et lève IOException si la connexion est fermée.
+ */
+interface AprsConnection {
+    suspend fun readLine(): String?
+    suspend fun write(text: String)
+    fun close()
+}
+
+/** Fil de lecture bloquante (Dispatchers.IO). */
+internal expect val aprsDispatcher: CoroutineDispatcher
+
+/** Ouvre la connexion (délai de connexion 15 s). */
+expect suspend fun openAprsConnection(host: String, port: Int): AprsConnection
+
+/**
  * Client APRS-IS en lecture seule pour OGN (aprs.glidernet.org:14580, « pass -1 » : aucune émission possible).
  * Envoie un keepalive toutes les [keepaliveSeconds], se reconnecte avec attente croissante, relit le filtre à chaque connexion.
  */
@@ -37,11 +48,11 @@ class AprsClient(
     private val appVersion: String = "0.4",
     private val host: String = "aprs.glidernet.org",
     private val port: Int = 14580,
-    private val clock: Clock = Clock.systemUTC(),
+    private val clock: Clock = Clock.System,
     private val keepaliveSeconds: Long = 180,
     private val silenceTimeoutSeconds: Long = 90,
     private val backoffSeconds: List<Long> = listOf(5, 10, 30, 60, 120),
-    private val connect: (String, Int) -> Socket = { h, p -> Socket().apply { connect(InetSocketAddress(h, p), 15_000) } },
+    private val connect: suspend (String, Int) -> AprsConnection = ::openAprsConnection,
 ) {
     fun loginLine(filter: String): String =
         "user $user pass -1 vers $appName $appVersion" + (if (filter.isNotBlank()) " filter $filter" else "")
@@ -52,28 +63,20 @@ class AprsClient(
             attempt++
             state.value = AprsState.Connecting(attempt)
             val f = filter()
-            var socket: Socket? = null
+            var socket: AprsConnection? = null
             var gotData = false
             try {
                 socket = connect(host, port)
                 val s = socket
                 val handle = currentCoroutineContext()[Job]?.invokeOnCompletion { runCatching { s.close() } }
                 try {
-                    s.soTimeout = 30_000
-                    val out = s.getOutputStream()
-                    out.write((loginLine(f) + "\r\n").toByteArray())
-                    out.flush()
-                    val reader = BufferedReader(InputStreamReader(s.getInputStream(), Charsets.UTF_8))
-                    var lastWrite = clock.millis()
-                    var lastRead = clock.millis()
+                    s.write(loginLine(f) + "\r\n")
+                    var lastWrite = clock.now().toEpochMilliseconds()
+                    var lastRead = lastWrite
                     var server: String? = null
                     while (currentCoroutineContext().isActive) {
-                        val line = try {
-                            reader.readLine() ?: throw IOException("connexion fermée par le serveur")
-                        } catch (e: SocketTimeoutException) {
-                            null
-                        }
-                        val now = clock.millis()
+                        val line = s.readLine()
+                        val now = clock.now().toEpochMilliseconds()
                         if (line != null) {
                             lastRead = now
                             if (!gotData) {
@@ -83,23 +86,22 @@ class AprsClient(
                             if (line.startsWith("# aprsc") || line.startsWith("# javAPRSSrvr")) {
                                 if (server == null) {
                                     server = line.removePrefix("# ").trim()
-                                    state.value = AprsState.Connected(server, clock.instant(), f)
+                                    state.value = AprsState.Connected(server, clock.now(), f)
                                 }
                             } else if (line.startsWith("# logresp")) {
                                 // « # logresp GLIDY1234 unverified, server GLIDERN3 »
                                 server = line.substringAfter("server ", "").trim().ifEmpty { server }
-                                state.value = AprsState.Connected(server, clock.instant(), f)
+                                state.value = AprsState.Connected(server, clock.now(), f)
                             } else if (REJECTED.containsMatchIn(line)) {
                                 // le serveur refuse l'indicatif (plus de 9 caractères) ou le filtre : il n'enverra rien
-                                emit(AprsLine(line, clock.instant()))
+                                emit(AprsLine(line, clock.now()))
                                 throw IOException(line.removePrefix("# ").trim())
                             }
-                            emit(AprsLine(line, clock.instant()))
+                            emit(AprsLine(line, clock.now()))
                         }
                         if (now - lastRead > silenceTimeoutSeconds * 1000) throw IOException("silence du serveur")
                         if (now - lastWrite > keepaliveSeconds * 1000) {
-                            out.write("#keepalive\r\n".toByteArray())
-                            out.flush()
+                            s.write("#keepalive\r\n")
                             lastWrite = now
                         }
                     }
@@ -116,7 +118,7 @@ class AprsClient(
             }
         }
         state.value = AprsState.Idle
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(aprsDispatcher)
 
     companion object {
         /** Lignes de refus du serveur : l'indicatif ou le filtre est invalide, la connexion ne servira à rien. */

@@ -20,7 +20,7 @@
 ## iOS / KMP
 
 - Décision (JB, 11/10/2026) : version iOS de Wind Glider. Métier partagé en **Kotlin Multiplatform**, interface iOS en **SwiftUI**, **édition Lite d'abord** (Prévol météo + cartes, Pilotage, Mes vols).
-- Ordre de migration KMP : ✅ `core:domain`, ✅ `data:precog` (étape 1), ✅ `data:carto` (lecture des packs : PMTiles, PNG Terrarium, openAIP ; téléchargement et style MapLibre restent en `jvmMain`) ; puis `data:ogn`, `core:flightarchive`. Les modules `feature:*` et `app` restent Android (Compose).
+- Ordre de migration KMP : ✅ `core:domain`, ✅ `data:precog` (étape 1), ✅ `data:carto` (lecture des packs : PMTiles, PNG Terrarium, openAIP ; téléchargement et style MapLibre restent en `jvmMain`) , ✅ `data:ogn` (APRS : `AprsConnection` = java.net.Socket sur Android, sockets Ktor sur iOS ; verrou `PlatformLock` non réentrant), ✅ `core:flightarchive`, ✅ `data:flightcloud`, ✅ `core:social`. Les modules `feature:*` et `app` restent Android (Compose).
 - Disposition : `src/commonMain` (métier), `src/jvmMain` (Android), `src/iosMain` (iOS), `src/commonTest` (lancé sur JVM **et** simulateur iOS), `src/jvmTest` (tests historiques JUnit). Cible `jvm()` consommée telle quelle par Android, cibles `iosArm64` + `iosSimulatorArm64`.
 - Règle d'or : **comportement Android inchangé**. Tout remplaçant d'une API Java rend exactement la même valeur, prouvé par un `JavaParityTest` (jvmTest) ; formats de fichier conservés (cache precog, IGC à l'octet près).
 - Dans `commonMain`, jamais de `java.*` :

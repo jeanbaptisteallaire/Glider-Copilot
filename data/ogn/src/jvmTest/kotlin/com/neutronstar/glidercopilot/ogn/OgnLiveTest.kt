@@ -17,9 +17,10 @@ import org.junit.Test
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.ServerSocket
-import java.time.Duration
-import java.time.Instant
-import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.math.cos
@@ -43,7 +44,7 @@ class OgnLiveTest {
         assertEquals(-0.0965, f.climbMs!!, 1e-3)
         assertEquals(0.0, f.turnDegS!!, 1e-9)
         assertEquals("EGHL", f.receiver)
-        assertEquals(2.0, f.latency.seconds.toDouble(), 0.0)
+        assertEquals(2.0, f.latency.inWholeSeconds.toDouble(), 0.0)
         assertFalse(f.hidden)
     }
 
@@ -78,12 +79,12 @@ class OgnLiveTest {
             val a = (if (right) 1 else -1) * 2 * Math.PI * s / 26.0
             val pos = LatLon(center.lat + 0.15 * cos(a) / 111.32, center.lon + 0.15 * sin(a) / (111.32 * cos(Math.toRadians(center.lat))))
             val track = ((Math.toDegrees(a) + (if (right) 90 else -90)) % 360 + 360) % 360
-            OgnFix(addr, AddressType.FLARM, 1, "FLR$addr", start.plusSeconds(s.toLong()), start.plusSeconds(s + 3L), pos, 1000.0 + climb * s,
+            OgnFix(addr, AddressType.FLARM, 1, "FLR$addr", start.plus((s.toLong()).seconds), start.plus((s + 3L).seconds), pos, 1000.0 + climb * s,
                 track, 80.0, climb, if (right) 13.8 else -13.8, stealth = false, noTracking = false, receiver = "R")
         }
 
     private fun straight(addr: String, start: Instant, seconds: Int): List<OgnFix> = (0..seconds step 4).map { s ->
-        OgnFix(addr, AddressType.FLARM, 1, "FLR$addr", start.plusSeconds(s.toLong()), start.plusSeconds(s + 2L),
+        OgnFix(addr, AddressType.FLARM, 1, "FLR$addr", start.plus((s.toLong()).seconds), start.plus((s + 2L).seconds),
             LatLon(43.8 + s * 0.0002, 3.8), 1500.0 - s * 0.8, 0.0, 110.0, -0.8, 0.0, false, false, "R")
     }
 
@@ -104,7 +105,7 @@ class OgnLiveTest {
     @Test fun mergesSameThermalAcrossGliders() {
         val t0 = Instant.parse("2026-09-17T12:00:00Z")
         val eps = ThermalDetector.episodes(spiral("AAAAAA", t0, 120, 1.8)) +
-            ThermalDetector.episodes(spiral("BBBBBB", t0.plusSeconds(200), 90, 1.2, center = LatLon(43.903, 3.901))) +
+            ThermalDetector.episodes(spiral("BBBBBB", t0.plus((200).seconds), 90, 1.2, center = LatLon(43.903, 3.901))) +
             ThermalDetector.episodes(spiral("CCCCCC", t0, 90, 2.0, center = LatLon(44.2, 4.2))) +
             ThermalDetector.episodes(spiral("EEEEEE", t0, 90, -0.8, center = LatLon(44.0, 3.5)))   // descente : pas une pompe
         val th = ThermalDetector.thermals(eps)
@@ -126,7 +127,7 @@ class OgnLiveTest {
         spiral("BBBBBB", t0, 60, 1.0).forEach { store.add(it) }
         spiral("CCCCCC", t0, 60, 1.0, center = LatLon(44.2, 4.2)).forEach { store.add(it) }
         store.add(spiral("DDDDDD", t0, 8, 1.0).first().copy(stealth = true))
-        val now = t0.plusSeconds(125)
+        val now = t0.plus((125).seconds)
         store.analyse(now)
         val ac = store.aircraft(now).associateBy { it.address }
         assertEquals(setOf("AAAAAA", "CCCCCC"), ac.keys)
@@ -138,9 +139,9 @@ class OgnLiveTest {
         // mon planeur exclu du trafic et des pompes
         assertEquals(1, store.thermals(now, exclude = setOf("AAAAAA")).size)
         // purge
-        store.analyse(t0.plus(Duration.ofHours(2)))
+        store.analyse(t0.plus(2.hours))
         assertEquals(0, store.size())
-        assertTrue(store.thermals(t0.plus(Duration.ofHours(2))).isEmpty())
+        assertTrue(store.thermals(t0.plus(2.hours)).isEmpty())
     }
 
     @Test fun ownGliderCadenceLatencyAndFilter() {
@@ -148,8 +149,8 @@ class OgnLiveTest {
         val st = OwnGlider.status(spiral("004839", t0, 60, 1.0))!!
         assertEquals(4.0, st.medianIntervalS!!, 1e-9)
         assertEquals(3.0, st.medianLatencyS!!, 1e-9)
-        assertTrue(st.isFresh(t0.plusSeconds(90)))
-        assertFalse(st.isFresh(t0.plusSeconds(200)))
+        assertTrue(st.isFresh(t0.plus((90).seconds)))
+        assertFalse(st.isFresh(t0.plus((200).seconds)))
         assertEquals("r/43.8003/3.7817/100 b/FLR004839", OwnGlider.aprsFilter(LatLon(43.80028, 3.78167), 100, listOf(AddressType.FLARM to "004839")))
         assertEquals("r/43.8003/3.7817/100", OwnGlider.aprsFilter(LatLon(43.80028, 3.78167), 100, emptyList()))
     }
@@ -290,21 +291,21 @@ class FollowPipelineTest {
         var circling = 0
         var last: com.neutronstar.glidercopilot.domain.safety.SafetyState? = null
         for (f in track) {
-            val ns = java.time.Duration.between(t0, f.time).toNanos() + 1
+            val ns = (f.time - t0).inWholeNanoseconds + 1
             core.onOgn(f.climbMs, f.altitudeM, 1)
-            val fix = com.neutronstar.glidercopilot.domain.flight.GpsFix(f.time.toKotlinInstant(), f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0)
+            val fix = com.neutronstar.glidercopilot.domain.flight.GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0)
             core.onGps(fix, ns)
             safety.onFix(fix)
-            val snap = core.snapshot(ns, f.time.toKotlinInstant())
+            val snap = core.snapshot(ns, f.time)
             if (snap.circling) circling++
-            last = safety.update(fix, snap.altitudeM!!, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), f.time.toKotlinInstant(), armed = true)
+            last = safety.update(fix, snap.altitudeM!!, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), f.time, armed = true)
             assertEquals(com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN, snap.source)
         }
-        val end = core.snapshot(java.time.Duration.between(t0, track.last().time).toNanos() + 1, track.last().time.toKotlinInstant())
+        val end = core.snapshot((track.last().time - t0).inWholeNanoseconds + 1, track.last().time)
         assertTrue("spirales vues sur $circling trames", circling > 30)
         assertTrue("pompe ${end.avgThermalMs}", (end.avgThermalMs ?: 0.0) > 1.0)
         assertEquals(com.neutronstar.glidercopilot.domain.flight.FlightPhase.FLYING, end.phase)
-        assertTrue("vent estimé", safety.wind.wind(track.last().time.toKotlinInstant()) != null)
+        assertTrue("vent estimé", safety.wind.wind(track.last().time) != null)
         val r = last!!.choice.result
         assertEquals("LFNL", r.field.id)
         assertTrue("distance ${r.distanceKm}", r.distanceKm in 5.0..25.0)
@@ -317,7 +318,7 @@ class TrafficMapLabelTest {
     private val t0 = Instant.parse("2026-09-18T12:00:00Z")
 
     private fun fix(addr: String, type: Int, pos: LatLon, s: Long) = OgnFix(
-        addr, AddressType.FLARM, type, "FLR$addr", t0.plusSeconds(s), t0.plusSeconds(s), pos,
+        addr, AddressType.FLARM, type, "FLR$addr", t0.plus((s).seconds), t0.plus((s).seconds), pos,
         1200.0, 90.0, 100.0, 0.5, null, stealth = false, noTracking = false, receiver = "LFNL",
     )
 
@@ -340,7 +341,7 @@ class TrafficMapLabelTest {
     @Test fun anonymousDevicesKeepTheirAddressLabel() {
         val store = TrafficStore(DeviceDirectory { ddb("F-CGXB", identified = false) })
         repeat(3) { store.add(fix("3EE2C1", 1, LatLon(43.80 + it * 0.001, 3.78), it * 4L)) }
-        val a = store.aircraft(t0.plusSeconds(10)).single()
+        val a = store.aircraft(t0.plus((10).seconds)).single()
         assertNull(a.label)
         assertEquals("C1", a.shortLabel)
     }
@@ -355,6 +356,6 @@ class TrafficMapLabelTest {
         val far = store.track("AABBCC"); val near = store.track("DDEEFF")
         assertEquals(3, far.size)
         assertEquals(12, near.size)
-        assertEquals(2, store.aircraft(t0.plusSeconds(48)).size)
+        assertEquals(2, store.aircraft(t0.plus((48).seconds)).size)
     }
 }

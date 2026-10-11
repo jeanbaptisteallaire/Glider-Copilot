@@ -420,10 +420,10 @@ class FlightEngine(
     private var lastFollow: OgnFix? = null
 
     private fun onFollowFix(f: OgnFix) {
-        val ns = SystemClock.elapsedRealtimeNanos() - f.latency.toNanos().coerceIn(0L, 60_000_000_000L)
+        val ns = SystemClock.elapsedRealtimeNanos() - f.latency.inWholeNanoseconds.coerceIn(0L, 60_000_000_000L)
         lastFollow = f
-        core.onOgn(f.climbMs, f.altitudeM, f.latency.seconds.coerceAtLeast(0))
-        val fix = GpsFix(f.time.toKotlinInstant(), f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0, f.altitudeM)
+        core.onOgn(f.climbMs, f.altitudeM, f.latency.inWholeNanoseconds.floorDiv(1_000_000_000L).coerceAtLeast(0))
+        val fix = GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0, f.altitudeM)
         core.onGps(fix, ns)
         afterGps(fix, ns)
     }
@@ -703,7 +703,7 @@ class FlightEngine(
             if (snap.phase == FlightPhase.LANDED) closeIgc()
         }
         if (running && mode == OwnshipMode.FOLLOW) lastFollow?.let { f ->
-            core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time, java.time.Instant.now()).seconds.coerceAtLeast(0))
+            core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time.toJavaInstant(), java.time.Instant.now()).seconds.coerceAtLeast(0))
         }
         // vidage périodique (4 Hz, ce même tour de boucle) plutôt qu'à chaque échantillon : baro+accél. tournent jusqu'à 75 Hz
         runCatching { calibWriter?.flush() }

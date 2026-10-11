@@ -82,8 +82,8 @@ object ThermalDetector {
                 val dur = (run.last().time - run.first().time)
                 if (abs(turn) >= minTurnDeg && dur >= minDuration) {
                     val alts = run.mapNotNull { it.altitudeM }
-                    val climb = if (alts.size >= 2 && dur.seconds > 0) {
-                        (run.last().altitudeM ?: alts.last()) .minus(run.first().altitudeM ?: alts.first()) / dur.seconds
+                    val climb = if (alts.size >= 2 && dur.inWholeSeconds > 0) {
+                        (run.last().altitudeM ?: alts.last()) .minus(run.first().altitudeM ?: alts.first()) / dur.inWholeSeconds
                     } else run.mapNotNull { it.climbMs }.average().takeIf { !it.isNaN() } ?: 0.0
                     out += CirclingEpisode(
                         address = run.first().address,
@@ -192,15 +192,16 @@ class TrafficStore(
     var framesAccepted = 0L; private set
     var framesRejected = 0L; private set
 
-    @Synchronized
-    fun add(fix: OgnFix): Boolean {
-        if (fix.hidden) { framesRejected++; return false }
+    private val lock = com.neutronstar.glidercopilot.precog.PlatformLock()
+
+    fun add(fix: OgnFix): Boolean = lock.withLock {
+        if (fix.hidden) { framesRejected++; return@withLock false }
         val device = directory.lookup(fix.address)
-        if (device != null && !device.tracked) { framesRejected++; return false }
+        if (device != null && !device.tracked) { framesRejected++; return@withLock false }
         labels[fix.address] = device?.takeIf { it.identified }?.let { it.competitionNumber ?: it.registration }
         val q = tracks.getOrPut(fix.address) { ArrayDeque() }
         // même trame relayée par plusieurs récepteurs, ou trame plus ancienne arrivée en retard
-        q.lastOrNull()?.let { if (fix.time <= it.time) return false }
+        q.lastOrNull()?.let { if (fix.time <= it.time) return@withLock false }
         q.addLast(fix)
         // au loin (carte du sud de la France), la trajectoire n'apporte rien : on ne garde que les dernières positions
         val c = centre()
@@ -208,11 +209,13 @@ class TrafficStore(
             while (q.size > 3) q.removeFirst()
         }
         framesAccepted++
-        return true
+        true
     }
 
-    @Synchronized
-    fun purge(now: Instant) {
+    fun purge(now: Instant): Unit = lock.withLock { purgeLocked(now) }
+
+    /** Verrou déjà pris (le verrou iOS n'est pas réentrant). */
+    private fun purgeLocked(now: Instant) {
         val horizon = now.minus(trackWindow)
         val it = tracks.entries.iterator()
         while (it.hasNext()) {
@@ -229,9 +232,8 @@ class TrafficStore(
      * à trois positions, d'où aucune spirale à trouver, et parcourir des centaines de traces bloquerait
      * la réception des trames (le verrou est partagé avec [add]).
      */
-    @Synchronized
-    fun analyse(now: Instant) {
-        purge(now)
+    fun analyse(now: Instant): Unit = lock.withLock {
+        purgeLocked(now)
         for ((addr, q) in tracks) {
             if (q.size < MIN_FIXES_FOR_CIRCLING) continue
             val last = q.lastOrNull() ?: continue
@@ -243,24 +245,22 @@ class TrafficStore(
         }
     }
 
-    @Synchronized
-    fun aircraft(now: Instant, maxAge: Duration = 2.minutes, exclude: Set<String> = emptySet()): List<TrafficAircraft> =
+    fun aircraft(now: Instant, maxAge: Duration = 2.minutes, exclude: Set<String> = emptySet()): List<TrafficAircraft> = lock.withLock {
         tracks.mapNotNull { (addr, q) ->
             val last = q.lastOrNull() ?: return@mapNotNull null
             if (addr in exclude || (now - last.time) > maxAge) return@mapNotNull null
             val circling = episodes.any { it.address == addr && secondsBetween(it.end, last.time) <= 20 }
             TrafficAircraft(addr, last.aircraftType, labels[addr], last, circling)
         }
+    }
 
-    @Synchronized
-    fun thermals(now: Instant, exclude: Set<String> = emptySet()): List<NetworkThermal> =
+    fun thermals(now: Instant, exclude: Set<String> = emptySet()): List<NetworkThermal> = lock.withLock {
         ThermalDetector.thermals(episodes.filter { it.address !in exclude && it.end >= now - thermalWindow })
+    }
 
-    @Synchronized
-    fun track(address: String): List<OgnFix> = tracks[address]?.toList().orEmpty()
+    fun track(address: String): List<OgnFix> = lock.withLock { tracks[address]?.toList().orEmpty() }
 
-    @Synchronized
-    fun size(): Int = tracks.size
+    fun size(): Int = lock.withLock { tracks.size }
 }
 
 /** Suivi de mon planeur par ses adresses FLARM/OGN : dernière position, vario OGN, cadence et retard mesurés. */
@@ -278,7 +278,7 @@ object OwnGlider {
         val sorted = fixes.sortedBy { it.time }
         val last = sorted.lastOrNull() ?: return null
         val intervals = sorted.zipWithNext { a, b -> secondsBetween(a.time, b.time).toDouble() }.filter { it > 0 && it < 600 }
-        val latencies = sorted.takeLast(30).map { it.latency.toMillis() / 1000.0 }
+        val latencies = sorted.takeLast(30).map { it.latency.inWholeNanoseconds.floorDiv(1_000_000L) / 1000.0 }
         return OwnGliderStatus(last, median(intervals), median(latencies), sorted.size)
     }
 
@@ -303,7 +303,7 @@ object OwnGlider {
 
     /** Distance horizontale approximative utile au tri du trafic (km). */
     fun distanceKm(a: LatLon, b: LatLon): Double {
-        val kx = 111.32 * cos(Math.toRadians((a.lat + b.lat) / 2))
+        val kx = 111.32 * cos(com.neutronstar.glidercopilot.domain.toRadians((a.lat + b.lat) / 2))
         return max(0.0, kotlin.math.hypot((a.lon - b.lon) * kx, (a.lat - b.lat) * 110.57))
     }
 }

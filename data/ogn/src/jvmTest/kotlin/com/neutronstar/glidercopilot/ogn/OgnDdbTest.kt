@@ -8,9 +8,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.io.IOException
-import java.time.Duration
-import java.time.Instant
-import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 
 class OgnDdbTest {
     private fun text(name: String) = javaClass.classLoader!!.getResource(name)!!.readText()
@@ -63,14 +64,14 @@ class OgnDdbTest {
     @Test fun lookupRespectsTrackingChoiceAndCaches() {
         var calls = 0
         var now = Instant.parse("2026-09-16T08:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> calls++; HttpResult(200, text("ddb_synth.json"), "\"e1\"") }, MemoryResponseCache(), { now.toKotlinInstant() })
+        val db = OgnDeviceDatabase({ _, _ -> calls++; HttpResult(200, text("ddb_synth.json"), "\"e1\"") }, MemoryResponseCache(), { now })
         val found = db.lookup("F-CJAB")
         assertTrue(found is PairingLookup.Found)
         assertEquals("DD1234", (found as PairingLookup.Found).devices.first().deviceId)
         assertTrue(db.lookup("F-CHID") is PairingLookup.NotTracked)
         assertTrue(db.lookup("F-XXXX") is PairingLookup.NotFound)
         assertEquals(1, calls)
-        now = now.plus(Duration.ofHours(25))
+        now = now.plus(25.hours)
         db.lookup("F-CJAB")
         assertEquals(2, calls)
     }
@@ -79,10 +80,10 @@ class OgnDdbTest {
         val cache = MemoryResponseCache()
         var online = true
         var now = Instant.parse("2026-09-16T08:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> if (online) HttpResult(200, text("ddb_synth.json"), null) else throw IOException("réseau") }, cache, { now.toKotlinInstant() })
+        val db = OgnDeviceDatabase({ _, _ -> if (online) HttpResult(200, text("ddb_synth.json"), null) else throw IOException("réseau") }, cache, { now })
         db.lookup("F-CJAB")
         online = false
-        now = now.plus(Duration.ofDays(3))
+        now = now.plus(3.days)
         val r = db.lookup("F-CJAB") as PairingLookup.Found
         assertTrue(r.offline)
         val none = OgnDeviceDatabase({ _, _ -> throw IOException("réseau") }, MemoryResponseCache()).lookup("F-CJAB")
@@ -116,12 +117,12 @@ class DdbIndexTest {
             override fun read(key: String) = inner.read(key).also { reads++ }
             override fun write(key: String, value: com.neutronstar.glidercopilot.precog.CachedResponse) = inner.write(key, value)
         }
-        var now = java.time.Instant.parse("2026-09-17T12:00:00Z")
-        val db = OgnDeviceDatabase({ _, _ -> com.neutronstar.glidercopilot.precog.HttpResult(200, text, null) }, cache, { now.toKotlinInstant() })
+        var now = Instant.parse("2026-09-17T12:00:00Z")
+        val db = OgnDeviceDatabase({ _, _ -> com.neutronstar.glidercopilot.precog.HttpResult(200, text, null) }, cache, { now })
         org.junit.Assert.assertNull(db.cachedDevice("DD1234"))   // pas encore téléchargée
-        now = now.plusSeconds(700)
+        now = now.plus((700).seconds)
         db.lookup("F-CJAB")
-        now = now.plusSeconds(700)
+        now = now.plus((700).seconds)
         val before = reads
         repeat(1000) { db.cachedDevice("DD1234") }
         org.junit.Assert.assertEquals("F-CJAB", db.cachedDevice("dd1234")!!.registration)

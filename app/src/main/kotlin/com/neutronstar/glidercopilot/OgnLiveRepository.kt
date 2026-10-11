@@ -37,8 +37,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toJavaInstant
-import java.time.Duration
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -80,8 +82,8 @@ class OgnLiveRepository(
 
     // horloge : réelle en direct, accélérée pendant le rejeu
     @Volatile private var replayStartReal = 0L
-    @Volatile private var replayStartVirtual: Instant = Instant.EPOCH
-    private fun now(): Instant = if (replay) replayStartVirtual.plusMillis((System.currentTimeMillis() - replayStartReal) * REPLAY_SPEED) else Instant.now()
+    @Volatile private var replayStartVirtual: Instant = com.neutronstar.glidy.common.EPOCH
+    private fun now(): Instant = if (replay) replayStartVirtual.plus(((System.currentTimeMillis() - replayStartReal) * REPLAY_SPEED).milliseconds) else Clock.System.now()
 
     private val frameTimes = ArrayDeque<Instant>()
     @Volatile private var lastFrameAt: Instant? = null
@@ -141,17 +143,17 @@ class OgnLiveRepository(
         val t0 = raw.firstNotNullOf { secs(it) }
         val fmt = DateTimeFormatter.ofPattern("HHmmss").withZone(ZoneOffset.UTC)
         replayStartReal = System.currentTimeMillis()
-        replayStartVirtual = Instant.now()
-        aprsState.value = AprsState.Connected("rejeu local", Instant.now(), "rejeu")
+        replayStartVirtual = Clock.System.now()
+        aprsState.value = AprsState.Connected("rejeu local", Clock.System.now(), "rejeu")
         var loopStart = replayStartVirtual
         while (true) {
             for (line in raw) {
                 val t = secs(line) ?: continue
-                val virtual = loopStart.plusSeconds((t - t0).toLong())
-                while (now().isBefore(virtual)) delay(20)
-                emit(AprsLine(line.replace(time, ":/${fmt.format(virtual)}h"), now()))
+                val virtual = loopStart.plus((t - t0).toLong().seconds)
+                while (now() < virtual) delay(20)
+                emit(AprsLine(line.replace(time, ":/${fmt.format(virtual.toJavaInstant())}h"), now()))
             }
-            loopStart = now().plusSeconds(5)
+            loopStart = now().plus(5.seconds)
             store.analyse(now())
         }
     }
@@ -164,14 +166,14 @@ class OgnLiveRepository(
         synchronized(frameTimes) {
             lastFrameAt = line.received
             frameTimes.addLast(line.received)
-            while (frameTimes.isNotEmpty() && Duration.between(frameTimes.first(), line.received).seconds > 60) frameTimes.removeFirst()
+            while (frameTimes.isNotEmpty() && between(frameTimes.first(), line.received).seconds > 60) frameTimes.removeFirst()
         }
         synchronized(intervals) {
             lastTimeByAddress.put(fix.address, fix.time)?.let { prev ->
-                val d = Duration.between(prev, fix.time).toMillis() / 1000.0
+                val d = between(prev, fix.time).toMillis() / 1000.0
                 if (d > 0 && d < 120) push(intervals, d)
             }
-            push(latencies, fix.latency.toMillis() / 1000.0)
+            push(latencies, fix.latency.inWholeNanoseconds.floorDiv(1_000_000L) / 1000.0)
         }
     }
 
@@ -218,12 +220,12 @@ class OgnLiveRepository(
                     typeLabel = a.typeLabel,
                     speedKmh = a.last.groundSpeedKmh,
                     climbMs = a.last.climbMs,
-                    ageS = Duration.between(a.last.time, now).seconds.coerceAtLeast(0),
+                    ageS = between(a.last.time, now).seconds.coerceAtLeast(0),
                 )
             },
             thermals = thermals.map { ThermalMark(it.position, it.climbMs, it.aircraftCount, it.ageMinutes(now)) },
             own = ownStatus?.let { st ->
-                OwnOgn(st.last.position, st.last.trackDeg, st.last.altitudeM, st.last.climbMs, st.medianLatencyS, Duration.between(st.last.received, now).seconds)
+                OwnOgn(st.last.position, st.last.trackDeg, st.last.altitudeM, st.last.climbMs, st.medianLatencyS, between(st.last.received, now).seconds)
             },
             live = state is AprsState.Connected,
             replay = replay,
@@ -231,7 +233,7 @@ class OgnLiveRepository(
         if (followSet.isNotEmpty()) {
             val ft = followSet.flatMap { store.track(it) }.maxByOrNull { it.time }
             glider.publishFollowLine(ft?.let { f ->
-                val ago = Duration.between(f.received, now).seconds
+                val ago = between(f.received, now).seconds
                 listOfNotNull(
                     if (ago < 90) "vu il y a $ago s" else "vu il y a ${ago / 60} min",
                     f.altitudeM?.let { "${it.roundToInt()} m" },
@@ -243,11 +245,11 @@ class OgnLiveRepository(
         val clubPos = clubPosition
         _network.value = OgnNetworkUi(
             framesPerMin = synchronized(frameTimes) { frameTimes.size },
-            lastFrameAgoS = lastFrameAt?.let { Duration.between(it, now).seconds },
+            lastFrameAgoS = lastFrameAt?.let { between(it, now).seconds },
             warning = when {
                 state is AprsState.Waiting && Regex("(?i)invalid|refus").containsMatchIn(state.reason) ->
                     "OGN a refusé la connexion (${state.reason})."
-                state is AprsState.Connected && !replay && (lastFrameAt == null || Duration.between(lastFrameAt, now).seconds > 120) ->
+                state is AprsState.Connected && !replay && lastFrameAt.let { it == null || between(it, now).seconds > 120 } ->
                     "Aucune trame OGN depuis 2 min : vérifiez le réseau."
                 else -> null
             },
@@ -268,7 +270,7 @@ class OgnLiveRepository(
             ownLabel = reg?.takeIf { glider.ownDevices.value.isNotEmpty() },
             ownSeen = ownStatus?.isFresh(now) == true,
             ownLine = ownStatus?.let { st ->
-                val ago = Duration.between(st.last.received, now)
+                val ago = between(st.last.received, now)
                 val dist = clubPos?.let { Geo.distanceKm(it, st.last.position) }
                 listOfNotNull(
                     if (ago.seconds < 90) "vu il y a ${ago.seconds} s" else "vu il y a ${ago.toMinutes()} min",
@@ -291,10 +293,13 @@ class OgnLiveRepository(
     private fun ddbStatusLabel(now: Instant): String {
         val st = glider.ddb.status()
         val at = st.fetchedAt ?: return "Base des immatriculations (DDB) : jamais chargée" + if (replay) " (rejeu, normal)" else " — réessaiera au prochain démarrage"
-        val age = Duration.between(at.toJavaInstant(), now)
+        val age = java.time.Duration.between(at.toJavaInstant(), now.toJavaInstant())
         val ago = if (age.toHours() < 20) "il y a ${age.toMinutes().coerceAtLeast(0)} min" else DDB_FMT.format(at.toJavaInstant())
         return "Base des immatriculations (DDB) : ${st.deviceCount} appareils, ${if (st.offline) "copie locale" else "à jour"} $ago"
     }
+
+    /** Écart java.time entre deux instants (mêmes arrondis qu'avant la migration KMP de data:ogn). */
+    private fun between(a: Instant, b: Instant): java.time.Duration = java.time.Duration.between(a.toJavaInstant(), b.toJavaInstant())
 
     private fun signed(n: Int) = (if (n >= 0) "+" else "−") + kotlin.math.abs(n)
 

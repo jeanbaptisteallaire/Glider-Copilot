@@ -118,6 +118,4 @@ object OgnParser {
         return t
     }
 
-    @Suppress("unused")
-    private val utc = ZoneOffset.UTC
 }
