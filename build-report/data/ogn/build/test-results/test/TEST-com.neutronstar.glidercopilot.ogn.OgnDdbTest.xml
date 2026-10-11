@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.ogn.OgnDdbTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-11T12:55:34" hostname="runnervmmprz5" time="1.101">
+<testsuite name="com.neutronstar.glidercopilot.ogn.OgnDdbTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-11T13:23:20" hostname="runnervmmprz5" time="1.155">
   <properties/>
   <testcase name="parsesAndSkipsEmptyRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.001"/>
-  <testcase name="lookupRespectsTrackingChoiceAndCaches" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.007"/>
-  <testcase name="leanParserReadsLargeBaseQuickly" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="1.075"/>
-  <testcase name="normalizesRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.003"/>
+  <testcase name="lookupRespectsTrackingChoiceAndCaches" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.003"/>
+  <testcase name="leanParserReadsLargeBaseQuickly" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="1.125"/>
+  <testcase name="normalizesRegistrations" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.006"/>
   <testcase name="findsFlarmFirstWithTolerantKey" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.005"/>
-  <testcase name="offlineFallsBackToLastCopy" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.006"/>
+  <testcase name="offlineFallsBackToLastCopy" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.01"/>
   <testcase name="leanParserHandlesEscapesNumbersAndCompactJson" classname="com.neutronstar.glidercopilot.ogn.OgnDdbTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

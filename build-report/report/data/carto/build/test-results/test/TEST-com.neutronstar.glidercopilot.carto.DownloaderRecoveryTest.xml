@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.neutronstar.glidercopilot.carto.DownloaderRecoveryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-11T12:55:39" hostname="runnervmmprz5" time="6.031">
+<testsuite name="com.neutronstar.glidercopilot.carto.DownloaderRecoveryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-11T13:23:23" hostname="runnervmmprz5" time="6.05">
   <properties/>
-  <testcase name="restartsFromZeroWhenServerRefusesRange" classname="com.neutronstar.glidercopilot.carto.DownloaderRecoveryTest" time="6.031"/>
+  <testcase name="restartsFromZeroWhenServerRefusesRange" classname="com.neutronstar.glidercopilot.carto.DownloaderRecoveryTest" time="6.05"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
