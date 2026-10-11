@@ -5,7 +5,8 @@ import com.neutronstar.glidy.flightarchive.FlightId
 import com.neutronstar.glidy.flightarchive.IgcFileRef
 import com.neutronstar.glidy.flightarchive.IgcTrackPoint
 import com.neutronstar.glidy.flightarchive.LocalFileState
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.seconds
 import java.util.UUID
 import kotlin.math.cos
 import kotlin.math.sin
@@ -26,7 +27,7 @@ class Replay3dTrackPayloadTest {
         val t0 = Instant.parse("2026-09-19T10:00:00Z")
         return List(n) { i ->
             val a = i * 2 * Math.PI / 30
-            IgcTrackPoint(t0.plusSeconds(i.toLong()), 43.8 + 0.0012 * sin(a), 3.7 + 0.0016 * cos(a), null, 800 + (i * 1.5).toInt())
+            IgcTrackPoint(t0 + (i.toLong()).seconds, 43.8 + 0.0012 * sin(a), 3.7 + 0.0016 * cos(a), null, 800 + (i * 1.5).toInt())
         }
     }
 
@@ -45,12 +46,12 @@ class Replay3dTrackPayloadTest {
         // un tour de 30 s ne peut pas tenir en moins de ~8 points à 2,5 m près : les spirales restent rondes
         val perTurn = p.latitudes.size / (30_000 / 30.0)
         assertTrue("spirales aplaties : $perTurn points par tour", perTurn >= 8)
-        assertEquals(track.last().timestamp.epochSecond - track.first().timestamp.epochSecond, p.seconds.last())
+        assertEquals(track.last().timestamp.epochSeconds - track.first().timestamp.epochSeconds, p.seconds.last())
     }
 
     @Test fun straightLineCollapsesToItsEnds() {
         val t0 = Instant.parse("2026-09-19T10:00:00Z")
-        val line = List(1_000) { i -> IgcTrackPoint(t0.plusSeconds(i.toLong()), 43.8 + i * 1e-5, 3.7, null, 1000) }
+        val line = List(1_000) { i -> IgcTrackPoint(t0 + (i.toLong()).seconds, 43.8 + i * 1e-5, 3.7, null, 1000) }
         assertEquals(2, Replay3dTrackPayload.simplify(line, 2.5).size)
     }
 }

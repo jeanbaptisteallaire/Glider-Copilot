@@ -1,5 +1,8 @@
 package com.neutronstar.glidy.flightarchive.data
 
+import okio.Source
+import okio.buffer
+import okio.source
 import com.neutronstar.glidy.flightarchive.CompletedFlightGateway
 import com.neutronstar.glidy.flightarchive.CompletedFlightResult
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
@@ -24,7 +27,7 @@ class AtomicCompletedFlightGateway(
 
     override suspend fun submitCompletedIgc(
         fileName: String,
-        source: InputStream,
+        source: Source,
     ): CompletedFlightResult = mutex.withLock {
         withContext(ioDispatcher) {
             inboxDirectory.mkdirs()
@@ -33,7 +36,7 @@ class AtomicCompletedFlightGateway(
             val completed = File(inboxDirectory, "$stem--$displayName")
             val partial = File(inboxDirectory, "${completed.name}.part")
             try {
-                val accepted = copyBounded(source, partial)
+                val accepted = copyBounded(source.buffer().inputStream(), partial)
                 if (!accepted) {
                     partial.delete()
                     return@withContext CompletedFlightResult.TooLarge
@@ -74,7 +77,7 @@ class AtomicCompletedFlightGateway(
     }
 
     private suspend fun importAndConsume(file: File, displayName: String): ImportIgcResult {
-        val result = file.inputStream().buffered().use { repository.importIgc(displayName, it) }
+        val result = file.inputStream().buffered().use { repository.importIgc(displayName, it.source()) }
         when (result) {
             is ImportIgcResult.Imported,
             is ImportIgcResult.Duplicate,

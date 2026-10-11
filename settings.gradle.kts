@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 rootProject.name = "GliderCopilot"
 include(":app")
 include(":core:designsystem")
+include(":core:common")
 include(":core:domain")
 include(":data:precog")
 include(":data:ogn")

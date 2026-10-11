@@ -3,31 +3,62 @@ name: WindGlider
 options:
   bundleIdPrefix: com.neutronstar
   deploymentTarget:
-    iOS: "16.0"
+    iOS: "17.0"
   createIntermediateGroups: true
 configFiles:
   Debug: WindGlider/Config.xcconfig
   Release: WindGlider/Config.xcconfig
-targets:
-  WindGlider:
+targetTemplates:
+  WindGliderApp:
     type: application
     platform: iOS
     sources:
       - WindGlider/Sources
       - path: WindGlider/Resources
         optional: true
+      # même annuaire FFVP que l'app Android (pas de copie)
+      - path: ../app/src/main/assets/clubs_fr.json
+        buildPhase: resources
+      # police Inter et illustrations : mêmes fichiers que l'app Android (pas de copie)
+      - path: ../core/designsystem/src/main/res/font
+        type: folder
+        buildPhase: resources
+      - path: ../app/src/main/res/drawable-nodpi/wg_cockpit.webp
+        buildPhase: resources
+      - path: ../app/src/main/res/drawable-nodpi/wg_logo.webp
+        buildPhase: resources
+      - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_flights_header.webp
+        buildPhase: resources
+      - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_avatar.webp
+        buildPhase: resources
+      # rejeu 3D : même page que l'app Android (assets replay3d)
+      - path: ../feature/replay3d/src/main/assets/replay3d
+        type: folder
+        buildPhase: resources
+      # données d'essai (build de développement, argument -testData) : réponses synthétiques des tests precog
+      - path: ../data/precog/src/jvmTest/resources/fixtures
+        type: folder
+        buildPhase: resources
     info:
-      path: WindGlider/Info.plist
+      path: WindGlider/${target_name}-Info.plist
       properties:
         CFBundleDisplayName: Wind Glider
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
-        UILaunchScreen: {}
+        UILaunchScreen: { UIColorName: LaunchBackground }
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         PRECOG_API_KEY: $(PRECOG_API_KEY)
+        SUPABASE_URL: $(SUPABASE_URL)
+        SUPABASE_ANON_KEY: $(SUPABASE_ANON_KEY)
+        WG_EDITION: $(WG_EDITION)
+        NSLocationWhenInUseUsageDescription: "Position GPS du planeur pendant le vol : marge de sécurité, trace IGC et club le plus proche. Elle reste sur le téléphone."
+        NSMotionUsageDescription: "Baromètre et accéléromètre du téléphone pour le vario."
+        UIBackgroundModes: [audio, location]
+        UIAppFonts: [font/inter_regular.ttf, font/inter_medium.ttf, font/inter_semibold.ttf, font/inter_bold.ttf]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.neutronstar.windglider.lite
+        PRODUCT_BUNDLE_IDENTIFIER: com.neutronstar.glidercopilot
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         SWIFT_VERSION: "5.0"
         ENABLE_USER_SCRIPT_SANDBOXING: NO
         FRAMEWORK_SEARCH_PATHS: $(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
@@ -44,3 +75,18 @@ targets:
             export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
           fi
           ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+
+# Éditions (comme Android : même identifiant, édition choisie à la construction ; BuildConfig.LITE ↔ drapeau FULL)
+targets:
+  WindGlider:
+    templates: [WindGliderApp]
+    settings:
+      base:
+        WG_EDITION: lite
+  WindGliderFull:
+    templates: [WindGliderApp]
+    settings:
+      base:
+        WG_EDITION: full
+        PRODUCT_NAME: WindGlider
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) FULL

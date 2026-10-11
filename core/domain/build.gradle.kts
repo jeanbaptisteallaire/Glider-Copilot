@@ -9,6 +9,7 @@ kotlin {
     iosSimulatorArm64()
     sourceSets {
         commonMain.dependencies {
+            api(project(":core:common"))
             api(libs.kotlinx.datetime)
         }
         commonTest.dependencies {

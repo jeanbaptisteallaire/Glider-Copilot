@@ -63,7 +63,7 @@ internal fun OfflineMapCard(ui: OfflineMapUi, onDownload: () -> Unit, onCancel: 
                 )
                 ui.installed?.aeroValidUntil?.let {
                     Text(
-                        (if (ui.aeroExpired) "Aéro périmée depuis le " else "Aéro valable jusqu’au ") + DAY.format(it),
+                        (if (ui.aeroExpired) "Aéro périmée depuis le " else "Aéro valable jusqu’au ") + DAY.format(it.toJavaInstant()),
                         style = cardStyle(TextRole.Secondary, 11.sp, if (ui.aeroExpired) c.warn else c.dim),
                     )
                 }

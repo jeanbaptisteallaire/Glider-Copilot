@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.myflights
 
+import kotlinx.datetime.toJavaInstant
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -659,8 +660,8 @@ private fun HealthAltitudeChart(altitudes: List<Float>, durationSeconds: Long) {
 
 private fun ArchivedFlight.toCardUi(): FlightCardUi {
     val summary = summary
-    val startedAt = summary?.startedAt?.atZone(ZoneId.systemDefault())
-    val durationSeconds = if (summary == null) 0L else Duration.between(summary.startedAt, summary.endedAt).seconds
+    val startedAt = summary?.startedAt?.toJavaInstant()?.atZone(ZoneId.systemDefault())
+    val durationSeconds = if (summary == null) 0L else Duration.between(summary.startedAt.toJavaInstant(), summary.endedAt.toJavaInstant()).seconds
     val gliderLabel = listOfNotNull(gliderType, gliderId).filter(String::isNotBlank).joinToString(" · ")
         .ifBlank { "Planeur non renseigné" }
     return FlightCardUi(

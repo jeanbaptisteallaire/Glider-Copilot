@@ -1,36 +1,34 @@
 package com.neutronstar.glidercopilot.domain
 
+import com.neutronstar.glidy.common.EPOCH as CommonEpoch
 import kotlinx.datetime.Instant
-import kotlin.math.roundToLong
 
 /*
- * iOS / KMP étape 1 — remplaçants communs de java.lang.Math, String.format et java.time.Duration.
- * Chacun rend exactement la même valeur que l'appel Java qu'il remplace (Android inchangé).
+ * iOS / KMP — les remplaçants communs de java.lang.Math, String.format et java.time.Duration vivent dans core:common
+ * (partagé avec les modules Mes vols). Ces alias gardent les noms historiques du métier : aucun appelant ne change.
  */
 
 /** Instant.EPOCH de java.time. */
-val EPOCH: Instant = Instant.fromEpochSeconds(0)
+val EPOCH: Instant = CommonEpoch
 
 /** `java.time.Duration.between(from, to).getSeconds()` : secondes entières, arrondi vers −∞ comme java.time. */
-fun secondsBetween(from: Instant, to: Instant): Long {
-    val s = to.epochSeconds - from.epochSeconds
-    return if (to.nanosecondsOfSecond < from.nanosecondsOfSecond) s - 1 else s
-}
+fun secondsBetween(from: Instant, to: Instant): Long = com.neutronstar.glidy.common.secondsBetween(from, to)
 
 /** `Math.toRadians` (même constante que le JDK, donc même arrondi). */
-fun toRadians(deg: Double): Double = deg * 0.017453292519943295
+fun toRadians(deg: Double): Double = com.neutronstar.glidy.common.toRadians(deg)
 
 /** `Math.toDegrees` (même constante que le JDK). */
-fun toDegrees(rad: Double): Double = rad * 57.29577951308232
+fun toDegrees(rad: Double): Double = com.neutronstar.glidy.common.toDegrees(rad)
 
 /** `Math.round(double)` : demi vers +∞, NaN → 0. */
-fun roundHalfUp(x: Double): Long = if (x.isNaN()) 0L else x.roundToLong()
+fun roundHalfUp(x: Double): Long = com.neutronstar.glidy.common.roundHalfUp(x)
 
 /** `String.format(locale, "%.<decimals>f", value)` ; [decimalComma] = Locale.FRANCE, sinon Locale.ROOT. */
-expect fun formatFixed(value: Double, decimals: Int, decimalComma: Boolean = false): String
+fun formatFixed(value: Double, decimals: Int, decimalComma: Boolean = false): String =
+    com.neutronstar.glidy.common.formatFixed(value, decimals, decimalComma)
 
 /** `%0<width>d` pour un entier positif ou nul. */
-fun Int.zeroPad(width: Int): String = toString().padStart(width, '0')
+fun Int.zeroPad(width: Int): String = with(com.neutronstar.glidy.common.ZeroPad) { this@zeroPad.pad(width) }
 
 /** Décomposition canonique (NFD) de `java.text.Normalizer`. */
-expect fun normalizeNfd(s: String): String
+fun normalizeNfd(s: String): String = com.neutronstar.glidy.common.normalizeNfd(s)

@@ -1,5 +1,8 @@
 package com.neutronstar.glidy.flightarchive.data
 
+import com.neutronstar.glidy.flightarchive.parse
+import okio.Source
+import okio.buffer
 import com.neutronstar.glidy.flightarchive.ArchivedFlight
 import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.FlightId
@@ -20,7 +23,7 @@ import com.neutronstar.glidy.flightarchive.SyncState
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
-import java.time.Instant
+import kotlinx.datetime.Instant
 import java.util.UUID
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +40,7 @@ class RoomFlightArchiveRepository(
     private val parser = StreamingIgcFlightParser()
     private val mutex = Mutex()
 
-    override suspend fun importIgc(fileName: String, source: InputStream): ImportIgcResult =
+    override suspend fun importIgc(fileName: String, source: Source): ImportIgcResult =
         mutex.withLock {
             withContext(ioDispatcher) {
                 archiveDirectory.mkdirs()
@@ -45,7 +48,7 @@ class RoomFlightArchiveRepository(
                 val digest = MessageDigest.getInstance("SHA-256")
 
                 try {
-                    val size = copyAndHash(source, temporary, digest)
+                    val size = copyAndHash(source.buffer().inputStream(), temporary, digest)
                         ?: return@withContext ImportIgcResult.TooLarge.also { temporary.delete() }
                     val sha256 = digest.digest().toHex()
                     dao.findBySha256(sha256)?.let { existing ->
@@ -53,7 +56,7 @@ class RoomFlightArchiveRepository(
                         return@withContext ImportIgcResult.Duplicate(existing.toDomain())
                     }
 
-                    val parsed = temporary.bufferedReader(Charsets.ISO_8859_1).use(parser::parse)
+                    val parsed = temporary.bufferedReader(Charsets.ISO_8859_1).use { parser.parse(it) }
                     if (parsed is IgcParseResult.Failure) {
                         temporary.delete()
                         return@withContext ImportIgcResult.Invalid(parsed.error)
@@ -145,7 +148,7 @@ class RoomFlightArchiveRepository(
         val root = archiveDirectory.canonicalFile
         val file = File(root, entity.relativePath).canonicalFile
         if (!file.path.startsWith(root.path + File.separator) || !file.isFile) return@withContext null
-        when (val parsed = file.bufferedReader(Charsets.ISO_8859_1).use(parser::parse)) {
+        when (val parsed = file.bufferedReader(Charsets.ISO_8859_1).use { parser.parse(it) }) {
             is IgcParseResult.Success -> parsed.flight.points
             else -> null
         }
@@ -181,7 +184,7 @@ class RoomFlightArchiveRepository(
 
     private suspend fun indexExistingFile(file: File, displayName: String, createdAt: Long): FlightEntity? {
         val sha256 = sha256(file)
-        val parsed = file.bufferedReader(Charsets.ISO_8859_1).use(parser::parse)
+        val parsed = file.bufferedReader(Charsets.ISO_8859_1).use { parser.parse(it) }
         if (parsed !is IgcParseResult.Success) return null
         return parsed.flight.toEntity(
             id = stableId(sha256),
@@ -252,8 +255,8 @@ class RoomFlightArchiveRepository(
         val bounds = summary.bounds
         return FlightEntity(
             id = id, relativePath = relativePath, fileName = fileName, sizeBytes = sizeBytes, sha256 = sha256,
-            startedAtEpochMillis = summary.startedAt.toEpochMilli(),
-            endedAtEpochMillis = summary.endedAt.toEpochMilli(),
+            startedAtEpochMillis = summary.startedAt.toEpochMilliseconds(),
+            endedAtEpochMillis = summary.endedAt.toEpochMilliseconds(),
             pointCount = summary.pointCount, validPointCount = summary.validPointCount,
             distanceMeters = summary.distanceMeters,
             minimumAltitudeMeters = summary.minimumAltitudeMeters,
@@ -274,8 +277,8 @@ class RoomFlightArchiveRepository(
     private fun FlightEntity.toDomain(): ArchivedFlight {
         val summary = if (startedAtEpochMillis != null && endedAtEpochMillis != null) {
             FlightSummary(
-                startedAt = Instant.ofEpochMilli(startedAtEpochMillis),
-                endedAt = Instant.ofEpochMilli(endedAtEpochMillis),
+                startedAt = Instant.fromEpochMilliseconds(startedAtEpochMillis),
+                endedAt = Instant.fromEpochMilliseconds(endedAtEpochMillis),
                 pointCount = pointCount,
                 validPointCount = validPointCount,
                 distanceMeters = distanceMeters,
@@ -306,7 +309,7 @@ class RoomFlightArchiveRepository(
             },
             altitudeProfileMeters = altitudeProfile.split(',').mapNotNull(String::toIntOrNull),
             visibility = runCatching { FlightVisibility.valueOf(visibility) }.getOrDefault(FlightVisibility.PRIVATE),
-            publishedAt = publishedAtEpochMillis?.let(Instant::ofEpochMilli),
+            publishedAt = publishedAtEpochMillis?.let { Instant.fromEpochMilliseconds(it) },
         )
     }
 

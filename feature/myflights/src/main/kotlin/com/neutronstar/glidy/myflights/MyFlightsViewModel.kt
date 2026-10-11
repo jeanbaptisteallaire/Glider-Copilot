@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.myflights
 
+import okio.source
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -118,7 +119,7 @@ class MyFlightsViewModel(
                 mutableState.value = latest.copy(notice = "Le partage n'a pas pu être modifié.")
                 return@launch
             }
-            val now = java.time.Instant.now()
+            val now = kotlinx.datetime.Clock.System.now()
             mutableState.value = latest.copy(
                 flights = latest.flights.map {
                     if (it.id == id) it.copy(visibility = target, publishedAt = if (target == FlightVisibility.PUBLIC) now else null) else it
@@ -171,7 +172,7 @@ class MyFlightsViewModel(
             return
         }
         viewModelScope.launch {
-            val result = runCatching { source.use { repository.importIgc(fileName, it) } }
+            val result = runCatching { source.use { repository.importIgc(fileName, it.source()) } }
                 .getOrElse { ImportIgcResult.Failed(it.message ?: "erreur locale") }
             val flights = runCatching { repository.listFlights().sortedForDisplay() }
                 .getOrElse {
@@ -255,7 +256,7 @@ class MyFlightsViewModel(
 
     private fun List<ArchivedFlight>.sortedForDisplay(): List<ArchivedFlight> =
         sortedWith(
-            compareByDescending<ArchivedFlight> { it.summary?.startedAt?.toEpochMilli() ?: Long.MIN_VALUE }
+            compareByDescending<ArchivedFlight> { it.summary?.startedAt?.toEpochMilliseconds() ?: Long.MIN_VALUE }
                 .thenBy { it.file.fileName.lowercase() },
         )
 }
