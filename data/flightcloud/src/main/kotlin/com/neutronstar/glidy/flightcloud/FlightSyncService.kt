@@ -5,7 +5,6 @@ import com.neutronstar.glidy.flightarchive.FlightArchiveRepository
 import com.neutronstar.glidy.flightarchive.ImportIgcResult
 import com.neutronstar.glidy.flightarchive.LocalFileState
 import com.neutronstar.glidy.flightarchive.SyncState
-import java.time.Duration
 
 data class SyncReport(
     val uploaded: Int = 0,
@@ -57,7 +56,7 @@ class FlightSyncService(
                 blocking { bytes = client.downloadIgc(record) }
                 val data = (bytes as? CloudResult.Ok)?.value
                 if (data == null) { failed++; continue }
-                when (val imported = repository.importIgc(record.fileName, data.inputStream())) {
+                when (val imported = repository.importIgc(record.fileName, okio.Buffer().write(data))) {
                     is ImportIgcResult.Imported -> { repository.updateSyncState(imported.flight.id, SyncState.SYNCED, record.storagePath); restored++ }
                     is ImportIgcResult.Duplicate -> already++
                     else -> failed++
@@ -85,7 +84,7 @@ class FlightSyncService(
         storagePath = "",
         startedAt = summary?.startedAt?.toString(),
         endedAt = summary?.endedAt?.toString(),
-        durationSeconds = summary?.let { Duration.between(it.startedAt, it.endedAt).seconds },
+        durationSeconds = summary?.let { com.neutronstar.glidy.common.secondsBetween(it.startedAt, it.endedAt) },
         distanceMeters = summary?.distanceMeters,
         altitudeMinMeters = summary?.minimumAltitudeMeters,
         altitudeMaxMeters = summary?.maximumAltitudeMeters,

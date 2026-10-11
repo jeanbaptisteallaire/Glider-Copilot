@@ -15,7 +15,8 @@ import com.neutronstar.glidy.flightarchive.ReconciliationResult
 import com.neutronstar.glidy.flightarchive.RemoveFlightResult
 import com.neutronstar.glidy.flightarchive.ShareFlightResult
 import java.io.InputStream
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.seconds
 import java.util.UUID
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
@@ -245,7 +246,7 @@ class MyFlightsViewModelTest {
         private val storedFlights = flights.toMutableList()
         var removeCalls = 0
 
-        override suspend fun importIgc(fileName: String, source: InputStream): ImportIgcResult =
+        override suspend fun importIgc(fileName: String, source: okio.Source): ImportIgcResult =
             ImportIgcResult.Failed("not configured")
 
         override suspend fun reconcile(): ReconciliationResult {
@@ -289,14 +290,14 @@ class MyFlightsViewModelTest {
 }
 
 private fun flight(index: Int, state: LocalFileState = LocalFileState.AVAILABLE): ArchivedFlight {
-    val start = Instant.parse("2026-01-01T10:00:00Z").plusSeconds(index.toLong() * 3_600L)
+    val start = Instant.parse("2026-01-01T10:00:00Z") + (index.toLong() * 3_600L).seconds
     val sha = index.toString(16).padStart(64, '0')
     return ArchivedFlight(
         id = FlightId(UUID.nameUUIDFromBytes("flight-$index".toByteArray()).toString()),
         file = IgcFileRef("$sha.igc", "vol-$index.igc", 1_024L + index, sha),
         summary = FlightSummary(
             startedAt = start,
-            endedAt = start.plusSeconds(3_600),
+            endedAt = start + (3_600).seconds,
             pointCount = 3_600,
             validPointCount = 3_600,
             distanceMeters = 80_000,

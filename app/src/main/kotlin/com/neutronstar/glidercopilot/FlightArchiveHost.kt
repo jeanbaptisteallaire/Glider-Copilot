@@ -1,5 +1,7 @@
 package com.neutronstar.glidercopilot
 
+import com.neutronstar.glidy.flightarchive.importIgc
+import com.neutronstar.glidy.flightarchive.submitCompletedIgc
 import android.content.Context
 import android.util.Log
 import com.neutronstar.glidy.flightarchive.CompletedFlightGateway

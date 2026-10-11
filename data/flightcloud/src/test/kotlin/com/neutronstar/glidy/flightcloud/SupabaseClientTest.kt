@@ -11,7 +11,8 @@ import com.neutronstar.glidy.flightarchive.ReconciliationResult
 import com.neutronstar.glidy.flightarchive.RemoveFlightResult
 import com.neutronstar.glidy.flightarchive.SyncState
 import java.io.InputStream
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.seconds
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertArrayEquals
@@ -64,8 +65,8 @@ private class FakeSupabase : CloudTransport {
 /** Faux carnet local en mémoire. */
 private class FakeArchive(flights: List<ArchivedFlight>, private val files: MutableMap<String, ByteArray>) : FlightArchiveRepository {
     val flights = flights.toMutableList()
-    override suspend fun importIgc(fileName: String, source: InputStream): ImportIgcResult {
-        val bytes = source.readBytes()
+    override suspend fun importIgc(fileName: String, source: okio.Source): ImportIgcResult {
+        val bytes = okio.Buffer().apply { writeAll(source) }.readByteArray()
         val sha = sha(bytes)
         flights.firstOrNull { it.file.sha256 == sha }?.let { return ImportIgcResult.Duplicate(it) }
         val f = flight(fileName, bytes)

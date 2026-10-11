@@ -246,7 +246,7 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         tab = Tab.MES_VOLS
         repeat(20) {
             val newest = runCatching { container.flights.repository.listFlights() }.getOrNull()
-                ?.maxByOrNull { it.summary?.startedAt?.toEpochMilli() ?: Long.MIN_VALUE }
+                ?.maxByOrNull { it.summary?.startedAt?.toEpochMilliseconds() ?: Long.MIN_VALUE }
             if (newest != null) { replayed = newest; return@LaunchedEffect }
             kotlinx.coroutines.delay(500)
         }

@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.replay3d
 
+import kotlinx.datetime.toJavaInstant
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.net.Uri
@@ -225,13 +226,13 @@ internal data class Replay3dTrackPayload(
         fun from(flight: ArchivedFlight, track: List<IgcTrackPoint>): Replay3dTrackPayload {
             val usable = track.filter { (it.gpsAltitudeMeters ?: it.pressureAltitudeMeters) != null }
             val kept = if (usable.size > MAX_POINTS) simplify(usable, 2.5) else usable
-            val t0 = kept.firstOrNull()?.timestamp?.epochSecond ?: 0L
+            val t0 = kept.firstOrNull()?.timestamp?.epochSeconds ?: 0L
             return Replay3dTrackPayload(
                 title = flight.file.fileName,
                 latitudes = DoubleArray(kept.size) { kept[it].latitude },
                 longitudes = DoubleArray(kept.size) { kept[it].longitude },
                 altitudes = IntArray(kept.size) { kept[it].gpsAltitudeMeters ?: kept[it].pressureAltitudeMeters ?: 0 },
-                seconds = LongArray(kept.size) { kept[it].timestamp.epochSecond - t0 },
+                seconds = LongArray(kept.size) { kept[it].timestamp.epochSeconds - t0 },
             )
         }
 
@@ -298,7 +299,7 @@ internal data class Replay3dPayload(
                     altitudeMeters = flight.altitudeProfileMeters.getOrNull(index) ?: fallbackAltitude,
                 )
             }
-            val duration = flight.summary?.let { Duration.between(it.startedAt, it.endedAt).seconds } ?: 1L
+            val duration = flight.summary?.let { Duration.between(it.startedAt.toJavaInstant(), it.endedAt.toJavaInstant()).seconds } ?: 1L
             return Replay3dPayload(
                 title = flight.file.fileName,
                 durationSeconds = duration.coerceAtLeast(1L),
