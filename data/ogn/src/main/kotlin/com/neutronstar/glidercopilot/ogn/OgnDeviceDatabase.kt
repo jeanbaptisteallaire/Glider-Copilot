@@ -5,8 +5,11 @@ import com.neutronstar.glidercopilot.precog.CachedResponse
 import com.neutronstar.glidercopilot.precog.HttpClient
 import com.neutronstar.glidercopilot.precog.ResponseCache
 import java.io.IOException
-import java.time.Duration
-import java.time.Instant
+import com.neutronstar.glidercopilot.domain.EPOCH
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 
 /** Fiche de la Device Database OGN. */
 data class DdbDevice(
@@ -127,7 +130,7 @@ object DdbParser {
 class OgnDeviceDatabase(
     private val http: HttpClient,
     private val cache: ResponseCache,
-    private val clock: () -> Instant = Instant::now,
+    private val clock: () -> Instant = { Clock.System.now() },
     private val url: String = DDB_URL,
 ) {
     @Volatile private var parsed: Pair<Instant, List<DdbDevice>>? = null
@@ -170,7 +173,7 @@ class OgnDeviceDatabase(
     private fun load(): Loaded? {
         val now = clock()
         val cached = cache.read(url)
-        if (cached != null && Duration.between(cached.fetchedAt, now) < MAX_AGE) return Loaded(devicesOf(cached), cached.fetchedAt, false)
+        if (cached != null && (now - cached.fetchedAt) < MAX_AGE) return Loaded(devicesOf(cached), cached.fetchedAt, false)
         return try {
             val r = http.get(url, cached?.etag)
             when {
@@ -204,7 +207,7 @@ class OgnDeviceDatabase(
      */
     fun cachedDevice(address: String): DdbDevice? {
         // appelé pour chaque trame : la copie disque (plusieurs Mo) n'est relue qu'au plus toutes les 10 min
-        val nowMs = clock().toEpochMilli()
+        val nowMs = clock().toEpochMilliseconds()
         var idx = index?.second
         if (idx == null || nowMs - indexCheckedAt > 600_000) {
             // une seule reconstruction à la fois : les trames arrivées pendant ce temps restent sans nom (adresse brute)
@@ -215,7 +218,7 @@ class OgnDeviceDatabase(
                 idx = if (cached == null) emptyMap()
                 else index?.takeIf { it.first == cached.fetchedAt }?.second
                     ?: devicesOf(cached).associateBy { it.deviceId }.also { index = cached.fetchedAt to it }
-                if (cached == null) index = Instant.EPOCH to idx
+                if (cached == null) index = EPOCH to idx
             } finally { indexBuilding.set(false) }
         }
         return idx?.get(address.uppercase())
@@ -238,6 +241,6 @@ class OgnDeviceDatabase(
 
     companion object {
         const val DDB_URL = "https://ddb.glidernet.org/download/?j=1&t=1"
-        val MAX_AGE: Duration = Duration.ofHours(24)
+        val MAX_AGE: Duration = 24.hours
     }
 }

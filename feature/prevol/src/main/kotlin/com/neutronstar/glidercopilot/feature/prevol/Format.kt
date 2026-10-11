@@ -9,7 +9,8 @@ import com.neutronstar.glidercopilot.designsystem.Gc
 import com.neutronstar.glidercopilot.designsystem.GcColors
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.designsystem.vario
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlinx.datetime.toJavaInstant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -21,8 +22,9 @@ internal object Fmt {
     private val h = DateTimeFormatter.ofPattern("H'h'", Locale.FRANCE).withZone(zone)
     val day: DateTimeFormatter = DateTimeFormatter.ofPattern("EEEE d MMMM", Locale.FRANCE)
 
-    fun hm(i: Instant) = hm.format(i)
-    fun hour(i: Instant) = h.format(i)
+    // iOS / KMP : le métier rend des kotlinx.datetime.Instant ; affichage java.time inchangé
+    fun hm(i: Instant) = hm.format(i.toJavaInstant())
+    fun hour(i: Instant) = h.format(i.toJavaInstant())
     fun m(v: Double) = grouped((v / 10).roundToInt() * 10) + " m"
     fun grouped(n: Int): String = "%,d".format(Locale.ROOT, n).replace(',', ' ')
     fun ms(v: Double) = String.format(Locale.FRANCE, "%.1f m/s", v)

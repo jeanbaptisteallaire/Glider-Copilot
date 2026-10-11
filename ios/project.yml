@@ -1,0 +1,44 @@
+# iOS / KMP — projet Xcode généré par XcodeGen (`cd ios && xcodegen`). Le .xcodeproj n'est pas versionné.
+name: WindGlider
+options:
+  bundleIdPrefix: com.neutronstar
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+configFiles:
+  Debug: WindGlider/Config.xcconfig
+  Release: WindGlider/Config.xcconfig
+targets:
+  WindGlider:
+    type: application
+    platform: iOS
+    sources:
+      - WindGlider/Sources
+      - path: WindGlider/Resources
+        optional: true
+    info:
+      path: WindGlider/Info.plist
+      properties:
+        CFBundleDisplayName: Wind Glider
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        PRECOG_API_KEY: $(PRECOG_API_KEY)
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.neutronstar.windglider.lite
+        SWIFT_VERSION: "5.0"
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+        FRAMEWORK_SEARCH_PATHS: $(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)
+        OTHER_LDFLAGS: [$(inherited), -framework, WindGliderShared]
+        CODE_SIGN_STYLE: Automatic
+    preBuildScripts:
+      - name: Métier Kotlin (WindGliderShared)
+        basedOnDependencyAnalysis: false
+        script: |
+          cd "$SRCROOT/.."
+          if [ -z "$JAVA_HOME" ] && [ -d "/Applications/Android Studio.app/Contents/jbr/Contents/Home" ]; then
+            export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
+          fi
+          ./gradlew :shared:embedAndSignAppleFrameworkForXcode

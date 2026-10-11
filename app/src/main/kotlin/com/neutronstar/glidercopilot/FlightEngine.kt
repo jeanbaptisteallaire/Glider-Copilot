@@ -67,8 +67,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedWriter
 import java.io.File
+import com.neutronstar.glidercopilot.domain.EPOCH
+import com.neutronstar.glidercopilot.domain.secondsBetween
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toKotlinInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Duration.Companion.nanoseconds
 import java.time.Duration
-import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -134,9 +142,9 @@ class FlightEngine(
 
     // horloge : monotone réelle, ou virtuelle (accélérée) pendant le rejeu
     private var replayStartElapsed = 0L
-    private var replayStartWall: Instant = Instant.EPOCH
+    private var replayStartWall: Instant = EPOCH
     private fun clockNs(): Long = if (virtualClock) ((SystemClock.elapsedRealtimeNanos() - replayStartElapsed) * (if (mode == OwnshipMode.REPLAY) replaySpeed else 1.0)).toLong() else SystemClock.elapsedRealtimeNanos()
-    private fun clockNow(): Instant = if (virtualClock) replayStartWall.plusNanos(clockNs()) else Instant.now()
+    private fun clockNow(): Instant = if (virtualClock) replayStartWall + clockNs().nanoseconds else Clock.System.now()
 
     // ---------------------------------------------------------------- source du planeur affiché
     /** Mode démo (bascule de la carte) : vol simulé, trafic OGN réel. */
@@ -166,8 +174,8 @@ class FlightEngine(
         val day = forecastDay ?: return null
         val alt = lastAltitudeM ?: return null
         val now = clockNow()
-        val hour = day.hours.minByOrNull { kotlin.math.abs(Duration.between(it.analysis.validTime, now).seconds) } ?: return null
-        if (kotlin.math.abs(Duration.between(hour.analysis.validTime, now).toHours()) > 3) return null
+        val hour = day.hours.minByOrNull { kotlin.math.abs(secondsBetween(it.analysis.validTime, now)) } ?: return null
+        if (kotlin.math.abs(secondsBetween(hour.analysis.validTime, now) / 3600) > 3) return null
         val layer = hour.winds.minByOrNull { kotlin.math.abs(it.altitudeMslM - alt) } ?: return null
         return com.neutronstar.glidercopilot.domain.safety.Wind(
             layer.fromDeg, layer.speedKmh,
@@ -198,7 +206,7 @@ class FlightEngine(
         header = { start ->
             val own = glider.ownDevices.value.firstOrNull()
             Igc.Header(
-                date = start.atZone(ZoneOffset.UTC).toLocalDate(),
+                date = start.toLocalDateTime(TimeZone.UTC).date,
                 gliderType = own?.aircraftModel.orEmpty(),
                 gliderId = own?.registration.orEmpty(),
                 appVersion = "WINDGLIDER ${BuildConfig.VERSION_NAME}",
@@ -264,7 +272,7 @@ class FlightEngine(
         when (mode) {
             OwnshipMode.REPLAY, OwnshipMode.DEMO -> {
                 replayStartElapsed = SystemClock.elapsedRealtimeNanos()
-                replayStartWall = Instant.now()
+                replayStartWall = Clock.System.now()
                 jobs += scope.launch { if (mode == OwnshipMode.REPLAY) runReplay() else runDemo() }
             }
             OwnshipMode.FOLLOW -> jobs += scope.launch { ogn.followFixes.collect { onFollowFix(it) } }
@@ -394,7 +402,7 @@ class FlightEngine(
             else -> lastMsl?.takeIf { ns - it.first < 2_000_000_000L }?.second
         }
         val fix = GpsFix(
-            time = Instant.ofEpochMilli(l.time),
+            time = Instant.fromEpochMilliseconds(l.time),
             position = LatLon(l.latitude, l.longitude),
             altitudeM = msl,
             groundSpeedKmh = if (l.hasSpeed()) l.speed * 3.6 else null,
@@ -415,7 +423,7 @@ class FlightEngine(
         val ns = SystemClock.elapsedRealtimeNanos() - f.latency.toNanos().coerceIn(0L, 60_000_000_000L)
         lastFollow = f
         core.onOgn(f.climbMs, f.altitudeM, f.latency.seconds.coerceAtLeast(0))
-        val fix = GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0, f.altitudeM)
+        val fix = GpsFix(f.time.toKotlinInstant(), f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0, f.altitudeM)
         core.onGps(fix, ns)
         afterGps(fix, ns)
     }
@@ -479,7 +487,7 @@ class FlightEngine(
                 is SensorSample.Baro -> { core.onBaro(s.hPa, s.timeNs); tone.vario = core.fastClimb }
                 is SensorSample.Accel -> core.onAcceleration(s.upMs2, s.timeNs)
                 is SensorSample.Gps -> {
-                    val fix = s.fix.copy(time = replayStartWall.plusNanos(s.timeNs), ellipsoidAltM = s.fix.altitudeM)
+                    val fix = s.fix.copy(time = replayStartWall + s.timeNs.nanoseconds, ellipsoidAltM = s.fix.altitudeM)
                     core.onGps(fix, s.timeNs)
                     afterGps(fix, s.timeNs)
                 }
@@ -503,7 +511,7 @@ class FlightEngine(
                     is SensorSample.Baro -> { core.onBaro(s.hPa, t); tone.vario = core.fastClimb }
                     is SensorSample.Accel -> core.onAcceleration(s.upMs2, t)
                     is SensorSample.Gps -> {
-                        val fix = s.fix.copy(time = replayStartWall.plusNanos(t), ellipsoidAltM = s.fix.altitudeM)
+                        val fix = s.fix.copy(time = replayStartWall + t.nanoseconds, ellipsoidAltM = s.fix.altitudeM)
                         core.onGps(fix, t)
                         afterGps(fix, t)
                     }
@@ -519,7 +527,7 @@ class FlightEngine(
 
     private fun openIgc(start: Instant): ((String) -> Unit)? {
         closeIgc()
-        val date = start.atZone(ZoneOffset.UTC).toLocalDate()
+        val date = start.toLocalDateTime(TimeZone.UTC).date
         val dir = igcDir()
         val index = (1..99).firstOrNull { !File(dir, Igc.fileName(date, it)).exists() } ?: return null
         val file = File(dir, Igc.fileName(date, index))
@@ -546,8 +554,8 @@ class FlightEngine(
         val files = listOf("igc", "igc-rejeu").flatMap { d -> File(context.getExternalFilesDir(null) ?: context.filesDir, d).listFiles { f -> f.name.endsWith(".igc") }?.toList() ?: emptyList() }
         flights = files.sortedByDescending { it.lastModified() }.take(10).map { f ->
             val fixes = runCatching { Igc.parse(f.readText(Charsets.US_ASCII)) }.getOrDefault(emptyList())
-            val dur = if (fixes.size > 1) Duration.between(fixes.first().time, fixes.last().time).seconds else 0
-            val start = fixes.firstOrNull()?.time?.atZone(ZoneId.systemDefault())
+            val dur = if (fixes.size > 1) secondsBetween(fixes.first().time, fixes.last().time) else 0
+            val start = fixes.firstOrNull()?.time?.toJavaInstant()?.atZone(ZoneId.systemDefault())
             val detail = listOfNotNull(
                 start?.let { String.format(Locale.FRANCE, "%02d/%02d %02dh%02d", it.dayOfMonth, it.monthValue, it.hour, it.minute) },
                 "durée ${chrono(dur)}",
@@ -567,7 +575,7 @@ class FlightEngine(
 
     private fun openCalibration(start: Instant) {
         closeCalibration()
-        val file = File(calibDir(), "calib-${calibNameFormat.format(start)}.csv")
+        val file = File(calibDir(), "calib-${calibNameFormat.format(start.toJavaInstant())}.csv")
         val w = runCatching { file.bufferedWriter(Charsets.US_ASCII) }.getOrElse { Log.w(TAG, "calibration impossible", it); return }
         calibWriter = w; calibFile = file
         calibRecorder = CalibrationRecorder { line -> runCatching { w.write(line); w.write("\n") } }
@@ -695,7 +703,7 @@ class FlightEngine(
             if (snap.phase == FlightPhase.LANDED) closeIgc()
         }
         if (running && mode == OwnshipMode.FOLLOW) lastFollow?.let { f ->
-            core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time, Instant.now()).seconds.coerceAtLeast(0))
+            core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time, java.time.Instant.now()).seconds.coerceAtLeast(0))
         }
         // vidage périodique (4 Hz, ce même tour de boucle) plutôt qu'à chaque échantillon : baro+accél. tournent jusqu'à 75 Hz
         runCatching { calibWriter?.flush() }

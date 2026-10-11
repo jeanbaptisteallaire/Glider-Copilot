@@ -1,0 +1,5 @@
+*.xcodeproj/
+xcuserdata/
+DerivedData/
+WindGlider/Secrets.xcconfig
+build/

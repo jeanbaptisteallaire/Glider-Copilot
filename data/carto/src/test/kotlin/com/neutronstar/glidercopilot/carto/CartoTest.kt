@@ -39,7 +39,7 @@ class CartoTest {
         assertEquals("LFMT", d.airports[0].icao)
         assertEquals("VOR-DME", d.navaids[0].typeLabel)
         assertEquals(1, d.reportingPoints.size)
-        assertEquals(Instant.parse("2026-09-16T20:30:00Z"), d.fetched)
+        assertEquals(kotlinx.datetime.Instant.parse("2026-09-16T20:30:00Z"), d.fetched)
         val tma = d.airspaces.first { it.id == "a1" }
         assertEquals("TMA", tma.typeLabel)
         assertEquals("D", tma.classLetter)
