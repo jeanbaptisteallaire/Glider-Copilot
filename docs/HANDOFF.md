@@ -27,6 +27,10 @@ Décision JB : Wind Glider sur iOS — KMP pour le métier, SwiftUI pour l'inter
   Démo vérifiée : marge +809 m, terrain 183 m (openAIP), vent 300°/15, comme Android.
 - Mes vols : carnet des IGC (en-tête `platform = iOS`), détail avec trace.
 - data:carto en KMP (Okio, zlib natif) ; tests communs du relief réel exécutés sur le simulateur iOS.
+- Premier lancement : avertissement de sécurité (texte d'Android, sans la mention OGN) ; « Avant de voler » une fois par
+  lancement avant Pilotage ; police Inter, illustrations et icône reprises des ressources Android (aucune copie).
+- Mes vols : rejeu 3D = même page `feature/replay3d/src/main/assets/replay3d` dans une WKWebView (schéma `wgassets://`,
+  pont `window.AndroidReplay`, même format de données et même simplification Douglas-Peucker).
 
 **Prochaine session (iOS)** : clé PRECOG locale et police Inter embarquée dans l'app ; choix du club (`ClubSearch`) ; cartes
 (data:carto en KMP) ; puis Pilotage Lite (moteur `FlightEngineCore` déjà commun : capteurs CoreLocation/CoreMotion/baromètre

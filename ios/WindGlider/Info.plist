@@ -26,13 +26,23 @@
 	<string>Baromètre et accéléromètre du téléphone pour le vario.</string>
 	<key>PRECOG_API_KEY</key>
 	<string>$(PRECOG_API_KEY)</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>font/inter_regular.ttf</string>
+		<string>font/inter_medium.ttf</string>
+		<string>font/inter_semibold.ttf</string>
+		<string>font/inter_bold.ttf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
 		<string>location</string>
 	</array>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+	</dict>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

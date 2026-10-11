@@ -2,6 +2,10 @@ package com.neutronstar.glidercopilot.shared
 
 import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.flight.Igc
+import com.neutronstar.glidercopilot.domain.flight.IgcFix
+import com.neutronstar.glidercopilot.domain.roundHalfUp
+import com.neutronstar.glidercopilot.domain.toRadians
+import kotlin.math.cos
 import com.neutronstar.glidercopilot.domain.formatFixed
 import com.neutronstar.glidercopilot.domain.secondsBetween
 import com.neutronstar.glidercopilot.domain.zeroPad
@@ -70,4 +74,56 @@ class FlightLibrary(private val dir: String) {
     }
 
     fun delete(path: String) { runCatching { fs.delete(path.toPath()) } }
+
+    /**
+     * Données du rejeu 3D (page replay3d d'Android, identique) : même format que Replay3dTrackPayload —
+     * titre, lat/lon arrondis au millionième, altitude GNSS (baro en repli), secondes depuis le début ;
+     * au-delà de 20 000 points, Douglas-Peucker à 2,5 m. Null si le fichier est illisible ou sans altitude.
+     */
+    fun replayJson(path: String): String? = runCatching {
+        val p = path.toPath()
+        val usable = Igc.parse(fs.read(p) { readUtf8() }).filter { (it.gnssAltM ?: 0) != 0 || (it.pressureAltM ?: 0) != 0 }
+        if (usable.size < 2) return null
+        val kept = if (usable.size > 20_000) simplify(usable, 2.5) else usable
+        val t0 = kept.first().time.epochSeconds
+        fun alt(f: IgcFix) = f.gnssAltM?.takeIf { it != 0 } ?: f.pressureAltM ?: 0
+        fun r6(v: Double) = roundHalfUp(v * 1e6) / 1e6
+        buildString {
+            append("{\"title\":\"").append(p.name).append("\",")
+            append("\"lat\":[").append(kept.joinToString(",") { r6(it.position.lat).toString() }).append("],")
+            append("\"lon\":[").append(kept.joinToString(",") { r6(it.position.lon).toString() }).append("],")
+            append("\"alt\":[").append(kept.joinToString(",") { alt(it).toString() }).append("],")
+            append("\"t\":[").append(kept.joinToString(",") { (it.time.epochSeconds - t0).toString() }).append("]}")
+        }
+    }.getOrNull()
+
+    /** Douglas-Peucker itératif en mètres (projection locale + altitude), comme Replay3dTrackPayload.simplify. */
+    private fun simplify(points: List<IgcFix>, toleranceM: Double): List<IgcFix> {
+        if (points.size < 3) return points
+        val lat0 = toRadians(points.first().position.lat)
+        val x = DoubleArray(points.size) { toRadians(points[it].position.lon) * 6_371_000.0 * cos(lat0) }
+        val y = DoubleArray(points.size) { toRadians(points[it].position.lat) * 6_371_000.0 }
+        val z = DoubleArray(points.size) { (points[it].gnssAltM?.takeIf { a -> a != 0 } ?: points[it].pressureAltM ?: 0).toDouble() }
+        val keep = BooleanArray(points.size).also { it[0] = true; it[points.size - 1] = true }
+        val stack = ArrayDeque<Pair<Int, Int>>().apply { add(0 to points.size - 1) }
+        while (stack.isNotEmpty()) {
+            val (a, b) = stack.removeLast()
+            if (b - a < 2) continue
+            val dx = x[b] - x[a]; val dy = y[b] - y[a]; val dz = z[b] - z[a]
+            val len2 = dx * dx + dy * dy + dz * dz
+            var worst = -1.0; var index = -1
+            for (i in a + 1 until b) {
+                val px = x[i] - x[a]; val py = y[i] - y[a]; val pz = z[i] - z[a]
+                val u = if (len2 > 0) ((px * dx + py * dy + pz * dz) / len2).coerceIn(0.0, 1.0) else 0.0
+                val ex = px - u * dx; val ey = py - u * dy; val ez = pz - u * dz
+                val d = ex * ex + ey * ey + ez * ez
+                if (d > worst) { worst = d; index = i }
+            }
+            if (index >= 0 && worst > toleranceM * toleranceM) {
+                keep[index] = true
+                stack.add(a to index); stack.add(index to b)
+            }
+        }
+        return points.filterIndexed { i, _ -> keep[i] }
+    }
 }

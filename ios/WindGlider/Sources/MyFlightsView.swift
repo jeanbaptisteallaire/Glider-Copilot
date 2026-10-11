@@ -33,7 +33,9 @@ struct MyFlightsView: View {
 }
 
 struct FlightDetail: View {
+    @EnvironmentObject var app: AppModel
     let f: FlightEntry
+    @State private var replay: String?
 
     var body: some View {
         ScrollView {
@@ -56,10 +58,21 @@ struct FlightDetail: View {
                     }
                     Text("\(f.fileName) · \(f.detail) · trace indicative (enregistreur non approuvé)").font(WG.caption).foregroundStyle(WG.dim)
                 }
+                Button {
+                    replay = app.library.replayJson(path: f.path)
+                } label: {
+                    Label("Rejeu 3D", systemImage: "view.3d").font(WG.headline).frame(maxWidth: .infinity, minHeight: 48)
+                }
+                .buttonStyle(.borderedProminent).tint(WG.sky)
+                .disabled(f.maxAltText == "—")
+                if f.maxAltText == "—" { Text("Rejeu 3D indisponible : vol sans altitude.").font(WG.caption).foregroundStyle(WG.dim) }
             }
             .padding(16)
         }
         .background(WG.brandPaper)
+        .fullScreenCover(isPresented: Binding(get: { replay != nil }, set: { if !$0 { replay = nil } })) {
+            if let r = replay { ReplayScreen(payload: r) }
+        }
         .navigationTitle("Vol")
         .navigationBarTitleDisplayMode(.inline)
     }
