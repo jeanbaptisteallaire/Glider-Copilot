@@ -1,57 +1,58 @@
 To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.11.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
 Daemon will be stopped at the end of the build 
 > Task :core:common:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :data:precog:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :core:domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :data:ogn:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:domain:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :data:precog:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :data:precog:jvmProcessResources NO-SOURCE
 > Task :data:ogn:processResources NO-SOURCE
 > Task :core:domain:jvmProcessResources NO-SOURCE
-> Task :core:domain:processJvmMainResources SKIPPED
 > Task :data:carto:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :data:precog:jvmProcessResources NO-SOURCE
-> Task :core:flightarchive:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :data:precog:processJvmMainResources SKIPPED
+> Task :core:domain:processJvmMainResources SKIPPED
+> Task :core:flightarchive:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :data:flightcloud:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :data:flightcloud:processResources NO-SOURCE
-> Task :core:social:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :data:carto:jvmProcessResources NO-SOURCE
 > Task :data:carto:processJvmMainResources SKIPPED
+> Task :core:social:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :data:flightcloud:jvmProcessResources NO-SOURCE
 > Task :core:flightarchive:jvmProcessResources NO-SOURCE
-> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :core:flightarchive:processJvmMainResources SKIPPED
+> Task :data:flightcloud:processJvmMainResources SKIPPED
 > Task :core:designsystem:preBuild UP-TO-DATE
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :core:designsystem:preDebugBuild UP-TO-DATE
 > Task :app:preBuild UP-TO-DATE
 > Task :app:preDebugBuild UP-TO-DATE
-> Task :core:designsystem:preDebugBuild UP-TO-DATE
 > Task :app:generateDebugBuildConfig
 > Task :data:flightarchive:preBuild UP-TO-DATE
 > Task :data:flightarchive:preDebugBuild UP-TO-DATE
-> Task :data:flightarchive:writeDebugAarMetadata
+> Task :core:designsystem:writeDebugAarMetadata
 > Task :feature:checklist:preBuild UP-TO-DATE
 > Task :feature:checklist:preDebugBuild UP-TO-DATE
-> Task :core:designsystem:writeDebugAarMetadata
+> Task :data:flightarchive:writeDebugAarMetadata
 > Task :feature:feed:preBuild UP-TO-DATE
 > Task :feature:feed:preDebugBuild UP-TO-DATE
-> Task :feature:feed:writeDebugAarMetadata
+> Task :feature:checklist:writeDebugAarMetadata
 > Task :feature:flight:preBuild UP-TO-DATE
 > Task :feature:flight:preDebugBuild UP-TO-DATE
-> Task :feature:checklist:writeDebugAarMetadata
+> Task :feature:feed:writeDebugAarMetadata
 > Task :feature:myflights:preBuild UP-TO-DATE
 > Task :feature:myflights:preDebugBuild UP-TO-DATE
-> Task :feature:flight:writeDebugAarMetadata
+> Task :feature:myflights:writeDebugAarMetadata
 > Task :feature:prevol:preBuild UP-TO-DATE
 > Task :feature:prevol:preDebugBuild UP-TO-DATE
-> Task :feature:prevol:writeDebugAarMetadata
+> Task :feature:flight:writeDebugAarMetadata
 > Task :feature:replay3d:preBuild UP-TO-DATE
 > Task :feature:replay3d:preDebugBuild UP-TO-DATE
-> Task :feature:myflights:writeDebugAarMetadata
+> Task :feature:replay3d:writeDebugAarMetadata
 > Task :app:generateDebugResValues
 > Task :core:designsystem:generateDebugResValues FROM-CACHE
 > Task :core:designsystem:generateDebugResources
-> Task :feature:replay3d:writeDebugAarMetadata
 > Task :core:designsystem:packageDebugResources
 > Task :data:flightarchive:generateDebugResValues FROM-CACHE
 > Task :data:flightarchive:generateDebugResources
+> Task :feature:prevol:writeDebugAarMetadata
 > Task :data:flightarchive:packageDebugResources
 > Task :feature:checklist:generateDebugResValues FROM-CACHE
 > Task :feature:checklist:generateDebugResources FROM-CACHE
@@ -75,31 +76,26 @@ Daemon will be stopped at the end of the build
 > Task :core:designsystem:processDebugManifest
 > Task :data:flightarchive:extractDeepLinksDebug FROM-CACHE
 > Task :data:flightarchive:processDebugManifest
-> Task :core:common:jvmProcessResources NO-SOURCE
-> Task :core:common:processJvmMainResources SKIPPED
-> Task :core:social:processResources NO-SOURCE
 > Task :feature:checklist:extractDeepLinksDebug FROM-CACHE
 > Task :feature:checklist:processDebugManifest
 > Task :feature:feed:extractDeepLinksDebug FROM-CACHE
 > Task :feature:feed:processDebugManifest
-> Task :app:checkDebugAarMetadata
 > Task :feature:flight:extractDeepLinksDebug FROM-CACHE
 > Task :feature:flight:processDebugManifest
 > Task :feature:myflights:extractDeepLinksDebug FROM-CACHE
 > Task :feature:myflights:processDebugManifest
 > Task :feature:prevol:extractDeepLinksDebug FROM-CACHE
-> Task :app:mapDebugSourceSetPaths
 > Task :feature:prevol:processDebugManifest
-> Task :app:generateDebugResources
 > Task :feature:replay3d:extractDeepLinksDebug FROM-CACHE
 > Task :feature:replay3d:processDebugManifest
+> Task :app:checkDebugAarMetadata
+> Task :core:common:jvmProcessResources NO-SOURCE
+> Task :core:common:processJvmMainResources SKIPPED
+> Task :core:social:processResources NO-SOURCE
 > Task :core:designsystem:compileDebugLibraryResources
+> Task :app:mapDebugSourceSetPaths
+> Task :app:generateDebugResources
 > Task :core:designsystem:parseDebugLocalResources
-> Task :app:packageDebugResources
-> Task :app:parseDebugLocalResources
-> Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug FROM-CACHE
-> Task :app:mergeDebugResources
 > Task :core:designsystem:generateDebugRFile
 > Task :data:flightarchive:compileDebugLibraryResources
 > Task :data:flightarchive:parseDebugLocalResources
@@ -112,122 +108,27 @@ Daemon will be stopped at the end of the build
 > Task :feature:feed:generateDebugRFile
 > Task :feature:flight:compileDebugLibraryResources FROM-CACHE
 > Task :feature:flight:parseDebugLocalResources FROM-CACHE
-> Task :app:processDebugMainManifest
 > Task :feature:flight:generateDebugRFile
 > Task :feature:myflights:compileDebugLibraryResources
 > Task :feature:myflights:parseDebugLocalResources
 > Task :feature:myflights:generateDebugRFile
 > Task :feature:prevol:compileDebugLibraryResources FROM-CACHE
 > Task :feature:prevol:parseDebugLocalResources FROM-CACHE
-> Task :app:processDebugManifest
 > Task :feature:prevol:generateDebugRFile
 > Task :feature:replay3d:compileDebugLibraryResources FROM-CACHE
 > Task :feature:replay3d:parseDebugLocalResources FROM-CACHE
-> Task :app:processDebugManifestForPackage
-> Task :core:designsystem:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :feature:replay3d:generateDebugRFile
+> Task :core:designsystem:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:mergeDebugResources
+> Task :app:packageDebugResources
+> Task :app:parseDebugLocalResources
+> Task :app:createDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksDebug FROM-CACHE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
+> Task :app:processDebugManifestForPackage
 > Task :core:common:compileKotlinJvm
 > Task :core:common:compileJvmMainJava NO-SOURCE
 > Task :core:common:jvmMainClasses
-> Task :app:processDebugResources
-> Task :core:designsystem:javaPreCompileDebug
-> Task :data:flightarchive:checkKotlinGradlePluginConfigurationErrors SKIPPED
 > Task :core:common:jvmJar
-> Task :data:flightarchive:javaPreCompileDebug
-> Task :core:social:compileKotlin
-> Task :core:social:compileJava NO-SOURCE
-> Task :core:social:classes UP-TO-DATE
-> Task :core:social:jar
-> Task :data:flightarchive:preDebugUnitTestBuild UP-TO-DATE
-> Task :data:flightarchive:generateDebugUnitTestStubRFile
-> Task :data:flightarchive:javaPreCompileDebugUnitTest FROM-CACHE
-> Task :data:flightarchive:preReleaseBuild UP-TO-DATE
-> Task :data:flightarchive:generateReleaseResValues FROM-CACHE
-> Task :data:flightarchive:generateReleaseResources
-> Task :data:flightarchive:packageReleaseResources
-> Task :data:flightarchive:parseReleaseLocalResources FROM-CACHE
-> Task :data:flightarchive:generateReleaseRFile FROM-CACHE
-> Task :data:flightarchive:javaPreCompileRelease FROM-CACHE
-> Task :data:flightarchive:preReleaseUnitTestBuild UP-TO-DATE
-> Task :data:flightarchive:generateReleaseUnitTestStubRFile FROM-CACHE
-> Task :data:flightarchive:javaPreCompileReleaseUnitTest FROM-CACHE
-> Task :feature:checklist:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:checklist:javaPreCompileDebug FROM-CACHE
-> Task :feature:feed:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:feed:javaPreCompileDebug FROM-CACHE
-> Task :feature:flight:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:flight:javaPreCompileDebug FROM-CACHE
-> Task :feature:myflights:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:myflights:javaPreCompileDebug FROM-CACHE
-> Task :feature:prevol:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:prevol:javaPreCompileDebug FROM-CACHE
-> Task :feature:replay3d:checkKotlinGradlePluginConfigurationErrors SKIPPED
-> Task :feature:replay3d:javaPreCompileDebug FROM-CACHE
-> Task :app:javaPreCompileDebug FROM-CACHE
-> Task :app:preDebugUnitTestBuild UP-TO-DATE
-> Task :app:javaPreCompileDebugUnitTest FROM-CACHE
-> Task :app:buildKotlinToolingMetadata
-> Task :app:preReleaseBuild UP-TO-DATE
-> Task :app:generateReleaseBuildConfig
-> Task :core:designsystem:preReleaseBuild UP-TO-DATE
-> Task :core:designsystem:writeReleaseAarMetadata
-> Task :data:flightarchive:writeReleaseAarMetadata
-> Task :feature:checklist:preReleaseBuild UP-TO-DATE
-> Task :feature:checklist:writeReleaseAarMetadata
-> Task :feature:feed:preReleaseBuild UP-TO-DATE
-> Task :feature:feed:writeReleaseAarMetadata
-> Task :feature:flight:preReleaseBuild UP-TO-DATE
-> Task :feature:flight:writeReleaseAarMetadata
-> Task :feature:myflights:preReleaseBuild UP-TO-DATE
-> Task :feature:myflights:writeReleaseAarMetadata
-> Task :feature:prevol:preReleaseBuild UP-TO-DATE
-> Task :feature:prevol:writeReleaseAarMetadata
-> Task :feature:replay3d:preReleaseBuild UP-TO-DATE
-> Task :feature:replay3d:writeReleaseAarMetadata
-> Task :app:checkReleaseAarMetadata
-> Task :app:generateReleaseResValues FROM-CACHE
-> Task :core:designsystem:generateReleaseResValues FROM-CACHE
-> Task :core:designsystem:generateReleaseResources
-> Task :core:designsystem:packageReleaseResources
-> Task :feature:checklist:generateReleaseResValues FROM-CACHE
-> Task :feature:checklist:generateReleaseResources FROM-CACHE
-> Task :feature:checklist:packageReleaseResources
-> Task :feature:feed:generateReleaseResValues FROM-CACHE
-> Task :feature:feed:generateReleaseResources FROM-CACHE
-> Task :feature:feed:packageReleaseResources
-> Task :feature:flight:generateReleaseResValues FROM-CACHE
-> Task :feature:flight:generateReleaseResources FROM-CACHE
-> Task :feature:flight:packageReleaseResources
-> Task :feature:myflights:generateReleaseResValues FROM-CACHE
-> Task :feature:myflights:generateReleaseResources
-> Task :feature:myflights:packageReleaseResources
-> Task :feature:prevol:generateReleaseResValues FROM-CACHE
-> Task :feature:prevol:generateReleaseResources FROM-CACHE
-> Task :feature:prevol:packageReleaseResources
-> Task :feature:replay3d:generateReleaseResValues FROM-CACHE
-> Task :feature:replay3d:generateReleaseResources FROM-CACHE
-> Task :feature:replay3d:packageReleaseResources
-> Task :app:mapReleaseSourceSetPaths
-> Task :app:generateReleaseResources
-> Task :core:flightarchive:compileKotlinJvm
-> Task :core:flightarchive:compileJvmMainJava NO-SOURCE
-> Task :core:flightarchive:jvmMainClasses
-> Task :core:flightarchive:jvmJar
-> Task :app:mergeReleaseResources
-> Task :core:designsystem:compileDebugKotlin
-> Task :core:designsystem:compileDebugJavaWithJavac NO-SOURCE
-> Task :core:designsystem:bundleLibCompileToJarDebug
-> Task :data:flightcloud:compileKotlin
-> Task :data:flightcloud:compileJava NO-SOURCE
-> Task :data:flightcloud:classes UP-TO-DATE
-> Task :data:flightcloud:jar
-> Task :feature:feed:compileDebugKotlin
-> Task :feature:feed:compileDebugJavaWithJavac NO-SOURCE
-> Task :feature:feed:bundleLibCompileToJarDebug
-> Task :data:flightarchive:kspDebugKotlin
-> Task :data:flightarchive:kspReleaseKotlin
-> Task :core:domain:compileKotlinJvm
-> Task :core:domain:compileJvmMainJava NO-SOURCE
-> Task :core:domain:jvmMainClasses
-> Task :core:domain:jvmJar
-> Task :feature:replay3d:compileDebugKotlin
+> Task :app:processDebugResources
