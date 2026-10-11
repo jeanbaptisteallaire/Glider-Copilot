@@ -1,7 +1,8 @@
 package com.neutronstar.glidy.social
 
-import java.text.Normalizer
-import java.time.Instant
+import com.neutronstar.glidy.common.normalizeNfd
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.seconds
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.roundToLong
@@ -75,7 +76,7 @@ fun FeedPilot.matches(query: String): Boolean {
 }
 
 internal fun fold(s: String): String =
-    Normalizer.normalize(s, Normalizer.Form.NFD).replace(Regex("\\p{Mn}+"), "").lowercase()
+    normalizeNfd(s).replace(Regex("\\p{Mn}+"), "").lowercase()
 
 /**
  * Réseau de démonstration : 14 pilotes fictifs et leurs vols synthétiques (thermiques + transitions),
@@ -126,7 +127,7 @@ class DemoSocialRepository(
             repeat(count) { fi ->
                 day += 1 + rng.nextInt(9)
                 val hours = 1.0 + rng.nextDouble() * (if (pilot.experience == ExperienceLevel.STUDENT) 1.5 else 5.0)
-                val start = now.minusSeconds(day * 86_400L).minusSeconds(rng.nextInt(5 * 3600).toLong())
+                val start = now - (day * 86_400L).seconds - rng.nextInt(5 * 3600).toLong().seconds
                 val (route, km) = syntheticTrack(rng, legs = 2 + rng.nextInt(4))
                 val durationS = (hours * 3600).roundToLong()
                 val distanceM = (km * (0.6 + hours * 0.35) * 1000).roundToLong().coerceAtLeast(8_000)
@@ -207,7 +208,7 @@ class DemoSocialRepository(
     private class Lcg(seed: Long) {
         private var s = seed xor 0x5DEECE66DL
         fun next(): Int { s = (s * 0x5DEECE66DL + 0xBL) and ((1L shl 48) - 1); return (s ushr 16).toInt() }
-        fun nextInt(n: Int): Int = Math.floorMod(next(), n)
+        fun nextInt(n: Int): Int = next().mod(n)   // Math.floorMod : reste positif
         fun nextDouble(): Double = (next().toLong() and 0xFFFFFFFFL) / 4294967296.0
     }
 

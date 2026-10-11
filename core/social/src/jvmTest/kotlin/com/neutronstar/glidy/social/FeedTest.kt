@@ -27,7 +27,7 @@ class FeedTest {
         val first = repo.feed(null, pageSize = 5)
         assertEquals(5, first.items.size)
         assertTrue(first.items.all { it.pilot.id in setOf("p01", "p06") })
-        assertTrue(first.items.zipWithNext().all { (a, b) -> !a.startedAt.isBefore(b.startedAt) })
+        assertTrue(first.items.zipWithNext().all { (a, b) -> a.startedAt >= b.startedAt })
         assertTrue(repo.suggestions().none { it.id == "p01" })
     }
 

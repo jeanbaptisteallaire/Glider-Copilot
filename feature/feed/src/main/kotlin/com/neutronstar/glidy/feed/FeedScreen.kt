@@ -1,5 +1,6 @@
 package com.neutronstar.glidy.feed
 
+import kotlinx.datetime.toJavaInstant
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -365,7 +366,7 @@ private fun FeedFlightDetail(flight: FeedFlight, following: Boolean, onBack: () 
         item { GcTraceThumbnail(flight.route, Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(14.dp))) }
         item {
             GcCard(
-                title = DATE.format(flight.startedAt.atZone(ZoneId.systemDefault())).replaceFirstChar { it.titlecase(Locale.FRANCE) },
+                title = DATE.format(flight.startedAt.toJavaInstant().atZone(ZoneId.systemDefault())).replaceFirstChar { it.titlecase(Locale.FRANCE) },
                 trailing = { if (flight.pilot.isDemo) GcPill("Exemple", c.warn) },
             ) {
                 Row(Modifier.fillMaxWidth()) {

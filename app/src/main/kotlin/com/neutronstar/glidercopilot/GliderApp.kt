@@ -42,7 +42,7 @@ class AppContainer(app: Application) {
     val profile = ProfileHost(app)
     /** S17 — fil de démonstration (pilotes fictifs), suivis gardés sur le téléphone. S18 : Supabase. */
     val social: com.neutronstar.glidy.social.SocialRepository =
-        com.neutronstar.glidy.social.DemoSocialRepository(FollowHost(app), java.time.Instant.now())
+        com.neutronstar.glidy.social.DemoSocialRepository(FollowHost(app), kotlinx.datetime.Clock.System.now())
     val flight = FlightEngine(app, prefs, clubs, carto, glider, ogn, weather, onIgcClosed = flights::submitClosedIgc)
     /** S12 — compte optionnel + sauvegarde des vols (Supabase), jamais pendant un vol enregistré. */
     val cloud = CloudHost(app, flights) { flight.live.value.snapshot?.recording == true }

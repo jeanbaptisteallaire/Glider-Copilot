@@ -1,6 +1,6 @@
 package com.neutronstar.glidy.social
 
-import java.text.Normalizer
+import com.neutronstar.glidy.common.normalizeNfd
 
 /*
  * GLIDY — profil pilote (S16). Kotlin pur, sans dépendance : partagé par la page profil (Mes vols),
@@ -67,7 +67,7 @@ object Usernames {
 
     /** Met en forme une saisie : minuscules, accents retirés, espaces → « _ », @ initial retiré. */
     fun normalize(input: String): String {
-        val noAccent = Normalizer.normalize(input.trim().removePrefix("@"), Normalizer.Form.NFD)
+        val noAccent = normalizeNfd(input.trim().removePrefix("@"))
             .replace(Regex("\\p{Mn}+"), "")
         return noAccent.lowercase().replace(Regex("\\s+"), "_").filter { it.isLetterOrDigit() || it == '_' || it == '.' }
     }
