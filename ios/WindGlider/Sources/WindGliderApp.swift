@@ -3,11 +3,13 @@ import SwiftUI
 @main
 struct WindGliderApp: App {
     @StateObject private var app = AppModel()
+    @StateObject private var mapControl = MapControl()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(app)
+                .environmentObject(mapControl)
                 .environment(\.locale, Locale(identifier: "fr_FR"))
                 .task { app.startEngine() }
         }

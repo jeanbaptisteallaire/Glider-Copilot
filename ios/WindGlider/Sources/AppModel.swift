@@ -24,6 +24,11 @@ final class AppModel: ObservableObject {
     @Published var pilot: PilotUi
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
+    /// Pastilles de Pilotage, même sens qu'Android (DeviceState.kt) : GPS = autorisation et localisation actives,
+    /// BARO = baromètre présent, DATA = réseau avec accès Internet.
+    struct Status { var gps = false; var baro = false; var data = false }
+    @Published var status = Status()
+    private let pathMonitor = NWPathMonitor()
     /// Espaces aériens à moins de 40 km du club (pack hors ligne), pour la carte et Prévol.
     @Published var airspaces: [AirspaceShape] = []
     @Published var soundOn: Bool { didSet { UserDefaults.standard.set(soundOn, forKey: "varioSound"); engine.setSound(on: soundOn); soundOn ? tone.start() : tone.stop() } }
@@ -67,6 +72,11 @@ final class AppModel: ObservableObject {
         club = clubs.current(chosenId: d.string(forKey: "clubId"), lat: 0, lon: 0, hasPosition: false)
         engine.setClub(c: club)
         refreshFlights()
+        status.baro = sensors.baroAvailable
+        pathMonitor.pathUpdateHandler = { [weak self] path in
+            Task { @MainActor in self?.status.data = path.status == .satisfied }
+        }
+        pathMonitor.start(queue: .global(qos: .utility))
         PackStoreHolder.current = packs
         packSink = packs.$active.sink { [weak self] p in
             self?.engine.setPack(p: p)
@@ -102,6 +112,7 @@ final class AppModel: ObservableObject {
                 guard let self else { return }
                 self.pilot = self.engine.ui()
                 self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
+                self.status.gps = self.sensors.authorized && CLLocationManager.locationServicesEnabled()
             }
         }
     }
@@ -201,3 +212,4 @@ final class AppModel: ObservableObject {
 
 import Combine
 import CoreLocation
+import Network

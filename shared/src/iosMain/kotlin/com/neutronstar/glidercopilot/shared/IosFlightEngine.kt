@@ -125,6 +125,16 @@ data class PilotUi(
     val fieldElevText: String,
     /** Relief du pack chargé : coupe et marge sur le relief réel. */
     val reliefLoaded: Boolean,
+    /** Coupe : altitude d'arrivée au terrain sur la pente de plané (terrain + hauteur d'arrivée), terrain, distance. */
+    val arrivalAltM: Double,
+    val fieldElevM: Double,
+    val routeKm: Double,
+    /** « 3,9 km · LFNL 183 m », comme la coupe Android. */
+    val profileEndText: String,
+    /** « +300 m · vent 300°/15 » : marge d'arrivée réglée et vent utilisé, au-dessus de la finesse. */
+    val finesseNote: String,
+    /** Durée du vol (chrono), affichée sur la carte. */
+    val flightTimeText: String,
 )
 
 /**
@@ -502,6 +512,12 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             soundOn = soundOn,
             fieldElevText = fieldElevation?.let { "terrain ${if (fieldElevationSource == "openAIP") "" else "≈ "}${it.roundToInt()} m ($fieldElevationSource)" } ?: "altitude du terrain inconnue : marge non calculée",
             reliefLoaded = pack?.reliefLoaded == true,
+            arrivalAltM = r?.let { it.field.elevationM + it.arrivalAglM } ?: 0.0,
+            fieldElevM = r?.field?.elevationM ?: 0.0,
+            routeKm = r?.distanceKm ?: 0.0,
+            profileEndText = r?.let { "${formatFixed(it.distanceKm, 1, decimalComma = true)} km · ${it.field.code} ${it.field.elevationM.roundToInt()} m" } ?: "",
+            finesseNote = "+${SafetyConfig(finesse.toDouble()).arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
+            flightTimeText = chrono(snap?.flightSeconds ?: 0),
         )
     }
 
