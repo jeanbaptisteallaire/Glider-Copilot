@@ -67,7 +67,7 @@ struct PilotView: View {
             .frame(maxWidth: 130, alignment: .leading)
             Spacer(minLength: 4)
             VStack(spacing: 0) {
-                Text("Distance").font(WG.footnote).foregroundStyle(WG.dim)
+                Text("Dist. ter.").font(WG.footnote).foregroundStyle(WG.dim)
                 Text(p.distanceText).font(WG.number(32)).minimumScaleFactor(0.6).lineLimit(1)
                 Text("km").font(WG.caption)
             }
@@ -79,19 +79,16 @@ struct PilotView: View {
                     Text(p.finesseNote).font(WG.caption2).foregroundStyle(WG.dim).minimumScaleFactor(0.6)
                 }
                 .lineLimit(1)
-                HStack(spacing: 2) {
-                    ForEach([20, 15, 10], id: \.self) { f in
-                        Button { app.finesse = f } label: {
-                            HStack(alignment: .firstTextBaseline, spacing: 0) {
-                                Text("F").font(WG.caption2)
-                                Text("\(f)").font(WG.number(20))
-                            }
-                            .lineLimit(1).fixedSize()
-                            .padding(.horizontal, 7).padding(.vertical, 5)
-                            .background(app.finesse == f ? WG.sky.opacity(0.15) : .clear, in: RoundedRectangle(cornerRadius: 8))
-                            .foregroundStyle(app.finesse == f ? WG.sky : WG.brandInk)
-                        }
+                // un seul bouton : touche = bascule finesse 10 ⇄ 20
+                Button { app.finesse = app.finesse == 10 ? 20 : 10 } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("F").font(WG.caption2)
+                        Text("\(app.finesse)").font(WG.number(20))
                     }
+                    .lineLimit(1).fixedSize()
+                    .padding(.horizontal, 7).padding(.vertical, 5)
+                    .background(WG.sky.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
+                    .foregroundStyle(WG.sky)
                 }
                 Button { choosingField = true } label: {
                     HStack(spacing: 6) {
