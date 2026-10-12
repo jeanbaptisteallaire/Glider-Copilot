@@ -223,6 +223,32 @@ internal fun LiveMap(
     val gliderRot = remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
     val gliderOverlay = remember { mutableStateOf(false) }
 
+    // V3 — gyroscope : taux de virage réel du planeur entre deux positions GPS (rotation projetée sur la verticale),
+    // comme iOS. Actif seulement tant que la carte de Pilotage est affichée.
+    if (!trafficOnly) DisposableEffect(Unit) {
+        val sm = context.getSystemService(android.content.Context.SENSOR_SERVICE) as android.hardware.SensorManager
+        val gravity = FloatArray(3).also { it[2] = 9.81f }
+        val listener = object : android.hardware.SensorEventListener {
+            override fun onSensorChanged(e: android.hardware.SensorEvent) {
+                when (e.sensor.type) {
+                    android.hardware.Sensor.TYPE_GRAVITY -> System.arraycopy(e.values, 0, gravity, 0, 3)
+                    android.hardware.Sensor.TYPE_GYROSCOPE -> {
+                        val g = kotlin.math.sqrt(gravity[0] * gravity[0] + gravity[1] * gravity[1] + gravity[2] * gravity[2]).coerceAtLeast(0.1f)
+                        // rotation autour de la verticale (gravité vers le haut) : positive = à gauche ; on veut positif à droite
+                        val up = (e.values[0] * gravity[0] + e.values[1] * gravity[1] + e.values[2] * gravity[2]) / g
+                        controller.predictor.gyro(-Math.toDegrees(up.toDouble()), System.nanoTime() / 1e9)
+                    }
+                }
+            }
+            override fun onAccuracyChanged(sensor: android.hardware.Sensor?, accuracy: Int) = Unit
+        }
+        sm.getDefaultSensor(android.hardware.Sensor.TYPE_GRAVITY)?.let { sm.registerListener(listener, it, android.hardware.SensorManager.SENSOR_DELAY_GAME) }
+        sm.getDefaultSensor(android.hardware.Sensor.TYPE_GYROSCOPE)?.let { sm.registerListener(listener, it, android.hardware.SensorManager.SENSOR_DELAY_GAME) }
+        // écran : 30 images/s demandées au système (Android 15+, écrans à fréquence variable comme le Pixel 8 Pro)
+        if (android.os.Build.VERSION.SDK_INT >= 35) runCatching { mapView.requestedFrameRate = 30f }
+        onDispose { sm.unregisterListener(listener) }
+    }
+
     // V3 — boucle d'image à 30 i/s : planeur prédit et caméra posée sans animation, cap et zoom lissés.
     // Hors spirale et en suivi seulement ; la vue spirale garde sa logique (ThermalZoom).
     LaunchedEffect(style, trafficOnly) {
