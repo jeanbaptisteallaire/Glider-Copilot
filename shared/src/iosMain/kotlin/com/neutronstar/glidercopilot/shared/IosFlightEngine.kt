@@ -367,7 +367,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         lastAltitudeM = alt
         val armed = if (demo) true else snap.recording
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
-        safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, SafetyConfig(finesse.toDouble()), fix.time, armed) }.getOrNull()
+        safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, SafetyConfig.forFinesse(finesse), fix.time, armed) }.getOrNull()
     }
 
     private fun forecastWind(): Wind? {
@@ -517,7 +517,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             fieldElevM = r?.field?.elevationM ?: 0.0,
             routeKm = r?.distanceKm ?: 0.0,
             profileEndText = r?.let { "${formatFixed(it.distanceKm, 1, decimalComma = true)} km · ${it.field.code} ${it.field.elevationM.roundToInt()} m" } ?: "",
-            finesseNote = "+${SafetyConfig(finesse.toDouble()).arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
+            finesseNote = "+${SafetyConfig.forFinesse(finesse).arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
             flightTimeText = chrono(snap?.flightSeconds ?: 0),
         )
     }
