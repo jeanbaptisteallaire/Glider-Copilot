@@ -41,6 +41,10 @@ final class AppModel: ObservableObject {
     let traffic: IosTraffic?  // jamais nil ; optionnel pour garder les appels existants
     @Published var trafficSnap: TrafficSnapshot?
     private var tick = 0
+    /// V3 : position du planeur à chaque image pour la carte fluide (affichage seulement).
+    let predictor = OwnshipPredictor()
+    private var demoLast: (lat: Double, lon: Double, t: Double)?
+    private var demoSpeed = 0.0
 
     static let igcDir: String = {
         let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -61,7 +65,16 @@ final class AppModel: ObservableObject {
         voiceOn = d.object(forKey: "voice") as? Bool ?? true
         autoTakeoff = d.bool(forKey: "autoTakeoff")   // Lite : enregistrement manuel par défaut (comme Android)
         sensors = Sensors(engine: engine)
-        sensors.onPosition = { [weak self] l in self?.positionChanged(l.coordinate) }
+        sensors.onPosition = { [weak self] l in
+            guard let self else { return }
+            self.positionChanged(l.coordinate)
+            // chaque position GPS va directement à la carte, sans attendre le tour de 0,25 s
+            if !self.demo { self.predictor.fix(lat: l.coordinate.latitude, lon: l.coordinate.longitude, speedMs: l.speed, course: l.course, at: l.timestamp.timeIntervalSince1970) }
+        }
+        sensors.onTurnRate = { [weak self] rate, t in
+            guard let self, !self.demo else { return }
+            self.predictor.gyro(turnDegS: rate, at: t)
+        }
 
         engine.onSpeak = { [weak self] text, level in
             self?.voice.speak(text)
@@ -105,6 +118,20 @@ final class AppModel: ObservableObject {
 
     var weatherIsTestData: Bool { weatherApi.isTestData }
 
+    /// Mode démo : le planeur simulé vient du moteur (4 Hz) ; vitesse déduite des positions successives.
+    private func feedDemo(_ p: PilotUi) {
+        guard p.hasPosition else { return }
+        let now = Date().timeIntervalSince1970
+        if let l = demoLast {
+            guard l.lat != p.lat || l.lon != p.lon else { return }
+            let (e, n) = OwnshipPredictor.enu(fromLat: l.lat, lon: l.lon, toLat: p.lat, lon: p.lon)
+            let d = hypot(e, n), dt = max(now - l.t, 0.05)
+            if d < 2000 { demoSpeed = demoSpeed * 0.5 + d / dt * 0.5 }
+        }
+        demoLast = (p.lat, p.lon, now)
+        predictor.fix(lat: p.lat, lon: p.lon, speedMs: demoSpeed, course: p.trackDeg, at: now)
+    }
+
     /// Identifiant d'installation (indicatif APRS de lecture « GLIDYnnnn », comme installId d'Android).
     static var installId: Int64 {
         let d = UserDefaults.standard
@@ -132,6 +159,7 @@ final class AppModel: ObservableObject {
             Task { @MainActor in
                 guard let self else { return }
                 self.pilot = self.engine.ui()
+                if self.demo { self.feedDemo(self.pilot) }
                 self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
                 self.status.gps = self.sensors.authorized && CLLocationManager.locationServicesEnabled()
                 self.tick += 1

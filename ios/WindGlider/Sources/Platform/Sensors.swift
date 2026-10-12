@@ -10,6 +10,8 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
     private let motion = CMMotionManager()
     private weak var engine: IosFlightEngine?
     var onPosition: ((CLLocation) -> Void)?
+    /// V3 : taux de virage (°/s, positif à droite) = rotation du téléphone autour de la verticale (gyroscope).
+    var onTurnRate: ((Double, TimeInterval) -> Void)?
     private(set) var authorized = false
 
     init(engine: IosFlightEngine) {
@@ -41,6 +43,9 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
                 guard let m else { return }
                 let u = m.userAcceleration, g = m.gravity
                 self?.engine?.onMotion(ux: u.x, uy: u.y, uz: u.z, gx: g.x, gy: g.y, gz: g.z, uptimeS: m.timestamp)
+                // projection de la rotation sur la gravité (vers le bas) : virage à droite = cap qui augmente
+                let r = m.rotationRate, n = sqrt(g.x * g.x + g.y * g.y + g.z * g.z)
+                if n > 0.5 { self?.onTurnRate?((r.x * g.x + r.y * g.y + r.z * g.z) / n * 180 / .pi, Date().timeIntervalSince1970) }
             }
         }
     }

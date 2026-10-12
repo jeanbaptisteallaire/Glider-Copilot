@@ -29,7 +29,12 @@ struct PilotView: View {
                 .background(WG.brandPaper.opacity(0.5))
             }
             ZStack(alignment: .top) {
-                FlightMapView(p: p, airspaces: app.airspaces)
+                // V3 : carte fluide (60 images/s, planeur prédit) ; -mapV2 au lancement = carte de la V2
+                if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
+                    FlightMapView(p: p, airspaces: app.airspaces)
+                } else {
+                    FluidMapView(p: p, airspaces: app.airspaces, traffic: app.trafficSnap, predictor: app.predictor)
+                }
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario)
             }
             if showVario {
