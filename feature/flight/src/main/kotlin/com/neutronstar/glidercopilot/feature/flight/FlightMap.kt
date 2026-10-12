@@ -222,6 +222,8 @@ internal fun LiveMap(
     // (la couche MapLibre est rendue avec une image de retard sur la caméra : le planeur « grésillait »)
     val gliderRot = remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
     val gliderOverlay = remember { mutableStateOf(false) }
+    /** Position à l'écran (px) hors suivi fluide ; null = place fixe (5 % sous le centre). */
+    val gliderAt = remember { mutableStateOf<androidx.compose.ui.geometry.Offset?>(null) }
 
     // V3 — gyroscope : taux de virage réel du planeur entre deux positions GPS (rotation projetée sur la verticale),
     // comme iOS. Actif seulement tant que la carte de Pilotage est affichée.
@@ -246,6 +248,8 @@ internal fun LiveMap(
         sm.getDefaultSensor(android.hardware.Sensor.TYPE_GYROSCOPE)?.let { sm.registerListener(listener, it, android.hardware.SensorManager.SENSOR_DELAY_GAME) }
         // écran : 30 images/s demandées au système (Android 15+, écrans à fréquence variable comme le Pixel 8 Pro)
         if (android.os.Build.VERSION.SDK_INT >= 35) runCatching { mapView.requestedFrameRate = 30f }
+        // rendu MapLibre plafonné à 30 images/s (sinon la carte redessine à la fréquence de l'écran)
+        runCatching { mapView.setMaximumFps(30) }
         onDispose { sm.unregisterListener(listener) }
     }
 
@@ -269,16 +273,20 @@ internal fun LiveMap(
                 val course = if (st.valid) st.course else f.headingDeg
                 val fluid = controller.follow && !controller.thermalActive && f.thermal == null &&
                     System.currentTimeMillis() > controller.transitionUntil
-                if (fluid != gliderOverlay.value) {
-                    gliderOverlay.value = fluid
-                    if (fluid) s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(EMPTY_JSON)
+                // planeur toujours dessiné par-dessus la carte (plus jamais l'ancienne icône de la couche) ;
+                // hors suivi fluide (spirale, carte libre, transitions) il est placé par la projection de la caméra
+                if (!gliderOverlay.value) {
+                    gliderOverlay.value = true
+                    s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(EMPTY_JSON)
                 }
                 controller.fluid = fluid
                 if (!fluid) {
-                    s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(
-                        """{"type":"Feature","properties":{"heading":$course},"geometry":{"type":"Point","coordinates":[${pos.longitude},${pos.latitude}]}}""")
+                    val pt = map.projection.toScreenLocation(pos)
+                    gliderAt.value = androidx.compose.ui.geometry.Offset(pt.x, pt.y)
+                    gliderRot.floatValue = (course - map.cameraPosition.bearing).toFloat()
                     controller.camBearing = Double.NaN; return@withFrameNanos
                 }
+                gliderAt.value = null
                 val bearing = if (centering || controller.orientation == MapOrientation.NORTH) 0.0 else course
                 val zoom = if (centering) maxOf(controller.zoom, MapController.CENTERING_ZOOM) else controller.zoom
                 if (controller.camBearing.isNaN()) { controller.camBearing = map.cameraPosition.bearing; controller.camZoom = map.cameraPosition.zoom }
@@ -480,7 +488,10 @@ internal fun LiveMap(
             val size = 34.dp
             androidx.compose.foundation.Canvas(
                 Modifier.size(size)
-                    .offset(x = maxWidth / 2 - size / 2, y = maxHeight * 0.55f - size / 2)
+                    .offset(
+                        x = gliderAt.value?.let { with(androidx.compose.ui.platform.LocalDensity.current) { it.x.toDp() } - size / 2 } ?: (maxWidth / 2 - size / 2),
+                        y = gliderAt.value?.let { with(androidx.compose.ui.platform.LocalDensity.current) { it.y.toDp() } - size / 2 } ?: (maxHeight * 0.55f - size / 2),
+                    )
                     .graphicsLayer { rotationZ = gliderRot.floatValue },
             ) { drawGlider() }
         }
