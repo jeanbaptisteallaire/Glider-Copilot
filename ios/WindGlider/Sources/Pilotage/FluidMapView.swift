@@ -50,9 +50,9 @@ struct FluidMapView: UIViewRepresentable {
 
     func updateUIView(_ v: MKMapView, context: Context) {
         context.coordinator.update(p: p, airspaces: airspaces, traffic: traffic, on: v)
-        let style: UIUserInterfaceStyle = dark ? .dark : .light
-        if v.overrideUserInterfaceStyle != style {
-            v.overrideUserInterfaceStyle = style
+        // mode sombre : même fond de carte (couleurs, contraste) qu'en mode clair ; seule la route change de couleur
+        if context.coordinator.lastDark != dark {
+            context.coordinator.lastDark = dark
             context.coordinator.restyle(on: v)
         }
         if context.coordinator.scaleBottom?.constant != -30 - bottomInset {
@@ -67,6 +67,7 @@ struct FluidMapView: UIViewRepresentable {
     final class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let predictor: OwnshipPredictor
         var scaleBottom: NSLayoutConstraint?
+        var lastDark: Bool?
         let control: MapControl
         let ownship = OwnshipAnnotation()
         private weak var view: MKMapView?
@@ -107,6 +108,14 @@ struct FluidMapView: UIViewRepresentable {
 
         @objc func userGesture(_ g: UIGestureRecognizer) {
             if g.state == .began { control.follow = false }
+            // fin d'un geste : le zoom choisi par le pilote devient le zoom de référence ; « recentrer » ne fait
+            // alors que ramener le planeur au centre, sans rezoomer
+            if g.state == .ended || g.state == .cancelled, let v = view {
+                let d = min(max(v.camera.centerCoordinateDistance, 600), 200_000)
+                camDistance = d
+                camHeading = v.camera.heading
+                if !(p?.zoomActive ?? false) { control.distance = d }
+            }
         }
 
         func gestureRecognizer(_ g: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }

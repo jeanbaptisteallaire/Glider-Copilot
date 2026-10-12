@@ -46,6 +46,11 @@ struct PilotView: View {
                 if dark {
                     Rectangle().strokeBorder(Color.black, lineWidth: 26).blur(radius: 14)
                         .padding(-8).ignoresSafeArea().allowsHitTesting(false)
+                    // sous les boîtes du haut : fond noir qui se fond dans la carte
+                    LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black.opacity(0.85), location: 0.55),
+                                           .init(color: .clear, location: 1)], startPoint: .top, endPoint: .bottom)
+                        .frame(height: max(topInset, 150) + 30).frame(maxHeight: .infinity, alignment: .top)
+                        .allowsHitTesting(false)
                 }
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset).padding(.bottom, bottomInset)
                 VStack(spacing: 6) {
@@ -89,6 +94,7 @@ struct PilotView: View {
         }
         .background(PI.box)
         .fontWeight(dark ? .medium : nil)
+        .statusBarHidden(dark)   // mode sombre : heure et batterie noires illisibles sur le bandeau noir
         .toolbarColorScheme(dark ? .dark : .light, for: .tabBar)
         .toolbarBackground(dark ? .visible : .automatic, for: .tabBar)
         .toolbarBackground(dark ? Color.black : Color.clear, for: .tabBar)
