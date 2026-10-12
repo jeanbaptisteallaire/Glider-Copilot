@@ -90,8 +90,6 @@ struct PilotView: View {
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
                 VStack(alignment: .leading, spacing: 0) {
-                // mode clair / sombre : juste au-dessus du logo Plans, coin bas gauche de la carte
-                if !showVario { DayNightToggle(dark: $dark).padding(.leading, 10).padding(.bottom, 40) }
                 // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
                 ZStack(alignment: .bottomTrailing) {
                     if showVario {
@@ -368,9 +366,11 @@ struct MapOverlay: View {
                 badge("GPS", app.status.gps)
                 badge("BARO", app.status.baro)
                 badge("DATA", app.status.data)
+                // mode clair / sombre, sous les pastilles ; remonte avec elles quand le vario est ouvert
+                DayNightToggle(dark: $darkMode).padding(.top, 6)
             }
             .accessibilityElement(children: .combine)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 54)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 26)   // juste au-dessus de l'échelle
 
             // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
             VStack(alignment: .trailing, spacing: 8) {
@@ -393,7 +393,7 @@ struct MapOverlay: View {
             .font(.title3.weight(.light)).foregroundStyle(PI.ink)
             .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing).padding(.bottom, 22)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)   // au plus bas, au-dessus de « vario »
         }
         .padding(10)
     }
