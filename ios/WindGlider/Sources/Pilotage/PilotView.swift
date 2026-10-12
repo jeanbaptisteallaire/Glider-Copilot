@@ -42,6 +42,23 @@ struct PilotView: View {
                         // ne redimensionne jamais la carte (planeur immobile à l'écran)
                         .ignoresSafeArea(.container, edges: .bottom)
                 }
+                // tout en bas au centre : REC au-dessus du chrono du vol, dans la même petite boîte
+                Button { app.toggleRecording() } label: {
+                    VStack(spacing: 1) {
+                        HStack(spacing: 4) {
+                            Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
+                            Text("REC").font(WG.caption2.weight(.bold))
+                        }
+                        .foregroundStyle(p.recording ? .white : WG.bad)
+                        Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : PI.ink)
+                    }
+                    .padding(.horizontal, 10).padding(.vertical, 4)
+                    .background(p.recording ? WG.bad : PI.box.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
+                    .shadow(color: .black.opacity(0.15), radius: 2)
+                }
+                .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 2)
+
                 // mode sombre : vignettage noir très court sur les bords (les boîtes noires s'y fondent)
                 if dark {
                     Rectangle().strokeBorder(Color.black, lineWidth: 26).blur(radius: 14)
@@ -74,7 +91,7 @@ struct PilotView: View {
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
                 VStack(alignment: .leading, spacing: 0) {
                 // mode clair / sombre : juste au-dessus du logo Plans, coin bas gauche de la carte
-                if !showVario { DayNightToggle(dark: $dark).padding(.leading, 10).padding(.bottom, 12) }
+                if !showVario { DayNightToggle(dark: $dark).padding(.leading, 10).padding(.bottom, 40) }
                 // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
                 ZStack(alignment: .bottomTrailing) {
                     if showVario {
@@ -355,23 +372,6 @@ struct MapOverlay: View {
             .accessibilityElement(children: .combine)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 54)
 
-            // bas centre : REC au-dessus du chrono du vol, dans la même petite boîte
-            Button { app.toggleRecording() } label: {
-                VStack(spacing: 1) {
-                    HStack(spacing: 4) {
-                        Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
-                        Text("REC").font(WG.caption2.weight(.bold))
-                    }
-                    .foregroundStyle(p.recording ? .white : WG.bad)
-                    Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : PI.ink)
-                }
-                .padding(.horizontal, 10).padding(.vertical, 4)
-                .background(p.recording ? WG.bad : PI.box.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
-                .shadow(color: .black.opacity(0.15), radius: 2)
-            }
-            .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 22)
-
             // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
             VStack(alignment: .trailing, spacing: 8) {
             Button {
@@ -441,27 +441,27 @@ struct ProfileStrip: View {
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
             ForEach(Array(pts.enumerated()), id: \.offset) { _, d in
-                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(PI.good.opacity(0.35))
+                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(darkMode ? Color(red: 0.55, green: 1.0, blue: 0.45).opacity(0.75) : PI.good.opacity(0.35))
             }
             if total > 0 {
                 LineMark(x: .value("km", 0.0), y: .value("alt", p.currentAltM), series: .value("s", "plané"))
-                    .foregroundStyle(PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
+                    .foregroundStyle(darkMode ? Color(red: 0.2, green: 0.85, blue: 1.0) : PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
                 LineMark(x: .value("km", total), y: .value("alt", p.arrivalAltM), series: .value("s", "plané"))
-                    .foregroundStyle(PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
+                    .foregroundStyle(darkMode ? Color(red: 0.2, green: 0.85, blue: 1.0) : PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
                 LineMark(x: .value("km", 0.0), y: .value("sécu", p.requiredAltM), series: .value("s", "sécu"))
-                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(WG.bad)
+                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad)
                 LineMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300), series: .value("s", "sécu"))
-                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(WG.bad)
+                    .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad)
                 PointMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300))
                     .symbolSize(20).foregroundStyle(PI.route)
-                    .annotation(position: .top, alignment: .trailing) { Text("+300").font(WG.caption2).foregroundStyle(WG.bad) }
+                    .annotation(position: .top, alignment: .trailing) { Text("+300").font(WG.caption2).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad) }
             }
         }
         .chartXScale(domain: 0...max(total, 0.1))
         .chartYScale(domain: 0...top)
         // axes à gauche comme Android ; en bas seulement « 0 » et l'étiquette de fin (distance · terrain)
         .chartXAxis { AxisMarks(values: .automatic(desiredCount: 3)) { AxisGridLine() } }
-        .chartYAxis { AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { AxisGridLine(); AxisValueLabel() } }
+        .chartYAxis { AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { AxisGridLine().foregroundStyle(darkMode ? Color.white.opacity(0.25) : Color.gray.opacity(0.3)); AxisValueLabel().foregroundStyle(darkMode ? Color.white : WG.dim).font(darkMode ? WG.caption2.weight(.semibold) : WG.caption2) } }
         .overlay(alignment: .topTrailing) {
             if !p.arrivalText.isEmpty { Text(p.arrivalText).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.good).padding(.trailing, 80) }
         }

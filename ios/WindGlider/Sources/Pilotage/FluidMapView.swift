@@ -34,7 +34,7 @@ struct FluidMapView: UIViewRepresentable {
         scale.legendAlignment = .leading
         scale.translatesAutoresizingMaskIntoConstraints = false
         v.addSubview(scale)
-        let bottom = scale.bottomAnchor.constraint(equalTo: v.safeAreaLayoutGuide.bottomAnchor, constant: -30)
+        let bottom = scale.bottomAnchor.constraint(equalTo: v.safeAreaLayoutGuide.bottomAnchor, constant: -36)
         context.coordinator.scaleBottom = bottom
         NSLayoutConstraint.activate([scale.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: 10), bottom])
         // un geste du pilote (glisser, pincer, tourner) passe la carte en LIBRE
@@ -55,8 +55,8 @@ struct FluidMapView: UIViewRepresentable {
             context.coordinator.lastDark = dark
             context.coordinator.restyle(on: v)
         }
-        if context.coordinator.scaleBottom?.constant != -30 - bottomInset {
-            context.coordinator.scaleBottom?.constant = -30 - bottomInset
+        if context.coordinator.scaleBottom?.constant != -36 {
+            context.coordinator.scaleBottom?.constant = -36
         }
     }
 
