@@ -14,6 +14,13 @@ Cible : une Lite Android 2.1.0 équivalente à l'iPhone, publiée sur le Play St
 - **Par plateforme, il ne reste que le dessin.** iOS utilise SwiftUI et MapKit ; Android utilise Compose et MapLibre.
 - **Sécurité :** les calculs de marge, d'alerte et d'IGC ne changent pas. Seul l'affichage change.
 
+## Décisions de JB (12/10/2026)
+
+- Accord pour modifier les fichiers Pilotage protégés, `Theme.kt` et `AppRoot.kt`, et pour régénérer le garde-fou.
+- Fond de carte : **MapLibre**.
+- Android : **30 images par seconde** (économie de batterie), au lieu de 60.
+- Essais sur un téléphone Android branché en USB.
+
 ## 1. Écarts à trancher (JB)
 
 | Sujet | iOS | Android : proposition |
@@ -33,7 +40,7 @@ Cible : une Lite Android 2.1.0 équivalente à l'iPhone, publiée sur le Play St
 
 ### Étape 2 : fluidité de la carte
 
-1. Boucle d'image `Choreographer`, à 60 images par seconde :
+1. Boucle d'image `Choreographer` limitée à **30 images par seconde** (une image sur deux à 60 Hz, décision JB : batterie) :
    - caméra posée sans animation à chaque image ;
    - cap lissé (τ 0,4 s), zoom lissé (τ 0,3 s), centre de spirale lissé (τ 0,5 s) ;
    - planeur décalé de 5 % vers le bas.
