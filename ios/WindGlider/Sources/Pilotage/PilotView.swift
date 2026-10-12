@@ -7,6 +7,18 @@ import WindGliderShared
 /// coupe vers le terrain, carte (trace colorée par le vario, route, vent, zoom spirale), vario et moyennes, REC.
 /// Fond blanc (V18.7). Calculs : moteur commun (FlightEngineCore + SafetyEngine).
 /// Coupe et vario se masquent (interrupteurs orange) pour agrandir la carte ; masqués, ils restent en pastille sur la carte.
+/// Palette de Pilotage : mode clair (charte blanche) ou mode sombre (V3, inspiré de l'avionique : boîtes noires,
+/// textes blancs un peu plus gras, vert et violet fluo très clairs, vignettage noir sur les bords).
+enum PI {
+    static var dark: Bool { UserDefaults.standard.bool(forKey: "pilot.dark") }
+    static var ink: Color { dark ? .white : WG.brandInk }
+    static var dim: Color { dark ? Color.white.opacity(0.62) : WG.dim }
+    static var box: Color { dark ? .black : WG.card }
+    static var good: Color { dark ? Color(red: 0.80, green: 1.0, blue: 0.70) : WG.good }      // vert fluo très clair
+    static var route: Color { dark ? Color(red: 0.86, green: 0.72, blue: 1.0) : WG.route }    // violet fluo très clair
+    static func number(_ size: CGFloat) -> Font { Font.custom("Inter", size: size).weight(dark ? .bold : .semibold).monospacedDigit() }
+}
+
 struct PilotView: View {
     @EnvironmentObject var app: AppModel
     @State private var choosingField = false
@@ -14,6 +26,7 @@ struct PilotView: View {
     @AppStorage("pilot.showVario") private var showVario = true
     @State private var topInset: CGFloat = 0
     @State private var bottomInset: CGFloat = 0
+    @AppStorage("pilot.dark") private var dark = false
 
     var body: some View {
         let p = app.pilot
@@ -24,10 +37,15 @@ struct PilotView: View {
                 if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                     FlightMapView(p: p, airspaces: app.airspaces)
                 } else {
-                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: bottomInset)
+                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: bottomInset, dark: dark)
                         // la carte passe toujours sous le vario et la barre d'onglets : ouvrir ou fermer un panneau
                         // ne redimensionne jamais la carte (planeur immobile à l'écran)
                         .ignoresSafeArea(.container, edges: .bottom)
+                }
+                // mode sombre : vignettage noir très court sur les bords (les boîtes noires s'y fondent)
+                if dark {
+                    Rectangle().strokeBorder(Color.black, lineWidth: 26).blur(radius: 14)
+                        .padding(-8).ignoresSafeArea().allowsHitTesting(false)
                 }
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset).padding(.bottom, bottomInset)
                 VStack(spacing: 6) {
@@ -37,10 +55,10 @@ struct PilotView: View {
                     if showProfile {
                         VStack(spacing: 0) {
                             ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
-                            Text(p.fieldElevText).font(WG.caption).foregroundStyle(WG.dim)
+                            Text(p.fieldElevText).font(WG.caption).foregroundStyle(PI.dim)
                                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
                         }
-                        .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 14))
+                        .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
                         .padding(.horizontal, 8)
                     } else {
                         Color.clear.frame(height: 30)
@@ -49,11 +67,14 @@ struct PilotView: View {
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
+                VStack(alignment: .leading, spacing: 0) {
+                // mode clair / sombre : juste au-dessus du logo Plans, coin bas gauche de la carte
+                if !showVario { DayNightToggle(dark: $dark).padding(.leading, 10).padding(.bottom, 12) }
                 // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
                 ZStack(alignment: .bottomTrailing) {
                     if showVario {
                         varioBar(p)
-                            .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 14))
+                            .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
                             .padding(.horizontal, 8)
                     } else {
                         Color.clear.frame(height: 30)
@@ -61,11 +82,17 @@ struct PilotView: View {
                     PanelToggle(isOn: $showVario, label: "vario", dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
                 }
                 .padding(.bottom, 4)
+                }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bottomInset = $0 }
                 .frame(maxHeight: .infinity, alignment: .bottom)
             }
         }
-        .background(WG.card)
+        .background(PI.box)
+        .fontWeight(dark ? .medium : nil)
+        .toolbarColorScheme(dark ? .dark : .light, for: .tabBar)
+        .toolbarBackground(dark ? .visible : .automatic, for: .tabBar)
+        .toolbarBackground(dark ? Color.black : Color.clear, for: .tabBar)
+        .animation(.easeInOut(duration: 0.25), value: dark)
         .sheet(isPresented: $choosingField) { FieldPicker().environmentObject(app).presentationDetents([.medium]) }
         .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
@@ -74,20 +101,20 @@ struct PilotView: View {
     // MARK: en-tête : marge, distance, finesse
 
     private func header(_ p: PilotUi) -> some View {
-        let marginColor = p.marginKnown ? (p.marginM >= 0 ? WG.good : WG.bad) : WG.dim
+        let marginColor = p.marginKnown ? (p.marginM >= 0 ? PI.good : WG.bad) : PI.dim
         let f10 = app.finesse == 10
         return HStack(alignment: .top, spacing: 6) {
             // gauche : marge (sans unité, évidente), SÉCU, ALT
             VStack(alignment: .leading, spacing: 0) {
                 Text("Marge sécu.").font(WG.footnote).foregroundStyle(marginColor)
-                Text(p.marginText).font(WG.number(40)).foregroundStyle(marginColor)
+                Text(p.marginText).font(PI.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
                 Spacer(minLength: 2)
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim); Text(p.secuText).font(WG.number(16))
+                    Text("SÉCU").font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
                 }
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16))
+                    Text("ALT").font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
                 }
             }
             .lineLimit(1)
@@ -99,14 +126,14 @@ struct PilotView: View {
                     HStack(spacing: 4) {
                         // F20 : pas de +300 m affiché, le mot « Finesse » en entier
                         Text(f10 ? "Fin." : "Finesse").font(WG.footnote)
-                        if f10 { Text("+300 m").font(WG.caption2).foregroundStyle(WG.dim) }
+                        if f10 { Text("+300 m").font(WG.caption2).foregroundStyle(PI.dim) }
                     }
                     .lineLimit(1).fixedSize()
                     // un seul bouton : touche = bascule finesse 10 ⇄ 20
                     Button { app.finesse = f10 ? 20 : 10 } label: {
                         HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text("F").font(WG.caption2)
-                            Text("\(app.finesse)").font(WG.number(20))
+                            Text("\(app.finesse)").font(PI.number(20))
                         }
                         .lineLimit(1).fixedSize()
                         .padding(.horizontal, 10).padding(.vertical, 5)
@@ -117,7 +144,7 @@ struct PilotView: View {
                 .frame(maxWidth: .infinity).headerBox()
                 VStack(spacing: 0) {
                     Text("CAP").font(WG.footnote)
-                    Text(p.hasPosition ? "\(Int(p.trackDeg.rounded()) % 360)°" : "—").font(WG.number(20)).monospacedDigit()
+                    Text(p.hasPosition ? "\(Int(p.trackDeg.rounded()) % 360)°" : "—").font(PI.number(20)).monospacedDigit()
                 }
                 .lineLimit(1)
                 .frame(maxWidth: .infinity).headerBox()
@@ -127,17 +154,17 @@ struct PilotView: View {
             // droite : distance, terrain, cap vers le terrain (même taille que le cap GPS)
             Button { choosingField = true } label: {
                 VStack(alignment: .trailing, spacing: 0) {
-                    Text("Dist. ter.").font(WG.footnote).foregroundStyle(WG.dim)
+                    Text("Dist. ter.").font(WG.footnote).foregroundStyle(PI.dim)
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
-                        Text(p.distanceText).font(WG.number(32)).minimumScaleFactor(0.6)
+                        Text(p.distanceText).font(PI.number(32)).minimumScaleFactor(0.6)
                         Text("km").font(WG.caption)
                     }
                     Spacer(minLength: 2)
                     HStack(spacing: 4) {
-                        Text(p.fieldCode).font(WG.headline).foregroundStyle(WG.brandInk)
-                        Image(systemName: "chevron.down").font(.caption2).foregroundStyle(WG.route)
+                        Text(p.fieldCode).font(WG.headline).foregroundStyle(PI.ink)
+                        Image(systemName: "chevron.down").font(.caption2).foregroundStyle(PI.route)
                     }
-                    Text(p.bearingText).font(WG.number(20)).foregroundStyle(WG.route)
+                    Text(p.bearingText).font(PI.number(20)).foregroundStyle(PI.route)
                 }
                 .lineLimit(1)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
@@ -148,7 +175,7 @@ struct PilotView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 8).padding(.top, 4)
-        .foregroundStyle(WG.brandInk)
+        .foregroundStyle(PI.ink)
     }
 
     // MARK: vario
@@ -156,8 +183,8 @@ struct PilotView: View {
     private func varioBar(_ p: PilotUi) -> some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading) {
-                Text(p.varioLabel).font(WG.footnote).foregroundStyle(WG.dim)
-                Text(p.varioText).font(WG.number(40)).foregroundStyle(WG.vario(p.varioMs)).lineLimit(1).minimumScaleFactor(0.6)
+                Text(p.varioLabel).font(WG.footnote).foregroundStyle(PI.dim)
+                Text(p.varioText).font(PI.number(40)).foregroundStyle(WG.vario(p.varioMs)).lineLimit(1).minimumScaleFactor(0.6)
             }
             .frame(width: 120, alignment: .leading)
             VStack(spacing: 6) {
@@ -175,11 +202,11 @@ struct PilotView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 14).padding(.top, 10).padding(.bottom, 10)
-        .foregroundStyle(WG.brandInk)
+        .foregroundStyle(PI.ink)
     }
 
     private func avg(_ l: String, _ v: String) -> some View {
-        VStack(alignment: .leading) { Text(l).font(WG.caption).foregroundStyle(WG.dim); Text(v).font(WG.number(17)) }
+        VStack(alignment: .leading) { Text(l).font(WG.caption).foregroundStyle(PI.dim); Text(v).font(PI.number(17)) }
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
@@ -189,11 +216,12 @@ private extension View {
     /// Boîte de l'en-tête de Pilotage (V3) : fond blanc à 90 %, coins légèrement arrondis, carte visible autour.
     func headerBox() -> some View {
         padding(.horizontal, 10).padding(.vertical, 6)
-            .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 12))
+            .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 12))
     }
 }
 
 struct PanelToggle: View {
+    @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
     @Binding var isOn: Bool
     let label: String
     var dark = false
@@ -201,7 +229,7 @@ struct PanelToggle: View {
 
     var body: some View {
         Toggle(isOn: $isOn) {
-            Text(label).font(Font.custom("Inter", size: 11 * scale)).foregroundStyle(dark ? .white : WG.dim)
+            Text(label).font(Font.custom("Inter", size: 11 * scale)).foregroundStyle(dark ? .white : PI.dim)
         }
             .toggleStyle(MiniSwitch(scale: scale))
             .padding(.horizontal, dark ? 4 : 0)
@@ -232,6 +260,7 @@ struct MiniSwitch: ToggleStyle {
 
 /// Boutons, pastilles et légendes posés sur la carte (disposition de l'écran Android).
 struct MapOverlay: View {
+    @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
     @EnvironmentObject var app: AppModel
     @EnvironmentObject var map: MapControl
     @State private var airspaceHint = false
@@ -245,12 +274,13 @@ struct MapOverlay: View {
             VStack(alignment: .leading, spacing: 6) {
                 // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
                 if let t = app.trafficSnap, t.connected {
-                    (Text("OGN ").fontWeight(.bold).foregroundColor(WG.brandInk) + Text(t.pill))
-                        .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(WG.dim)
+                    (Text("OGN ").fontWeight(.bold).foregroundColor(PI.ink) + Text(t.pill))
+                        .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(PI.dim)
                         .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 10))
+                        .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 10))
                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
                         .accessibilityLabel("Trafic OGN : \(t.pill)")
+                        .offset(y: showProfile ? 0 : -34)
                 }
                 // panneaux masqués : pastilles indépendantes sur la carte
             }
@@ -260,25 +290,25 @@ struct MapOverlay: View {
             VStack(alignment: .trailing, spacing: 8) {
                 Button { app.demo.toggle() } label: {
                     Text("DÉMO").font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
-                        .background(app.demo ? WG.climb : WG.card, in: Capsule())
-                        .foregroundStyle(app.demo ? .white : WG.brandInk).shadow(color: .black.opacity(0.15), radius: 2)
+                        .background(app.demo ? WG.climb : PI.box, in: Capsule())
+                        .foregroundStyle(app.demo ? .white : PI.ink).shadow(color: .black.opacity(0.15), radius: 2)
                 }
                 VStack(spacing: 3) {
                     if p.windKnown {
-                        Image(systemName: "arrow.down").font(.subheadline.weight(.semibold)).rotationEffect(.degrees(p.windFromDeg)).foregroundStyle(WG.route)
-                        Text(p.windText.replacingOccurrences(of: "/", with: "\n")).font(WG.caption2).multilineTextAlignment(.center)
+                        Image(systemName: "arrow.down").font(.subheadline.weight(.semibold)).rotationEffect(.degrees(p.windFromDeg)).foregroundStyle(PI.route)
+                        Text(p.windText.replacingOccurrences(of: "/", with: "\n")).font(WG.caption2).foregroundStyle(PI.ink).multilineTextAlignment(.center)
                     } else {
-                        Text("vent\n—").font(WG.caption2).foregroundStyle(WG.dim).multilineTextAlignment(.center)
+                        Text("vent\n—").font(WG.caption2).foregroundStyle(PI.dim).multilineTextAlignment(.center)
                     }
                 }
                 .frame(width: 44).padding(.vertical, 8)
-                .background(WG.card, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
+                .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
                 .accessibilityLabel(p.windKnown ? "Vent \(p.windText)" : "Vent pas encore estimé : spiralez")
                 VStack(spacing: 3) {
-                    Text("+4").font(WG.caption2).foregroundStyle(WG.dim)
+                    Text("+4").font(WG.caption2).foregroundStyle(PI.dim)
                     LinearGradient(colors: [WG.vario(4), WG.vario(1.5), WG.vario(0), WG.vario(-3)], startPoint: .top, endPoint: .bottom)
                         .frame(width: 4, height: 50).clipShape(Capsule())
-                    Text("−3").font(WG.caption2).foregroundStyle(WG.dim)
+                    Text("−3").font(WG.caption2).foregroundStyle(PI.dim)
                 }
                 .frame(width: 44)
             }
@@ -290,8 +320,8 @@ struct MapOverlay: View {
                 VStack(spacing: 8) {
                     Button { map.recenter() } label: {
                         Image(systemName: "scope").font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(map.follow ? WG.sky : WG.brandInk)
-                            .frame(width: 40, height: 40).background(WG.card.opacity(0.9), in: Circle())
+                            .foregroundStyle(map.follow ? WG.sky : PI.ink)
+                            .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
                             .shadow(color: .black.opacity(0.15), radius: 2)
                     }
                     .accessibilityLabel(map.follow ? "Carte centrée sur le planeur" : "Recentrer la carte")
@@ -303,10 +333,10 @@ struct MapOverlay: View {
                                     Text("N").font(Font.custom("Inter", size: 8).weight(.bold)).foregroundStyle(.white).offset(y: 2)
                                 }
                             } else {
-                                Text(map.orientation.label).font(WG.caption2.weight(.semibold)).foregroundStyle(WG.brandInk)
+                                Text(map.orientation.label).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.ink)
                             }
                         }
-                        .frame(width: 40, height: 40).background(WG.card.opacity(0.9), in: Circle())
+                        .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
                         .shadow(color: .black.opacity(0.15), radius: 2)
                     }
                     .accessibilityLabel("Orientation de la carte : \(map.orientation == .north ? "nord en haut" : map.orientation.label)")
@@ -327,10 +357,10 @@ struct MapOverlay: View {
                         Text("REC").font(WG.caption2.weight(.bold))
                     }
                     .foregroundStyle(p.recording ? .white : WG.bad)
-                    Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : WG.brandInk)
+                    Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : PI.ink)
                 }
                 .padding(.horizontal, 10).padding(.vertical, 4)
-                .background(p.recording ? WG.bad : WG.card.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
+                .background(p.recording ? WG.bad : PI.box.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
                 .shadow(color: .black.opacity(0.15), radius: 2)
             }
             .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
@@ -342,8 +372,8 @@ struct MapOverlay: View {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             } label: {
                 Image(systemName: "square.3.layers.3d").font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(app.showAirspaces && !app.airspaces.isEmpty ? WG.sky : WG.brandInk)
-                    .frame(width: 40, height: 40).background(WG.card, in: Circle()).shadow(color: .black.opacity(0.1), radius: 1)
+                    .foregroundStyle(app.showAirspaces && !app.airspaces.isEmpty ? WG.sky : PI.ink)
+                    .frame(width: 40, height: 40).background(PI.box, in: Circle()).shadow(color: .black.opacity(0.1), radius: 1)
             }
             .accessibilityLabel(app.showAirspaces ? "Masquer les zones aéronautiques" : "Afficher les zones aéronautiques")
             .alert("Zones aéronautiques", isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
@@ -354,8 +384,8 @@ struct MapOverlay: View {
                 Divider().frame(width: 24)
                 Button { map.zoomOut() } label: { Image(systemName: "minus").frame(width: 40, height: 40) }.accessibilityLabel("Zoom arrière")
             }
-            .font(.title3.weight(.light)).foregroundStyle(WG.brandInk)
-            .background(WG.card, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
+            .font(.title3.weight(.light)).foregroundStyle(PI.ink)
+            .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing).padding(.bottom, 22)
         }
@@ -364,15 +394,15 @@ struct MapOverlay: View {
 
     private func round(_ label: String, a11y: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(label).font(WG.caption2.weight(.semibold)).foregroundStyle(WG.brandInk)
-                .frame(width: 40, height: 40).background(WG.card, in: Circle()).shadow(color: .black.opacity(0.15), radius: 2)
+            Text(label).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.ink)
+                .frame(width: 40, height: 40).background(PI.box, in: Circle()).shadow(color: .black.opacity(0.15), radius: 2)
         }
         .accessibilityLabel(a11y)
     }
 
     private func badge(_ label: String, _ ok: Bool) -> some View {
-        HStack(spacing: 4) { Circle().fill(ok ? WG.good : WG.bad).frame(width: 6, height: 6); Text(label).font(WG.caption2) }
-            .padding(.horizontal, 7).padding(.vertical, 3).background(WG.card, in: Capsule())
+        HStack(spacing: 4) { Circle().fill(ok ? PI.good : WG.bad).frame(width: 6, height: 6); Text(label).font(WG.caption2).foregroundStyle(PI.ink) }
+            .padding(.horizontal, 7).padding(.vertical, 3).background(PI.box, in: Capsule())
             .accessibilityLabel("\(label) \(ok ? "actif" : "inactif")")
     }
 }
@@ -386,7 +416,7 @@ struct VarioScale: View {
             ZStack(alignment: .leading) {
                 LinearGradient(colors: [WG.vario(-3), WG.vario(0), WG.vario(1.5), WG.vario(4)], startPoint: .leading, endPoint: .trailing)
                     .clipShape(Capsule())
-                Rectangle().fill(WG.brandInk).frame(width: 4, height: g.size.height + 8).offset(x: x - 2)
+                Rectangle().fill(PI.ink).frame(width: 4, height: g.size.height + 8).offset(x: x - 2)
             }
         }
     }
@@ -396,6 +426,7 @@ struct VarioScale: View {
 /// terrain (trait plein, inclinée selon la finesse et le vent), altitude nécessaire (pointillés rouges) jusqu'à
 /// terrain + hauteur d'arrivée (« +300 »).
 struct ProfileStrip: View {
+    @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
     let p: PilotUi
 
     var body: some View {
@@ -404,19 +435,19 @@ struct ProfileStrip: View {
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
             ForEach(Array(pts.enumerated()), id: \.offset) { _, d in
-                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(WG.good.opacity(0.35))
+                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(PI.good.opacity(0.35))
             }
             if total > 0 {
                 LineMark(x: .value("km", 0.0), y: .value("alt", p.currentAltM), series: .value("s", "plané"))
-                    .foregroundStyle(WG.brandInk).lineStyle(StrokeStyle(lineWidth: 2))
+                    .foregroundStyle(PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
                 LineMark(x: .value("km", total), y: .value("alt", p.arrivalAltM), series: .value("s", "plané"))
-                    .foregroundStyle(WG.brandInk).lineStyle(StrokeStyle(lineWidth: 2))
+                    .foregroundStyle(PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
                 LineMark(x: .value("km", 0.0), y: .value("sécu", p.requiredAltM), series: .value("s", "sécu"))
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(WG.bad)
                 LineMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300), series: .value("s", "sécu"))
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(WG.bad)
                 PointMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300))
-                    .symbolSize(20).foregroundStyle(WG.route)
+                    .symbolSize(20).foregroundStyle(PI.route)
                     .annotation(position: .top, alignment: .trailing) { Text("+300").font(WG.caption2).foregroundStyle(WG.bad) }
             }
         }
@@ -426,12 +457,12 @@ struct ProfileStrip: View {
         .chartXAxis { AxisMarks(values: .automatic(desiredCount: 3)) { AxisGridLine() } }
         .chartYAxis { AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { AxisGridLine(); AxisValueLabel() } }
         .overlay(alignment: .topTrailing) {
-            if !p.arrivalText.isEmpty { Text(p.arrivalText).font(WG.caption2.weight(.semibold)).foregroundStyle(WG.good).padding(.trailing, 80) }
+            if !p.arrivalText.isEmpty { Text(p.arrivalText).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.good).padding(.trailing, 80) }
         }
         .overlay(alignment: .bottomTrailing) {
-            if !p.profileEndText.isEmpty { Text(p.profileEndText).font(WG.caption2).foregroundStyle(WG.dim).offset(y: 12) }
+            if !p.profileEndText.isEmpty { Text(p.profileEndText).font(WG.caption2).foregroundStyle(PI.dim).offset(y: 12) }
         }
-        .overlay { if total == 0 { Text("Coupe disponible dès la première position").font(WG.caption).foregroundStyle(WG.dim) } }
+        .overlay { if total == 0 { Text("Coupe disponible dès la première position").font(WG.caption).foregroundStyle(PI.dim) } }
         .padding(.horizontal, 12).padding(.top, 14)
     }
 }
@@ -640,5 +671,30 @@ private struct PumpMark: View {
     private func formatClimb(_ v: Double) -> String {
         let f = NumberFormatter(); f.locale = Locale(identifier: "fr_FR"); f.minimumFractionDigits = 1; f.maximumFractionDigits = 1
         return (v >= 0 ? "+" : "") + (f.string(from: NSNumber(value: v)) ?? "")
+    }
+}
+
+
+/// Interrupteur mode clair / sombre (soleil, lune) sur fond noir, comme « relief » et « vario ».
+struct DayNightToggle: View {
+    @Binding var dark: Bool
+
+    var body: some View {
+        Button { withAnimation(.easeInOut(duration: 0.25)) { dark.toggle() } } label: {
+            HStack(spacing: 0) {
+                icon("sun.max.fill", on: !dark)
+                icon("moon.fill", on: dark)
+            }
+            .padding(3).background(Color.black.opacity(0.85), in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(dark ? "Passer en mode clair" : "Passer en mode sombre")
+    }
+
+    private func icon(_ name: String, on: Bool) -> some View {
+        Image(systemName: name).font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(on ? Color.black : Color.white.opacity(0.7))
+            .frame(width: 30, height: 24)
+            .background(on ? Color.white : Color.clear, in: Capsule())
     }
 }

@@ -13,6 +13,8 @@ struct FluidMapView: UIViewRepresentable {
     /// Hauteur du panneau vario posé sur la carte : l'échelle et le logo Plans restent au-dessus (la carte, elle,
     /// ne change pas de taille, le planeur ne bouge pas à l'écran).
     var bottomInset: CGFloat = 0
+    /// Mode sombre de Pilotage : fond de carte sombre d'Apple, route et terrain en violet fluo très clair.
+    var dark = false
     @EnvironmentObject var map: MapControl
 
     func makeCoordinator() -> Coordinator { Coordinator(predictor: predictor, control: map) }
@@ -48,6 +50,11 @@ struct FluidMapView: UIViewRepresentable {
 
     func updateUIView(_ v: MKMapView, context: Context) {
         context.coordinator.update(p: p, airspaces: airspaces, traffic: traffic, on: v)
+        let style: UIUserInterfaceStyle = dark ? .dark : .light
+        if v.overrideUserInterfaceStyle != style {
+            v.overrideUserInterfaceStyle = style
+            context.coordinator.restyle(on: v)
+        }
         if context.coordinator.scaleBottom?.constant != -30 - bottomInset {
             context.coordinator.scaleBottom?.constant = -30 - bottomInset
         }
@@ -151,6 +158,14 @@ struct FluidMapView: UIViewRepresentable {
         }
 
         // MARK: contenu (4 Hz, par différence)
+
+        /// Changement clair / sombre : la route et le drapeau du terrain reprennent la couleur du mode.
+        func restyle(on v: MKMapView) {
+            routeRenderer?.setNeedsDisplay()
+            for a in v.annotations where a is MKPointAnnotation {
+                v.view(for: a)?.image = UIImage(systemName: "flag.fill")?.withTintColor(UIColor(PI.route), renderingMode: .alwaysOriginal)
+            }
+        }
 
         func update(p: PilotUi, airspaces: [AirspaceShape], traffic: TrafficSnapshot?, on v: MKMapView) {
             let first = self.p == nil
@@ -303,7 +318,7 @@ struct FluidMapView: UIViewRepresentable {
             case let f as MKPointAnnotation:
                 let v = m.dequeueReusableAnnotationView(withIdentifier: "field") ?? MKAnnotationView(annotation: f, reuseIdentifier: "field")
                 v.annotation = f
-                v.image = UIImage(systemName: "flag.fill")?.withTintColor(UIColor(WG.route), renderingMode: .alwaysOriginal)
+                v.image = UIImage(systemName: "flag.fill")?.withTintColor(UIColor(PI.route), renderingMode: .alwaysOriginal)
                 v.displayPriority = .required
                 return v
             default: return nil
@@ -353,7 +368,7 @@ final class RouteRenderer: MKOverlayRenderer {
     override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in ctx: CGContext) {
         guard let r = overlay as? RouteOverlay, let from = r.from else { return }
         let a = point(for: MKMapPoint(from)), b = point(for: MKMapPoint(r.to))
-        ctx.setStrokeColor(UIColor(WG.route).cgColor)
+        ctx.setStrokeColor(UIColor(PI.route).cgColor)
         ctx.setLineWidth(1 / zoomScale)
         ctx.setLineDash(phase: 0, lengths: [4 / zoomScale, 4 / zoomScale])
         ctx.move(to: a); ctx.addLine(to: b); ctx.strokePath()
