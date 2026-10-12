@@ -219,14 +219,6 @@ struct MapOverlay: View {
                         .accessibilityLabel("Trafic OGN : \(t.pill)")
                 }
                 // panneaux masqués : pastilles indépendantes sur la carte
-                if !showVario {
-                    HStack(spacing: 4) {
-                        Text("vario").font(WG.caption2).foregroundStyle(WG.dim)
-                        Text(p.varioText).font(WG.number(15)).foregroundStyle(WG.vario(p.varioMs))
-                        PanelToggle(isOn: $showVario, label: "")
-                    }
-                    .padding(.leading, 8).background(WG.card.opacity(0.92), in: Capsule()).shadow(color: .black.opacity(0.12), radius: 2)
-                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
@@ -279,8 +271,8 @@ struct MapOverlay: View {
                 .background(WG.card.opacity(0.92), in: Capsule())
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 22)
 
-            // bas droite : zones aéronautiques (au-dessus) et zoom
-            VStack(spacing: 8) {
+            // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
+            VStack(alignment: .trailing, spacing: 8) {
             Button {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             } label: {
@@ -299,6 +291,15 @@ struct MapOverlay: View {
             }
             .font(.title3.weight(.light)).foregroundStyle(WG.brandInk)
             .background(WG.card, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
+            // vario replié : pastille sous le zoom
+            if !showVario {
+                HStack(spacing: 4) {
+                    Text("vario").font(WG.caption2).foregroundStyle(WG.dim)
+                    Text(p.varioText).font(WG.number(15)).foregroundStyle(WG.vario(p.varioMs))
+                    PanelToggle(isOn: $showVario, label: "")
+                }
+                .padding(.leading, 8).background(WG.card.opacity(0.92), in: Capsule()).shadow(color: .black.opacity(0.12), radius: 2)
+            }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing).padding(.bottom, 22)
         }
