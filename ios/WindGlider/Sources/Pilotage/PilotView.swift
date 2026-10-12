@@ -12,21 +12,12 @@ struct PilotView: View {
     @State private var choosingField = false
     @AppStorage("pilot.showProfile") private var showProfile = true
     @AppStorage("pilot.showVario") private var showVario = true
+    @State private var topInset: CGFloat = 0
 
     var body: some View {
         let p = app.pilot
         VStack(spacing: 0) {
-            header(p)
-            if showProfile {
-                ZStack(alignment: .topTrailing) {
-                    VStack(spacing: 0) {
-                        ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
-                        Text(p.fieldElevText).font(WG.caption).foregroundStyle(WG.dim)
-                            .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
-                    }
-                }
-                .background(WG.brandPaper.opacity(0.5))
-            }
+            // V3 : la carte se déroule derrière l'en-tête (quatre boîtes blanches à 90 %) et la coupe
             ZStack(alignment: .top) {
                 // V3 : carte fluide (60 images/s, planeur prédit) ; -mapV2 au lancement = carte de la V2
                 if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
@@ -36,7 +27,20 @@ struct PilotView: View {
                         // vario replié : la carte passe sous la barre d'onglets (transparence)
                         .ignoresSafeArea(.container, edges: showVario ? [] : .bottom)
                 }
-                MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario)
+                MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset)
+                VStack(spacing: 6) {
+                    header(p)
+                    if showProfile {
+                        VStack(spacing: 0) {
+                            ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
+                            Text(p.fieldElevText).font(WG.caption).foregroundStyle(WG.dim)
+                                .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
+                        }
+                        .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 14))
+                        .padding(.horizontal, 8)
+                    }
+                }
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
             }
             if showVario {
                 ZStack(alignment: .topTrailing) {
@@ -55,65 +59,79 @@ struct PilotView: View {
 
     private func header(_ p: PilotUi) -> some View {
         let marginColor = p.marginKnown ? (p.marginM >= 0 ? WG.good : WG.bad) : WG.dim
-        return VStack(alignment: .leading, spacing: 2) {
-        HStack(alignment: .top) {
+        let f10 = app.finesse == 10
+        return HStack(alignment: .top, spacing: 6) {
+            // gauche : marge (sans unité, évidente), SÉCU, ALT
             VStack(alignment: .leading, spacing: 0) {
                 Text("Marge sécu.").font(WG.footnote).foregroundStyle(marginColor)
-                // une seule ligne, quelle que soit la valeur ; unité en petit dessous
                 Text(p.marginText).font(WG.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
-                Text("m").font(WG.caption).foregroundStyle(WG.dim).padding(.top, -4)
+                Spacer(minLength: 2)
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim); Text(p.secuText).font(WG.number(16))
+                }
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16))
+                }
             }
-            .frame(maxWidth: 130, alignment: .leading)
-            Spacer(minLength: 4)
-            VStack(spacing: 0) {
-                Text("Dist. ter.").font(WG.footnote).foregroundStyle(WG.dim)
-                Text(p.distanceText).font(WG.number(32)).minimumScaleFactor(0.6).lineLimit(1)
-                Text("km").font(WG.caption)
-            }
-            Spacer(minLength: 4)
-            VStack(alignment: .trailing, spacing: 4) {
-                HStack(spacing: 4) {
-                    Text("Fin.").font(WG.footnote).foregroundStyle(WG.brandInk).fixedSize()
-                    // le vent peut être long (« vent 344°/27 prévu ») : il rétrécit au lieu de pousser l'en-tête
-                    Text(p.finesseNote).font(WG.caption2).foregroundStyle(WG.dim).minimumScaleFactor(0.6)
+            .lineLimit(1)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .headerBox()
+            // centre : finesse (haut) et cap GPS (bas)
+            VStack(spacing: 6) {
+                VStack(spacing: 4) {
+                    HStack(spacing: 4) {
+                        // F20 : pas de +300 m affiché, le mot « Finesse » en entier
+                        Text(f10 ? "Fin." : "Finesse").font(WG.footnote)
+                        if f10 { Text("+300 m").font(WG.caption2).foregroundStyle(WG.dim) }
+                    }
+                    .lineLimit(1).fixedSize()
+                    // un seul bouton : touche = bascule finesse 10 ⇄ 20
+                    Button { app.finesse = f10 ? 20 : 10 } label: {
+                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                            Text("F").font(WG.caption2)
+                            Text("\(app.finesse)").font(WG.number(20))
+                        }
+                        .lineLimit(1).fixedSize()
+                        .padding(.horizontal, 10).padding(.vertical, 5)
+                        .background(WG.sky.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
+                        .foregroundStyle(WG.sky)
+                    }
+                }
+                .frame(maxWidth: .infinity).headerBox()
+                VStack(spacing: 0) {
+                    Text("CAP").font(WG.footnote)
+                    Text(p.hasPosition ? "\(Int(p.trackDeg.rounded()) % 360)°" : "—").font(WG.number(20)).monospacedDigit()
                 }
                 .lineLimit(1)
-                // un seul bouton : touche = bascule finesse 10 ⇄ 20
-                Button { app.finesse = app.finesse == 10 ? 20 : 10 } label: {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
-                        Text("F").font(WG.caption2)
-                        Text("\(app.finesse)").font(WG.number(20))
+                .frame(maxWidth: .infinity).headerBox()
+                .accessibilityElement(children: .combine)
+            }
+            .frame(width: 96)
+            // droite : distance, terrain, cap vers le terrain (même taille que le cap GPS)
+            Button { choosingField = true } label: {
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text("Dist. ter.").font(WG.footnote).foregroundStyle(WG.dim)
+                    HStack(alignment: .firstTextBaseline, spacing: 2) {
+                        Text(p.distanceText).font(WG.number(32)).minimumScaleFactor(0.6)
+                        Text("km").font(WG.caption)
                     }
-                    .lineLimit(1).fixedSize()
-                    .padding(.horizontal, 7).padding(.vertical, 5)
-                    .background(WG.sky.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
-                    .foregroundStyle(WG.sky)
-                }
-                Button { choosingField = true } label: {
-                    HStack(spacing: 6) {
-                        Text(p.autoField ? "AUTO" : "MANU").font(WG.caption2).foregroundStyle(WG.route)
+                    Spacer(minLength: 2)
+                    HStack(spacing: 4) {
                         Text(p.fieldCode).font(WG.headline).foregroundStyle(WG.brandInk)
-                        Text(p.bearingText).font(WG.number(18)).foregroundStyle(WG.route)
                         Image(systemName: "chevron.down").font(.caption2).foregroundStyle(WG.route)
                     }
-                    .lineLimit(1).fixedSize()
+                    Text(p.bearingText).font(WG.number(20)).foregroundStyle(WG.route)
                 }
-                .accessibilityLabel("Choisir le terrain de référence")
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+                .headerBox()
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Choisir le terrain de référence")
         }
-        // ALT, SÉCU et référence d'altitude sur une seule ligne (gain de hauteur)
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16))
-            Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim).padding(.leading, 8); Text(p.secuText).font(WG.number(16))
-            Text(p.altRefText).font(WG.caption2).foregroundStyle(WG.dim).padding(.leading, 8)
-            Spacer(minLength: 4)
-            // V3 : interrupteur de la coupe « marge », fixe dans l'en-tête sous les finesses (ne bouge plus)
-            PanelToggle(isOn: $showProfile, label: "relief")
-        }
-        .lineLimit(1)
-        }
-        .padding(.horizontal, 14).padding(.top, 6).padding(.bottom, 4)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 8).padding(.top, 4)
         .foregroundStyle(WG.brandInk)
     }
 
@@ -149,27 +167,42 @@ struct PilotView: View {
 }
 
 /// Petit interrupteur orange d'un panneau (coupe, vario).
+private extension View {
+    /// Boîte de l'en-tête de Pilotage (V3) : fond blanc à 90 %, coins légèrement arrondis, carte visible autour.
+    func headerBox() -> some View {
+        padding(.horizontal, 10).padding(.vertical, 6)
+            .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 12))
+    }
+}
+
 struct PanelToggle: View {
     @Binding var isOn: Bool
     let label: String
+    var dark = false
+    var scale: CGFloat = 1
 
     var body: some View {
-        Toggle(isOn: $isOn) { Text(label).font(WG.caption2).foregroundStyle(WG.dim) }
-            .toggleStyle(MiniSwitch())
+        Toggle(isOn: $isOn) {
+            Text(label).font(Font.custom("Inter", size: 11 * scale)).foregroundStyle(dark ? .white : WG.dim)
+        }
+            .toggleStyle(MiniSwitch(scale: scale))
+            .padding(.horizontal, dark ? 4 : 0)
+            .background(dark ? Color.black.opacity(0.85) : .clear, in: Capsule())
             .accessibilityLabel(isOn ? "Masquer \(label)" : "Afficher \(label)")
     }
 }
 
 /// Interrupteur réduit (≈ 26 × 15 pt), orange de la charte quand il est actif.
 struct MiniSwitch: ToggleStyle {
+    var scale: CGFloat = 1
     func makeBody(configuration: Configuration) -> some View {
         Button { configuration.isOn.toggle() } label: {
             HStack(spacing: 4) {
                 configuration.label
                 Capsule().fill(configuration.isOn ? WG.climb : Color.gray.opacity(0.35))
-                    .frame(width: 26, height: 15)
+                    .frame(width: 26 * scale, height: 15 * scale)
                     .overlay(alignment: configuration.isOn ? .trailing : .leading) {
-                        Circle().fill(.white).frame(width: 11, height: 11).padding(2)
+                        Circle().fill(.white).frame(width: 11 * scale, height: 11 * scale).padding(2 * scale)
                     }
             }
             .padding(4).contentShape(Rectangle())
@@ -220,15 +253,6 @@ struct MapOverlay: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
-            // haut centre : cap réel du planeur (route GPS), petite boîte semi-transparente
-            if p.hasPosition {
-                Text("CAP \(Int(p.trackDeg.rounded()) % 360)°").font(WG.number(15)).monospacedDigit().foregroundStyle(WG.brandInk)
-                    .padding(.horizontal, 10).padding(.vertical, 4)
-                    .background(WG.card.opacity(0.7), in: RoundedRectangle(cornerRadius: 8))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top).padding(.top, 6)
-                    .accessibilityLabel("Cap \(Int(p.trackDeg.rounded()) % 360) degrés")
-            }
-
             // bas centre, au-dessus du chrono : mode démo
             if p.demo {
                 Text("DÉMO · planeur simulé").font(WG.caption2).padding(.horizontal, 8).padding(.vertical, 4)
@@ -238,6 +262,8 @@ struct MapOverlay: View {
 
             // haut droite : DÉMO, vent, échelle vario
             VStack(alignment: .trailing, spacing: 8) {
+                // interrupteur de la coupe : sur fond noir pour rester visible sur la carte
+                PanelToggle(isOn: $showProfile, label: "relief", dark: true, scale: 1.2)
                 Button { app.demo.toggle() } label: {
                     Text("DÉMO").font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
                         .background(app.demo ? WG.climb : WG.card, in: Capsule())
