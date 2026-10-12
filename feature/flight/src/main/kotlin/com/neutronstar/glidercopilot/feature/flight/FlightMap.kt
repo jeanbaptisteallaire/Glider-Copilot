@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
+import kotlin.math.exp
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -24,6 +26,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.neutronstar.glidercopilot.carto.MapStyle
 import com.neutronstar.glidercopilot.domain.LatLon
+import com.neutronstar.glidercopilot.domain.flight.OwnshipPredictor
 import com.neutronstar.glidercopilot.domain.flight.ThermalView
 import com.neutronstar.glidercopilot.domain.flight.ThermalZoom
 import org.maplibre.android.MapLibre
@@ -149,11 +152,24 @@ class MapController {
     internal var smoothLon = 0.0
     internal var smoothZoom = 0.0
 
+    // V3 — carte fluide : planeur prédit entre deux positions GPS, caméra posée à chaque image (30 i/s)
+    internal val predictor = OwnshipPredictor()
+    internal var lastFix: LatLon? = null
+    internal var lastFixT = 0.0
+    internal var camBearing = Double.NaN
+    internal var camZoom = Double.NaN
+    /** Vrai quand la boucle d'image pilote la caméra (suivi hors spirale) : la recomposition ne la bouge plus. */
+    internal var fluid = false
+
     fun zoomIn() {
-        if (thermalActive) thermalBias = (thermalBias + 1).coerceAtMost(3.0) else map?.animateCamera(CameraUpdateFactory.zoomIn(), 250)
+        if (thermalActive) thermalBias = (thermalBias + 1).coerceAtMost(3.0)
+        else if (fluid) zoom = (zoom + 1).coerceAtMost(18.0)   // la boucle d'image lisse le changement
+        else map?.animateCamera(CameraUpdateFactory.zoomIn(), 250)
     }
     fun zoomOut() {
-        if (thermalActive) thermalBias = (thermalBias - 1).coerceAtLeast(-3.0) else map?.animateCamera(CameraUpdateFactory.zoomOut(), 250)
+        if (thermalActive) thermalBias = (thermalBias - 1).coerceAtLeast(-3.0)
+        else if (fluid) zoom = (zoom - 1).coerceAtLeast(4.0)
+        else map?.animateCamera(CameraUpdateFactory.zoomOut(), 250)
     }
     fun recenter() { follow = true }
 
@@ -192,6 +208,49 @@ internal fun LiveMap(
         MapView(context).apply { onCreate(null) }
     }
     var style by remember { mutableStateOf<Style?>(null) }
+    val traceSize = remember { androidx.compose.runtime.mutableIntStateOf(-1) }
+    val traceCentering = remember { mutableStateOf(false) }
+    val latestFrame = androidx.compose.runtime.rememberUpdatedState(frame)
+
+    // V3 — boucle d'image à 30 i/s : planeur prédit et caméra posée sans animation, cap et zoom lissés.
+    // Hors spirale et en suivi seulement ; la vue spirale garde sa logique (ThermalZoom).
+    LaunchedEffect(style, trafficOnly) {
+        val s = style ?: return@LaunchedEffect
+        if (trafficOnly) return@LaunchedEffect
+        var last = 0L
+        var lastNs = 0L
+        while (true) {
+            withFrameNanos { now ->
+                if (now - last < 33_000_000L) return@withFrameNanos   // 30 images par seconde (batterie)
+                val dt = if (lastNs == 0L) 0.033 else ((now - lastNs) / 1e9).coerceAtMost(0.1)
+                last = now; lastNs = now
+                val map = controller.map ?: return@withFrameNanos
+                val f = latestFrame.value
+                val centering = f.circling && controller.orientation == MapOrientation.AUTO
+                val st = controller.predictor.state(System.nanoTime() / 1e9)
+                val pos = if (st.valid) LatLng(st.lat, st.lon) else LatLng(f.glider.lat, f.glider.lon)
+                val course = if (st.valid) st.course else f.headingDeg
+                s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(
+                    """{"type":"Feature","properties":{"heading":$course},"geometry":{"type":"Point","coordinates":[${pos.longitude},${pos.latitude}]}}""")
+                val fluid = controller.follow && !controller.thermalActive && f.thermal == null &&
+                    System.currentTimeMillis() > controller.transitionUntil
+                controller.fluid = fluid
+                if (!fluid) { controller.camBearing = Double.NaN; return@withFrameNanos }
+                val bearing = if (centering || controller.orientation == MapOrientation.NORTH) 0.0 else course
+                val zoom = if (centering) maxOf(controller.zoom, MapController.CENTERING_ZOOM) else controller.zoom
+                if (controller.camBearing.isNaN()) { controller.camBearing = map.cameraPosition.bearing; controller.camZoom = map.cameraPosition.zoom }
+                controller.camBearing = OwnshipPredictor.norm(controller.camBearing +
+                    OwnshipPredictor.angleDiff(bearing, controller.camBearing) * (1 - exp(-dt / 0.4)))
+                controller.camZoom += (zoom - controller.camZoom) * (1 - exp(-dt / 0.3))
+                // planeur 5 % plus bas que le centre (comme iOS V3), centré en vue centrage
+                val padTop = if (centering) 0.0 else mapView.height * 0.10
+                map.moveCamera(CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.Builder().target(pos).bearing(controller.camBearing).zoom(controller.camZoom)
+                        .padding(0.0, padTop, 0.0, 0.0).build()))
+                controller.shownZoom = controller.camZoom
+            }
+        }
+    }
 
     DisposableEffect(lifecycle, mapView) {
         val observer = LifecycleEventObserver { _, event ->
@@ -242,7 +301,7 @@ internal fun LiveMap(
             }
             map.addOnCameraMoveListener {
                 // le zoom choisi par le pilote n'est mémorisé que pour ses propres gestes : la vue centrage zoome sans l'écraser
-                if (!controller.centering && !controller.thermalActive && System.currentTimeMillis() > controller.transitionUntil) {
+                if (!controller.fluid && !controller.centering && !controller.thermalActive && System.currentTimeMillis() > controller.transitionUntil) {
                     controller.zoom = map.cameraPosition.zoom
                 }
                 controller.shownZoom = map.cameraPosition.zoom
@@ -278,8 +337,23 @@ internal fun LiveMap(
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(EMPTY_JSON)
             return@SideEffect
         }
-        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
-        s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(if (centering) emptyList() else frame.trace))
+        // nouvelle position GPS : vitesse sol mesurée entre deux positions, transmise au prédicteur
+        if (frame.glider != controller.lastFix) {
+            val t = System.nanoTime() / 1e9
+            val prev = controller.lastFix
+            val dt = t - controller.lastFixT
+            val speed = if (prev != null && dt in 0.2..5.0) {
+                val (e, n) = OwnshipPredictor.enu(prev.lat, prev.lon, frame.glider.lat, frame.glider.lon)
+                kotlin.math.hypot(e, n) / dt
+            } else 0.0
+            controller.predictor.fix(frame.glider.lat, frame.glider.lon, speed, frame.headingDeg, t)
+            controller.lastFix = frame.glider; controller.lastFixT = t
+        }
+        if (!controller.fluid) s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
+        if (frame.trace.size != traceSize.intValue || centering != traceCentering.value) {
+            traceSize.intValue = frame.trace.size; traceCentering.value = centering
+            s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(if (centering) emptyList() else frame.trace))
+        }
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_AIR_TRACE)?.setGeoJson(traceJson(if (centering) frame.airTrace else emptyList()))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_CORE)?.setGeoJson(coreJson(if (centering) frame.core else null))
         s.getSourceAs<GeoJsonSource>(MapStyle.SRC_ROUTE)?.setGeoJson(line(frame.glider, frame.field))
@@ -327,6 +401,7 @@ internal fun LiveMap(
             return@SideEffect
         }
         if (controller.thermalActive && (thermal == null || !controller.follow)) { controller.thermalActive = false; controller.thermalBias = 0.0 }
+        if (controller.fluid) return@SideEffect   // caméra posée par la boucle d'image
         if (controller.follow && map != null && System.currentTimeMillis() > controller.transitionUntil) {
             // route en haut en transition, nord en haut en spirale (une carte qui tourne à 14°/s est illisible)
             val bearing = when {

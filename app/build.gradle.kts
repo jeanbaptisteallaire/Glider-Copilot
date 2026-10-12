@@ -60,6 +60,11 @@ android {
         }
     }
     buildTypes {
+        debug {
+            // essais sur un téléphone qui a déjà la version du Play Store : app de test à côté (autre identifiant),
+            // sans désinstaller ni toucher aux vols. Seulement si GLIDY_DEV_SUFFIX est défini (CI inchangée).
+            System.getenv("GLIDY_DEV_SUFFIX")?.let { applicationIdSuffix = it; versionNameSuffix = "-test" }
+        }
         release {
             // R8 (S9) : code réduit et obscurci pour la version publiée ; ressources inutilisées retirées.
             // Un test de fumée CI installe l'APK release sur émulateur pour vérifier qu'aucune règle ne manque.

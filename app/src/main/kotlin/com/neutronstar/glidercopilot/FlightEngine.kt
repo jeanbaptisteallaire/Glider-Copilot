@@ -499,7 +499,8 @@ class FlightEngine(
     /** Mode démo : boucle de pompes et transitions autour du terrain du club, rejouée sans fin en temps réel. */
     private suspend fun runDemo() {
         val center = fieldPosition ?: LatLon(43.80028, 3.78167)
-        val loop = DemoFlight.generate(center)
+        // V3 (comme iOS) : spirales sans vent, légèrement irrégulières, pompes plus longues
+        val loop = DemoFlight.generate(center, windKmh = 0.0, spiralWanderMs = 0.35, spiralGainM = 220.0)
         val loopNs = (loop.size.toLong()) * 1_000_000_000L
         var k = 0L
         while (true) {
