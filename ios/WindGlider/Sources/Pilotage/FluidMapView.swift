@@ -297,22 +297,65 @@ final class AirspaceOverlay: NSObject, MKOverlay {
     var boundingMapRect: MKMapRect { polygon.boundingMapRect }
 }
 
-/// Planeur : même symbole que la V2 (avion bleu nuit), tourné vers la route à chaque image.
+/// Planeur (V3) : silhouette vectorielle de planeur vue de dessus — grande envergure, fuselage fin, verrière, empennage
+/// en T —, fond blanc et très fin contour noir. Nez vers le haut, tourné vers la route à chaque image.
 final class OwnshipView: MKAnnotationView {
-    private let icon = UIImageView(image: UIImage(systemName: "airplane", withConfiguration: UIImage.SymbolConfiguration(textStyle: .title2))?
-        .withTintColor(UIColor(WG.brandInk), renderingMode: .alwaysOriginal))
+    private let icon = GliderIcon(frame: CGRect(x: 0, y: 0, width: 46, height: 46))
     override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
-        frame = CGRect(x: 0, y: 0, width: 36, height: 36)
-        icon.frame = bounds; icon.contentMode = .center
+        frame = CGRect(x: 0, y: 0, width: 46, height: 46)
         addSubview(icon)
         displayPriority = .required
         zPriority = .max
         collisionMode = .none
+        accessibilityLabel = "Mon planeur"
     }
     required init?(coder: NSCoder) { fatalError() }
-    /// « airplane » pointe vers l'est : −90° pour l'aligner sur la route.
-    func rotate(_ deg: Double) { icon.transform = CGAffineTransform(rotationAngle: (deg - 90) * .pi / 180) }
+    func rotate(_ deg: Double) { icon.transform = CGAffineTransform(rotationAngle: deg * .pi / 180) }
+}
+
+final class GliderIcon: UIView {
+    override init(frame: CGRect) { super.init(frame: frame); isOpaque = false; backgroundColor = .clear }
+    required init?(coder: NSCoder) { fatalError() }
+
+    /// Pièces du planeur en coordonnées unitaires (0…1), nez en haut, centre de gravité au centre de la vue.
+    private func parts(in r: CGRect) -> [UIBezierPath] {
+        func pt(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: r.minX + x * r.width, y: r.minY + y * r.height) }
+        // ailes : bord d'attaque droit, effilées vers les saumons arrondis
+        let wing = UIBezierPath()
+        wing.move(to: pt(0.50, 0.37))
+        wing.addLine(to: pt(0.02, 0.41))
+        wing.addQuadCurve(to: pt(0.02, 0.45), controlPoint: pt(0.00, 0.43))
+        wing.addLine(to: pt(0.50, 0.49))
+        wing.addLine(to: pt(0.98, 0.45))
+        wing.addQuadCurve(to: pt(0.98, 0.41), controlPoint: pt(1.00, 0.43))
+        wing.close()
+        // fuselage : nez arrondi, verrière plus large, poutre de queue fine
+        let body = UIBezierPath()
+        body.move(to: pt(0.50, 0.14))
+        body.addQuadCurve(to: pt(0.535, 0.30), controlPoint: pt(0.545, 0.17))
+        body.addQuadCurve(to: pt(0.512, 0.52), controlPoint: pt(0.530, 0.44))
+        body.addLine(to: pt(0.506, 0.86))
+        body.addLine(to: pt(0.494, 0.86))
+        body.addLine(to: pt(0.488, 0.52))
+        body.addQuadCurve(to: pt(0.465, 0.30), controlPoint: pt(0.470, 0.44))
+        body.addQuadCurve(to: pt(0.50, 0.14), controlPoint: pt(0.455, 0.17))
+        body.close()
+        // stabilisateur (empennage en T)
+        let tail = UIBezierPath(roundedRect: CGRect(origin: pt(0.36, 0.83), size: CGSize(width: 0.28 * r.width, height: 0.045 * r.height)),
+                                cornerRadius: 0.02 * r.height)
+        return [wing, body, tail]
+    }
+
+    override func draw(_ rect: CGRect) {
+        let r = bounds.insetBy(dx: 1.5, dy: 1.5)
+        let paths = parts(in: r)
+        // contour de la silhouette entière : trait noir sous les pièces, puis remplissage blanc par-dessus
+        UIColor.black.setStroke()
+        for p in paths { p.lineWidth = 1.2; p.lineJoinStyle = .round; p.stroke() }
+        UIColor.white.setFill()
+        for p in paths { p.fill() }
+    }
 }
 
 /// Aéronef OGN : flèche orientée (orange en spirale), étiquette DDB ou repli court, écart d'altitude (comme la V2).
