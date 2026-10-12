@@ -118,7 +118,15 @@ data class SafetyConfig(
     val arrivalMarginM: Double = 300.0,
     /** Hauteur minimale au-dessus du relief le long de la route (m). */
     val reliefClearanceM: Double = 100.0,
-)
+) {
+    companion object {
+        /**
+         * Réglage de l'écran Pilotage (JB, 12/10/2026) : les 300 m d'arrivée (tour de piste) ne s'ajoutent qu'en
+         * finesse 20 ; en finesse 10, la marge est calculée jusqu'au terrain lui-même.
+         */
+        fun forFinesse(finesse: Int) = SafetyConfig(finesse.toDouble(), arrivalMarginM = if (finesse >= 20) 300.0 else 0.0)
+    }
+}
 
 data class ProfileSample(val sKm: Double, val terrainM: Double?)
 

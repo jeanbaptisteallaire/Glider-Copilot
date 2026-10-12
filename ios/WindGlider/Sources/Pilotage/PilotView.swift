@@ -145,9 +145,9 @@ struct PilotView: View {
             VStack(spacing: 6) {
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
-                        // F20 : pas de +300 m affiché, le mot « Finesse » en entier
-                        Text(f10 ? "Fin." : "Finesse").font(WG.footnote)
-                        if f10 { Text("+300 m").font(WG.caption2).foregroundStyle(PI.dim) }
+                        // F20 : « Fin. +300 m » (tour de piste) ; F10 : « Finesse », sans les 300 m (JB, 12/10/2026)
+                        Text(f10 ? "Finesse" : "Fin.").font(WG.footnote)
+                        if !f10 { Text("+300 m").font(WG.caption2).foregroundStyle(PI.dim) }
                     }
                     .lineLimit(1).fixedSize()
                     // un seul bouton : touche = bascule finesse 10 ⇄ 20
@@ -432,11 +432,13 @@ struct VarioScale: View {
 /// terrain (trait plein, inclinée selon la finesse et le vent), altitude nécessaire (pointillés rouges) jusqu'à
 /// terrain + hauteur d'arrivée (« +300 »).
 struct ProfileStrip: View {
+    @EnvironmentObject var app: AppModel
     @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
     let p: PilotUi
 
     var body: some View {
         let pts = p.profile
+        let arrival = app.finesse >= 20 ? 300.0 : 0.0   // tour de piste en finesse 20 seulement
         let total = max(pts.last?.sKm ?? 0, p.routeKm)
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
@@ -450,11 +452,11 @@ struct ProfileStrip: View {
                     .foregroundStyle(darkMode ? Color(red: 0.2, green: 0.85, blue: 1.0) : PI.ink).lineStyle(StrokeStyle(lineWidth: 2))
                 LineMark(x: .value("km", 0.0), y: .value("sécu", p.requiredAltM), series: .value("s", "sécu"))
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad)
-                LineMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300), series: .value("s", "sécu"))
+                LineMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + arrival), series: .value("s", "sécu"))
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad)
-                PointMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + 300))
+                PointMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + arrival))
                     .symbolSize(20).foregroundStyle(PI.route)
-                    .annotation(position: .top, alignment: .trailing) { Text("+300").font(WG.caption2).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad) }
+                    .annotation(position: .top, alignment: .trailing) { if arrival > 0 { Text("+300").font(WG.caption2).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad) } }
             }
         }
         .chartXScale(domain: 0...max(total, 0.1))
