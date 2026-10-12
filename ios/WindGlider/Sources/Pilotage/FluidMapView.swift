@@ -99,7 +99,7 @@ struct FluidMapView: UIViewRepresentable {
         func attach(_ v: MKMapView) {
             view = v
             let l = CADisplayLink(target: self, selector: #selector(frame))
-            l.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 60, preferred: 60)
+            l.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 30, preferred: 30)   // 30 i/s : batterie (JB)
             l.add(to: .main, forMode: .common)
             link = l
         }
