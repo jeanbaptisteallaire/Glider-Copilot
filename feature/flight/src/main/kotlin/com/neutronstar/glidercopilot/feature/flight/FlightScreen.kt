@@ -236,7 +236,7 @@ fun FlightScreen(
         if (dark) Vignette(topInset)
         val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
         val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
-        Box(Modifier.fillMaxSize().padding(top = topInset, bottom = bottomInset + bottomBarInset + 12.dp))   // + marge du vario (4 dp) et espace {
+        Box(Modifier.fillMaxSize().padding(top = topInset, bottom = bottomInset + bottomBarInset + 12.dp)) {   // + marge du vario (4 dp) et espace
             MapOverlays(
                 shown, snap?.flightSeconds ?: 0, null, map, controller, traffic, chronoAction(live, controls),
                 recording = snap?.recording == true,
