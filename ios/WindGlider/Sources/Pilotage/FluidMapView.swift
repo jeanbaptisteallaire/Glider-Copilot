@@ -10,6 +10,9 @@ struct FluidMapView: UIViewRepresentable {
     var airspaces: [AirspaceShape] = []
     var traffic: TrafficSnapshot?
     let predictor: OwnshipPredictor
+    /// Hauteur du panneau vario posé sur la carte : l'échelle et le logo Plans restent au-dessus (la carte, elle,
+    /// ne change pas de taille, le planeur ne bouge pas à l'écran).
+    var bottomInset: CGFloat = 0
     @EnvironmentObject var map: MapControl
 
     func makeCoordinator() -> Coordinator { Coordinator(predictor: predictor, control: map) }
@@ -29,10 +32,9 @@ struct FluidMapView: UIViewRepresentable {
         scale.legendAlignment = .leading
         scale.translatesAutoresizingMaskIntoConstraints = false
         v.addSubview(scale)
-        NSLayoutConstraint.activate([
-            scale.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: 10),
-            scale.bottomAnchor.constraint(equalTo: v.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-        ])
+        let bottom = scale.bottomAnchor.constraint(equalTo: v.safeAreaLayoutGuide.bottomAnchor, constant: -30)
+        context.coordinator.scaleBottom = bottom
+        NSLayoutConstraint.activate([scale.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: 10), bottom])
         // un geste du pilote (glisser, pincer, tourner) passe la carte en LIBRE
         for g in [UIPanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()] as [UIGestureRecognizer] {
             g.addTarget(context.coordinator, action: #selector(Coordinator.userGesture(_:)))
@@ -46,6 +48,9 @@ struct FluidMapView: UIViewRepresentable {
 
     func updateUIView(_ v: MKMapView, context: Context) {
         context.coordinator.update(p: p, airspaces: airspaces, traffic: traffic, on: v)
+        if context.coordinator.scaleBottom?.constant != -30 - bottomInset {
+            context.coordinator.scaleBottom?.constant = -30 - bottomInset
+        }
     }
 
     static func dismantleUIView(_ v: MKMapView, coordinator: Coordinator) { coordinator.detach() }
@@ -54,6 +59,7 @@ struct FluidMapView: UIViewRepresentable {
 
     final class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         let predictor: OwnshipPredictor
+        var scaleBottom: NSLayoutConstraint?
         let control: MapControl
         let ownship = OwnshipAnnotation()
         private weak var view: MKMapView?
@@ -264,7 +270,7 @@ struct FluidMapView: UIViewRepresentable {
                 let r = MKPolygonRenderer(polygon: a.polygon)
                 let c = UIColor(WG.airspace(a.family))
                 // masque : voile léger dans la zone, bord net (cartes aéro)
-                r.strokeColor = c; r.fillColor = c.withAlphaComponent(0.025); r.lineWidth = 1.5   // voiles superposés : rester léger
+                r.strokeColor = c; r.fillColor = c.withAlphaComponent(0.025); r.lineWidth = 1.05  // voiles superposés : rester léger
                 if a.family == 1 { r.lineDashPattern = [6, 4] }
                 return r
             }

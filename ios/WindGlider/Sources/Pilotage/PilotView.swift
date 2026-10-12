@@ -13,6 +13,7 @@ struct PilotView: View {
     @AppStorage("pilot.showProfile") private var showProfile = true
     @AppStorage("pilot.showVario") private var showVario = true
     @State private var topInset: CGFloat = 0
+    @State private var bottomInset: CGFloat = 0
 
     var body: some View {
         let p = app.pilot
@@ -23,11 +24,12 @@ struct PilotView: View {
                 if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                     FlightMapView(p: p, airspaces: app.airspaces)
                 } else {
-                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor)
-                        // vario replié : la carte passe sous la barre d'onglets (transparence)
-                        .ignoresSafeArea(.container, edges: showVario ? [] : .bottom)
+                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: bottomInset)
+                        // la carte passe toujours sous le vario et la barre d'onglets : ouvrir ou fermer un panneau
+                        // ne redimensionne jamais la carte (planeur immobile à l'écran)
+                        .ignoresSafeArea(.container, edges: .bottom)
                 }
-                MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset)
+                MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset).padding(.bottom, bottomInset)
                 VStack(spacing: 6) {
                     header(p)
                     // interrupteur « relief » : toujours au même endroit, coin haut droit de la boîte de coupe
@@ -47,12 +49,20 @@ struct PilotView: View {
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
-            }
-            if showVario {
-                ZStack(alignment: .topTrailing) {
-                    varioBar(p)
-                    PanelToggle(isOn: $showVario, label: "vario").padding(.trailing, 6).padding(.top, 2)
+                // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
+                ZStack(alignment: .bottomTrailing) {
+                    if showVario {
+                        varioBar(p)
+                            .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 14))
+                            .padding(.horizontal, 8)
+                    } else {
+                        Color.clear.frame(height: 30)
+                    }
+                    PanelToggle(isOn: $showVario, label: "vario", dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
                 }
+                .padding(.bottom, 4)
+                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bottomInset = $0 }
+                .frame(maxHeight: .infinity, alignment: .bottom)
             }
         }
         .background(WG.card)
@@ -161,8 +171,10 @@ struct PilotView: View {
                     .frame(width: 40, height: 40).overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
             }
             .accessibilityLabel(app.soundOn ? "Couper le son du vario" : "Activer le son du vario")
+            .frame(maxHeight: .infinity, alignment: .top)
         }
-        .padding(.horizontal, 14).padding(.top, 14).padding(.bottom, 8)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(.horizontal, 14).padding(.top, 10).padding(.bottom, 10)
         .foregroundStyle(WG.brandInk)
     }
 
@@ -344,15 +356,6 @@ struct MapOverlay: View {
             }
             .font(.title3.weight(.light)).foregroundStyle(WG.brandInk)
             .background(WG.card, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
-            // vario replié : pastille sous le zoom
-            if !showVario {
-                HStack(spacing: 4) {
-                    Text("vario").font(WG.caption2).foregroundStyle(WG.dim)
-                    Text(p.varioText).font(WG.number(15)).foregroundStyle(WG.vario(p.varioMs))
-                    PanelToggle(isOn: $showVario, label: "")
-                }
-                .padding(.leading, 8).background(WG.card.opacity(0.92), in: Capsule()).shadow(color: .black.opacity(0.12), radius: 2)
-            }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing).padding(.bottom, 22)
         }
