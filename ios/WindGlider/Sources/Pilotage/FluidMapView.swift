@@ -159,6 +159,16 @@ struct FluidMapView: UIViewRepresentable {
             if p.zoomActive, let c = camCenter {
                 let k = 1 - exp(-dt / 0.5)
                 camCenter = .init(latitude: c.latitude + (target.latitude - c.latitude) * k, longitude: c.longitude + (target.longitude - c.longitude) * k)
+            } else if p.hasPosition, v.bounds.height > 0 {
+                // planeur un peu plus bas que le centre (10 % de l'espace sous le centre, soit 5 % de la hauteur) :
+                // le centre de la carte est avancé d'autant dans la direction du haut de l'écran
+                let mid = CGPoint(x: v.bounds.midX, y: v.bounds.midY)
+                let a = v.convert(mid, toCoordinateFrom: v), b = v.convert(CGPoint(x: mid.x, y: mid.y + 100), toCoordinateFrom: v)
+                let mPerPt = CLLocation(latitude: a.latitude, longitude: a.longitude).distance(from: CLLocation(latitude: b.latitude, longitude: b.longitude)) / 100
+                let ahead = Double(v.bounds.height) * 0.05 * mPerPt
+                let h = camHeading * .pi / 180
+                let (lat, lon) = OwnshipPredictor.offset(lat: target.latitude, lon: target.longitude, east: ahead * sin(h), north: ahead * cos(h))
+                camCenter = .init(latitude: lat, longitude: lon)
             } else {
                 camCenter = target
             }
