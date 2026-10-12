@@ -28,6 +28,8 @@ object DemoFlight {
     /**
      * Trace 1 Hz commençant en transition vers la première pompe. Vent [windFromDeg]/[windKmh] : les spirales dérivent,
      * les transitions sont corrigées (vitesse sol différente selon le cap).
+     * [spiralWanderMs] > 0 (iOS) : en spirale, le cercle dérive lentement au hasard (quelques mètres par tour) et
+     * n'est pas parfaitement rond ; [spiralGainM] : gain de chaque pompe (iOS : plus de tours superposés), pour que les tours ne se superposent pas exactement. 0 = trace inchangée (Android).
      */
     fun generate(
         field: LatLon,
@@ -38,8 +40,13 @@ object DemoFlight {
         glideKmh: Double = 100.0,
         sinkMs: Double = 1.1,
         seed: Int = 3,
+        spiralWanderMs: Double = 0.0,
+        spiralGainM: Double = 60.0,
     ): List<IgcFix> {
         val rnd = Random(seed)
+        val wander = Random(seed + 101)   // tirages à part : la trace par défaut reste identique
+        var dE = 0.0
+        var dN = 0.0
         val wE = -windKmh * sin(toRadians(windFromDeg)) / 3.6
         val wN = -windKmh * cos(toRadians(windFromDeg)) / 3.6
         val out = ArrayList<IgcFix>()
@@ -69,14 +76,22 @@ object DemoFlight {
                 emit()
             }
             // spirale jusqu'à retrouver l'altitude de base + un peu (dernière pompe : exactement la base)
-            val target = baseAltM + if (i == LEGS.lastIndex) 0.0 else 60.0 + 30.0 * rnd.nextDouble()
+            val target = baseAltM + if (i == LEGS.lastIndex) 0.0 else spiralGainM + 30.0 * rnd.nextDouble()
             val period = 26.0 + 6 * rnd.nextDouble()
             var phase = heading   // continuité du cap à l'entrée en spirale
             val tas = 80 / 3.6
             while (alt < target) {
                 phase += 2 * PI / period
                 heading = phase
-                move(tas * sin(phase) + wE, tas * cos(phase) + wN)
+                if (spiralWanderMs > 0) {
+                    // marche aléatoire lente du centre du cercle + rayon légèrement irrégulier
+                    dE = (dE + (wander.nextDouble() - 0.5) * spiralWanderMs * 0.5).coerceIn(-spiralWanderMs, spiralWanderMs)
+                    dN = (dN + (wander.nextDouble() - 0.5) * spiralWanderMs * 0.5).coerceIn(-spiralWanderMs, spiralWanderMs)
+                    val v = tas * (1 + 0.07 * (wander.nextDouble() - 0.5))
+                    move(v * sin(phase) + wE + dE, v * cos(phase) + wN + dN)
+                } else {
+                    move(tas * sin(phase) + wE, tas * cos(phase) + wN)
+                }
                 // montée plus forte d'un côté du cercle (cœur décalé)
                 alt += leg.climbMs + 0.9 * sin(phase - 1.0)
                 emit()

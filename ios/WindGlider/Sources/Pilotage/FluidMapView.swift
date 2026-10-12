@@ -276,26 +276,56 @@ struct FluidMapView: UIViewRepresentable {
         }
 
         private static func segments(_ trace: [TraceDot]) -> [MKOverlay] {
+            let fade = overlapFade(trace)
             var out: [MKOverlay] = []
             var cur: [CLLocationCoordinate2D] = []
-            var bucket = Int.min
-            for d in trace {
-                let b = Int((d.climbMs * 2).rounded())
+            var key = (Int.min, -1)
+            for (i, d) in trace.enumerated() {
+                let k = (Int((d.climbMs * 2).rounded()), fade[i])
                 let c = CLLocationCoordinate2D(latitude: d.lat, longitude: d.lon)
-                if b != bucket, let last = cur.last {
-                    out.append(TraceOverlay(coordinates: cur, count: cur.count).with(climb: Double(bucket) / 2)); cur = [last]
+                if k != key, let last = cur.last {
+                    out.append(TraceOverlay(coordinates: cur, count: cur.count).with(climb: Double(key.0) / 2, fade: key.1)); cur = [last]
                 }
-                bucket = b; cur.append(c)
+                key = k; cur.append(c)
             }
-            if cur.count > 1 { out.append(TraceOverlay(coordinates: cur, count: cur.count).with(climb: Double(bucket) / 2)) }
+            if cur.count > 1 { out.append(TraceOverlay(coordinates: cur, count: cur.count).with(climb: Double(key.0) / 2, fade: key.1)) }
             return out
+        }
+
+        /// Traces superposées (spirales) : un passage recouvert par des tours plus récents s'estompe un peu à chaque
+        /// tour, sans jamais disparaître (niveau 0 = net … 5 = le plus fade, voir TraceOverlay.alpha). Une trace qui
+        /// n'est recouverte par rien reste nette, même après une heure de vol.
+        private static func overlapFade(_ trace: [TraceDot]) -> [Int] {
+            let n = trace.count
+            var fade = [Int](repeating: 0, count: n)
+            guard n > 30 else { return fade }
+            let cell = 30.0   // m
+            let lat0 = trace[0].lat * .pi / 180
+            func key(_ d: TraceDot) -> (Int, Int) {
+                (Int((d.lon * 111_320 * cos(lat0) / cell).rounded(.down)), Int((d.lat * 110_574 / cell).rounded(.down)))
+            }
+            var grid: [Int: [Int]] = [:]
+            func h(_ x: Int, _ y: Int) -> Int { x &* 73_856_093 ^ y &* 19_349_663 }
+            for i in 0..<n { let (x, y) = key(trace[i]); grid[h(x, y), default: []].append(i) }
+            for i in 0..<n {
+                let (x, y) = key(trace[i])
+                var later: [Int] = []
+                for dx in -1...1 { for dy in -1...1 { for j in grid[h(x + dx, y + dy)] ?? [] where j > i + 15 { later.append(j) } } }
+                guard !later.isEmpty else { continue }
+                later.sort()
+                // passages distincts plus récents : indices séparés de plus de 15 s
+                var passes = 1, prev = later[0]
+                for j in later.dropFirst() { if j - prev > 15 { passes += 1 }; prev = j }
+                fade[i] = min(passes, 5)
+            }
+            return fade
         }
 
         // MARK: rendu
 
         func mapView(_ m: MKMapView, rendererFor o: MKOverlay) -> MKOverlayRenderer {
             if let t = o as? TraceOverlay {
-                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.vario(t.climb)); r.lineWidth = 4; r.lineCap = .round; return r
+                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.vario(t.climb)).withAlphaComponent(t.alpha); r.lineWidth = 4; r.lineCap = .round; return r
             }
             if let t = o as? RouteOverlay {
                 let r = RouteRenderer(overlay: t); routeRenderer = r; return r
@@ -372,7 +402,10 @@ final class AirspaceLabel: NSObject, MKAnnotation {
 
 final class TraceOverlay: MKPolyline {
     var climb = 0.0
-    func with(climb: Double) -> TraceOverlay { self.climb = climb; return self }
+    var fade = 0
+    /// 1 tour plus récent par-dessus : 0,8 ; puis 0,68, 0,58, 0,5 ; plancher 0,45 (toujours visible).
+    var alpha: CGFloat { [1.0, 0.8, 0.68, 0.58, 0.5, 0.45][min(fade, 5)] }
+    func with(climb: Double, fade: Int = 0) -> TraceOverlay { self.climb = climb; self.fade = fade; return self }
 }
 
 /// Route vers le terrain : calque unique couvrant le monde, extrémités modifiables (V3 : trait deux fois plus fin).
