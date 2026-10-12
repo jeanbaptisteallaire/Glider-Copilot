@@ -15,6 +15,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import kotlin.math.exp
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -211,6 +215,10 @@ internal fun LiveMap(
     val traceSize = remember { androidx.compose.runtime.mutableIntStateOf(-1) }
     val traceCentering = remember { mutableStateOf(false) }
     val latestFrame = androidx.compose.runtime.rememberUpdatedState(frame)
+    // planeur dessiné par-dessus la carte en mode fluide : position fixe à l'écran, seule la rotation change
+    // (la couche MapLibre est rendue avec une image de retard sur la caméra : le planeur « grésillait »)
+    val gliderRot = remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
+    val gliderOverlay = remember { mutableStateOf(false) }
 
     // V3 — boucle d'image à 30 i/s : planeur prédit et caméra posée sans animation, cap et zoom lissés.
     // Hors spirale et en suivi seulement ; la vue spirale garde sa logique (ThermalZoom).
@@ -230,12 +238,18 @@ internal fun LiveMap(
                 val st = controller.predictor.state(System.nanoTime() / 1e9)
                 val pos = if (st.valid) LatLng(st.lat, st.lon) else LatLng(f.glider.lat, f.glider.lon)
                 val course = if (st.valid) st.course else f.headingDeg
-                s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(
-                    """{"type":"Feature","properties":{"heading":$course},"geometry":{"type":"Point","coordinates":[${pos.longitude},${pos.latitude}]}}""")
                 val fluid = controller.follow && !controller.thermalActive && f.thermal == null &&
                     System.currentTimeMillis() > controller.transitionUntil
+                if (fluid != gliderOverlay.value) {
+                    gliderOverlay.value = fluid
+                    if (fluid) s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(EMPTY_JSON)
+                }
                 controller.fluid = fluid
-                if (!fluid) { controller.camBearing = Double.NaN; return@withFrameNanos }
+                if (!fluid) {
+                    s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(
+                        """{"type":"Feature","properties":{"heading":$course},"geometry":{"type":"Point","coordinates":[${pos.longitude},${pos.latitude}]}}""")
+                    controller.camBearing = Double.NaN; return@withFrameNanos
+                }
                 val bearing = if (centering || controller.orientation == MapOrientation.NORTH) 0.0 else course
                 val zoom = if (centering) maxOf(controller.zoom, MapController.CENTERING_ZOOM) else controller.zoom
                 if (controller.camBearing.isNaN()) { controller.camBearing = map.cameraPosition.bearing; controller.camZoom = map.cameraPosition.zoom }
@@ -248,6 +262,7 @@ internal fun LiveMap(
                     CameraPosition.Builder().target(pos).bearing(controller.camBearing).zoom(controller.camZoom)
                         .padding(0.0, padTop, 0.0, 0.0).build()))
                 controller.shownZoom = controller.camZoom
+                gliderRot.floatValue = (course - controller.camBearing).toFloat()
             }
         }
     }
@@ -349,7 +364,7 @@ internal fun LiveMap(
             controller.predictor.fix(frame.glider.lat, frame.glider.lon, speed, frame.headingDeg, t)
             controller.lastFix = frame.glider; controller.lastFixT = t
         }
-        if (!controller.fluid) s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
+        if (!controller.fluid && !gliderOverlay.value) s.getSourceAs<GeoJsonSource>(MapStyle.SRC_GLIDER)?.setGeoJson(gliderJson(frame))
         if (frame.trace.size != traceSize.intValue || centering != traceCentering.value) {
             traceSize.intValue = frame.trace.size; traceCentering.value = centering
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_TRACE)?.setGeoJson(traceJson(if (centering) emptyList() else frame.trace))
@@ -421,7 +436,34 @@ internal fun LiveMap(
         }
     }
 
-    AndroidView(factory = { mapView }, modifier = modifier.semantics { contentDescription = "Carte hors ligne vue de dessus" })
+    androidx.compose.foundation.layout.BoxWithConstraints(modifier) {
+        AndroidView(factory = { mapView }, modifier = Modifier.matchParentSize().semantics { contentDescription = "Carte hors ligne vue de dessus" })
+        if (gliderOverlay.value && !trafficOnly) {
+            // centre de la caméra avec la marge du haut (10 % de la hauteur) : 5 % sous le milieu
+            val size = 34.dp
+            androidx.compose.foundation.Canvas(
+                Modifier.size(size)
+                    .offset(x = maxWidth / 2 - size / 2, y = maxHeight * 0.55f - size / 2)
+                    .graphicsLayer { rotationZ = gliderRot.floatValue },
+            ) { drawGlider() }
+        }
+    }
+}
+
+/** Silhouette de planeur vue de dessus, nez vers le haut : blanc, contour noir fin (comme iOS V3). */
+private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawGlider() {
+    val w = size.width; val h = size.height
+    val path = androidx.compose.ui.graphics.Path().apply {
+        // fuselage et ailes : demi-envergure à gauche puis à droite, empennage en bas
+        moveTo(w * 0.5f, h * 0.06f)
+        lineTo(w * 0.54f, h * 0.30f); lineTo(w * 0.98f, h * 0.33f); lineTo(w * 0.98f, h * 0.39f); lineTo(w * 0.54f, h * 0.41f)
+        lineTo(w * 0.52f, h * 0.84f); lineTo(w * 0.68f, h * 0.86f); lineTo(w * 0.68f, h * 0.92f); lineTo(w * 0.5f, h * 0.93f)
+        lineTo(w * 0.32f, h * 0.92f); lineTo(w * 0.32f, h * 0.86f); lineTo(w * 0.48f, h * 0.84f)
+        lineTo(w * 0.46f, h * 0.41f); lineTo(w * 0.02f, h * 0.39f); lineTo(w * 0.02f, h * 0.33f); lineTo(w * 0.46f, h * 0.30f)
+        close()
+    }
+    drawPath(path, Color.White)
+    drawPath(path, Color.Black, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 1.2f * density))
 }
 
 private fun gliderJson(f: GeoFrame) =
