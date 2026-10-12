@@ -24,7 +24,6 @@ struct PilotView: View {
                         Text(p.fieldElevText).font(WG.caption).foregroundStyle(WG.dim)
                             .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
                     }
-                    PanelToggle(isOn: $showProfile, label: "coupe").padding(.trailing, 6).padding(.top, 2)
                 }
                 .background(WG.brandPaper.opacity(0.5))
             }
@@ -34,6 +33,8 @@ struct PilotView: View {
                     FlightMapView(p: p, airspaces: app.airspaces)
                 } else {
                     FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor)
+                        // vario replié : la carte passe sous la barre d'onglets (transparence)
+                        .ignoresSafeArea(.container, edges: showVario ? [] : .bottom)
                 }
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario)
             }
@@ -108,6 +109,9 @@ struct PilotView: View {
             Text("ALT").font(WG.caption).foregroundStyle(WG.dim); Text(p.altText).font(WG.number(16))
             Text("SÉCU").font(WG.caption).foregroundStyle(WG.dim).padding(.leading, 8); Text(p.secuText).font(WG.number(16))
             Text(p.altRefText).font(WG.caption2).foregroundStyle(WG.dim).padding(.leading, 8)
+            Spacer(minLength: 4)
+            // V3 : interrupteur de la coupe « marge », fixe dans l'en-tête sous les finesses (ne bouge plus)
+            PanelToggle(isOn: $showProfile, label: "marge")
         }
         .lineLimit(1)
         }
@@ -215,13 +219,6 @@ struct MapOverlay: View {
                         .accessibilityLabel("Trafic OGN : \(t.pill)")
                 }
                 // panneaux masqués : pastilles indépendantes sur la carte
-                if !showProfile {
-                    HStack(spacing: 4) {
-                        Text(p.marginKnown ? "marge \(p.marginText) m" : "coupe").font(WG.caption2)
-                        PanelToggle(isOn: $showProfile, label: "")
-                    }
-                    .padding(.leading, 8).background(WG.card.opacity(0.92), in: Capsule()).shadow(color: .black.opacity(0.12), radius: 2)
-                }
                 if !showVario {
                     HStack(spacing: 4) {
                         Text("vario").font(WG.caption2).foregroundStyle(WG.dim)
@@ -275,7 +272,7 @@ struct MapOverlay: View {
                 badge("DATA", app.status.data)
             }
             .accessibilityElement(children: .combine)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 40)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 54)
 
             // bas centre : chrono du vol
             Text(p.flightTimeText).font(WG.caption.monospacedDigit()).padding(.horizontal, 8).padding(.vertical, 3)

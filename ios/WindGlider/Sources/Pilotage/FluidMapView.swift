@@ -23,7 +23,7 @@ struct FluidMapView: UIViewRepresentable {
         v.showsScale = false
         v.isPitchEnabled = false
         v.delegate = context.coordinator
-        // échelle en bas à gauche, au-dessus des pastilles (disposition de la V2)
+        // échelle en bas à gauche, sous les pastilles GPS · BARO · DATA, juste au-dessus du logo Plans
         let scale = MKScaleView(mapView: v)
         scale.scaleVisibility = .visible
         scale.legendAlignment = .leading
@@ -31,7 +31,7 @@ struct FluidMapView: UIViewRepresentable {
         v.addSubview(scale)
         NSLayoutConstraint.activate([
             scale.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: 10),
-            scale.bottomAnchor.constraint(equalTo: v.bottomAnchor, constant: -128),
+            scale.bottomAnchor.constraint(equalTo: v.safeAreaLayoutGuide.bottomAnchor, constant: -30),
         ])
         // un geste du pilote (glisser, pincer, tourner) passe la carte en LIBRE
         for g in [UIPanGestureRecognizer(), UIPinchGestureRecognizer(), UIRotationGestureRecognizer()] as [UIGestureRecognizer] {
