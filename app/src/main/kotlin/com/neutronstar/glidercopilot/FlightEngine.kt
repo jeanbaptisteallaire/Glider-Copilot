@@ -442,7 +442,7 @@ class FlightEngine(
         }
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
         safetyState = runCatching {
-            safety.update(fix, alt, climb, snap.circling, SafetyConfig(finesse.toDouble()), fix.time, armed)
+            safety.update(fix, alt, climb, snap.circling, SafetyConfig.forFinesse(finesse), fix.time, armed)
         }.onFailure { Log.w(TAG, "calcul de sécurité", it) }.getOrNull()
     }
 

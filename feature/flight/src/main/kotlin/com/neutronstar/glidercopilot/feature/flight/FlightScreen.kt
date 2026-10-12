@@ -93,7 +93,8 @@ private const val DEFAULT_FIELD_ELEV = 183.0
 private val LocalFieldElev = androidx.compose.runtime.staticCompositionLocalOf { DEFAULT_FIELD_ELEV }
 private const val FIELD_DIST_KM = 7.4
 private const val FIELD_BRG = 285.0
-private const val ARRIVAL_MARGIN = 300.0
+/** Hauteur d'arrivée (tour de piste) : 300 m en finesse 20 seulement (JB, 12/10/2026), comme SafetyConfig.forFinesse. */
+private fun arrivalMargin(finesse: Int): Double = if (finesse >= 20) 300.0 else 0.0
 private const val CEILING = 1880.0
 
 /**
@@ -182,7 +183,7 @@ fun FlightScreen(
     val brg = result?.bearingDeg ?: if (gliderPos != null && field != null) Geo.bearingDeg(gliderPos, field) else FIELD_BRG
     val distKnown = result != null || (gliderPos != null && field != null) || showDemo
     val fieldElevShown = result?.field?.elevationM ?: fieldElev
-    val need = result?.requiredM ?: (fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0))
+    val need = result?.requiredM ?: (fieldElev + arrivalMargin(finesse) + (if (distKnown) distKm * 1000 / finesse else 0.0))
     val marge = result?.let { r -> alt?.let { it - r.requiredM } } ?: alt?.takeIf { distKnown }?.let { it - need }
     val trend: Double? = when {
         real -> snap!!.avgSpiralMs
@@ -235,7 +236,7 @@ fun FlightScreen(
         if (dark) Vignette(topInset)
         val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
         val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
-        Box(Modifier.fillMaxSize().padding(top = topInset, bottom = bottomInset + bottomBarInset)) {
+        Box(Modifier.fillMaxSize().padding(top = topInset, bottom = bottomInset + bottomBarInset + 12.dp))   // + marge du vario (4 dp) et espace {
             MapOverlays(
                 shown, snap?.flightSeconds ?: 0, null, map, controller, traffic, chronoAction(live, controls),
                 recording = snap?.recording == true,
@@ -272,7 +273,7 @@ fun FlightScreen(
                 if (profileOpen) {
                     Column(Modifier.padding(horizontal = 8.dp).fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(c.background.copy(alpha = if (dark) 1f else 0.9f)).padding(top = 6.dp)) {
                         if (waiting) Text("Coupe du terrain dès la première position (GPS ou OGN)", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, color = c.dim), modifier = Modifier.fillMaxWidth().height(88.dp).padding(start = 16.dp, top = 30.dp))
-                        else ProfileCanvas(alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge ?: 0.0, distKm, brg, result, if (showDemo) CEILING else null)
+                        else ProfileCanvas(alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge ?: 0.0, distKm, brg, result, if (showDemo) CEILING else null, arrivalMargin(finesse))
                     }
                 } else Spacer(Modifier.height(34.dp))
                 PanelSwitch("relief", profileOpen, { profileOpen = !profileOpen }, Modifier.align(Alignment.TopEnd).padding(end = 10.dp, top = 2.dp))
@@ -362,9 +363,9 @@ private fun Header(marge: Double?, alt: Double?, need: Double?, finesse: Int, pe
         Column(Modifier.width(96.dp).fillMaxHeight(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             Column(Modifier.fillMaxWidth().headerBox(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    // F20 : pas de « +300 m », le mot Finesse en entier
-                    Text(if (pending != null) "encore" else if (finesse == 10) "Fin." else "Finesse", style = foot.copy(color = if (pending != null) c.warn else c.ink), maxLines = 1)
-                    if (pending == null && finesse == 10) Text("+${ARRIVAL_MARGIN.toInt()} m", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, color = c.dim), maxLines = 1)
+                    // F20 : « Fin. +300 m » (tour de piste) ; F10 : le mot Finesse en entier, sans les 300 m
+                    Text(if (pending != null) "encore" else if (finesse == 20) "Fin." else "Finesse", style = foot.copy(color = if (pending != null) c.warn else c.ink), maxLines = 1)
+                    if (pending == null && finesse == 20) Text("+${arrivalMargin(finesse).toInt()} m", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, color = c.dim), maxLines = 1)
                 }
                 Row(
                     Modifier.background(c.route.copy(alpha = 0.15f), RoundedCornerShape(8.dp))
@@ -494,6 +495,7 @@ private fun ProfileCanvas(
     altOrNull: Double?, need: Double, finesse: Double, marge: Double, distKm: Double, brg: Double,
     result: com.neutronstar.glidercopilot.domain.safety.GlideResult? = null,
     CEILING: Double? = null,
+    arrivalM: Double = 300.0,
 ) {
     val realRelief = result?.takeIf { it.terrainKnown }?.profile
     val alt = altOrNull ?: need
@@ -557,7 +559,7 @@ private fun ProfileCanvas(
         }
         drawPath(ground, Brush.verticalGradient(listOf(c.terrainTop, c.terrainBottom), startY = y(tmax), endY = h))
         // plancher de sécurité
-        val arr = FIELD_ELEV + ARRIVAL_MARGIN
+        val arr = FIELD_ELEV + arrivalM
         val dash = PathEffect.dashPathEffect(floatArrayOf(6.dp.toPx(), 4.dp.toPx()))
         drawLine(c.warn, Offset(x(0.0), y(need)), Offset(x(d), y(arr)), 2.dp.toPx(), pathEffect = dash)
         drawLine(c.warn, Offset(x(d), y(arr)), Offset(x(d), y(FIELD_ELEV)), 1.5.dp.toPx())
@@ -581,8 +583,8 @@ private fun ProfileCanvas(
         drawPath(Path().apply { moveTo(fx, fy); lineTo(fx, fy - 14.dp.toPx()); lineTo(fx - 8.dp.toPx(), fy - 10.dp.toPx()); lineTo(fx, fy - 7.dp.toPx()); close() }, c.route)
         val arrH = gl(d) - FIELD_ELEV
         val arrY = (y(gl(d)) - 8.dp.toPx()).coerceIn(pT + 2, h - pB - 14.dp.toPx())
-        if (known) label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - ARRIVAL_MARGIN >= 0) c.ok else c.bad), TextAlign.End)
-        label(tm, "+${ARRIVAL_MARGIN.toInt()}", fx - 4.dp.toPx(), y(arr) + 9.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.warn), TextAlign.End)
+        if (known) label(tm, "arrivée ${signed(arrH)} m/sol", fx - 10.dp.toPx(), arrY, TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = if (arrH - arrivalM >= 0) c.ok else c.bad), TextAlign.End)
+        if (arrivalM > 0) label(tm, "+${arrivalM.toInt()}", fx - 4.dp.toPx(), y(arr) + 9.dp.toPx(), TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 9.5.sp, fontWeight = FontWeight.Bold, color = c.warn), TextAlign.End)
         // planeur de profil
         val gx = x(0.0); val gy = y(alt)
         if (known) drawLine(c.ink, Offset(gx - 8.dp.toPx(), gy), Offset(gx + 10.dp.toPx(), gy + 1.dp.toPx()), 2.dp.toPx())
