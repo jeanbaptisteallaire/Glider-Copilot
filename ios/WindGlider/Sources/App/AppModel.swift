@@ -31,6 +31,10 @@ final class AppModel: ObservableObject {
     private let pathMonitor = NWPathMonitor()
     /// Espaces aériens à moins de 40 km du club (pack hors ligne), pour la carte et Prévol.
     @Published var airspaces: [AirspaceShape] = []
+    /// V3 : masque des zones aéronautiques affiché sur la carte de vol (bouton près du zoom)
+    @Published var showAirspaces: Bool = UserDefaults.standard.object(forKey: "showAirspaces") as? Bool ?? true {
+        didSet { UserDefaults.standard.set(showAirspaces, forKey: "showAirspaces") }
+    }
     @Published var soundOn: Bool { didSet { UserDefaults.standard.set(soundOn, forKey: "varioSound"); engine.setSound(on: soundOn); soundOn ? tone.start() : tone.stop() } }
     @Published var voiceOn: Bool { didSet { UserDefaults.standard.set(voiceOn, forKey: "voice"); voice.enabled = voiceOn } }
     @Published var autoTakeoff: Bool { didSet { UserDefaults.standard.set(autoTakeoff, forKey: "autoTakeoff"); engine.setAutoTakeoff(on: autoTakeoff) } }
@@ -188,7 +192,8 @@ final class AppModel: ObservableObject {
 
     private func updateAirspaces(_ p: ActivePack?) {
         guard let p, let pos = club?.position else { airspaces = []; return }
-        airspaces = p.airspacesAround(lat: pos.lat, lon: pos.lon, km: 40, max: 60)
+        // V3 : toute la région autour du terrain (masque des zones aéronautiques sur la carte)
+        airspaces = p.airspacesAround(lat: pos.lat, lon: pos.lon, km: 150, max: 400)
     }
 
     // MARK: club

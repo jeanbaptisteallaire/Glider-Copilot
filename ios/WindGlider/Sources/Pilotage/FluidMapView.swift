@@ -67,10 +67,14 @@ struct FluidMapView: UIViewRepresentable {
         private var airspaceIds: [String] = []
         private var traceCount = -1
         private var traceOverlays: [MKOverlay] = []
-        private var routeOverlay: MKPolyline?
+        private let route = RouteOverlay()
+        private weak var routeRenderer: RouteRenderer?
+        private var routeAdded = false
         private var field = MKPointAnnotation()
         private var planes: [String: PlaneAnnotation] = [:]
         private var pumps: [String: PumpAnnotation] = [:]
+        private var airspaceShapes: [AirspaceShape] = []
+        private var airspaceLabels: [String: AirspaceLabel] = [:]
 
         init(predictor: OwnshipPredictor, control: MapControl) {
             self.predictor = predictor
@@ -152,7 +156,9 @@ struct FluidMapView: UIViewRepresentable {
                 v.removeOverlays(v.overlays.filter { $0 is AirspaceOverlay })
                 v.addOverlays(airspaces.map { AirspaceOverlay(shape: $0) }, level: .aboveRoads)
                 airspaceIds = ids
+                airspaceShapes = airspaces
             }
+            placeAirspaceLabels(on: v)
             // trace : seulement quand elle change de longueur
             if p.trace.count != traceCount {
                 traceCount = p.trace.count
@@ -160,9 +166,9 @@ struct FluidMapView: UIViewRepresentable {
                 traceOverlays = Self.segments(p.trace)
                 v.addOverlays(traceOverlays, level: .aboveLabels)
             }
-            // route vers le terrain
-            if let r = routeOverlay { v.removeOverlay(r) }
-            routeOverlay = nil
+            // route vers le terrain : un seul calque, redessiné (pas recréé) à chaque mise à jour
+            if !routeAdded { v.addOverlay(route, level: .aboveLabels); routeAdded = true }
+            route.from = nil
             if p.fieldLat != 0 || p.fieldLon != 0 {
                 let fieldC = CLLocationCoordinate2D(latitude: p.fieldLat, longitude: p.fieldLon)
                 if field.coordinate.latitude != fieldC.latitude || field.coordinate.longitude != fieldC.longitude || field.title != p.fieldCode {
@@ -171,12 +177,11 @@ struct FluidMapView: UIViewRepresentable {
                     v.addAnnotation(field)
                 }
                 if p.hasPosition {
-                    let me = ownship.coordinate.latitude == 0 ? CLLocationCoordinate2D(latitude: p.lat, longitude: p.lon) : ownship.coordinate
-                    let r = RouteOverlay(coordinates: [me, fieldC], count: 2)
-                    v.addOverlay(r, level: .aboveLabels)
-                    routeOverlay = r
+                    route.from = ownship.coordinate.latitude == 0 ? CLLocationCoordinate2D(latitude: p.lat, longitude: p.lon) : ownship.coordinate
+                    route.to = fieldC
                 }
             }
+            routeRenderer?.setNeedsDisplay()
             // trafic OGN
             let planeList = traffic?.planes ?? []
             let seen = Set(planeList.map(\.id))
@@ -202,6 +207,34 @@ struct FluidMapView: UIViewRepresentable {
             }
         }
 
+        /// Nom des zones proches, posé sur leur bord au point le plus près du planeur (comme les étiquettes d'Android).
+        private func placeAirspaceLabels(on v: MKMapView) {
+            let c = ownship.coordinate.latitude != 0 ? ownship.coordinate : v.centerCoordinate
+            let span = max(v.region.span.latitudeDelta, 0.05)
+            var keep = Set<String>()
+            for a in airspaceShapes {
+                let k = a.coords
+                var best = (d: Double.infinity, lat: 0.0, lon: 0.0)
+                var i = 0
+                while i + 1 < k.count {
+                    let la = k[i].doubleValue, lo = k[i + 1].doubleValue
+                    let d = abs(la - c.latitude) + abs(lo - c.longitude) * cos(c.latitude * .pi / 180)
+                    if d < best.d { best = (d, la, lo) }
+                    i += 2
+                }
+                guard best.d < span * 0.6 else { continue }
+                keep.insert(a.id)
+                if let l = airspaceLabels[a.id] {
+                    l.coordinate = .init(latitude: best.lat, longitude: best.lon)
+                } else {
+                    let l = AirspaceLabel(shape: a, at: .init(latitude: best.lat, longitude: best.lon))
+                    airspaceLabels[a.id] = l
+                    v.addAnnotation(l)
+                }
+            }
+            for (id, l) in airspaceLabels where !keep.contains(id) { v.removeAnnotation(l); airspaceLabels[id] = nil }
+        }
+
         private static func segments(_ trace: [TraceDot]) -> [MKOverlay] {
             var out: [MKOverlay] = []
             var cur: [CLLocationCoordinate2D] = []
@@ -225,12 +258,13 @@ struct FluidMapView: UIViewRepresentable {
                 let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.vario(t.climb)); r.lineWidth = 4; r.lineCap = .round; return r
             }
             if let t = o as? RouteOverlay {
-                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.route); r.lineWidth = 2; r.lineDashPattern = [4, 5]; return r
+                let r = RouteRenderer(overlay: t); routeRenderer = r; return r
             }
             if let a = o as? AirspaceOverlay {
                 let r = MKPolygonRenderer(polygon: a.polygon)
                 let c = UIColor(WG.airspace(a.family))
-                r.strokeColor = c; r.fillColor = c.withAlphaComponent(0.06); r.lineWidth = 1.5
+                // masque : voile léger dans la zone, bord net (cartes aéro)
+                r.strokeColor = c; r.fillColor = c.withAlphaComponent(0.025); r.lineWidth = 1.5   // voiles superposés : rester léger
                 if a.family == 1 { r.lineDashPattern = [6, 4] }
                 return r
             }
@@ -247,6 +281,19 @@ struct FluidMapView: UIViewRepresentable {
             case let pu as PumpAnnotation:
                 let v = (m.dequeueReusableAnnotationView(withIdentifier: "pump") as? PumpView) ?? PumpView(annotation: pu, reuseIdentifier: "pump")
                 v.annotation = pu; v.configure(pu.pump); return v
+            case let l as AirspaceLabel:
+                let v = m.dequeueReusableAnnotationView(withIdentifier: "asp") ?? MKAnnotationView(annotation: l, reuseIdentifier: "asp")
+                v.annotation = l
+                v.subviews.forEach { $0.removeFromSuperview() }
+                let t = UILabel()
+                t.text = l.shape.name
+                t.font = UIFont(name: "Inter-SemiBold", size: 10) ?? .systemFont(ofSize: 10, weight: .semibold)
+                t.textColor = UIColor(WG.airspace(l.shape.family))
+                t.layer.shadowColor = UIColor.white.cgColor; t.layer.shadowRadius = 2; t.layer.shadowOpacity = 1; t.layer.shadowOffset = .zero
+                t.sizeToFit()
+                v.frame = t.bounds; v.addSubview(t)
+                v.displayPriority = .defaultLow; v.collisionMode = .rectangle
+                return v
             case let f as MKPointAnnotation:
                 let v = m.dequeueReusableAnnotationView(withIdentifier: "field") ?? MKAnnotationView(annotation: f, reuseIdentifier: "field")
                 v.annotation = f
@@ -277,12 +324,35 @@ final class PumpAnnotation: NSObject, MKAnnotation {
     init(pump: TrafficPump) { self.pump = pump; coordinate = .init(latitude: pump.lat, longitude: pump.lon) }
 }
 
+final class AirspaceLabel: NSObject, MKAnnotation {
+    @objc dynamic var coordinate: CLLocationCoordinate2D
+    let shape: AirspaceShape
+    init(shape: AirspaceShape, at c: CLLocationCoordinate2D) { self.shape = shape; coordinate = c }
+}
+
 final class TraceOverlay: MKPolyline {
     var climb = 0.0
     func with(climb: Double) -> TraceOverlay { self.climb = climb; return self }
 }
 
-final class RouteOverlay: MKPolyline {}
+/// Route vers le terrain : calque unique couvrant le monde, extrémités modifiables (V3 : trait deux fois plus fin).
+final class RouteOverlay: NSObject, MKOverlay {
+    var from: CLLocationCoordinate2D?
+    var to = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    var coordinate: CLLocationCoordinate2D { to }
+    var boundingMapRect: MKMapRect { .world }
+}
+
+final class RouteRenderer: MKOverlayRenderer {
+    override func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in ctx: CGContext) {
+        guard let r = overlay as? RouteOverlay, let from = r.from else { return }
+        let a = point(for: MKMapPoint(from)), b = point(for: MKMapPoint(r.to))
+        ctx.setStrokeColor(UIColor(WG.route).cgColor)
+        ctx.setLineWidth(1 / zoomScale)
+        ctx.setLineDash(phase: 0, lengths: [4 / zoomScale, 4 / zoomScale])
+        ctx.move(to: a); ctx.addLine(to: b); ctx.strokePath()
+    }
+}
 
 final class AirspaceOverlay: NSObject, MKOverlay {
     let polygon: MKPolygon

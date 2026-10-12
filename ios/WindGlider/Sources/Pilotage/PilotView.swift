@@ -33,7 +33,7 @@ struct PilotView: View {
                 if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                     FlightMapView(p: p, airspaces: app.airspaces)
                 } else {
-                    FluidMapView(p: p, airspaces: app.airspaces, traffic: app.trafficSnap, predictor: app.predictor)
+                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor)
                 }
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario)
             }
@@ -181,6 +181,7 @@ struct MiniSwitch: ToggleStyle {
 struct MapOverlay: View {
     @EnvironmentObject var app: AppModel
     @EnvironmentObject var map: MapControl
+    @State private var airspaceHint = false
     let p: PilotUi
     @Binding var showProfile: Bool
     @Binding var showVario: Bool
@@ -281,7 +282,19 @@ struct MapOverlay: View {
                 .background(WG.card.opacity(0.92), in: Capsule())
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 22)
 
-            // bas droite : zoom
+            // bas droite : zones aéronautiques (au-dessus) et zoom
+            VStack(spacing: 8) {
+            Button {
+                if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
+            } label: {
+                Image(systemName: "square.3.layers.3d").font(.system(size: 17, weight: .regular))
+                    .foregroundStyle(app.showAirspaces && !app.airspaces.isEmpty ? WG.sky : WG.brandInk)
+                    .frame(width: 40, height: 40).background(WG.card, in: Circle()).shadow(color: .black.opacity(0.1), radius: 1)
+            }
+            .accessibilityLabel(app.showAirspaces ? "Masquer les zones aéronautiques" : "Afficher les zones aéronautiques")
+            .alert("Zones aéronautiques", isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
+                Text("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP).")
+            }
             VStack(spacing: 0) {
                 Button { map.zoomIn() } label: { Image(systemName: "plus").frame(width: 40, height: 40) }.accessibilityLabel("Zoom avant")
                 Divider().frame(width: 24)
@@ -289,6 +302,7 @@ struct MapOverlay: View {
             }
             .font(.title3.weight(.light)).foregroundStyle(WG.brandInk)
             .background(WG.card, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
+            }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing).padding(.bottom, 22)
         }
         .padding(10)
