@@ -164,6 +164,9 @@ class MapController {
     internal var camZoom = Double.NaN
     /** Vrai quand la boucle d'image pilote la caméra (suivi hors spirale) : la recomposition ne la bouge plus. */
     internal var fluid = false
+    /** V3 — zones aéronautiques (openAIP) affichées ou masquées par le bouton de couches. */
+    var showAirspaces by mutableStateOf(true)
+    internal var airspacesShown: Boolean? = null
 
     fun zoomIn() {
         if (thermalActive) thermalBias = (thermalBias + 1).coerceAtMost(3.0)
@@ -352,6 +355,12 @@ internal fun LiveMap(
             s.getSourceAs<GeoJsonSource>(MapStyle.SRC_THERMALS)?.setGeoJson(EMPTY_JSON)
             return@SideEffect
         }
+        if (controller.airspacesShown != controller.showAirspaces) {
+            controller.airspacesShown = controller.showAirspaces
+            val vis = if (controller.showAirspaces) "visible" else "none"
+            for (id in listOf("airspace-fill", "airspace-line", "airspace-line-restricted", "airspace-label"))
+                s.getLayer(id)?.setProperties(org.maplibre.android.style.layers.PropertyFactory.visibility(vis))
+        }
         // nouvelle position GPS : vitesse sol mesurée entre deux positions, transmise au prédicteur
         if (frame.glider != controller.lastFix) {
             val t = System.nanoTime() / 1e9
@@ -478,10 +487,15 @@ private fun coreJson(core: CoreMark?): String {
 }
 
 private fun traceJson(segments: List<Triple<LatLon, LatLon, Color>>): String = buildString {
+    // V3 : tours recouverts par des tours plus récents un peu plus fades (logique commune TraceFade)
+    val lat = DoubleArray(segments.size) { segments[it].second.lat }
+    val lon = DoubleArray(segments.size) { segments[it].second.lon }
+    val fade = com.neutronstar.glidercopilot.domain.flight.TraceFade.levels(lat, lon)
     append("""{"type":"FeatureCollection","features":[""")
     segments.forEachIndexed { i, (a, b, color) ->
         if (i > 0) append(',')
-        append("""{"type":"Feature","properties":{"color":"${hex(color)}"},"geometry":{"type":"LineString","coordinates":[[${a.lon},${a.lat}],[${b.lon},${b.lat}]]}}""")
+        val o = com.neutronstar.glidercopilot.domain.flight.TraceFade.ALPHA[fade[i]]
+        append("""{"type":"Feature","properties":{"color":"${hex(color)}","opacity":$o},"geometry":{"type":"LineString","coordinates":[[${a.lon},${a.lat}],[${b.lon},${b.lat}]]}}""")
     }
     append("]}")
 }

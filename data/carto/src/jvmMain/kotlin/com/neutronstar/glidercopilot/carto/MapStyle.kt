@@ -224,9 +224,11 @@ object MapStyle {
             ))
         // couches dynamiques : route vers le terrain, trace colorée par le vario, planeur
         layers += mapOf("id" to "route", "type" to "line", "source" to SRC_ROUTE,
-            "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))
+            "paint" to mapOf("line-color" to p.route, "line-width" to 1.25, "line-dasharray" to listOf("literal", listOf(2, 2))))   // V3 : deux fois plus fine
         layers += mapOf("id" to "trace", "type" to "line", "source" to SRC_TRACE, "layout" to mapOf("line-cap" to "round"),
-            "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 3.5))
+            "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 3.5,
+                // V3 : tours recouverts estompés (TraceFade), jamais effacés
+                "line-opacity" to listOf("coalesce", listOf("get", "opacity"), 1.0)))
         // vue centrage : trace recalée du vent (en pointillé) et cœur estimé
         layers += mapOf("id" to "air-trace", "type" to "line", "source" to SRC_AIR_TRACE, "layout" to mapOf("line-cap" to "round"),
             "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 2.2, "line-opacity" to 0.85, "line-dasharray" to listOf("literal", listOf(2.2, 1.4))))

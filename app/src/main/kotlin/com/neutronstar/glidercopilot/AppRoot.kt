@@ -40,6 +40,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.testTag
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.foundation.border
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -203,6 +205,10 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     val flightMapDark = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyColors)) }
     // V18.7 — carte claire façon carte VFR papier (Pilotage et Carte en thème clair)
     val flightMapLight = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, paperChartPalette()) }
+    // V3 — Pilotage : même carte claire, contours d'espaces aériens 30 % plus fins et voile très léger (comme iOS)
+    val pilotMap = remember(activeMap, club?.id) {
+        buildFlightMapConfig(activeMap, club, paperChartPalette().copy(airspaceLineWidth = 1.4, airspaceFillOpacity = 0.025))
+    }
     val flightMap = if (lightMode) flightMapLight else flightMapDark
 
     // Localisation demandée une seule fois : club le plus proche et pastille GPS. Refus = club par défaut.
@@ -253,7 +259,8 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     }
     // S15 — thème social blanc ; V18.7 : Pilotage passe aussi sur fond blanc (accord JB), barre d'onglets claire
     val social = lightMode && replayed == null
-    SystemBarsFor(social)
+    val pilotDarkNow = tab == Tab.PILOTAGE && !(lightMode && context.getSharedPreferences("pilot", android.content.Context.MODE_PRIVATE).getBoolean("dark", false).not())
+    SystemBarsFor(social && !pilotDarkNow)
     val replay = replayed
     if (replay != null) {
         BackHandler { replayed = null }
@@ -293,16 +300,31 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         return
     }
 
-    Column(Modifier.fillMaxSize().background(if (social) (if (tab == Tab.PILOTAGE) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
+    // V3 — Pilotage : mode sombre propre à l'écran (boîtes noires, vignettage), même fond de carte ; mémorisé
+    val pilotPrefs = remember { context.getSharedPreferences("pilot", android.content.Context.MODE_PRIVATE) }
+    var pilotDark by remember { mutableStateOf(pilotPrefs.getBoolean("dark", false)) }
+    val pilotTab = tab == Tab.PILOTAGE
+    val pilotLight = lightMode && !pilotDark
+    val density = androidx.compose.ui.platform.LocalDensity.current
+    var barHeight by remember { mutableStateOf(0.dp) }
+    Box(Modifier.fillMaxSize().background(if (pilotTab && !pilotLight) GlidyColors.background else if (social) (if (pilotTab) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
         // S15 : l'interrupteur clair/sombre est dans l'en-tête de chaque écran (jamais sur Pilotage)
         val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
-        Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
+        // V3 : sous Pilotage, la carte passe sous la barre d'onglets flottante
+        Box(Modifier.fillMaxSize().padding(bottom = if (pilotTab) 0.dp else barHeight)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
                 Tab.TUTO -> TutoHomeScreen(lang, setLang, onTutorial = { tour = true }, onFeedback = { feedbackOnly = true })
                 Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
-                Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
+                Tab.PILOTAGE -> GlidyFlightTheme(pilotLight) {
+                    FlightScreen(
+                        status, map = pilotMap ?: flightMap, traffic = traffic, live = live, controls = container.flight,
+                        pilotDark = !pilotLight,
+                        onDarkChange = { d -> pilotDark = d; pilotPrefs.edit().putBoolean("dark", d).apply() },
+                        bottomBarInset = barHeight,
+                    )
+                }
                 Tab.CARTE -> GlidyAdaptiveTheme(lightMode) {
                     TrafficMapScreen(
                         map = if (lightMode) flightMapLight else flightMapDark, traffic = traffic, networkLabel = ognUi.statusLabel,
@@ -337,12 +359,22 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
             }
         } }
         // barre d'onglets : blanche en thème clair (V18.7 : Pilotage compris) ; noire en thème sombre
-        GlidyAdaptiveTheme(social) {
+        GlidyAdaptiveTheme(if (pilotTab) pilotLight else social) {
             val bar = Gc.colors
-            Column(Modifier.fillMaxWidth().background(if (social) bar.overlay else bar.background)) {
-                if (social) HorizontalDivider(thickness = 0.5.dp, color = bar.line)
+            // V3 — sous Pilotage : barre flottante en capsule, légèrement transparente (la carte passe dessous) ;
+            // inversée en mode sombre. Ailleurs : barre pleine largeur inchangée.
+            val floating = pilotTab
+            Column(
+                Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                    .onSizeChanged { barHeight = with(density) { it.height.toDp() } }
+                    .then(if (floating) Modifier.navigationBarsPadding().padding(horizontal = 14.dp, vertical = 6.dp)
+                        .background(bar.background.copy(alpha = 0.82f), RoundedCornerShape(32.dp))
+                        .border(0.5.dp, bar.line, RoundedCornerShape(32.dp))
+                    else Modifier.background(if (social) bar.overlay else bar.background)),
+            ) {
+                if (social && !floating) HorizontalDivider(thickness = 0.5.dp, color = bar.line)
                 Row(
-                    Modifier.fillMaxWidth().navigationBarsPadding().padding(top = 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
+                    Modifier.fillMaxWidth().then(if (floating) Modifier else Modifier.navigationBarsPadding()).padding(top = if (floating) 2.dp else 8.dp).height(62.dp).padding(horizontal = 8.dp, vertical = 3.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
