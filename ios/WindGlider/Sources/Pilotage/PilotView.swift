@@ -58,7 +58,7 @@ struct PilotView: View {
         return VStack(alignment: .leading, spacing: 2) {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Marge de sécurité").font(WG.footnote).foregroundStyle(marginColor)
+                Text("Marge sécu.").font(WG.footnote).foregroundStyle(marginColor)
                 // une seule ligne, quelle que soit la valeur ; unité en petit dessous
                 Text(p.marginText).font(WG.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
@@ -74,10 +74,11 @@ struct PilotView: View {
             Spacer(minLength: 4)
             VStack(alignment: .trailing, spacing: 4) {
                 HStack(spacing: 4) {
-                    Text("Finesse").font(WG.footnote).foregroundStyle(WG.brandInk)
-                    Text(p.finesseNote).font(WG.caption2).foregroundStyle(WG.dim)
+                    Text("Fin.").font(WG.footnote).foregroundStyle(WG.brandInk).fixedSize()
+                    // le vent peut être long (« vent 344°/27 prévu ») : il rétrécit au lieu de pousser l'en-tête
+                    Text(p.finesseNote).font(WG.caption2).foregroundStyle(WG.dim).minimumScaleFactor(0.6)
                 }
-                .lineLimit(1).fixedSize()
+                .lineLimit(1)
                 HStack(spacing: 2) {
                     ForEach([20, 15, 10], id: \.self) { f in
                         Button { app.finesse = f } label: {
@@ -221,6 +222,15 @@ struct MapOverlay: View {
                 // panneaux masqués : pastilles indépendantes sur la carte
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
+            // haut centre : cap réel du planeur (route GPS), petite boîte semi-transparente
+            if p.hasPosition {
+                Text("CAP \(Int(p.trackDeg.rounded()) % 360)°").font(WG.number(15)).monospacedDigit().foregroundStyle(WG.brandInk)
+                    .padding(.horizontal, 10).padding(.vertical, 4)
+                    .background(WG.card.opacity(0.7), in: RoundedRectangle(cornerRadius: 8))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top).padding(.top, 6)
+                    .accessibilityLabel("Cap \(Int(p.trackDeg.rounded()) % 360) degrés")
+            }
 
             // bas centre, au-dessus du chrono : mode démo
             if p.demo {
