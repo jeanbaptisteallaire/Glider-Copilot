@@ -26,7 +26,8 @@ BLOCKS = {
 }
 APPROOT = "app/src/main/kotlin/com/neutronstar/glidercopilot/AppRoot.kt"
 # V18.7 (accord JB) : Pilotage sur fond blanc via GlidyFlightTheme, charte sombre conservée en thème sombre
-PILOTAGE_LINE = "Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }"
+# V3 Android (accord JB, 12/10/2026) : disposition iOS V3, mode sombre propre à Pilotage (bascule soleil/lune)
+PILOTAGE_LINE = "Tab.PILOTAGE -> GlidyFlightTheme(pilotLight) {"
 
 
 def sha(text: str) -> str:
