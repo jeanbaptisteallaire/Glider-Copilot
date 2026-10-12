@@ -109,7 +109,7 @@ struct PilotView: View {
             Text(p.altRefText).font(WG.caption2).foregroundStyle(WG.dim).padding(.leading, 8)
             Spacer(minLength: 4)
             // V3 : interrupteur de la coupe « marge », fixe dans l'en-tête sous les finesses (ne bouge plus)
-            PanelToggle(isOn: $showProfile, label: "marge")
+            PanelToggle(isOn: $showProfile, label: "relief")
         }
         .lineLimit(1)
         }
