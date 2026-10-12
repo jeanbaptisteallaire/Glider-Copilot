@@ -30,6 +30,8 @@ struct PilotView: View {
                 MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset)
                 VStack(spacing: 6) {
                     header(p)
+                    // interrupteur « relief » : toujours au même endroit, coin haut droit de la boîte de coupe
+                    ZStack(alignment: .topTrailing) {
                     if showProfile {
                         VStack(spacing: 0) {
                             ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
@@ -38,6 +40,10 @@ struct PilotView: View {
                         }
                         .background(WG.card.opacity(0.9), in: RoundedRectangle(cornerRadius: 14))
                         .padding(.horizontal, 8)
+                    } else {
+                        Color.clear.frame(height: 30)
+                    }
+                    PanelToggle(isOn: $showProfile, label: "relief", dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
@@ -225,21 +231,6 @@ struct MapOverlay: View {
         ZStack {
             // haut gauche : recentrage (AUTO/LIBRE), orientation (AUTO/N↑/RTE), REC compact
             VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 6) {
-                    round(map.follow ? "AUTO" : "LIBRE", a11y: map.follow ? "Carte centrée sur le planeur" : "Recentrer la carte") { map.recenter() }
-                    round(map.orientation.label, a11y: "Orientation de la carte : \(map.orientation.label)") { map.cycleOrientation() }
-                    Button { app.toggleRecording() } label: {
-                        HStack(spacing: 4) {
-                            Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
-                            Text(p.recording ? p.chronoText : "REC").font(WG.caption2.weight(.bold))
-                        }
-                        .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(p.recording ? WG.bad : WG.card, in: Capsule())
-                        .foregroundStyle(p.recording ? .white : WG.bad)
-                        .shadow(color: .black.opacity(0.15), radius: 2)
-                    }
-                    .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
-                }
                 // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
                 if let t = app.trafficSnap, t.connected {
                     (Text("OGN ").fontWeight(.bold).foregroundColor(WG.brandInk) + Text(t.pill))
@@ -253,17 +244,8 @@ struct MapOverlay: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
-            // bas centre, au-dessus du chrono : mode démo
-            if p.demo {
-                Text("DÉMO · planeur simulé").font(WG.caption2).padding(.horizontal, 8).padding(.vertical, 4)
-                    .background(WG.card.opacity(0.92), in: Capsule())
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 50)
-            }
-
             // haut droite : DÉMO, vent, échelle vario
             VStack(alignment: .trailing, spacing: 8) {
-                // interrupteur de la coupe : sur fond noir pour rester visible sur la carte
-                PanelToggle(isOn: $showProfile, label: "relief", dark: true, scale: 1.2)
                 Button { app.demo.toggle() } label: {
                     Text("DÉMO").font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
                         .background(app.demo ? WG.climb : WG.card, in: Capsule())
@@ -292,6 +274,32 @@ struct MapOverlay: View {
 
             // bas gauche : états GPS · BARO · DATA
             VStack(alignment: .leading, spacing: 4) {
+                // position de la carte : recentrer (cible), orientation (boussole rouge en mode nord)
+                VStack(spacing: 8) {
+                    Button { map.recenter() } label: {
+                        Image(systemName: "scope").font(.system(size: 18, weight: .medium))
+                            .foregroundStyle(map.follow ? WG.sky : WG.brandInk)
+                            .frame(width: 40, height: 40).background(WG.card.opacity(0.9), in: Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 2)
+                    }
+                    .accessibilityLabel(map.follow ? "Carte centrée sur le planeur" : "Recentrer la carte")
+                    Button { map.cycleOrientation() } label: {
+                        Group {
+                            if map.orientation == .north {
+                                ZStack {
+                                    Image(systemName: "location.north.fill").font(.system(size: 18)).foregroundStyle(WG.bad)
+                                    Text("N").font(Font.custom("Inter", size: 8).weight(.bold)).foregroundStyle(.white).offset(y: 2)
+                                }
+                            } else {
+                                Text(map.orientation.label).font(WG.caption2.weight(.semibold)).foregroundStyle(WG.brandInk)
+                            }
+                        }
+                        .frame(width: 40, height: 40).background(WG.card.opacity(0.9), in: Circle())
+                        .shadow(color: .black.opacity(0.15), radius: 2)
+                    }
+                    .accessibilityLabel("Orientation de la carte : \(map.orientation == .north ? "nord en haut" : map.orientation.label)")
+                }
+                .padding(.bottom, 6)
                 badge("GPS", app.status.gps)
                 badge("BARO", app.status.baro)
                 badge("DATA", app.status.data)
@@ -299,10 +307,22 @@ struct MapOverlay: View {
             .accessibilityElement(children: .combine)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 54)
 
-            // bas centre : chrono du vol
-            Text(p.flightTimeText).font(WG.caption.monospacedDigit()).padding(.horizontal, 8).padding(.vertical, 3)
-                .background(WG.card.opacity(0.92), in: Capsule())
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 22)
+            // bas centre : REC au-dessus du chrono du vol, dans la même petite boîte
+            Button { app.toggleRecording() } label: {
+                VStack(spacing: 1) {
+                    HStack(spacing: 4) {
+                        Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
+                        Text("REC").font(WG.caption2.weight(.bold))
+                    }
+                    .foregroundStyle(p.recording ? .white : WG.bad)
+                    Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : WG.brandInk)
+                }
+                .padding(.horizontal, 10).padding(.vertical, 4)
+                .background(p.recording ? WG.bad : WG.card.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
+                .shadow(color: .black.opacity(0.15), radius: 2)
+            }
+            .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 22)
 
             // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
             VStack(alignment: .trailing, spacing: 8) {
