@@ -232,7 +232,7 @@ internal fun LiveMap(
         var lastNs = 0L
         while (true) {
             withFrameNanos { now ->
-                if (now - last < 33_000_000L) return@withFrameNanos   // 30 images par seconde (batterie)
+                if (now - last < 30_000_000L) return@withFrameNanos   // 30 images par seconde (batterie)
                 val dt = if (lastNs == 0L) 0.033 else ((now - lastNs) / 1e9).coerceAtMost(0.1)
                 last = now; lastNs = now
                 val map = controller.map ?: return@withFrameNanos
@@ -267,6 +267,8 @@ internal fun LiveMap(
                 controller.shownZoom = controller.camZoom
                 gliderRot.floatValue = (course - controller.camBearing).toFloat()
             }
+            // repos entre deux images : sans lui, l'attente d'image réveille l'app à chaque rafraîchissement d'écran
+            kotlinx.coroutines.delay(24)
         }
     }
 
