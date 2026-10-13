@@ -71,7 +71,10 @@ final class AssetSchemeHandler: NSObject, WKURLSchemeHandler {
         guard let url = task.request.url, let base = Bundle.main.resourceURL else { task.didFailWithError(URLError(.badURL)); return }
         let file = base.appendingPathComponent(url.path.trimmingCharacters(in: CharacterSet(charactersIn: "/")))
         // seules les pages embarquées (rejeu 3D, couverture animée) sont servies
-        guard ["replay3d", "cover"].contains(where: { file.standardizedFileURL.path.hasPrefix(base.appendingPathComponent($0).path + "/") }),
+        // les deux côtés normalisés : sur un vrai iPhone/iPad le bundle est sous /private/var et la normalisation
+        // retire « /private » d'un seul côté → toutes les pages refusées (couverture bleue vide, rejeu 3D vide)
+        let path = file.standardizedFileURL.path
+        guard ["replay3d", "cover"].contains(where: { path.hasPrefix(base.appendingPathComponent($0).standardizedFileURL.path + "/") }),
               let data = try? Data(contentsOf: file) else {
             task.didReceive(HTTPURLResponse(url: url, statusCode: 404, httpVersion: "HTTP/1.1", headerFields: nil)!)
             task.didFinish(); return

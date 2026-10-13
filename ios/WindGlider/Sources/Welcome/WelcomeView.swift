@@ -137,13 +137,61 @@ struct BrandTitle: View {
 }
 
 /// Couverture animée de JB (océan, nuage, planeurs peints), page HTML partagée avec Android.
-struct CoverAnimation: UIViewRepresentable {
+/// Couverture : image peinte native (toujours visible) sous la page animée d'Android. Si la page ne s'affiche pas
+/// (vu sur iPad / iPadOS 27 : fond bleu vide), l'image native reste : plus jamais d'écran bleu sans dessin.
+struct CoverAnimation: View {
+    var body: some View {
+        ZStack {
+            NativeCover()
+            CoverWeb()
+        }
+    }
+}
+
+/// Même cadrage que la page (viewBox 0 194 872 1841, « slice ») : océan, nuage, planeurs.
+struct NativeCover: View {
+    private static func img(_ name: String) -> UIImage? {
+        Bundle.main.url(forResource: name, withExtension: "webp", subdirectory: "cover").flatMap { UIImage(contentsOfFile: $0.path) }
+    }
+    private static let layers: [(UIImage?, CGRect)] = [
+        (img("ocean-sans-nuage"), CGRect(x: -24, y: 210, width: 928, height: 1918)),
+        (img("nuage-transparent"), CGRect(x: 0, y: 233, width: 872, height: 1802)),
+        (img("planeurs-transparents"), CGRect(x: 0, y: 231, width: 872, height: 1804)),
+    ]
+
+    var body: some View {
+        GeometryReader { g in
+            let k = max(g.size.width / 872, g.size.height / 1841)
+            let dx = (g.size.width - 872 * k) / 2, dy = (g.size.height - 1841 * k) / 2 - 194 * k
+            ZStack(alignment: .topLeading) {
+                WG.coverSea
+                ForEach(0..<Self.layers.count, id: \.self) { i in
+                    if let im = Self.layers[i].0 {
+                        let r = Self.layers[i].1
+                        Image(uiImage: im).resizable()
+                            .frame(width: r.width * k, height: r.height * k)
+                            .offset(x: dx + r.minX * k, y: dy + r.minY * k)
+                    }
+                }
+            }
+            .frame(width: g.size.width, height: g.size.height, alignment: .topLeading)
+            .clipped()
+        }
+    }
+}
+
+struct CoverWeb: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
+        // fond de page transparent : tant que (ou si) la page n'a rien dessiné, l'image native reste visible
+        config.userContentController.addUserScript(WKUserScript(
+            source: "var s=document.createElement('style');s.textContent='html,body{background:transparent!important} #scene>rect:first-of-type{fill:transparent}';document.documentElement.appendChild(s);",
+            injectionTime: .atDocumentStart, forMainFrameOnly: true))
         config.setURLSchemeHandler(AssetSchemeHandler(), forURLScheme: "wgassets")
         let web = WKWebView(frame: .zero, configuration: config)
         web.isOpaque = false
-        web.backgroundColor = UIColor(WG.coverSea)
+        web.backgroundColor = .clear
+        web.scrollView.backgroundColor = .clear
         web.scrollView.isScrollEnabled = false
         web.isUserInteractionEnabled = false
         web.scrollView.contentInsetAdjustmentBehavior = .never
