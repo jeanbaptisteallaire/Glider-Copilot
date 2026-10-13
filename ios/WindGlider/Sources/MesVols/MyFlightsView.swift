@@ -11,7 +11,7 @@ struct PilotProfile: Codable, Equatable {
     var level = ""
     var isEmpty: Bool { name.isEmpty && username.isEmpty && club.isEmpty && level.isEmpty }
 
-    static let levels = ["Élève", "Lâché", "Brevet", "Pilote confirmé", "Instructeur"]
+    static let levels = [tr("Élève"), tr("Lâché"), tr("Brevet"), tr("Pilote confirmé"), tr("Instructeur")]
 
     static func load() -> PilotProfile {
         (UserDefaults.standard.data(forKey: "pilotProfile")).flatMap { try? JSONDecoder().decode(PilotProfile.self, from: $0) } ?? PilotProfile()
@@ -37,7 +37,7 @@ struct MyFlightsView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     banner
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(profile.name.isEmpty ? "Pilote Wind Glider" : profile.name).font(WG.headline).foregroundStyle(WG.brandInk)
+                        Text(profile.name.isEmpty ? tr("Pilote Wind Glider") : profile.name).font(WG.headline).foregroundStyle(WG.brandInk)
                         if !profile.club.isEmpty { Text(profile.club).font(WG.subhead).foregroundStyle(WG.dim) }
                         if !profile.level.isEmpty {
                             Text(profile.level).font(WG.caption.weight(.semibold)).foregroundStyle(WG.sky)
@@ -47,19 +47,19 @@ struct MyFlightsView: View {
                     .padding(.leading, 4)
                     stats
                     if profile.isEmpty {
-                        WGCard(title: "Crée ton profil pilote", systemImage: "scribble", tint: WG.sky) {
-                            Text("Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien.")
+                        WGCard(title: tr("Crée ton profil pilote"), systemImage: "scribble", tint: WG.sky) {
+                            Text(tr("Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien."))
                                 .font(WG.subhead).foregroundStyle(WG.dim)
                         }
                     }
                     HStack(spacing: 8) {
                         Button { editing = true } label: {
-                            Text(profile.isEmpty ? "Créer mon profil" : "Modifier").font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
+                            Text(profile.isEmpty ? tr("Créer mon profil") : tr("Modifier")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
                                 .background(profile.isEmpty ? WG.sky : WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14))
                                 .foregroundStyle(profile.isEmpty ? .white : WG.sky)
                         }
                         Button { importing = true } label: {
-                            Text("Importer un IGC").font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
+                            Text(tr("Importer un IGC")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
                                 .background(WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14)).foregroundStyle(WG.sky)
                         }
                     }
@@ -67,21 +67,21 @@ struct MyFlightsView: View {
                     // comme Android : sauvegarde en ligne dans les deux éditions (le partage reste réservé à la complète)
                     AccountCard()
                     HStack(alignment: .firstTextBaseline) {
-                        Text("Vols").font(WG.title.weight(.bold)).foregroundStyle(WG.brandInk)
+                        Text(tr("Vols")).font(WG.title.weight(.bold)).foregroundStyle(WG.brandInk)
                         Spacer()
-                        Text("\(app.flights.count) vol\(app.flights.count > 1 ? "s" : "")").font(WG.subhead).foregroundStyle(WG.dim)
+                        Text(tr(app.flights.count > 1 ? "%d vols" : "%d vol", app.flights.count)).font(WG.subhead).foregroundStyle(WG.dim)
                     }
                     .padding(.top, 6)
                     if app.flights.isEmpty {
-                        WGCard(title: "Carnet vide", systemImage: "scribble", tint: WG.sky) {
-                            Text("Vos vols apparaissent ici après REC dans Pilotage, ou avec « Importer un IGC ».").font(WG.subhead).foregroundStyle(WG.dim)
+                        WGCard(title: tr("Carnet vide"), systemImage: "scribble", tint: WG.sky) {
+                            Text(tr("Vos vols apparaissent ici après REC dans Pilotage, ou avec « Importer un IGC ».")).font(WG.subhead).foregroundStyle(WG.dim)
                         }
                     } else {
                         LazyVGrid(columns: columns, spacing: 10) {
                             ForEach(app.flights, id: \.path) { f in
                                 NavigationLink { FlightDetail(f: f) } label: { FlightTile(f: f) }
                                     .buttonStyle(.plain)
-                                    .contextMenu { Button("Supprimer le vol", role: .destructive) { app.delete(f) } }
+                                    .contextMenu { Button(tr("Supprimer le vol"), role: .destructive) { app.delete(f) } }
                             }
                         }
                     }
@@ -104,7 +104,7 @@ struct MyFlightsView: View {
                 let ok = url.startAccessingSecurityScopedResource()
                 defer { if ok { url.stopAccessingSecurityScopedResource() } }
                 if app.library.importIgc(sourcePath: url.path, name: url.lastPathComponent) == nil {
-                    importError = "« \(url.lastPathComponent) » n'est pas un fichier IGC lisible."
+                    importError = tr("« %@ » n'est pas un fichier IGC lisible.", url.lastPathComponent)
                 }
                 app.refreshFlights()
             }
@@ -118,9 +118,10 @@ struct MyFlightsView: View {
                 (wgImage("wg_flights_header") ?? Image(systemName: "photo")).resizable().scaledToFill()
                     .frame(height: 196).frame(maxWidth: .infinity).clipped()
                 LinearGradient(colors: [Color(red: 0.06, green: 0.16, blue: 0.27).opacity(0.33), .clear], startPoint: .top, endPoint: .center)
-                Text(profile.username.isEmpty ? "Mon profil" : "@\(profile.username)")
+                Text(profile.username.isEmpty ? tr("Mon profil") : "@\(profile.username)")
                     .font(Font.custom("Inter", size: 28).weight(.bold)).foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.4), radius: 5).padding(.leading, 18).padding(.top, 12)
+                LanguageSwitch().frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 12).padding(.top, 12)
             }
             .frame(height: 196)
             .clipShape(RoundedRectangle(cornerRadius: 22))
@@ -129,7 +130,7 @@ struct MyFlightsView: View {
                 .frame(width: 76, height: 76).clipShape(Circle())
                 .overlay(Circle().stroke(.white, lineWidth: 3)).shadow(radius: 4)
                 .padding(.leading, 16)
-                .accessibilityLabel("Avatar du pilote")
+                .accessibilityLabel(tr("Avatar du pilote"))
         }
     }
 
@@ -138,9 +139,9 @@ struct MyFlightsView: View {
         let km = app.flights.reduce(0.0) { $0 + $1.distanceKm }
         return WGCard {
             HStack(alignment: .top) {
-                stat("\(app.flights.count)", nil, "Vols", WG.sky)
-                stat(totalS >= 3600 ? "\(totalS / 3600)" : "0", totalS >= 3600 ? "h \(String(format: "%02d", totalS % 3600 / 60))" : "h \(totalS / 60)", "Heures", WG.good)
-                stat(IosFlightEngine.companion.grouped(n: Int32(km.rounded())), "km", "Distance", WG.sun)
+                stat("\(app.flights.count)", nil, tr("Vols"), WG.sky)
+                stat(totalS >= 3600 ? "\(totalS / 3600)" : "0", totalS >= 3600 ? "h \(String(format: "%02d", totalS % 3600 / 60))" : "h \(totalS / 60)", tr("Heures"), WG.good)
+                stat(IosFlightEngine.companion.grouped(n: Int32(km.rounded())), "km", tr("Distance"), WG.sun)
             }
         }
     }
@@ -227,31 +228,31 @@ struct FlightDetail: View {
                     Text([FlightDates.weekday(f.startEpochS), PilotProfile.load().name.isEmpty ? nil : PilotProfile.load().name, f.fileName]
                         .compactMap { $0 }.joined(separator: " · ")).font(WG.subhead).foregroundStyle(WG.dim).lineLimit(1)
                 }
-                WGCard(title: "Trace", systemImage: "map", tint: WG.bad) {
+                WGCard(title: tr("Trace"), systemImage: "map", tint: WG.bad) {
                     TraceSketch(track: f.track, lineWidth: 2).frame(height: 300)
                         .background(Color.gray.opacity(0.06), in: RoundedRectangle(cornerRadius: 12))
                         .overlay(RoundedRectangle(cornerRadius: 12).stroke(WG.line))
                     HStack(alignment: .top) {
-                        kpi(f.durationText.replacingOccurrences(of: " h ", with: " h "), "Durée", WG.good, unit: nil)
-                        kpi(IosFlightEngine.companion.grouped(n: Int32(f.distanceKm.rounded())), "Distance", WG.sun, unit: "km")
-                        kpi(f.maxAltM > 0 ? IosFlightEngine.companion.grouped(n: Int32(f.maxAltM)) : "—", "Alt. max", WG.altitude, unit: f.maxAltM > 0 ? "m" : nil)
+                        kpi(f.durationText.replacingOccurrences(of: " h ", with: " h "), tr("Durée"), WG.good, unit: nil)
+                        kpi(IosFlightEngine.companion.grouped(n: Int32(f.distanceKm.rounded())), tr("Distance"), WG.sun, unit: "km")
+                        kpi(f.maxAltM > 0 ? IosFlightEngine.companion.grouped(n: Int32(f.maxAltM)) : "—", tr("Alt. max"), WG.altitude, unit: f.maxAltM > 0 ? "m" : nil)
                     }
                     Button { replay = app.library.replayJson(path: f.path) } label: {
-                        Text("Revoir le vol en 3D").font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
+                        Text(tr("Revoir le vol en 3D")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
                             .background(f.altProfile.isEmpty ? Color.gray.opacity(0.3) : WG.sky, in: RoundedRectangle(cornerRadius: 14)).foregroundStyle(.white)
                     }
                     .disabled(f.altProfile.isEmpty)
-                    if f.altProfile.isEmpty { Text("Rejeu 3D indisponible : vol sans altitude.").font(WG.caption).foregroundStyle(WG.dim) }
+                    if f.altProfile.isEmpty { Text(tr("Rejeu 3D indisponible : vol sans altitude.")).font(WG.caption).foregroundStyle(WG.dim) }
                 }
                 if !f.altProfile.isEmpty {
                     WGCard {
                         HStack {
-                            Label("Profil d'altitude", systemImage: "scribble").font(WG.headline).foregroundStyle(WG.altitude)
+                            Label(tr("Profil d'altitude"), systemImage: "scribble").font(WG.headline).foregroundStyle(WG.altitude)
                             Spacer()
                             Text(f.altSource).font(WG.footnote.weight(.semibold)).foregroundStyle(WG.dim)
                                 .padding(.horizontal, 10).padding(.vertical, 4).background(Color.gray.opacity(0.12), in: Capsule())
                         }
-                        Text("Plage").font(WG.subhead.weight(.semibold)).foregroundStyle(WG.dim)
+                        Text(tr("Plage")).font(WG.subhead.weight(.semibold)).foregroundStyle(WG.dim)
                         HStack(alignment: .firstTextBaseline, spacing: 3) {
                             Text("\(IosFlightEngine.companion.grouped(n: Int32(f.minAltM)))–\(IosFlightEngine.companion.grouped(n: Int32(f.maxAltM)))")
                                 .font(WG.number(30)).foregroundStyle(WG.brandInk)
@@ -277,7 +278,7 @@ struct FlightDetail: View {
                         .frame(height: 200)
                     }
                 }
-                Text("\(f.fileName) · \(f.detail) · trace indicative (enregistreur non approuvé)").font(WG.caption).foregroundStyle(WG.dim)
+                Text(tr("%@ · %@ · trace indicative (enregistreur non approuvé)", f.fileName, trDyn(f.detail))).font(WG.caption).foregroundStyle(WG.dim)
             }
             .padding(16)
         }
@@ -302,20 +303,20 @@ struct ProfileEditor: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Nom", text: $draft.name).textContentType(.name)
-                    TextField("Pseudo", text: $draft.username).textInputAutocapitalization(.never)
-                    TextField("Club", text: $draft.club)
-                    Picker("Niveau", selection: $draft.level) {
+                    TextField(tr("Nom"), text: $draft.name).textContentType(.name)
+                    TextField(tr("Pseudo"), text: $draft.username).textInputAutocapitalization(.never)
+                    TextField(tr("Club"), text: $draft.club)
+                    Picker(tr("Niveau"), selection: $draft.level) {
                         Text("—").tag("")
                         ForEach(PilotProfile.levels, id: \.self) { Text($0).tag($0) }
                     }
-                } footer: { Text("Tout reste sur ce téléphone : rien n'est envoyé ni partagé.") }
+                } footer: { Text(tr("Tout reste sur ce téléphone : rien n'est envoyé ni partagé.")) }
             }
-            .navigationTitle(profile.isEmpty ? "Créer mon profil" : "Modifier le profil")
+            .navigationTitle(profile.isEmpty ? tr("Créer mon profil") : tr("Modifier le profil"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Annuler") { dismiss() } }
-                ToolbarItem(placement: .confirmationAction) { Button("Enregistrer") { profile = draft; draft.save(); dismiss() } }
+                ToolbarItem(placement: .cancellationAction) { Button(tr("Annuler")) { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) { Button(tr("Enregistrer")) { profile = draft; draft.save(); dismiss() } }
             }
             .onAppear { draft = profile }
         }

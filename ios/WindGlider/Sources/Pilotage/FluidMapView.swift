@@ -451,7 +451,7 @@ final class OwnshipView: MKAnnotationView {
         displayPriority = .required
         zPriority = .max
         collisionMode = .none
-        accessibilityLabel = "Mon planeur"
+        accessibilityLabel = tr("Mon planeur")
     }
     required init?(coder: NSCoder) { fatalError() }
     func rotate(_ deg: Double) { icon.transform = CGAffineTransform(rotationAngle: deg * .pi / 180) }
@@ -525,7 +525,7 @@ final class PlaneView: MKAnnotationView {
         label.sizeToFit()
         label.frame = CGRect(x: (bounds.width - label.frame.width - 8) / 2, y: 17, width: label.frame.width + 8, height: 16)
         alpha = t.ageS > 60 ? 0.5 : 1
-        accessibilityLabel = "Aéronef \(t.fullLabel.isEmpty ? t.typeLabel : t.fullLabel)"
+        accessibilityLabel = tr("Aéronef %@", t.fullLabel.isEmpty ? trDyn(t.typeLabel) : t.fullLabel)
     }
 }
 
@@ -547,7 +547,7 @@ final class PumpView: MKAnnotationView {
         layer.borderColor = c.cgColor; backgroundColor = c.withAlphaComponent(0.25)
         let f = NumberFormatter(); f.locale = Locale(identifier: "fr_FR"); f.minimumFractionDigits = 1; f.maximumFractionDigits = 1
         label.text = (t.climbMs >= 0 ? "+" : "") + (f.string(from: NSNumber(value: t.climbMs)) ?? "")
-        accessibilityLabel = "Pompe \(label.text ?? "") mètres par seconde"
+        accessibilityLabel = tr("Pompe %@ mètres par seconde", label.text ?? "")
     }
 }
 

@@ -223,7 +223,7 @@ final class AppModel: ObservableObject {
     // MARK: météo
 
     func loadWeather() async {
-        guard let c = club, let pos = c.position else { weather = .failed("Club sans position connue"); return }
+        guard let c = club, let pos = c.position else { weather = .failed(tr("Club sans position connue")); return }
         weather = .loading
         do {
             let r = try await weatherApi.loadDay(lat: pos.lat, lon: pos.lon, departement: c.departement)

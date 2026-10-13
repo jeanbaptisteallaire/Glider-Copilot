@@ -84,8 +84,8 @@ final class AppleLogin: NSObject, ASAuthorizationControllerDelegate, ASAuthoriza
             switch (error as? ASAuthorizationError)?.code {
             case .canceled: finish(.failure(SignInError.cancelled))
             // 1000 : aucun compte Apple sur l'appareil (ou capacité absente de l'App ID)
-            case .unknown: finish(.failure(SignInError.failed("Connexion Apple indisponible : connectez-vous à votre compte Apple dans Réglages.")))
-            default: finish(.failure(SignInError.failed("Connexion Apple impossible, réessayez.")))
+            case .unknown: finish(.failure(SignInError.failed(tr("Connexion Apple indisponible : connectez-vous à votre compte Apple dans Réglages."))))
+            default: finish(.failure(SignInError.failed(tr("Connexion Apple impossible, réessayez."))))
             }
         }
     }

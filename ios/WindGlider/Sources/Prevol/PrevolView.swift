@@ -16,18 +16,18 @@ struct PrevolView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     header
                     if app.weatherIsTestData {
-                        Text("DONNÉES D'ESSAI · journée synthétique du 16/09/2026, pas une prévision")
+                        Text(tr("DONNÉES D'ESSAI · journée synthétique du 16/09/2026, pas une prévision"))
                             .font(WG.caption.weight(.bold)).foregroundStyle(.white)
                             .padding(8).frame(maxWidth: .infinity).background(WG.bad, in: RoundedRectangle(cornerRadius: 10))
                     }
                     PackCard()
                     switch app.weather {
                     case .idle, .loading:
-                        WGCard { HStack { ProgressView(); Text("Météo du jour…").font(WG.subhead) } }
+                        WGCard { HStack { ProgressView(); Text(tr("Météo du jour…")).font(WG.subhead) } }
                     case .failed(let message):
-                        WGCard(title: "Météo", systemImage: "cloud.sun", tint: WG.sun) {
+                        WGCard(title: tr("Météo"), systemImage: "cloud.sun", tint: WG.sun) {
                             Text(message).font(WG.subhead).foregroundStyle(WG.brandInk)
-                            Button("Réessayer") { Task { await app.loadWeather() } }.font(WG.subhead)
+                            Button(tr("Réessayer")) { Task { await app.loadWeather() } }.font(WG.subhead)
                         }
                     case .loaded(let day):
                         let sel = selected(day)
@@ -38,7 +38,7 @@ struct PrevolView: View {
                         Text("\(app.club?.shortName ?? app.club?.name ?? "") · ARPEGE · \(day.sources.first?.attribution ?? "Source : Météo-France")")
                             .font(WG.footnote).foregroundStyle(WG.dim).lineLimit(1)
                         Text(WeatherRepositoryKt.PRECOG_CREDIT).font(WG.footnote).foregroundStyle(WG.dim)
-                        Text("Estimations de l'app sur le profil ARPEGE (maille ~10 km) : plafond par parcelle adiabatique, base des cumulus par Espy, force par w*. Aide secondaire, à confronter au ciel et aux consignes du club.")
+                        Text(tr("Estimations de l'app sur le profil ARPEGE (maille ~10 km) : plafond par parcelle adiabatique, base des cumulus par Espy, force par w*. Aide secondaire, à confronter au ciel et aux consignes du club."))
                             .font(WG.footnote).foregroundStyle(WG.dim.opacity(0.8))
                     }
                     SensorsCard()
@@ -65,7 +65,7 @@ struct PrevolView: View {
     /// En-tête d'Android : grand titre, date et terrain à droite (le terrain ouvre le choix du club), « i », actualiser.
     private var header: some View {
         HStack(alignment: .center) {
-            Text("Prévol").font(WG.largeTitle).foregroundStyle(WG.brandInk)
+            Text(tr("Prévol")).font(WG.largeTitle).foregroundStyle(WG.brandInk)
             Spacer()
             VStack(alignment: .trailing, spacing: 1) {
                 if case .loaded(let day) = app.weather { Text(Fmt.day(day.date)).font(WG.footnote).foregroundStyle(WG.brandInk) }
@@ -77,14 +77,15 @@ struct PrevolView: View {
                     }
                     .foregroundStyle(WG.sky)
                 }
-                .accessibilityLabel("Changer de club")
+                .accessibilityLabel(tr("Changer de club"))
             }
             Button { showSources = true } label: { Image(systemName: "info.circle.fill").font(.title3).foregroundStyle(WG.sky) }
-                .accessibilityLabel("Sources météo").padding(.leading, 6)
+                .accessibilityLabel(tr("Sources météo")).padding(.leading, 6)
             Button { Task { await app.loadWeather() } } label: {
                 if case .loading = app.weather { ProgressView() } else { Image(systemName: "arrow.clockwise").font(.title3).foregroundStyle(WG.brandInk) }
             }
-            .accessibilityLabel("Actualiser").padding(.leading, 4)
+            .accessibilityLabel(tr("Actualiser")).padding(.leading, 4)
+            LanguageSwitch().padding(.leading, 6)
         }
         .padding(.top, 4)
     }
@@ -129,23 +130,23 @@ struct DayCard: View {
         let qColor: Color = switch s.quality.name { case "NONE": WG.dim; case "WEAK": WG.climb; case "AVERAGE": WG.brandInk; default: WG.good }
         WGCard {
             HStack {
-                Label("La journée", systemImage: "sun.max").font(WG.headline).foregroundStyle(WG.sun)
+                Label(tr("La journée"), systemImage: "sun.max").font(WG.headline).foregroundStyle(WG.sun)
                 Spacer()
-                Text("Thermique · \(s.quality.label)").font(WG.footnote.weight(.semibold)).foregroundStyle(qColor)
+                Text(tr("Thermique · %@", trDyn(s.quality.label))).font(WG.footnote.weight(.semibold)).foregroundStyle(qColor)
                     .padding(.horizontal, 10).padding(.vertical, 4).background(qColor.opacity(0.12), in: Capsule())
             }
             HStack(alignment: .top) {
-                kpi(Fmt.hm(s.triggerTime), "Déclenchement", WG.sun, unit: nil)
-                kpi(s.best.map { Fmt.mNumber($0.ceilingMslM) } ?? "—", s.best.map { "Plafond \(Fmt.hour($0.validTime))" } ?? "Plafond", WG.altitude, unit: s.best == nil ? nil : "m")
-                kpi(Fmt.hm(s.endTime), "Fin", WG.sun, unit: nil)
+                kpi(Fmt.hm(s.triggerTime), tr("Déclenchement"), WG.sun, unit: nil)
+                kpi(s.best.map { Fmt.mNumber($0.ceilingMslM) } ?? "—", s.best.map { tr("Plafond %@", Fmt.hour($0.validTime)) } ?? tr("Plafond"), WG.altitude, unit: s.best == nil ? nil : "m")
+                kpi(Fmt.hm(s.endTime), tr("Fin"), WG.sun, unit: nil)
             }
             CeilingChart(hours: day.hours, selected: selected, onSelect: onSelect).frame(height: 170)
             HStack(spacing: 12) {
-                legend(WG.chartClimb(0.4), "faible"); legend(WG.chartClimb(1.2), "moyen"); legend(WG.chartClimb(2.4), "fort")
-                HStack(spacing: 4) { Circle().fill(WG.altitude).frame(width: 7, height: 7); Text("base Cu").font(WG.caption) }
+                legend(WG.chartClimb(0.4), tr("faible")); legend(WG.chartClimb(1.2), tr("moyen")); legend(WG.chartClimb(2.4), tr("fort"))
+                HStack(spacing: 4) { Circle().fill(WG.altitude).frame(width: 7, height: 7); Text(tr("base Cu")).font(WG.caption) }
             }
             if s.overdevelopmentRisk {
-                Text("⚠ CAPE élevée sous cumulus : surdéveloppement possible").font(WG.footnote).foregroundStyle(WG.climb)
+                Text(tr("⚠ CAPE élevée sous cumulus : surdéveloppement possible")).font(WG.footnote).foregroundStyle(WG.climb)
             }
         }
     }
@@ -223,7 +224,7 @@ struct CeilingChart: View {
                 onSelect(min(max(Int((p.x - left) / w), 0), hours.count - 1))
             }
         }
-        .accessibilityLabel("Plafond heure par heure")
+        .accessibilityLabel(tr("Plafond heure par heure"))
     }
 }
 
@@ -236,9 +237,9 @@ struct HourCard: View {
     var body: some View {
         let h = day.hours[selected]
         let a = h.analysis
-        let nature = switch a.liftType.name { case "NONE": "Pas d'ascendance exploitable"; case "BLUE": "Thermique pur (ciel bleu)"; default: "Thermique sous cumulus" }
-        let capped = a.dryTopCapped && a.liftType.name == "BLUE" ? " (≥ sommet du profil)" : ""
-        WGCard(title: "Conditions à \(Fmt.hm(a.validTime))", systemImage: "sun.max", tint: WG.sun) {
+        let nature = switch a.liftType.name { case "NONE": tr("Pas d'ascendance exploitable"); case "BLUE": tr("Thermique pur (ciel bleu)"); default: tr("Thermique sous cumulus") }
+        let capped = a.dryTopCapped && a.liftType.name == "BLUE" ? tr(" (≥ sommet du profil)") : ""
+        WGCard(title: tr("Conditions à %@", Fmt.hm(a.validTime)), systemImage: "sun.max", tint: WG.sun) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
@@ -257,20 +258,20 @@ struct HourCard: View {
                 .onChange(of: selected) { _, v in withAnimation { proxy.scrollTo(v, anchor: .center) } }
             }
             HStack(alignment: .top) {
-                kpi(Fmt.mNumber(a.ceilingMslM), "Plafond", WG.altitude, unit: "m")
-                kpi(a.cloudBaseMslM.map { Fmt.mNumber($0.doubleValue) } ?? "—", "Base Cu", WG.altitude, unit: a.cloudBaseMslM == nil ? nil : "m")
-                kpi("~" + Fmt.num1(a.climbMs), "Montée", WG.sun, unit: "m/s")
+                kpi(Fmt.mNumber(a.ceilingMslM), tr("Plafond"), WG.altitude, unit: "m")
+                kpi(a.cloudBaseMslM.map { Fmt.mNumber($0.doubleValue) } ?? "—", tr("Base Cu"), WG.altitude, unit: a.cloudBaseMslM == nil ? nil : "m")
+                kpi("~" + Fmt.num1(a.climbMs), tr("Montée"), WG.sun, unit: "m/s")
             }
-            statRow("Plafond sol", Fmt.m(a.ceilingAglM) + capped)
-            statRow("Nature", nature)
-            statRow("Force estimée", "w* " + Fmt.ms(a.wStarMs))
-            statRow("Nébulosité", a.totalCloudPct.map { "\(Int($0.doubleValue)) %" + (h.surface.lowCloudPct.map { " (basse \(Int($0.doubleValue)) %)" } ?? "") } ?? "—")
+            statRow(tr("Plafond sol"), Fmt.m(a.ceilingAglM) + capped)
+            statRow(tr("Nature"), nature)
+            statRow(tr("Force estimée"), "w* " + Fmt.ms(a.wStarMs))
+            statRow(tr("Nébulosité"), a.totalCloudPct.map { "\(Int($0.doubleValue)) %" + (h.surface.lowCloudPct.map { tr(" (basse %d %%)", Int($0.doubleValue)) } ?? "") } ?? "—")
             if (h.surface.lowCloudPct?.doubleValue ?? 0) >= 85 {
-                Text("⚠ Couche basse prévue presque couverte : ascendances sans doute étouffées, base à vérifier au ciel.")
+                Text(tr("⚠ Couche basse prévue presque couverte : ascendances sans doute étouffées, base à vérifier au ciel."))
                     .font(WG.footnote).foregroundStyle(WG.climb)
             }
             statRow("CAPE", a.capeJkg.map { "\(Int($0.doubleValue)) J/kg" } ?? "—")
-            statRow("Sol du modèle", Fmt.m(a.groundAltitudeM) + (day.gridDistanceKm.map { " · maille à " + Fmt.num1($0.doubleValue) + " km" } ?? ""))
+            statRow(tr("Sol du modèle"), Fmt.m(a.groundAltitudeM) + (day.gridDistanceKm.map { tr(" · maille à %@ km", Fmt.num1($0.doubleValue)) } ?? ""))
         }
     }
 
@@ -293,7 +294,7 @@ struct WindsCard: View {
         let best = day.summary.best
         let h = hours.indices.contains(index) ? hours[index] : hours.first { best != nil && $0.analysis.validTime == best!.validTime } ?? hours.first
         if let h {
-            WGCard(title: "Vent par tranches · \(Fmt.hm(h.analysis.validTime))", systemImage: "wind", tint: WG.wind) {
+            WGCard(title: tr("Vent par tranches · %@", Fmt.hm(h.analysis.validTime)), systemImage: "wind", tint: WG.wind) {
                 ForEach(h.winds, id: \.label) { w in
                     HStack {
                         Text(w.label).font(WG.subhead).frame(width: 90, alignment: .leading)
@@ -303,7 +304,7 @@ struct WindsCard: View {
                         Text("\(Int(w.speedKmh.rounded())) km/h").font(WG.subhead.monospacedDigit()).foregroundStyle(WG.brandInk)
                     }
                 }
-                Text("Vent moyen du modèle (direction d'où il vient)").font(WG.caption).foregroundStyle(WG.dim)
+                Text(tr("Vent moyen du modèle (direction d'où il vient)")).font(WG.caption).foregroundStyle(WG.dim)
             }
         }
     }
@@ -314,11 +315,11 @@ struct VigilanceCard: View {
 
     var body: some View {
         let color: Color = [1: .green, 2: .yellow, 3: .orange, 4: .red][Int(v.colorId)] ?? .gray
-        WGCard(title: "Vigilance Météo-France · \(v.departement)", systemImage: "exclamationmark.triangle", tint: WG.brandInk) {
+        WGCard(title: tr("Vigilance Météo-France · %@", v.departement), systemImage: "exclamationmark.triangle", tint: WG.brandInk) {
             HStack {
                 Circle().fill(color).frame(width: 14, height: 14)
                 Text(v.colorLabel.capitalized).font(WG.subhead)
-                if !v.phenomena.isEmpty { Text("· " + v.phenomena.joined(separator: ", ")).font(WG.subhead).foregroundStyle(WG.dim) }
+                if !v.phenomena.isEmpty { Text("· " + v.phenomena.map { trDyn($0) }.joined(separator: ", ")).font(WG.subhead).foregroundStyle(WG.dim) }
             }
         }
     }
@@ -328,17 +329,17 @@ struct FlightSettingsCard: View {
     @EnvironmentObject var app: AppModel
 
     var body: some View {
-        WGCard(title: "Vol", systemImage: "gearshape", tint: WG.brandInk) {
-            Toggle("Départ automatique à 50 km/h", isOn: $app.autoTakeoff).font(WG.subhead)
-            Toggle("Son du vario", isOn: $app.soundOn).font(WG.subhead)
-            Toggle("Annonces vocales", isOn: $app.voiceOn).font(WG.subhead)
+        WGCard(title: tr("Vol"), systemImage: "gearshape", tint: WG.brandInk) {
+            Toggle(tr("Départ automatique à 50 km/h"), isOn: $app.autoTakeoff).font(WG.subhead)
+            Toggle(tr("Son du vario"), isOn: $app.soundOn).font(WG.subhead)
+            Toggle(tr("Annonces vocales"), isOn: $app.voiceOn).font(WG.subhead)
             HStack {
-                Button("Tester le son") { app.testSound() }
+                Button(tr("Tester le son")) { app.testSound() }
                 Spacer()
-                Button("Tester la voix") { app.testVoice() }
+                Button(tr("Tester la voix")) { app.testVoice() }
             }
             .font(WG.subhead)
-            Text("Sans départ automatique, l'enregistrement se lance avec REC dans Pilotage. Baromètre : \(app.sensors.baroAvailable ? "présent" : "absent")")
+            Text(tr("Sans départ automatique, l'enregistrement se lance avec REC dans Pilotage. Baromètre : %@", app.sensors.baroAvailable ? tr("présent") : tr("absent")))
                 .font(WG.caption).foregroundStyle(WG.dim)
         }
         .tint(WG.sky)
@@ -365,10 +366,10 @@ struct ClubPicker: View {
                     }
                 }
             }
-            .searchable(text: $query, prompt: "Sigle, OACI, nom ou ville")
-            .navigationTitle("Choix du club")
+            .searchable(text: $query, prompt: tr("Sigle, OACI, nom ou ville"))
+            .navigationTitle(tr("Choix du club"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Fermer") { dismiss() } } }
+            .toolbar { ToolbarItem(placement: .cancellationAction) { Button(tr("Fermer")) { dismiss() } } }
         }
     }
 }
@@ -385,21 +386,21 @@ struct SourcesSheet: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(s.product).font(WG.headline)
                             Text(s.attribution).font(WG.footnote)
-                            Text([s.referenceTime.map { "réseau de \(Fmt.hm($0))" }, "reçu à \(Fmt.hm(s.fetchedAt))", s.offline ? "copie locale" : nil]
+                            Text([s.referenceTime.map { tr("réseau de %@", Fmt.hm($0)) }, tr("reçu à %@", Fmt.hm(s.fetchedAt)), s.offline ? tr("copie locale") : nil]
                                 .compactMap { $0 }.joined(separator: " · ")).font(WG.caption).foregroundStyle(WG.dim)
                             if let l = s.license { Text(l).font(WG.caption).foregroundStyle(WG.dim) }
                         }
                     }
                 } else {
-                    Text("Aucune donnée reçue").font(WG.subhead)
+                    Text(tr("Aucune donnée reçue")).font(WG.subhead)
                 }
                 Section {
                     Text(WeatherRepositoryKt.PRECOG_CREDIT).font(WG.footnote)
-                    Text("Données fournies en l'état : estimation d'un modèle, à confronter à votre propre analyse. Ne remplace pas un briefing météo officiel.")
+                    Text(tr("Données fournies en l'état : estimation d'un modèle, à confronter à votre propre analyse. Ne remplace pas un briefing météo officiel."))
                         .font(WG.caption).foregroundStyle(WG.dim)
                 }
             }
-            .navigationTitle("Sources météo")
+            .navigationTitle(tr("Sources météo"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("OK") { dismiss() } } }
         }
@@ -414,17 +415,17 @@ struct PackCard: View {
     init() { _packs = ObservedObject(wrappedValue: PackStoreHolder.current) }
 
     var body: some View {
-        WGCard(title: "Carte hors ligne", systemImage: "map", tint: WG.good) {
+        WGCard(title: tr("Carte hors ligne"), systemImage: "map", tint: WG.good) {
             if let a = packs.active {
-                Text("\(a.name) · \(a.airportCount) terrains · relief \(a.reliefLoaded ? "chargé" : "absent")").font(WG.subhead)
-                if a.aeroExpired { Text("Données aéro périmées : mettez la carte à jour avant le vol").font(WG.caption).foregroundStyle(WG.bad) }
+                Text(tr("%@ · %d terrains · relief %@", a.name, Int(a.airportCount), a.reliefLoaded ? tr("chargé") : tr("absent"))).font(WG.subhead)
+                if a.aeroExpired { Text(tr("Données aéro périmées : mettez la carte à jour avant le vol")).font(WG.caption).foregroundStyle(WG.bad) }
                 if !app.airspaces.isEmpty {
-                    DisclosureGroup("Espaces aériens autour du terrain (\(app.airspaces.count))") {
+                    DisclosureGroup(tr("Espaces aériens autour du terrain (%d)", app.airspaces.count)) {
                         ForEach(app.airspaces.prefix(12), id: \.id) { s in
                             HStack(alignment: .top) {
                                 RoundedRectangle(cornerRadius: 2).fill(WG.airspace(s.family)).frame(width: 4, height: 30)
                                 VStack(alignment: .leading) {
-                                    Text(s.name + (s.byNotam ? " · par NOTAM" : "")).font(WG.subhead)
+                                    Text(s.name + (s.byNotam ? tr(" · par NOTAM") : "")).font(WG.subhead)
                                     Text("\(s.label) · \(s.vertical)").font(WG.caption).foregroundStyle(WG.dim)
                                 }
                             }
@@ -433,20 +434,20 @@ struct PackCard: View {
                     .font(WG.subhead).tint(WG.brandInk)
                 }
             } else if let p = packs.available {
-                Text("\(p.name) : relief et terrains, \(packs.neededMB) Mo").font(WG.subhead)
-                Text("Sans carte, la marge ne connaît ni le relief ni les terrains de dégagement.").font(WG.caption).foregroundStyle(WG.dim)
+                Text(tr("%@ : relief et terrains, %d Mo", p.name, Int(packs.neededMB))).font(WG.subhead)
+                Text(tr("Sans carte, la marge ne connaît ni le relief ni les terrains de dégagement.")).font(WG.caption).foregroundStyle(WG.dim)
             } else {
-                Text(packs.catalogError ?? "Aucune carte pour cette région").font(WG.subhead).foregroundStyle(WG.dim)
+                Text(packs.catalogError ?? tr("Aucune carte pour cette région")).font(WG.subhead).foregroundStyle(WG.dim)
             }
             if let pr = packs.progress {
-                ProgressView(value: pr) { Text("Téléchargement \(Int(pr * 100)) %").font(WG.caption) }
-                Button("Annuler") { packs.cancel() }.font(WG.subhead)
+                ProgressView(value: pr) { Text(tr("Téléchargement %d %%", Int(pr * 100))).font(WG.caption) }
+                Button(tr("Annuler")) { packs.cancel() }.font(WG.subhead)
             } else if packs.available != nil && (packs.installed == nil || packs.updateAvailable) {
-                Button(packs.updateAvailable ? "Mettre à jour" : "Télécharger (\(packs.neededMB) Mo)") { packs.download(club: app.club) }
+                Button(packs.updateAvailable ? tr("Mettre à jour") : tr("Télécharger (%d Mo)", Int(packs.neededMB))) { packs.download(club: app.club) }
                     .font(WG.subhead).buttonStyle(.borderedProminent).tint(WG.sky)
             }
             if let e = packs.error { Text(e).font(WG.caption).foregroundStyle(WG.bad) }
-            Text("Relief Copernicus GLO-30 · terrains openAIP · vérifiez SUP AIP et NOTAM avant le vol").font(WG.caption).foregroundStyle(WG.dim)
+            Text(tr("Relief Copernicus GLO-30 · terrains openAIP · vérifiez SUP AIP et NOTAM avant le vol")).font(WG.caption).foregroundStyle(WG.dim)
         }
     }
 }
@@ -460,12 +461,12 @@ struct SensorsCard: View {
 
     var body: some View {
         if let s = app.sensorsUi {
-            WGCard(title: "Capteurs", systemImage: "sensor", tint: WG.brandInk) {
-                Label(s.sourceLabel, systemImage: s.sourceOk ? "checkmark.circle.fill" : "exclamationmark.circle")
+            WGCard(title: tr("Capteurs"), systemImage: "sensor", tint: WG.brandInk) {
+                Label(trDyn(s.sourceLabel), systemImage: s.sourceOk ? "checkmark.circle.fill" : "exclamationmark.circle")
                     .font(WG.subhead).foregroundStyle(s.sourceOk ? WG.good : WG.brandInk)
                 Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 4) {
-                    GridRow { cell("Baromètre", s.baroHz); cell("Bruit baro", s.baroNoise) }
-                    GridRow { cell("Accéléromètre", s.accelHz); cell("GPS", s.gpsAccuracy) }
+                    GridRow { cell(tr("Baromètre"), s.baroHz); cell(tr("Bruit baro"), s.baroNoise) }
+                    GridRow { cell(tr("Accéléromètre"), s.accelHz); cell("GPS", s.gpsAccuracy) }
                 }
                 if !s.altitudeLine.isEmpty { Text(s.altitudeLine).font(WG.footnote) }
                 if !s.flightLine.isEmpty { Text(s.flightLine).font(WG.footnote).foregroundStyle(WG.dim) }

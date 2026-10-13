@@ -30,16 +30,16 @@ struct WelcomeView: View {
                     }
                     VStack(spacing: 16) {
                         if account.googleAvailable {
-                            WelcomeButton(text: "Continuer avec Google", enabled: !account.busy && !leaving) {
+                            WelcomeButton(text: tr("Continuer avec Google"), enabled: !account.busy && !leaving) {
                                 GoogleMark()
                             } action: { account.signInWithGoogle() }
                         }
                         if account.appleAvailable {
-                            WelcomeButton(text: "Se connecter avec Apple", enabled: !account.busy && !leaving) {
+                            WelcomeButton(text: tr("Se connecter avec Apple"), enabled: !account.busy && !leaving) {
                                 Image(systemName: "apple.logo").font(.system(size: 20, weight: .medium)).foregroundStyle(.black)
                             } action: { account.signInWithApple() }
                         }
-                        WelcomeButton(text: "Continuer en invité", enabled: !leaving) { EmptyView() } action: {
+                        WelcomeButton(text: tr("Continuer en invité"), enabled: !leaving) { EmptyView() } action: {
                             leaving = true
                             onContinue()
                         }
@@ -47,9 +47,9 @@ struct WelcomeView: View {
                     .opacity(shown ? 1 : 0).offset(y: shown ? 0 : 16)
                     if account.busy { ProgressView().tint(.white).padding(.top, 12) }
                     HStack(spacing: 4) {
-                        Link("Conditions", destination: Legal.terms)
+                        Link(tr("Conditions"), destination: Legal.terms)
                         Text("·")
-                        Link("Confidentialité", destination: Legal.privacy)
+                        Link(tr("Confidentialité"), destination: Legal.privacy)
                     }
                     .font(Font.custom("Inter", size: 12).weight(.medium)).foregroundStyle(.white).tint(.white)
                     .shadow(color: .black.opacity(0.6), radius: 4)
@@ -58,6 +58,7 @@ struct WelcomeView: View {
                 }
             }
             .padding(.horizontal, 24)
+            LanguageSwitch().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing).padding(.trailing, 16).padding(.top, 8)
         }
         .preferredColorScheme(.light)
         .onAppear {

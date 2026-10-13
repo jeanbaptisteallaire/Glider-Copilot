@@ -47,7 +47,7 @@ struct PilotView: View {
                     VStack(spacing: 1) {
                         HStack(spacing: 4) {
                             Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
-                            Text("REC").font(WG.caption2.weight(.bold))
+                            Text(tr("REC")).font(WG.caption2.weight(.bold))
                         }
                         .foregroundStyle(p.recording ? .white : WG.bad)
                         Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : PI.ink)
@@ -56,7 +56,7 @@ struct PilotView: View {
                     .background(p.recording ? WG.bad : PI.box.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
                     .shadow(color: .black.opacity(0.15), radius: 2)
                 }
-                .accessibilityLabel(p.recording ? "Arrêter l'enregistrement" : "Démarrer l'enregistrement")
+                .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 2)
 
                 // mode sombre : vignettage noir très court sur les bords (les boîtes noires s'y fondent)
@@ -77,7 +77,7 @@ struct PilotView: View {
                     if showProfile {
                         VStack(spacing: 0) {
                             ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
-                            Text(p.fieldElevText).font(WG.caption).foregroundStyle(PI.dim)
+                            Text(trDyn(p.fieldElevText)).font(WG.caption).foregroundStyle(PI.dim)
                                 .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
                         }
                         .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
@@ -85,7 +85,7 @@ struct PilotView: View {
                     } else {
                         Color.clear.frame(height: 30)
                     }
-                    PanelToggle(isOn: $showProfile, label: "relief", dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
+                    PanelToggle(isOn: $showProfile, label: tr("relief"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
@@ -99,7 +99,7 @@ struct PilotView: View {
                     } else {
                         Color.clear.frame(height: 30)
                     }
-                    PanelToggle(isOn: $showVario, label: "vario", dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
+                    PanelToggle(isOn: $showVario, label: tr("vario"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
                 }
                 .padding(.bottom, 4)
                 }
@@ -127,15 +127,15 @@ struct PilotView: View {
         return HStack(alignment: .top, spacing: 6) {
             // gauche : marge (sans unité, évidente), SÉCU, ALT
             VStack(alignment: .leading, spacing: 0) {
-                Text("Marge sécu.").font(WG.footnote).foregroundStyle(marginColor)
+                Text(tr("Marge sécu.")).font(WG.footnote).foregroundStyle(marginColor)
                 Text(p.marginText).font(PI.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
                 Spacer(minLength: 2)
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("SÉCU").font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
+                    Text(tr("SÉCU")).font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
                 }
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("ALT").font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
+                    Text(tr("ALT")).font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
                 }
             }
             .lineLimit(1)
@@ -146,7 +146,7 @@ struct PilotView: View {
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
                         // F20 : « Fin. +300 m » (tour de piste) ; F10 : « Finesse », sans les 300 m (JB, 12/10/2026)
-                        Text(f10 ? "Finesse" : "Fin.").font(WG.footnote)
+                        Text(f10 ? tr("Finesse") : tr("Fin.")).font(WG.footnote)
                         if !f10 { Text("+300 m").font(WG.caption2).foregroundStyle(PI.dim) }
                     }
                     .lineLimit(1).fixedSize()
@@ -164,7 +164,7 @@ struct PilotView: View {
                 }
                 .frame(maxWidth: .infinity).headerBox()
                 VStack(spacing: 0) {
-                    Text("CAP").font(WG.footnote)
+                    Text(tr("CAP")).font(WG.footnote)
                     Text(p.hasPosition ? "\(Int(p.trackDeg.rounded()) % 360)°" : "—").font(PI.number(20)).monospacedDigit()
                 }
                 .lineLimit(1)
@@ -175,7 +175,7 @@ struct PilotView: View {
             // droite : distance, terrain, cap vers le terrain (même taille que le cap GPS)
             Button { choosingField = true } label: {
                 VStack(alignment: .trailing, spacing: 0) {
-                    Text("Dist. ter.").font(WG.footnote).foregroundStyle(PI.dim)
+                    Text(tr("Dist. ter.")).font(WG.footnote).foregroundStyle(PI.dim)
                     HStack(alignment: .firstTextBaseline, spacing: 2) {
                         Text(p.distanceText).font(PI.number(32)).minimumScaleFactor(0.6)
                         Text("km").font(WG.caption)
@@ -192,7 +192,7 @@ struct PilotView: View {
                 .headerBox()
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Choisir le terrain de référence")
+            .accessibilityLabel(tr("Choisir le terrain de référence"))
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 8).padding(.top, 4)
@@ -204,21 +204,21 @@ struct PilotView: View {
     private func varioBar(_ p: PilotUi) -> some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading) {
-                Text(p.varioLabel).font(WG.footnote).foregroundStyle(PI.dim)
+                Text(trDyn(p.varioLabel)).font(WG.footnote).foregroundStyle(PI.dim)
                 Text(p.varioText).font(PI.number(40)).foregroundStyle(WG.vario(p.varioMs)).lineLimit(1).minimumScaleFactor(0.6)
             }
             .frame(width: 120, alignment: .leading)
             VStack(spacing: 6) {
                 VarioScale(value: p.varioMs).frame(height: 10)
                 HStack {
-                    avg("Spirale", p.spiralText); avg("Pompe", p.thermalText); avg("Jour", p.dayText)
+                    avg(tr("Spirale"), p.spiralText); avg(tr("Pompe"), p.thermalText); avg(tr("Jour"), p.dayText)
                 }
             }
             Button { app.soundOn.toggle() } label: {
                 Image(systemName: app.soundOn ? "speaker.wave.2" : "speaker.slash").font(.body)
                     .frame(width: 40, height: 40).overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
             }
-            .accessibilityLabel(app.soundOn ? "Couper le son du vario" : "Activer le son du vario")
+            .accessibilityLabel(app.soundOn ? tr("Couper le son du vario") : tr("Activer le son du vario"))
             .frame(maxHeight: .infinity, alignment: .top)
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -255,7 +255,7 @@ struct PanelToggle: View {
             .toggleStyle(MiniSwitch(scale: scale))
             .padding(.horizontal, dark ? 4 : 0)
             .background(dark ? Color.black.opacity(0.85) : .clear, in: Capsule())
-            .accessibilityLabel(isOn ? "Masquer \(label)" : "Afficher \(label)")
+            .accessibilityLabel(isOn ? tr("Masquer %@", label) : tr("Afficher %@", label))
     }
 }
 
@@ -295,12 +295,12 @@ struct MapOverlay: View {
             VStack(alignment: .leading, spacing: 6) {
                 // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
                 if let t = app.trafficSnap, t.connected {
-                    (Text("OGN ").fontWeight(.bold).foregroundColor(PI.ink) + Text(t.pill))
+                    (Text("OGN ").fontWeight(.bold).foregroundColor(PI.ink) + Text(trDyn(t.pill)))
                         .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(PI.dim)
                         .padding(.horizontal, 8).padding(.vertical, 5)
                         .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 10))
                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
-                        .accessibilityLabel("Trafic OGN : \(t.pill)")
+                        .accessibilityLabel(tr("Trafic OGN : %@", trDyn(t.pill)))
                         .offset(y: showProfile ? 0 : -34)
                 }
                 // panneaux masqués : pastilles indépendantes sur la carte
@@ -309,22 +309,25 @@ struct MapOverlay: View {
 
             // haut droite : DÉMO, vent, échelle vario
             VStack(alignment: .trailing, spacing: 8) {
+                HStack(spacing: 6) {
+                LanguageSwitch(dark: true)
                 Button { app.demo.toggle() } label: {
-                    Text("DÉMO").font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
+                    Text(tr("DÉMO")).font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
                         .background(app.demo ? WG.climb : PI.box, in: Capsule())
                         .foregroundStyle(app.demo ? .white : PI.ink).shadow(color: .black.opacity(0.15), radius: 2)
+                }
                 }
                 VStack(spacing: 3) {
                     if p.windKnown {
                         Image(systemName: "arrow.down").font(.subheadline.weight(.semibold)).rotationEffect(.degrees(p.windFromDeg)).foregroundStyle(PI.route)
-                        Text(p.windText.replacingOccurrences(of: "/", with: "\n")).font(WG.caption2).foregroundStyle(PI.ink).multilineTextAlignment(.center)
+                        Text(trDyn(p.windText).replacingOccurrences(of: "/", with: "\n")).font(WG.caption2).foregroundStyle(PI.ink).multilineTextAlignment(.center)
                     } else {
-                        Text("vent\n—").font(WG.caption2).foregroundStyle(PI.dim).multilineTextAlignment(.center)
+                        Text(tr("vent\n—")).font(WG.caption2).foregroundStyle(PI.dim).multilineTextAlignment(.center)
                     }
                 }
                 .frame(width: 44).padding(.vertical, 8)
                 .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
-                .accessibilityLabel(p.windKnown ? "Vent \(p.windText)" : "Vent pas encore estimé : spiralez")
+                .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
                 VStack(spacing: 3) {
                     Text("+4").font(WG.caption2).foregroundStyle(PI.dim)
                     LinearGradient(colors: [WG.vario(4), WG.vario(1.5), WG.vario(0), WG.vario(-3)], startPoint: .top, endPoint: .bottom)
@@ -345,7 +348,7 @@ struct MapOverlay: View {
                             .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
                             .shadow(color: .black.opacity(0.15), radius: 2)
                     }
-                    .accessibilityLabel(map.follow ? "Carte centrée sur le planeur" : "Recentrer la carte")
+                    .accessibilityLabel(map.follow ? tr("Carte centrée sur le planeur") : tr("Recentrer la carte"))
                     Button { map.cycleOrientation() } label: {
                         Group {
                             if map.orientation == .north {
@@ -360,7 +363,7 @@ struct MapOverlay: View {
                         .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
                         .shadow(color: .black.opacity(0.15), radius: 2)
                     }
-                    .accessibilityLabel("Orientation de la carte : \(map.orientation == .north ? "nord en haut" : map.orientation.label)")
+                    .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
                 }
                 .padding(.bottom, 6)
                 badge("GPS", app.status.gps)
@@ -381,9 +384,9 @@ struct MapOverlay: View {
                     .foregroundStyle(app.showAirspaces && !app.airspaces.isEmpty ? WG.sky : PI.ink)
                     .frame(width: 40, height: 40).background(PI.box, in: Circle()).shadow(color: .black.opacity(0.1), radius: 1)
             }
-            .accessibilityLabel(app.showAirspaces ? "Masquer les zones aéronautiques" : "Afficher les zones aéronautiques")
-            .alert("Zones aéronautiques", isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
-                Text("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP).")
+            .accessibilityLabel(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques"))
+            .alert(tr("Zones aéronautiques"), isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
+                Text(tr("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP)."))
             }
             VStack(spacing: 0) {
                 Button { map.zoomIn() } label: { Image(systemName: "plus").frame(width: 40, height: 40) }.accessibilityLabel("Zoom avant")
@@ -409,7 +412,7 @@ struct MapOverlay: View {
     private func badge(_ label: String, _ ok: Bool) -> some View {
         HStack(spacing: 4) { Circle().fill(ok ? PI.good : WG.bad).frame(width: 6, height: 6); Text(label).font(WG.caption2).foregroundStyle(PI.ink) }
             .padding(.horizontal, 7).padding(.vertical, 3).background(PI.box, in: Capsule())
-            .accessibilityLabel("\(label) \(ok ? "actif" : "inactif")")
+            .accessibilityLabel(tr(ok ? "%@ actif" : "%@ inactif", label))
     }
 }
 
@@ -470,7 +473,7 @@ struct ProfileStrip: View {
         .overlay(alignment: .bottomTrailing) {
             if !p.profileEndText.isEmpty { Text(p.profileEndText).font(WG.caption2).foregroundStyle(PI.dim).offset(y: 12) }
         }
-        .overlay { if total == 0 { Text("Coupe disponible dès la première position").font(WG.caption).foregroundStyle(PI.dim) } }
+        .overlay { if total == 0 { Text(tr("Coupe disponible dès la première position")).font(WG.caption).foregroundStyle(PI.dim) } }
         .padding(.horizontal, 12).padding(.top, 14)
     }
 }
@@ -620,7 +623,7 @@ struct FieldPicker: View {
     var body: some View {
         NavigationStack {
             List {
-                Button("Automatique (meilleure marge)") { app.engine.selectField(id: nil); dismiss() }
+                Button(tr("Automatique (meilleure marge)")) { app.engine.selectField(id: nil); dismiss() }
                 ForEach(app.engine.fieldChoices(), id: \.id) { f in
                     Button { app.engine.selectField(id: f.id); dismiss() } label: {
                         HStack {
@@ -637,7 +640,7 @@ struct FieldPicker: View {
                     }
                 }
             }
-            .navigationTitle("Terrain")
+            .navigationTitle(tr("Terrain"))
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -661,7 +664,7 @@ private struct PlaneMark: View {
                 .foregroundStyle(WG.brandInk)
         }
         .opacity(plane.ageS > 60 ? 0.5 : 1)
-        .accessibilityLabel("Aéronef \(plane.fullLabel.isEmpty ? plane.typeLabel : plane.fullLabel)")
+        .accessibilityLabel(tr("Aéronef %@", plane.fullLabel.isEmpty ? trDyn(plane.typeLabel) : plane.fullLabel))
     }
 }
 
@@ -674,7 +677,7 @@ private struct PumpMark: View {
             Circle().stroke(WG.vario(climb), lineWidth: 2).frame(width: 30, height: 30)
             Text(formatClimb(climb)).font(WG.caption2.weight(.bold)).foregroundStyle(WG.brandInk)
         }
-        .accessibilityLabel("Pompe \(formatClimb(climb)) mètres par seconde")
+        .accessibilityLabel(tr("Pompe %@ mètres par seconde", formatClimb(climb)))
     }
     private func formatClimb(_ v: Double) -> String {
         let f = NumberFormatter(); f.locale = Locale(identifier: "fr_FR"); f.minimumFractionDigits = 1; f.maximumFractionDigits = 1
@@ -696,7 +699,7 @@ struct DayNightToggle: View {
             .padding(3).background(Color.black.opacity(0.85), in: Capsule())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(dark ? "Passer en mode clair" : "Passer en mode sombre")
+        .accessibilityLabel(dark ? tr("Passer en mode clair") : tr("Passer en mode sombre"))
     }
 
     private func icon(_ name: String, on: Bool) -> some View {

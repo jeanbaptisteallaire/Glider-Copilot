@@ -34,22 +34,22 @@ final class AccountModel: ObservableObject {
     /// Clé du profil pour le tutoriel obligatoire (comme tutorialKeyFor d'Android) : « guest » ou identifiant du compte.
     var tutorialKey: String { account.userId() ?? "guest" }
 
-    func signInWithGoogle() { signIn("Connexion Google…") { try await GoogleLogin.request() } }
-    func signInWithApple() { signIn("Connexion Apple…") { [apple] in try await apple.request() } }
+    func signInWithGoogle() { signIn(tr("Connexion Google…")) { try await GoogleLogin.request() } }
+    func signInWithApple() { signIn(tr("Connexion Apple…")) { [apple] in try await apple.request() } }
 
     func signOut() {
         let a = account
         Task.detached { a.signOut() }
         email = nil
-        message = "Déconnecté. Vos vols restent sur l'iPhone."
+        message = tr("Déconnecté. Vos vols restent sur l'iPhone.")
     }
 
     func deleteAccount() {
         let arch = archive
-        run("Suppression du compte…") { a in a.deleteAccount(archive: arch) } onSuccess: { [weak self] in
+        run(tr("Suppression du compte…")) { a in a.deleteAccount(archive: arch) } onSuccess: { [weak self] in
             self?.refreshCounts()
             self?.email = nil
-            self?.message = "Compte supprimé. Vos vols restent sur l'iPhone."
+            self?.message = tr("Compte supprimé. Vos vols restent sur l'iPhone.")
         }
     }
 
@@ -61,9 +61,9 @@ final class AccountModel: ObservableObject {
 
     func syncNow() {
         guard signedIn, !busy else { return }
-        if isRecording() { message = "Envoi suspendu pendant le vol"; return }
+        if isRecording() { message = tr("Envoi suspendu pendant le vol"); return }
         busy = true
-        message = "Sauvegarde…"
+        message = tr("Sauvegarde…")
         let a = account, arch = archive
         Task {
             let before = Int(arch.counts().get(index: 1))
@@ -110,7 +110,7 @@ final class AccountModel: ObservableObject {
             } catch SignInError.failed(let m) {
                 message = m
             } catch {
-                message = "Échec : \(error.localizedDescription)"
+                message = tr("Échec : %@", error.localizedDescription)
             }
         }
     }

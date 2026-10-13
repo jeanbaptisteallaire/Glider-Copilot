@@ -48,7 +48,7 @@ struct RootView: View {
         } else {
             TabView(selection: $tab) {
                 ForEach(AppTab.visible) { t in
-                    screen(t).tabItem { Label(t.label(lang), systemImage: t.icon) }.tag(t)
+                    screen(t).id(lang).tabItem { Label(t.label(lang), systemImage: t.icon) }.tag(t)
                 }
             }
             .tint(WG.sky)

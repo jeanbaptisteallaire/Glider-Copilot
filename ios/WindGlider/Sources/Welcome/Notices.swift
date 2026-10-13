@@ -20,6 +20,7 @@ struct DisclaimerView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+            LanguageSwitch().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing).padding(.trailing, 16).padding(.top, 8).zIndex(2)
             LinearGradient(colors: [WG.sky.opacity(0.55), WG.brandPaper], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
             VStack {
                 wgImage("wg_logo")?.resizable().scaledToFit().frame(maxWidth: 220).padding(.top, 60)
@@ -27,17 +28,17 @@ struct DisclaimerView: View {
             }
             VStack(alignment: .leading, spacing: 12) {
                 Text("WIND GLIDER").font(Font.custom("Inter", size: 22).weight(.medium)).tracking(3).foregroundStyle(WG.brandInk)
-                Text("Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. Instruments de bord et veille extérieure priment. Le pilote reste seul responsable.")
+                Text(tr("Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. Instruments de bord et veille extérieure priment. Le pilote reste seul responsable."))
                     .font(WG.body).foregroundStyle(WG.brandInk)
-                Text("Données météo : PRECOG — precog-api.com (Source : Météo-France). Relief : Copernicus GLO-30. Terrains : openAIP. Estimations thermiques calculées dans l'app : à confronter au ciel.")
+                Text(tr("Données météo : PRECOG — precog-api.com (Source : Météo-France). Relief : Copernicus GLO-30. Terrains : openAIP. Estimations thermiques calculées dans l'app : à confronter au ciel."))
                     .font(WG.footnote).foregroundStyle(WG.brandInk.opacity(0.7))
                 HStack(spacing: 16) {
-                    Link("Conditions", destination: Legal.terms)
-                    Link("Confidentialité", destination: Legal.privacy)
+                    Link(tr("Conditions"), destination: Legal.terms)
+                    Link(tr("Confidentialité"), destination: Legal.privacy)
                 }
                 .font(WG.footnote).tint(WG.route)
                 Button(action: onAccept) {
-                    Text("J'ai compris").font(WG.headline).frame(maxWidth: .infinity, minHeight: 52)
+                    Text(tr("J'ai compris")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 52)
                 }
                 .background(WG.brandInk, in: RoundedRectangle(cornerRadius: 14))
                 .foregroundStyle(.white)
@@ -55,6 +56,7 @@ struct PilotNoticeView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
+            LanguageSwitch().frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing).padding(.trailing, 16).padding(.top, 8).zIndex(2)
             Color(red: 0x3B / 255, green: 0x3F / 255, blue: 0x45 / 255).ignoresSafeArea()
             VStack {
                 wgImage("wg_cockpit")?.resizable().scaledToFit()
@@ -62,11 +64,11 @@ struct PilotNoticeView: View {
             }
             .ignoresSafeArea(edges: .top)
             VStack(alignment: .leading, spacing: 10) {
-                Text("Avant de voler").font(WG.title).foregroundStyle(WG.brandInk)
-                line("Fixez solidement votre téléphone dans le cockpit, sans gêner les commandes ni la vue dehors.")
-                line("Utilisez Wind Glider avec l'accord de votre instructeur.")
-                line("Aide secondaire : instruments de bord et veille extérieure d'abord.")
-                Button(action: onOk) { Text("Compris").font(WG.headline).frame(maxWidth: .infinity, minHeight: 52) }
+                Text(tr("Avant de voler")).font(WG.title).foregroundStyle(WG.brandInk)
+                line(tr("Fixez solidement votre téléphone dans le cockpit, sans gêner les commandes ni la vue dehors."))
+                line(tr("Utilisez Wind Glider avec l'accord de votre instructeur."))
+                line(tr("Aide secondaire : instruments de bord et veille extérieure d'abord."))
+                Button(action: onOk) { Text(tr("Compris")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 52) }
                     .background(WG.brandInk, in: RoundedRectangle(cornerRadius: 14))
                     .foregroundStyle(.white)
                     .padding(.top, 4)

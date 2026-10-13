@@ -46,7 +46,7 @@ final class PackStore: ObservableObject {
             catalogError = nil
         } catch {
             if let cached = try? String(contentsOf: cacheURL, encoding: .utf8) { catalog = IosPacks.shared.parseCatalog(text: cached) }
-            catalogError = catalog.isEmpty ? "Catalogue des cartes injoignable" : nil
+            catalogError = catalog.isEmpty ? tr("Catalogue des cartes injoignable") : nil
         }
     }
 

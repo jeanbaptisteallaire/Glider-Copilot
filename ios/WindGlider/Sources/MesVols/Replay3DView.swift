@@ -45,7 +45,7 @@ struct Replay3DView: UIViewRepresentable {
             let js = "(function(){ if (!window.GlidyReplay) return 'attente'; try { window.GlidyReplay.loadFlight(\(payloadJson)); return 'ok'; } catch (e) { return 'ERR ' + e + ' ' + (e.stack || ''); } })()"
             web.evaluateJavaScript(js) { r, err in
                 let res = (r as? String) ?? err?.localizedDescription ?? "?"
-                if res == "ok" { self.sent = true } else if res != "attente" { self.onStatus("Rejeu indisponible : \(res)") }
+                if res == "ok" { self.sent = true } else if res != "attente" { self.onStatus(tr("Rejeu indisponible : %@", res)) }
             }
         }
 
@@ -54,7 +54,7 @@ struct Replay3DView: UIViewRepresentable {
             switch method {
             case "onJavascriptReady": send()
             case "onReady": onStatus("")
-            case "onError": onStatus(body["value"] ?? "Erreur du rejeu")
+            case "onError": onStatus(body["value"] ?? tr("Erreur du rejeu"))
             default: break
             }
         }
@@ -92,7 +92,7 @@ final class AssetSchemeHandler: NSObject, WKURLSchemeHandler {
 /// Écran plein du rejeu, ouvert depuis le détail d'un vol.
 struct ReplayScreen: View {
     let payload: String
-    @State private var status = "Chargement du rejeu 3D…"
+    @State private var status = tr("Chargement du rejeu 3D…")
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -104,7 +104,7 @@ struct ReplayScreen: View {
             }
             HStack {
                 Button { dismiss() } label: { Image(systemName: "xmark").font(.headline).padding(10).background(.white, in: Circle()) }
-                    .accessibilityLabel("Fermer le rejeu")
+                    .accessibilityLabel(tr("Fermer le rejeu"))
                 Spacer()
                 if !status.isEmpty { Text(status).font(WG.caption).padding(8).background(.white.opacity(0.9), in: Capsule()) }
             }

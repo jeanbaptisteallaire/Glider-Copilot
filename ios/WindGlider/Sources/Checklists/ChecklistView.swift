@@ -65,7 +65,7 @@ struct ChecklistView: View {
                 }
             }
             .buttonStyle(.plain)
-            .accessibilityValue(isOpen(list) ? "déplié" : "replié")
+            .accessibilityValue(isOpen(list) ? tr("déplié") : tr("replié"))
             if isOpen(list) {
                 ForEach(Array(list.blocks.enumerated()), id: \.offset) { _, block in
                     if let s = block as? BlockSubtitle {
@@ -103,21 +103,21 @@ struct ChecklistView: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel([item.bold, text].compactMap { $0 }.joined(separator: " "))
-        .accessibilityValue(on ? "coché" : "non coché")
+        .accessibilityValue(on ? tr("coché") : tr("non coché"))
     }
 
     private func briefFields(_ plan: CablePlan) -> some View {
         let b = brief
         return VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .top, spacing: 8) {
-                field("Piste / QFU", b.qfu, numeric: true) { save(b.doCopy(qfu: $0, turn: b.turn, ahead: b.ahead, field: b.field, threat: b.threat)) }
-                field("Demi-tour dès", b.turn, numeric: true, unit: "m sol") { save(b.doCopy(qfu: b.qfu, turn: $0, ahead: b.ahead, field: b.field, threat: b.threat)) }
+                field(tr("Piste / QFU"), b.qfu, numeric: true) { save(b.doCopy(qfu: $0, turn: b.turn, ahead: b.ahead, field: b.field, threat: b.threat)) }
+                field(tr("Demi-tour dès"), b.turn, numeric: true, unit: tr("m sol")) { save(b.doCopy(qfu: b.qfu, turn: $0, ahead: b.ahead, field: b.field, threat: b.threat)) }
             }
             HStack(alignment: .top, spacing: 8) {
-                field("Posé devant sous", b.ahead, numeric: true, unit: "m sol") { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: $0, field: b.field, threat: b.threat)) }
-                field("Dégagement", b.field) { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: b.ahead, field: $0, threat: b.threat)) }
+                field(tr("Posé devant sous"), b.ahead, numeric: true, unit: tr("m sol")) { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: $0, field: b.field, threat: b.threat)) }
+                field(tr("Dégagement"), b.field) { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: b.ahead, field: $0, threat: b.threat)) }
             }
-            field("Menace", b.threat) { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: b.ahead, field: b.field, threat: $0)) }
+            field(tr("Menace"), b.threat) { save(b.doCopy(qfu: b.qfu, turn: b.turn, ahead: b.ahead, field: b.field, threat: $0)) }
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(plan.rows, id: \.lead) { r in
                     (Text(r.lead).fontWeight(.semibold) + Text(" " + r.text)).font(WG.footnote).foregroundStyle(WG.brandInk)
