@@ -65,7 +65,7 @@ struct PrevolView: View {
     /// En-tête d'Android : grand titre, date et terrain à droite (le terrain ouvre le choix du club), « i », actualiser.
     private var header: some View {
         HStack(alignment: .center) {
-            Text(tr("Prévol")).font(WG.largeTitle).foregroundStyle(WG.brandInk)
+            Text(tr("Prévol")).font(WG.largeTitle).lineLimit(1).minimumScaleFactor(0.6).foregroundStyle(WG.brandInk)
             Spacer()
             VStack(alignment: .trailing, spacing: 1) {
                 if case .loaded(let day) = app.weather { Text(Fmt.day(day.date)).font(WG.footnote).foregroundStyle(WG.brandInk) }
@@ -112,7 +112,7 @@ enum Fmt {
     static func mNumber(_ v: Double) -> String { IosFlightEngine.companion.grouped(n: Int32((v / 10).rounded() * 10)) }
     static func day(_ d: Kotlinx_datetimeLocalDate) -> String {
         var c = DateComponents(); c.year = Int(d.year); c.month = Int(d.monthNumber); c.day = Int(d.dayOfMonth)
-        let f = DateFormatter(); f.locale = Locale(identifier: "fr_FR"); f.dateFormat = "EEEE d MMMM"
+        let f = DateFormatter(); f.locale = Locale(identifier: Lang.en ? "en_GB" : "fr_FR"); f.dateFormat = "EEEE d MMMM"
         return Calendar(identifier: .gregorian).date(from: c).map(f.string(from:)) ?? d.description
     }
 }

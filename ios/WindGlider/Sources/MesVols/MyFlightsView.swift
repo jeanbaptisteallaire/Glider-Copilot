@@ -11,7 +11,7 @@ struct PilotProfile: Codable, Equatable {
     var level = ""
     var isEmpty: Bool { name.isEmpty && username.isEmpty && club.isEmpty && level.isEmpty }
 
-    static let levels = [tr("Élève"), tr("Lâché"), tr("Brevet"), tr("Pilote confirmé"), tr("Instructeur")]
+    static var levels: [String] { [tr("Élève"), tr("Lâché"), tr("Brevet"), tr("Pilote confirmé"), tr("Instructeur")] }
 
     static func load() -> PilotProfile {
         (UserDefaults.standard.data(forKey: "pilotProfile")).flatMap { try? JSONDecoder().decode(PilotProfile.self, from: $0) } ?? PilotProfile()
@@ -207,7 +207,7 @@ struct TraceSketch: View {
 
 enum FlightDates {
     private static func fmt(_ pattern: String) -> DateFormatter {
-        let f = DateFormatter(); f.locale = Locale(identifier: "fr_FR"); f.dateFormat = pattern; return f
+        let f = DateFormatter(); f.locale = Locale(identifier: Lang.en ? "en_GB" : "fr_FR"); f.dateFormat = pattern; return f
     }
     static func short(_ s: Double) -> String { fmt("d MMM yyyy").string(from: Date(timeIntervalSince1970: s)) }
     static func long(_ s: Double) -> String { fmt("d MMMM yyyy").string(from: Date(timeIntervalSince1970: s)) }
