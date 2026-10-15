@@ -2,8 +2,8 @@
  "format": 1,
  "id": "provence-alpes-sud",
  "name": "Provence · Alpes du Sud",
- "version": "202610011016",
- "created": "2026-10-01T10:20:20Z",
+ "version": "202610150825",
+ "created": "2026-10-15T08:29:06Z",
  "bbox": [
   4.55,
   43.35,
@@ -15,47 +15,47 @@
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-29T10:20:20Z",
+ "aeroValidUntil": "2026-11-12T08:29:06Z",
  "aeroCounts": {
-  "airspace": 267,
+  "airspace": 259,
   "airport": 115,
   "navaid": 14,
   "reporting": 88
  },
  "sources": {
-  "protomaps": "20261001.pmtiles",
+  "protomaps": "20261014.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-10-01T10:20:20Z"
+  "openaip": "2026-10-15T08:29:06Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
   {
    "role": "fond",
-   "name": "provence-alpes-sud-202610011016-fond.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610011016-fond.pmtiles",
-   "size": 51627521,
-   "sha256": "f5861a87ae29406dec42d758df73878b91dda724a89a8f2b03cd06028afe6708"
+   "name": "provence-alpes-sud-202610150825-fond.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610150825-fond.pmtiles",
+   "size": 51745462,
+   "sha256": "d04771c7115739e4332ff716894c5b2423064609ea002498c3c289e510d8f843"
   },
   {
    "role": "relief",
-   "name": "provence-alpes-sud-202610011016-relief.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610011016-relief.pmtiles",
+   "name": "provence-alpes-sud-202610150825-relief.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610150825-relief.pmtiles",
    "size": 17225494,
    "sha256": "a5b214cb4a44287a20994eeb9c0c7668efd43a018bc42ad354e08e63358dd3bc"
   },
   {
    "role": "courbes",
-   "name": "provence-alpes-sud-202610011016-courbes.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610011016-courbes.pmtiles",
+   "name": "provence-alpes-sud-202610150825-courbes.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610150825-courbes.pmtiles",
    "size": 6273313,
-   "sha256": "18205fa391855908727f8333b47804cb55b78a06e92e4c131906ee530e9e1524"
+   "sha256": "fc88c28bdf6d70d9b253fc66167fd489d7acf2607774a2197977a1550b3689ae"
   },
   {
    "role": "aero",
-   "name": "provence-alpes-sud-202610011016-aero.geojson",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610011016-aero.geojson",
-   "size": 550668,
-   "sha256": "ab9d7a9cb226bff72e189217fa1af60747f83db80cc6140e75b89749b22e9e3f"
+   "name": "provence-alpes-sud-202610150825-aero.geojson",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/provence-alpes-sud-202610150825-aero.geojson",
+   "size": 514143,
+   "sha256": "5471db7fcad9cc327dc8c383ef2efc275fa190c3abb928bf8cdfc19076e293ba"
   }
  ]
 }
