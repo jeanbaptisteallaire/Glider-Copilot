@@ -2,8 +2,8 @@
  "format": 1,
  "id": "toulouse-pyrenees",
  "name": "Toulouse · Pyrénées",
- "version": "202610011021",
- "created": "2026-10-01T10:24:16Z",
+ "version": "202610150829",
+ "created": "2026-10-15T08:32:59Z",
  "bbox": [
   0.35,
   42.35,
@@ -15,47 +15,47 @@
  "demEncoding": "terrarium",
  "demTileSize": 512,
  "contourStep": 100,
- "aeroValidUntil": "2026-10-29T10:24:16Z",
+ "aeroValidUntil": "2026-11-12T08:32:59Z",
  "aeroCounts": {
-  "airspace": 171,
+  "airspace": 170,
   "airport": 174,
   "navaid": 7,
   "reporting": 55
  },
  "sources": {
-  "protomaps": "20261001.pmtiles",
+  "protomaps": "20261014.pmtiles",
   "copernicus": "GLO-30 (AWS Open Data)",
-  "openaip": "2026-10-01T10:24:16Z"
+  "openaip": "2026-10-15T08:32:59Z"
  },
  "attribution": "© OpenStreetMap contributors (ODbL) · Protomaps · openAIP (CC BY-NC 4.0) · Copernicus DEM GLO-30 © DLR, Airbus, ESA/Union européenne",
  "files": [
   {
    "role": "fond",
-   "name": "toulouse-pyrenees-202610011021-fond.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610011021-fond.pmtiles",
-   "size": 62491133,
-   "sha256": "4c79332219049a1f989817199c2cdf3a255142d878625c45a729353886f0e563"
+   "name": "toulouse-pyrenees-202610150829-fond.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610150829-fond.pmtiles",
+   "size": 62505271,
+   "sha256": "03fd4b20054a8a0f44a3eb734dbc90aad9b136efcc946bae657c49c2e982b131"
   },
   {
    "role": "relief",
-   "name": "toulouse-pyrenees-202610011021-relief.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610011021-relief.pmtiles",
+   "name": "toulouse-pyrenees-202610150829-relief.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610150829-relief.pmtiles",
    "size": 19505024,
    "sha256": "1dd2bea015805bfacace6280dbb409af5c14f1c0c9f6d7906a03fdebba6dc3e2"
   },
   {
    "role": "courbes",
-   "name": "toulouse-pyrenees-202610011021-courbes.pmtiles",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610011021-courbes.pmtiles",
+   "name": "toulouse-pyrenees-202610150829-courbes.pmtiles",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610150829-courbes.pmtiles",
    "size": 5698703,
-   "sha256": "4ba478d1567351513fa720dde718357a7fb1ce74275120ef33ced6ff7ce95bad"
+   "sha256": "d58a0bde6d5fe3b512fb5e377c38379888e95a64bdddeb247b3eb91458a4d33b"
   },
   {
    "role": "aero",
-   "name": "toulouse-pyrenees-202610011021-aero.geojson",
-   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610011021-aero.geojson",
-   "size": 330827,
-   "sha256": "74dc2678b19c98a788ec807c59fee45003484ab586be6ddf13b125fea4bd6278"
+   "name": "toulouse-pyrenees-202610150829-aero.geojson",
+   "url": "https://github.com/jeanbaptisteallaire/Glider-Copilot/releases/download/cartes/toulouse-pyrenees-202610150829-aero.geojson",
+   "size": 330430,
+   "sha256": "ef88c123019e9a937fa73e7465621855fee5eda4c31c9968fd0f6fe7907cb77a"
   }
  ]
 }
