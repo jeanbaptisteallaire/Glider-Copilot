@@ -23,6 +23,9 @@ targetTemplates:
       # même annuaire FFVP que l'app Android (pas de copie)
       - path: ../app/src/main/assets/clubs_fr.json
         buildPhase: resources
+      # vol d'exemple de Mes vols : même fichier que l'app Android
+      - path: ../app/src/main/assets/flights/saint-martin-de-londres-vol-synthetique.igc
+        buildPhase: resources
       # police Inter et illustrations : mêmes fichiers que l'app Android (pas de copie)
       - path: ../core/designsystem/src/main/res/font
         type: folder

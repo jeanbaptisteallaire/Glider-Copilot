@@ -61,6 +61,12 @@ final class AppModel: ObservableObject {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
         engine = IosFlightEngine(igcDir: AppModel.igcDir, appVersion: version)
         library = FlightLibrary(dir: AppModel.igcDir)
+        // vol d'exemple (Saint-Martin-de-Londres), le même qu'Android, importé une seule fois
+        if !UserDefaults.standard.bool(forKey: "demoFlightImported"),
+           let igc = Bundle.main.path(forResource: "saint-martin-de-londres-vol-synthetique", ofType: "igc"),
+           library.importIgc(sourcePath: igc, name: "exemple-saint-martin-de-londres-vol-synthetique.igc") != nil {
+            UserDefaults.standard.set(true, forKey: "demoFlightImported")
+        }
         weatherApi = AppModel.makeWeather(version: version)
         traffic = IosTraffic(cacheDir: NSTemporaryDirectory(), installId: AppModel.installId, appVersion: version)   // comme la 2.0.4 Lite : trafic OGN dans Pilotage
         pilot = engine.ui()
