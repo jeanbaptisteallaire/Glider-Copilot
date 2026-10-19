@@ -221,7 +221,8 @@ class TrafficStore(
         while (it.hasNext()) {
             val e = it.next()
             while (e.value.isNotEmpty() && e.value.first().time < horizon) e.value.removeFirst()
-            if (e.value.isEmpty()) { it.remove(); labels.remove(e.key); lastAnalysis.remove(e.key) }
+            // clé lue avant remove() : sur Kotlin/Native l'entrée n'est plus lisible après (ConcurrentModificationException)
+            if (e.value.isEmpty()) { val key = e.key; it.remove(); labels.remove(key); lastAnalysis.remove(key) }
         }
         episodes.removeAll { it.end < now - thermalWindow || it.end < now - 24.hours }
     }
