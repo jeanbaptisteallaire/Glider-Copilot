@@ -16,7 +16,23 @@ enum PI {
     static var box: Color { dark ? .black : WG.card }
     static var good: Color { dark ? Color(red: 0.80, green: 1.0, blue: 0.70) : WG.good }      // vert fluo très clair
     static var route: Color { dark ? Color(red: 0.86, green: 0.72, blue: 1.0) : WG.route }    // violet fluo très clair
-    static func number(_ size: CGFloat) -> Font { Font.custom("Inter", size: size).weight(dark ? .bold : .semibold).monospacedDigit() }
+    /// marge proche du seuil (PilotDeclutter.CAUTION_M) : orange de la charte, plus sombre en clair pour le contraste
+    static var caution: Color { dark ? WG.climb : WG.warn }
+    // V5 (JB, 19/10/2026) : chiffres plus gras, même taille
+    static func number(_ size: CGFloat) -> Font { Font.custom("Inter", size: size).weight(dark ? .heavy : .bold).monospacedDigit() }
+    static func marginColor(_ level: MarginLevel) -> Color {
+        switch level {
+        case .ok: return good
+        case .caution: return caution
+        case .alarm: return WG.bad
+        default: return dim
+        }
+    }
+}
+
+/// Retour haptique des interrupteurs de Pilotage (Essentiel, relief, vario, finesse, son, jour/nuit, couches).
+enum Haptic {
+    static func tap() { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
 }
 
 struct PilotView: View {
@@ -27,9 +43,16 @@ struct PilotView: View {
     @State private var topInset: CGFloat = 0
     @State private var bottomInset: CGFloat = 0
     @AppStorage("pilot.dark") private var dark = false
+    /// V5 : mode Essentiel (marge, distance, terrain ; ni coupe ni vario) ; mémorisé
+    @AppStorage("pilot.essential") private var essential = false
 
     var body: some View {
         let p = app.pilot
+        let ds = PilotDeclutter.shared.display(
+            essential: essential, profileWanted: showProfile, varioWanted: showVario,
+            marginKnown: p.marginKnown, marginM: p.marginM,
+            gpsOk: app.status.gps, baroOk: app.status.baro, dataOk: app.status.data,
+            ognConnected: app.trafficSnap?.connected ?? false)
         VStack(spacing: 0) {
             // V3 : la carte se déroule derrière l'en-tête (quatre boîtes blanches à 90 %) et la coupe
             ZStack(alignment: .top) {
@@ -57,7 +80,7 @@ struct PilotView: View {
                     .shadow(color: .black.opacity(0.15), radius: 2)
                 }
                 .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, 2)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, bottomInset + 4)   // V5 : au-dessus du vario
 
                 // mode sombre : vignettage noir très court sur les bords (les boîtes noires s'y fondent)
                 if dark {
@@ -69,12 +92,13 @@ struct PilotView: View {
                         .frame(height: max(topInset, 150) + 30).frame(maxHeight: .infinity, alignment: .top)
                         .allowsHitTesting(false)
                 }
-                MapOverlay(p: p, showProfile: $showProfile, showVario: $showVario).padding(.top, topInset).padding(.bottom, bottomInset)
+                MapOverlay(p: p, ds: ds, showProfile: $showProfile, showVario: $showVario, essential: $essential).padding(.top, topInset).padding(.bottom, bottomInset)
                 VStack(spacing: 6) {
-                    header(p)
+                    header(p, ds)
                     // interrupteur « relief » : toujours au même endroit, coin haut droit de la boîte de coupe
+                    // (caché en Essentiel, comme la coupe ; en Complet la coupe se rouvre quand la marge devient faible)
                     ZStack(alignment: .topTrailing) {
-                    if showProfile {
+                    if ds.showProfile {
                         VStack(spacing: 0) {
                             ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
                             Text(trDyn(p.fieldElevText)).font(WG.caption).foregroundStyle(PI.dim)
@@ -82,24 +106,28 @@ struct PilotView: View {
                         }
                         .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
                         .padding(.horizontal, 8)
-                    } else {
+                    } else if !essential {
                         Color.clear.frame(height: 30)
                     }
-                    PanelToggle(isOn: $showProfile, label: tr("relief"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
+                    if !essential {
+                        PanelToggle(isOn: $showProfile, label: tr("relief"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
+                    }
                     }
                 }
                 .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
                 VStack(alignment: .leading, spacing: 0) {
                 // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
                 ZStack(alignment: .bottomTrailing) {
-                    if showVario {
-                        varioBar(p)
+                    if ds.showVario {
+                        varioBar(p, details: ds.showVarioDetails)
                             .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
                             .padding(.horizontal, 8)
                     } else {
                         Color.clear.frame(height: 30)
                     }
-                    PanelToggle(isOn: $showVario, label: tr("vario"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
+                    if !essential {
+                        PanelToggle(isOn: $showVario, label: tr("vario"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
+                    }
                 }
                 .padding(.bottom, 4)
                 }
@@ -108,7 +136,15 @@ struct PilotView: View {
             }
         }
         .background(PI.box)
-        .fontWeight(dark ? .medium : nil)
+        // V5 (JB, 19/10/2026) : tous les textes plus gras, même taille
+        .fontWeight(dark ? .bold : .semibold)
+        .animation(.easeInOut(duration: 0.25), value: essential)
+        .animation(.easeInOut(duration: 0.25), value: ds.showProfile)
+        // marge qui passe sous le seuil (orange ou rouge) : la coupe se rouvre seule ; le pilote peut la refermer
+        .onChange(of: ds.marginLevel) { old, new in
+            let low: (MarginLevel) -> Bool = { $0 == .caution || $0 == .alarm }
+            if low(new) && !low(old) { showProfile = true }
+        }
         .statusBarHidden(dark)   // mode sombre : heure et batterie noires illisibles sur le bandeau noir
         .toolbarColorScheme(dark ? .dark : .light, for: .tabBar)
         .toolbarBackground(dark ? .visible : .automatic, for: .tabBar)
@@ -121,27 +157,35 @@ struct PilotView: View {
 
     // MARK: en-tête : marge, distance, finesse
 
-    private func header(_ p: PilotUi) -> some View {
-        let marginColor = p.marginKnown ? (p.marginM >= 0 ? PI.good : WG.bad) : PI.dim
+    private func header(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
+        let marginColor = PI.marginColor(ds.marginLevel)
         let f10 = app.finesse == 10
         return HStack(alignment: .top, spacing: 6) {
-            // gauche : marge (sans unité, évidente), SÉCU, ALT
+            // gauche : marge (sans unité, évidente), SÉCU, ALT ; cadre coloré seulement en attention / alarme
             VStack(alignment: .leading, spacing: 0) {
                 Text(tr("Marge sécu.")).font(WG.footnote).foregroundStyle(marginColor)
                 Text(p.marginText).font(PI.number(40)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.5)
-                Spacer(minLength: 2)
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text(tr("SÉCU")).font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
-                }
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text(tr("ALT")).font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
+                if ds.showHeaderDetails {
+                    Spacer(minLength: 2)
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(tr("SÉCU")).font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
+                    }
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(tr("ALT")).font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
+                    }
                 }
             }
             .lineLimit(1)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .headerBox()
-            // centre : finesse (haut) et cap GPS (bas)
+            .overlay {
+                if ds.marginLevel == .caution || ds.marginLevel == .alarm {
+                    RoundedRectangle(cornerRadius: 12).stroke(marginColor, lineWidth: 3)
+                }
+            }
+            // centre : finesse (haut) et cap GPS (bas) ; absents en Essentiel
+            if ds.showHeaderDetails {
             VStack(spacing: 6) {
                 VStack(spacing: 4) {
                     HStack(spacing: 4) {
@@ -151,7 +195,7 @@ struct PilotView: View {
                     }
                     .lineLimit(1).fixedSize()
                     // un seul bouton : touche = bascule finesse 10 ⇄ 20
-                    Button { app.finesse = f10 ? 20 : 10 } label: {
+                    Button { Haptic.tap(); app.finesse = f10 ? 20 : 10 } label: {
                         HStack(alignment: .firstTextBaseline, spacing: 0) {
                             Text("F").font(WG.caption2)
                             Text("\(app.finesse)").font(PI.number(20))
@@ -172,6 +216,7 @@ struct PilotView: View {
                 .accessibilityElement(children: .combine)
             }
             .frame(width: 96)
+            }
             // droite : distance, terrain, cap vers le terrain (même taille que le cap GPS)
             Button { choosingField = true } label: {
                 VStack(alignment: .trailing, spacing: 0) {
@@ -201,7 +246,7 @@ struct PilotView: View {
 
     // MARK: vario
 
-    private func varioBar(_ p: PilotUi) -> some View {
+    private func varioBar(_ p: PilotUi, details: Bool) -> some View {
         HStack(alignment: .center) {
             VStack(alignment: .leading) {
                 Text(trDyn(p.varioLabel)).font(WG.footnote).foregroundStyle(PI.dim)
@@ -210,16 +255,20 @@ struct PilotView: View {
             .frame(width: 120, alignment: .leading)
             VStack(spacing: 6) {
                 VarioScale(value: p.varioMs).frame(height: 10)
-                HStack {
-                    avg(tr("Spirale"), p.spiralText); avg(tr("Pompe"), p.thermalText); avg(tr("Jour"), p.dayText)
+                if details {
+                    HStack {
+                        avg(tr("Spirale"), p.spiralText); avg(tr("Pompe"), p.thermalText); avg(tr("Jour"), p.dayText)
+                    }
                 }
             }
-            Button { app.soundOn.toggle() } label: {
-                Image(systemName: app.soundOn ? "speaker.wave.2" : "speaker.slash").font(.body)
-                    .frame(width: 40, height: 40).overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
+            if details {
+                Button { Haptic.tap(); app.soundOn.toggle() } label: {
+                    Image(systemName: app.soundOn ? "speaker.wave.2" : "speaker.slash").font(.body)
+                        .frame(width: 40, height: 40).overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
+                }
+                .accessibilityLabel(app.soundOn ? tr("Couper le son du vario") : tr("Activer le son du vario"))
+                .frame(maxHeight: .infinity, alignment: .top)
             }
-            .accessibilityLabel(app.soundOn ? tr("Couper le son du vario") : tr("Activer le son du vario"))
-            .frame(maxHeight: .infinity, alignment: .top)
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 14).padding(.top, 10).padding(.bottom, 10)
@@ -263,7 +312,7 @@ struct PanelToggle: View {
 struct MiniSwitch: ToggleStyle {
     var scale: CGFloat = 1
     func makeBody(configuration: Configuration) -> some View {
-        Button { configuration.isOn.toggle() } label: {
+        Button { Haptic.tap(); configuration.isOn.toggle() } label: {
             HStack(spacing: 4) {
                 configuration.label
                 Capsule().fill(configuration.isOn ? WG.climb : Color.gray.opacity(0.35))
@@ -286,15 +335,17 @@ struct MapOverlay: View {
     @EnvironmentObject var map: MapControl
     @State private var airspaceHint = false
     let p: PilotUi
+    let ds: PilotDisplay
     @Binding var showProfile: Bool
     @Binding var showVario: Bool
+    @Binding var essential: Bool
 
     var body: some View {
         ZStack {
             // haut gauche : recentrage (AUTO/LIBRE), orientation (AUTO/N↑/RTE), REC compact
             VStack(alignment: .leading, spacing: 6) {
                 // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
-                if let t = app.trafficSnap, t.connected {
+                if ds.showOgn, let t = app.trafficSnap, t.connected {
                     (Text("OGN ").fontWeight(.bold).foregroundColor(PI.ink) + Text(trDyn(t.pill)))
                         .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(PI.dim)
                         .padding(.horizontal, 8).padding(.vertical, 5)
@@ -307,7 +358,8 @@ struct MapOverlay: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
-            // haut droite : DÉMO, vent, échelle vario
+            // haut droite : DÉMO, vent, échelle vario (outils : absents en Essentiel)
+            if ds.showMapTools {
             VStack(alignment: .trailing, spacing: 8) {
                 HStack(spacing: 6) {
                 LanguageSwitch(dark: true)
@@ -337,8 +389,9 @@ struct MapOverlay: View {
                 .frame(width: 44)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+            }
 
-            // bas gauche : états GPS · BARO · DATA
+            // bas gauche : recentrage, orientation, capteurs en défaut seulement (« dark cockpit »), jour / nuit
             VStack(alignment: .leading, spacing: 4) {
                 // position de la carte : recentrer (cible), orientation (boussole rouge en mode nord)
                 VStack(spacing: 8) {
@@ -349,6 +402,7 @@ struct MapOverlay: View {
                             .shadow(color: .black.opacity(0.15), radius: 2)
                     }
                     .accessibilityLabel(map.follow ? tr("Carte centrée sur le planeur") : tr("Recentrer la carte"))
+                    if ds.showMapTools {
                     Button { map.cycleOrientation() } label: {
                         Group {
                             if map.orientation == .north {
@@ -364,20 +418,24 @@ struct MapOverlay: View {
                         .shadow(color: .black.opacity(0.15), radius: 2)
                     }
                     .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
+                    }
                 }
                 .padding(.bottom, 6)
-                badge("GPS", app.status.gps)
-                badge("BARO", app.status.baro)
-                badge("DATA", app.status.data)
+                // V5 : un capteur n'apparaît que s'il est en défaut, dans tous les modes
+                if ds.gpsAlert { badge("GPS", false) }
+                if ds.baroAlert { badge("BARO", false) }
+                if ds.dataAlert { badge("DATA", false) }
                 // mode clair / sombre, sous les pastilles ; remonte avec elles quand le vario est ouvert
-                DayNightToggle(dark: $darkMode).padding(.top, 6)
+                if ds.showMapTools { DayNightToggle(dark: $darkMode).padding(.top, 6) }
             }
             .accessibilityElement(children: .combine)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 26)   // juste au-dessus de l'échelle
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 52)   // V5 : au-dessus de l’échelle et du logo Plans
 
             // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
             VStack(alignment: .trailing, spacing: 8) {
+            if ds.showMapTools {
             Button {
+                Haptic.tap()
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             } label: {
                 Image(systemName: "square.3.layers.3d").font(.system(size: 17, weight: .regular))
@@ -395,6 +453,15 @@ struct MapOverlay: View {
             }
             .font(.title3.weight(.light)).foregroundStyle(PI.ink)
             .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
+            }
+            // V5 : Essentiel ⇄ Complet, toujours au même endroit, sous le pouce
+            Button { Haptic.tap(); essential.toggle() } label: {
+                Text(essential ? tr("COMPLET") : tr("ESSENTIEL")).font(WG.caption2.weight(.heavy))
+                    .padding(.horizontal, 10).padding(.vertical, 8)
+                    .background(essential ? WG.climb : PI.box, in: Capsule())
+                    .foregroundStyle(essential ? .white : PI.ink).shadow(color: .black.opacity(0.15), radius: 2)
+            }
+            .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)   // au plus bas, au-dessus de « vario »
         }
@@ -691,7 +758,7 @@ struct DayNightToggle: View {
     @Binding var dark: Bool
 
     var body: some View {
-        Button { withAnimation(.easeInOut(duration: 0.25)) { dark.toggle() } } label: {
+        Button { Haptic.tap(); withAnimation(.easeInOut(duration: 0.25)) { dark.toggle() } } label: {
             HStack(spacing: 0) {
                 icon("sun.max.fill", on: !dark)
                 icon("moon.fill", on: dark)

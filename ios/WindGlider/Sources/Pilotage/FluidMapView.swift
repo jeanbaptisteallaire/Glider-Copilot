@@ -55,8 +55,13 @@ struct FluidMapView: UIViewRepresentable {
             context.coordinator.lastDark = dark
             context.coordinator.restyle(on: v)
         }
-        if context.coordinator.scaleBottom?.constant != -36 {
-            context.coordinator.scaleBottom?.constant = -36
+        // V5 : échelle et mentions Plans juste au-dessus du panneau vario (plus cachées derrière)
+        let lift = -(bottomInset + 30)   // au-dessus du logo Plans
+        if context.coordinator.scaleBottom?.constant != lift {
+            context.coordinator.scaleBottom?.constant = lift
+        }
+        if v.layoutMargins.bottom != bottomInset {
+            v.layoutMargins = UIEdgeInsets(top: v.layoutMargins.top, left: v.layoutMargins.left, bottom: bottomInset, right: v.layoutMargins.right)
         }
     }
 

@@ -90,7 +90,7 @@ let EN: [String: String] = [
     "OK": "OK", "Annuler": "Cancel", "Fermer": "Close", "Enregistrer": "Save", "Supprimer": "Delete", "Modifier": "Edit", "Réessayer": "Retry",
     // Pilotage
     "Marge sécu.": "Margin", "SÉCU": "REQ", "ALT": "ALT", "Finesse": "Glide ratio", "Fin.": "L/D", "CAP": "TRK", "Dist. ter.": "Field dist.",
-    "relief": "terrain", "vario": "vario", "REC": "REC", "DÉMO": "DEMO", "Spirale": "Circle", "Pompe": "Lift", "Jour": "Day",
+    "relief": "terrain", "vario": "vario", "REC": "REC", "DÉMO": "DEMO", "ESSENTIEL": "ESSENTIAL", "COMPLET": "FULL", "Afficher tout Pilotage": "Show the full flight screen", "N'afficher que l'essentiel": "Show essentials only", "Spirale": "Circle", "Pompe": "Lift", "Jour": "Day",
     "vent\n—": "wind\n—", "Coupe disponible dès la première position": "Profile available from the first position fix",
     "Zones aéronautiques": "Airspace",
     "Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP).": "Download your region's offline map in Pre-flight to show airspace (openAIP).",
