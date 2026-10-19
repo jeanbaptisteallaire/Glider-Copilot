@@ -48,8 +48,12 @@ enum GoogleLogin {
 final class AppleLogin: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     private var continuation: CheckedContinuation<IdToken, Error>?
     private var nonce = Nonce.make()
+    /// gardé jusqu'à la réponse : un contrôleur libéré en cours de route fait échouer la demande (vu sur iPad)
+    private var controller: ASAuthorizationController?
 
     func request() async throws -> IdToken {
+        // une demande précédente restée sans réponse est close proprement avant d'en lancer une autre
+        finish(.failure(SignInError.cancelled))
         nonce = Nonce.make()
         let req = ASAuthorizationAppleIDProvider().createRequest()
         req.requestedScopes = [.email]
@@ -57,20 +61,29 @@ final class AppleLogin: NSObject, ASAuthorizationControllerDelegate, ASAuthoriza
         let controller = ASAuthorizationController(authorizationRequests: [req])
         controller.delegate = self
         controller.presentationContextProvider = self
+        self.controller = controller
         return try await withCheckedThrowingContinuation { c in
             continuation = c
             controller.performRequests()
         }
     }
 
+    /// Fenêtre de la scène au premier plan (iPad en mode compatibilité, multifenêtre) : jamais une fenêtre vide.
     nonisolated func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         MainActor.assumeIsolated {
-            UIApplication.shared.connectedScenes.compactMap { ($0 as? UIWindowScene)?.keyWindow }.first ?? ASPresentationAnchor()
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            let active = scenes.filter { $0.activationState == .foregroundActive } + scenes
+            for scene in active {
+                if let w = scene.keyWindow ?? scene.windows.first(where: { $0.isKeyWindow }) ?? scene.windows.first { return w }
+            }
+            return ASPresentationAnchor()
         }
     }
 
     nonisolated func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         MainActor.assumeIsolated {
+            // réponse d'un contrôleur déjà remplacé : son nonce n'est plus le bon, ne pas clore la demande en cours
+            guard controller === self.controller else { return }
             guard let cred = authorization.credential as? ASAuthorizationAppleIDCredential,
                   let data = cred.identityToken, let token = String(data: data, encoding: .utf8) else {
                 finish(.failure(SignInError.failed("Jeton Apple absent"))); return
@@ -81,6 +94,7 @@ final class AppleLogin: NSObject, ASAuthorizationControllerDelegate, ASAuthoriza
 
     nonisolated func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         MainActor.assumeIsolated {
+            guard controller === self.controller else { return }
             switch (error as? ASAuthorizationError)?.code {
             case .canceled: finish(.failure(SignInError.cancelled))
             // 1000 : aucun compte Apple sur l'appareil (ou capacité absente de l'App ID)
@@ -93,5 +107,6 @@ final class AppleLogin: NSObject, ASAuthorizationControllerDelegate, ASAuthoriza
     private func finish(_ r: Result<IdToken, Error>) {
         continuation?.resume(with: r)
         continuation = nil
+        controller = nil
     }
 }

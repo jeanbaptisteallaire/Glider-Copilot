@@ -104,7 +104,7 @@ final class AccountModel: ObservableObject {
                 let t = try await token()
                 let a = account
                 let err = await Task.detached { a.signInWithIdToken(provider: t.provider, idToken: t.token, rawNonce: t.rawNonce) }.value
-                if let err { message = err } else { email = account.email(); message = nil; syncNow() }
+                if let err { message = err } else { email = account.email(); message = nil; Task { syncNow() } }   // après le defer (busy encore vrai ici)
             } catch SignInError.cancelled {
                 message = nil
             } catch SignInError.failed(let m) {
