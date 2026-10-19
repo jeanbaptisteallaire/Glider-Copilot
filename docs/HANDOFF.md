@@ -1,5 +1,9 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## Analyse concurrentielle — SeeYou Navigator (19/10/2026)
+
+Relevé complet (mode planeur, v3.11.6, compte gratuit) sur Pixel 8 Pro par ADB : `docs/concurrence/seeyou-navigator/ANALYSE.md` + 16 captures commentées. Recommandations prioritaires : fiche espace aérien au tap, appui long sur la carte (distance / arrivée / finesse requise), obstacles, vue de profil (accord JB pour Pilotage), explication d'une ligne par donnée, couche KK7, émission OGN.
+
 ## Session 21 — iOS étape 1 : core:domain et data:precog en Kotlin Multiplatform (11/10/2026)
 
 Décision JB : Wind Glider sur iOS — KMP pour le métier, SwiftUI pour l'interface, édition Lite d'abord. Voir CLAUDE.md « iOS / KMP ».

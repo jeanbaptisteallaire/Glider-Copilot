@@ -2,6 +2,7 @@
 
 - V20 : l'app s'appelle **Wind Glider** (titre en Inter capitales « WIND GLIDER », univers illustré, jetons `brandInk`/`brandPaper`/`brandSky`, `WgArt.kt`). V18.3 : ex-**spiral**. `applicationId` et noms de modules inchangés (GLIDY dans le code).
 
+- Concurrence : analyse détaillée de SeeYou Navigator (écran de vol, carte, radar, champs, réglages, captures, recommandations) dans `docs/concurrence/seeyou-navigator/ANALYSE.md` ; la relire avant toute évolution de Pilotage, Carte ou Prévol.
 - Lire d'abord `docs/HANDOFF.md` (état, décisions, prochaine session) et le plan dans le projet claude.ai « Planneur App ».
 - Onglets : **Feed** (S17, premier onglet : fil des pilotes suivis, recherche, suivre — démo jusqu'à Supabase), **Prévol** (météo + planeur FLARM + club), **Check-lists**, **Pilotage**, **Carte** et **Mes vols** (S10, carnet IGC + rejeu 3D ; S16 : page profil du pilote + grille 3 colonnes + partage par vol). Pas d’Annexes.
 - **S18 Lite (édition par défaut)** : `BuildConfig.LITE` → onglets Prévol (météo + cartes), Pilotage (+ interrupteur REC, enregistrement manuel), Mes vols (sans partage). Édition complète : `-Pglidy.edition=full`.
