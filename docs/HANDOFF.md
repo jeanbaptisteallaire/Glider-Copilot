@@ -1,5 +1,15 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## iOS 1.0 — publication App Store, build 8 en vérification (12 → 19/10/2026)
+
+- **App Store Connect** : app « Wind Glider » (UGS `WINDGLIDER-IOS-001`, Apple ID 6821932221), Lite, iPhone uniquement (`TARGETED_DEVICE_FAMILY = 1`), 4+, gratuite, 175 pays. Étiquette de confidentialité : localisation précise **et** approximative, e-mail, nom, identifiant, contenu utilisateur ; aucun suivi. Fiche, réponses à App Review et captures : `docs/app-store/`.
+- **Refus 2.1(a) « Sign in with Apple » (iPad)** : la cause était l'archive non signée, signée seulement à l'export, qui perdait le droit `com.apple.developer.applesignin` (builds 1 à 7). Correctif : `project.yml` signe la Release en « Apple Distribution » ; vérifier après chaque archive : `codesign -d --entitlements - --xml <app> | plutil -p -`.
+- **Build 8 soumis le 19/10** (1.0 (8)), publication automatique après acceptation.
+- **Pilotage épuré (iOS)** : bouton ESSENTIEL (marge, distance, terrain seulement), capteurs affichés seulement en défaut, marge orange < +200 m / rouge < 0, coupe rouverte au passage du seuil, retours haptiques, textes plus gras. Règles en commun : `PilotDeclutter.kt` (+ tests). Plan : `docs/ios/PLAN-PILOTAGE-EPURE.md`. Android inchangé (garde-fou `check_en_vol.py` vert).
+- **OGN** : correctif `TrafficStore` (clé lue après suppression → exception sur iOS ~30 min après la perte d'un aéronef, détection des pompes figée) ; `ThermalDetectorTest` en `commonTest` (JVM + simulateur iOS).
+- **TestFlight** : groupe interne « Equipe » (JB) et externe « Amis » (5 testeurs) ; répondre « Aucun des algorithmes » à la question de chiffrement de chaque build.
+- À suivre : retirer la capture `01-accueil` (écran d'accueil, guideline 2.3.3) à la prochaine version ; clé API App Store Connect (accès à demander dans Utilisateurs et accès > Intégrations).
+
 ## Analyse concurrentielle — SeeYou Navigator (19/10/2026)
 
 Relevé complet (mode planeur, v3.11.6, compte gratuit) sur Pixel 8 Pro par ADB : `docs/concurrence/seeyou-navigator/ANALYSE.md` + 16 captures commentées. Recommandations prioritaires : fiche espace aérien au tap, appui long sur la carte (distance / arrivée / finesse requise), obstacles, vue de profil (accord JB pour Pilotage), explication d'une ligne par donnée, couche KK7, émission OGN.

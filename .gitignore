@@ -18,3 +18,11 @@ __pycache__/
 # Secrets locaux, jamais dans le dépôt public
 Clé API Precog.rtf
 *.rtf
+
+# Enregistrements d'écran (lourds, données personnelles possibles) : hors dépôt
+*.mp4
+*.MP4
+*.mov
+*.MOV
+# Dossiers d'exemples locaux
+/Capture Android pour exemple/
