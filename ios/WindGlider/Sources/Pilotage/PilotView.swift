@@ -77,6 +77,10 @@ struct PilotView: View {
                             .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
                     }
                     .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
+                    .contentShape(Rectangle())
+                    .onTapGesture { Haptic.tap(); showProfile = false }   // un toucher la range dans le bouton montagne
+                    .accessibilityAddTraits(.isButton)
+                    .accessibilityHint(tr("Toucher pour ranger la coupe"))
                     .padding(.horizontal, 8)
                 }
             }
@@ -112,13 +116,14 @@ struct PilotView: View {
         let low = ds.marginLevel == .caution || ds.marginLevel == .alarm
         return HStack(alignment: .top, spacing: 6) {
             VStack(alignment: .leading, spacing: 2) {
-                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: true, essential: essential)
+                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: true, essential: essential,
+                           accessory: AnyView(finesseButton))
                 if essential {
                     // la seule autre information de survie : où est le terrain
                     Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(PI.ink)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .panel(dark)
             .overlay { if low { RoundedRectangle(cornerRadius: 14).stroke(PI.marginColor(ds.marginLevel), lineWidth: 3) } }
             if !essential {
@@ -140,19 +145,24 @@ struct PilotView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(tr("Choisir le terrain de référence"))
-                    Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {   // 10 → 20 → 30
-                        Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: true))
-                            .padding(.horizontal, 8).padding(.vertical, 3)
-                            .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
-                    }
-                    .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))
                 }
                 .lineLimit(1)
+                .frame(maxHeight: .infinity, alignment: .top)   // les deux boîtes du haut ont la même hauteur
                 .panel(dark)
             }
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 8).padding(.top, 4)
+    }
+
+    /// Finesse sous la marge : un toucher passe 10 → 20 → 30 (réglage détaillé en Prévol).
+    private var finesseButton: some View {
+        Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
+            Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: true))
+                .padding(.horizontal, 8).padding(.vertical, 3)
+                .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
+        }
+        .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))
     }
 
     /// Sous le bandeau, seulement si nécessaire : capteur en défaut, démo (« dark cockpit »).
@@ -204,6 +214,14 @@ struct PilotView: View {
                 }
                 .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                 .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
+                if !ds.showProfile {
+                    // coupe terrain repliée : même taille et même forme que le vent, montagne blanche
+                    Button { Haptic.tap(); showProfile = true } label: {
+                        Image(systemName: "mountain.2.fill").font(.system(size: 18, weight: .semibold)).foregroundStyle(.white)
+                            .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
+                    }
+                    .accessibilityLabel(tr("Afficher la coupe du terrain"))
+                }
                 // orientation de la vue : AUTO (nord en spirale, route sinon) → N↑ → RTE ; toujours visible
                 Button { Haptic.tap(); map.cycleOrientation() } label: {
                     Group {
@@ -287,7 +305,6 @@ struct PilotView: View {
     /// Réglages : hors du champ de vol (on ne règle pas en spirale).
     private func settingsMenu() -> some View {
         Menu {
-            Toggle(tr("Coupe du relief"), isOn: $showProfile)
             Toggle(tr("Vario"), isOn: $showVario)
             Toggle(tr("Fréquence radio du terrain"), isOn: $showRadio)
             Button(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques")) {

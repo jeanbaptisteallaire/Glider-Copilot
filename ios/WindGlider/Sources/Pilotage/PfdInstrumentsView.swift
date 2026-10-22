@@ -39,6 +39,8 @@ struct SafetyBand: View {
     let tape: AltitudeTapeState
     let dark: Bool
     var essential = false
+    /// Posé sous le chiffre de la marge, aligné à gauche, dans la hauteur du tambour (la boîte ne grandit pas).
+    var accessory: AnyView? = nil
 
     var body: some View {
         let ink = dark ? Color.white : WG.brandInk
@@ -47,11 +49,12 @@ struct SafetyBand: View {
                 Text(tr("Marge sécu. (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
                 Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.6)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(tr("Marge %@ mètres", marginText))
                     // centré sur la hauteur du tambour : marge et lecture d'altitude sur le même axe
                     .frame(height: essential ? nil : 78)
+                    .overlay(alignment: .bottomLeading) { if !essential, let accessory { accessory.offset(y: 12) } }
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(tr("Marge %@ mètres", marginText))
             if !essential {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(tr("Altitude (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
