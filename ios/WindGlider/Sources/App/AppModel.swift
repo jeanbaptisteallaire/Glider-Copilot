@@ -21,6 +21,8 @@ final class AppModel: ObservableObject {
 
     @Published var club: Club?
     @Published var weather: WeatherState = .idle
+    /// Jour de la météo Prévol : 0 aujourd'hui, 1 demain, 2 après-demain (aujourd'hui avant 17 h, demain ensuite).
+    @Published var dayOffset = Int(WindGliderWeather.companion.defaultOffset())
     @Published var pilot: PilotUi
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
@@ -238,10 +240,10 @@ final class AppModel: ObservableObject {
         guard let c = club, let pos = c.position else { weather = .failed(tr("Club sans position connue")); return }
         weather = .loading
         do {
-            let r = try await weatherApi.loadDay(lat: pos.lat, lon: pos.lon, departement: c.departement)
+            let r = try await weatherApi.loadDayOffset(lat: pos.lat, lon: pos.lon, departement: c.departement, offsetDays: Int32(dayOffset))
             if let ok = r as? WeatherResultSuccess {
                 weather = .loaded(ok.day)
-                engine.setForecast(day: ok.day)
+                if dayOffset == Int(WindGliderWeather.companion.defaultOffset()) { engine.setForecast(day: ok.day) }   // le vol suit le jour courant
             } else if let err = r as? WeatherResultError {
                 weather = .failed(err.message)
             }

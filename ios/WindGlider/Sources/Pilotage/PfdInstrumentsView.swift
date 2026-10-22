@@ -73,7 +73,10 @@ private struct Drum: View {
         let fg: Color = red ? .white : ink
         HStack(spacing: 2) {
             if let d = tape.drum {
+                // hachures blanches devant la lecture et filet vertical entre les deux séries de chiffres (référence Thales)
+                Hatch().stroke(fg.opacity(0.85), lineWidth: 2.5).frame(width: 22, height: 16).padding(.trailing, 4)
                 Text(d.high).font(WG.pfd(30, .bold)).foregroundStyle(fg)
+                Rectangle().fill(fg.opacity(0.5)).frame(width: 1, height: boxH - 8).padding(.horizontal, 3)
                 ZStack {
                     ForEach(0..<d.rows.count, id: \.self) { i in
                         let off = (CGFloat(i - Int(AltitudeDrum.companion.CENTER)) + CGFloat(d.roll)) * rowH
@@ -92,11 +95,22 @@ private struct Drum: View {
             }
         }
         .padding(.horizontal, 8).frame(height: boxH)
-        .background(red ? WG.alarmFill : .clear, in: RoundedRectangle(cornerRadius: 10))
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke(red ? WG.alarmFill : ink.opacity(0.5), lineWidth: 1.5))
+        .background(red ? WG.alarmFill : .clear, in: RoundedRectangle(cornerRadius: 10))   // pas de boîte, sauf le bloc rouge d'alarme
         .lineLimit(1).fixedSize()
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(tape.valid ? tr("Altitude") : tr("Altitude indisponible"))
+    }
+}
+
+/// Hachures « //// » devant la lecture d'altitude.
+private struct Hatch: Shape {
+    func path(in r: CGRect) -> Path {
+        var p = Path()
+        for k in stride(from: r.minX - r.height, to: r.maxX, by: 6) {
+            p.move(to: .init(x: max(k, r.minX), y: r.maxY - max(0, r.minX - k)))
+            p.addLine(to: .init(x: min(k + r.height, r.maxX), y: r.minY + max(0, k + r.height - r.maxX)))
+        }
+        return p
     }
 }
 

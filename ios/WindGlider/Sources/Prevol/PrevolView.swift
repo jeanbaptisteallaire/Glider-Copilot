@@ -21,6 +21,7 @@ struct PrevolView: View {
                             .padding(8).frame(maxWidth: .infinity).background(WG.bad, in: RoundedRectangle(cornerRadius: 10))
                     }
                     PackCard()
+                    DayPicker()
                     switch app.weather {
                     case .idle, .loading:
                         WGCard { HStack { ProgressView(); Text(tr("Météo du jour…")).font(WG.subhead) } }
@@ -127,13 +128,12 @@ struct DayCard: View {
 
     var body: some View {
         let s = day.summary
-        let qColor: Color = switch s.quality.name { case "NONE": WG.dim; case "WEAK": WG.climb; case "AVERAGE": WG.brandInk; default: WG.good }
         WGCard {
             HStack {
                 Label(tr("La journée"), systemImage: "sun.max").font(WG.headline).foregroundStyle(WG.sun)
                 Spacer()
-                Text(tr("Thermique · %@", trDyn(s.quality.label))).font(WG.footnote.weight(.semibold)).foregroundStyle(qColor)
-                    .padding(.horizontal, 10).padding(.vertical, 4).background(qColor.opacity(0.12), in: Capsule())
+                // score du jour sur 100, anneau façon Apple Watch (remplace la pastille de qualité : même information)
+                ScoreRing(result: WindGliderWeather.companion.score(day: day))
             }
             HStack(alignment: .top) {
                 kpi(Fmt.hm(s.triggerTime), tr("Déclenchement"), WG.sun, unit: nil)
@@ -476,5 +476,41 @@ struct SensorsCard: View {
 
     private func cell(_ l: String, _ v: String) -> some View {
         VStack(alignment: .leading) { Text(l).font(WG.caption).foregroundStyle(WG.dim); Text(v).font(WG.subhead.monospacedDigit()) }
+    }
+}
+
+
+/// Choix du jour de la météo : aujourd'hui, demain, après-demain (JB, 22/10/2026).
+struct DayPicker: View {
+    @EnvironmentObject var app: AppModel
+
+    var body: some View {
+        Picker(tr("Jour"), selection: Binding(get: { app.dayOffset }, set: { v in
+            Haptic.tap(); app.dayOffset = v; Task { await app.loadWeather() }
+        })) {
+            Text(tr("Aujourd'hui")).tag(0)
+            Text(tr("Demain")).tag(1)
+            Text(tr("Après-demain")).tag(2)
+        }
+        .pickerStyle(.segmented)
+    }
+}
+
+/// Score du jour sur 100 : petit anneau coloré, chiffre au centre (façon Apple Watch). Indicatif.
+struct ScoreRing: View {
+    let result: DayScoreResult
+    var size: CGFloat = 56
+
+    var body: some View {
+        let c: Color = switch result.level.name { case "POOR": WG.bad; case "FAIR": WG.warn; case "GOOD": WG.good; default: WG.sky }
+        let f = CGFloat(result.score) / 100
+        ZStack {
+            Circle().stroke(c.opacity(0.22), lineWidth: 7)
+            Circle().trim(from: 0, to: max(f, 0.001)).stroke(c, style: StrokeStyle(lineWidth: 7, lineCap: .round)).rotationEffect(.degrees(-90))
+            Text("\(result.score)").font(.system(size: size * 0.36, weight: .bold).monospacedDigit()).foregroundStyle(WG.brandInk)
+        }
+        .frame(width: size, height: size)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(tr("Score du jour %@ sur 100, indicatif", "\(result.score)"))
     }
 }

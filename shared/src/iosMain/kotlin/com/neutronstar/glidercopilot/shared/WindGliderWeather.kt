@@ -1,5 +1,14 @@
 package com.neutronstar.glidercopilot.shared
 
+import com.neutronstar.glidercopilot.domain.DayPlanner
+import com.neutronstar.glidercopilot.precog.DayWeather
+import com.neutronstar.glidercopilot.domain.DayScore
+import com.neutronstar.glidercopilot.domain.DayScoreResult
+import com.neutronstar.glidercopilot.domain.LiftType
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.precog.FileResponseCache
 import com.neutronstar.glidercopilot.precog.HttpClient
@@ -46,7 +55,27 @@ class WindGliderWeather private constructor(
     suspend fun loadDay(lat: Double, lon: Double, departement: String?): WeatherResult =
         if (fixedDate != null) repo.loadDay(LatLon(lat, lon), departement, fixedDate) else repo.loadDay(LatLon(lat, lon), departement)
 
+    /**
+     * Jour choisi par le pilote (JB, 22/10/2026) : 0 = aujourd'hui, 1 = demain, 2 = après-demain (heure de Paris).
+     * Données d'essai : décalage appliqué au jour imposé.
+     */
+    @Throws(Exception::class)
+    suspend fun loadDayOffset(lat: Double, lon: Double, departement: String?, offsetDays: Int): WeatherResult {
+        val base = fixedDate ?: Clock.System.now().toLocalDateTime(TimeZone.of("Europe/Paris")).date
+        return repo.loadDay(LatLon(lat, lon), departement, base.plus(offsetDays.coerceIn(0, 2), DateTimeUnit.DAY))
+    }
+
     companion object {
+        /** Jour proposé à l'ouverture : aujourd'hui avant 17 h, demain ensuite (comme avant le choix du jour). */
+        fun defaultOffset(): Int = if (Clock.System.now().toLocalDateTime(TimeZone.of("Europe/Paris")).hour < 17) 0 else 1
+
+        /** Score du jour sur 100 (indicatif) : vent moyen à 10 m sur les heures exploitables. */
+        fun score(day: DayWeather): DayScoreResult {
+            val usable = day.hours.filter { it.analysis.climbMs >= DayPlanner.USABLE_CLIMB_MS && it.analysis.liftType != LiftType.NONE }
+            val winds = usable.mapNotNull { it.surface.wind10mMs }
+            return DayScore.compute(day.summary, if (winds.isEmpty()) null else winds.average() * 3.6)
+        }
+
         /** Secondes Unix d'un instant métier (pratique côté Swift : Date(timeIntervalSince1970:)). */
         fun epochSeconds(i: Instant): Double = i.toEpochMilliseconds() / 1000.0
 
