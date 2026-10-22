@@ -50,6 +50,8 @@ struct PilotView: View {
     @AppStorage("pilot.essential") private var essential = false
     @State private var airspaceHint = false
     @AppStorage(Lang.key) private var lang = Lang.current
+    /// Option du menu « ⋯ » : fréquence radio du terrain de référence (JB, 22/10/2026).
+    @AppStorage("pilot.showRadio") private var showRadio = false
 
     var body: some View {
         let p = app.pilot
@@ -180,7 +182,7 @@ struct PilotView: View {
 
     private func edges(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
         HStack(alignment: .top) {
-            VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 8) {
                 // vent : flèche + vitesse ; flèche en pointillés si c'est une prévision
                 VStack(spacing: 0) {
                     if p.windKnown {
@@ -210,6 +212,19 @@ struct PilotView: View {
                 .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
                 if !map.follow {
                     roundButton("scope", tint: WG.sky, a11y: tr("Recentrer la carte")) { map.recenter() }
+                }
+                if showRadio {
+                    // antenne + code + fréquence en cyan (Godspeed) ; « — » si openAIP ne la donne pas
+                    VStack(spacing: 2) {
+                        Image(systemName: "antenna.radiowaves.left.and.right").font(.system(size: 14, weight: .semibold)).foregroundStyle(PI.dim)
+                        Text(p.fieldCode).font(.system(size: 12, weight: .semibold)).foregroundStyle(PI.ink)
+                        Text(p.fieldFrequencyText).font(WG.pfd(13)).foregroundStyle(WG.selected(dark: true))
+                    }
+                    .lineLimit(1).fixedSize()
+                    .padding(.horizontal, 6).padding(.vertical, 6)
+                    .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(tr("Fréquence %@ : %@", p.fieldCode, p.fieldFrequencyText))
                 }
             }
             Spacer(minLength: 0)
@@ -265,6 +280,7 @@ struct PilotView: View {
         Menu {
             Toggle(tr("Coupe du relief"), isOn: $showProfile)
             Toggle(tr("Vario"), isOn: $showVario)
+            Toggle(tr("Fréquence radio du terrain"), isOn: $showRadio)
             Button(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques")) {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             }

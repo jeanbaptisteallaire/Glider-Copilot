@@ -140,6 +140,8 @@ data class PilotUi(
     /** Vent : vitesse (km/h) et origine prévision (flèche en pointillés) plutôt que mesure. */
     val windSpeedKmh: Double = 0.0,
     val windForecast: Boolean = false,
+    /** Fréquence radio du terrain de référence (openAIP du pack), virgule française ; « — » si inconnue, jamais inventée. */
+    val fieldFrequencyText: String = "—",
 )
 
 /**
@@ -274,7 +276,10 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             list += FieldOption(icao ?: "CLUB", FieldOption.prettyName(c.airfieldName ?: c.name), clubPos, e, isClub = true, icao = icao)
         }
         fields = list
+        // fréquences openAIP des terrains, par identifiant de FieldOption (jamais devinées)
+        frequencies = airports.mapNotNull { a -> a.frequency?.takeIf { it.isNotBlank() }?.let { (a.icao ?: a.id) to it } }.toMap()
     }
+    private var frequencies: Map<String, String> = emptyMap()
 
     /** Terrains proposés au choix : alternatives calculées par la sécurité, sinon les plus proches. */
     fun fieldChoices(): List<FieldChoice> {
@@ -531,6 +536,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             spiralMs = snap?.avgSpiralMs ?: Double.NaN,
             windSpeedKmh = wind?.speedKmh ?: 0.0,
             windForecast = wind?.source == WindSource.FORECAST,
+            fieldFrequencyText = (r?.field?.id ?: club?.airfieldIcao)?.let { frequencies[it] }?.replace('.', ',') ?: "—",
         )
     }
 
