@@ -158,8 +158,8 @@ struct PilotView: View {
     /// Finesse sous la marge : un toucher passe 10 → 20 → 30 (réglage détaillé en Prévol).
     private var finesseButton: some View {
         Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
-            Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: true))
-                .padding(.horizontal, 8).padding(.vertical, 3)
+            Text("F\(app.finesse)").font(WG.pfd(16.5)).foregroundStyle(WG.selected(dark: true))   // +10 %
+                .padding(.horizontal, 9).padding(.vertical, 3.5)
                 .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
         }
         .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))

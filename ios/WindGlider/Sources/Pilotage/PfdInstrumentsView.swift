@@ -46,19 +46,21 @@ struct SafetyBand: View {
         let ink = dark ? Color.white : WG.brandInk
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 0) {
-                Text(tr("Marge sécu. (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
+                // libellés −10 % ; chiffres remontés de 16 pt vers leur libellé (la boîte garde sa taille)
+                Text(tr("Marge sécu. (m)")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(PI.dim)
                 Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.6)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(tr("Marge %@ mètres", marginText))
                     // centré sur la hauteur du tambour : marge et lecture d'altitude sur le même axe
                     .frame(height: essential ? nil : 78)
-                    .overlay(alignment: .bottomLeading) { if !essential, let accessory { accessory.offset(y: 12) } }
+                    .overlay(alignment: .bottomLeading) { if !essential, let accessory { accessory.offset(y: 2) } }
+                    .offset(y: essential ? 0 : -16)
             }
             if !essential {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(tr("Altitude (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
-                    Drum(tape: tape, ink: ink)
+                    Text(tr("Alti.")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(PI.dim)
+                    Drum(tape: tape, ink: ink).offset(y: -16)
                 }
             }
         }
