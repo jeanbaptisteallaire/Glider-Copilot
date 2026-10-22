@@ -69,7 +69,7 @@ targetTemplates:
         CFBundleDisplayName: Wind Glider
         CFBundleName: Wind Glider
         CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "8"
+        CFBundleVersion: "9"
         UILaunchScreen: { UIColorName: LaunchBackground }
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         PRECOG_API_KEY: $(PRECOG_API_KEY)
@@ -84,7 +84,7 @@ targetTemplates:
             CFBundleURLSchemes: [$(GOOGLE_IOS_URL_SCHEME)]
         NSLocationWhenInUseUsageDescription: "Position GPS du planeur pendant le vol : marge de sécurité, trace IGC et club le plus proche. Elle reste sur le téléphone."
         NSMotionUsageDescription: "Baromètre et accéléromètre du téléphone pour le vario."
-        UIBackgroundModes: [audio, location]
+        UIBackgroundModes: [location]   # sans audio (App Review 2.5.4, 22/10/2026) : vario et voix au premier plan seulement
         UIAppFonts: [font/inter_regular.ttf, font/inter_medium.ttf, font/inter_semibold.ttf, font/inter_bold.ttf]
     dependencies:
       - package: GoogleSignIn
