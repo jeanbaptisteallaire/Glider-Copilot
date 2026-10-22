@@ -360,9 +360,10 @@ struct FluidMapView: UIViewRepresentable {
             if let a = o as? AirspaceOverlay {
                 let r = MKPolygonRenderer(polygon: a.polygon)
                 let c = UIColor(WG.airspace(a.family))
-                // masque : voile léger dans la zone, bord net (cartes aéro)
-                r.strokeColor = c; r.fillColor = c.withAlphaComponent(0.025); r.lineWidth = 1.05  // voiles superposés : rester léger
-                if a.family == 1 { r.lineDashPattern = [6, 4] }
+                // Godspeed : trait de 2 pt (plein ou tirets selon la famille) + voile léger ; visibles sur satellite
+                r.strokeColor = c; r.fillColor = c.withAlphaComponent(WG.airspaceFill(a.family)); r.lineWidth = 2
+                let dash = WG.airspaceDash(a.family)
+                if !dash.isEmpty { r.lineDashPattern = dash.map { NSNumber(value: Double($0)) } }
                 return r
             }
             return MKOverlayRenderer(overlay: o)
@@ -384,9 +385,10 @@ struct FluidMapView: UIViewRepresentable {
                 v.subviews.forEach { $0.removeFromSuperview() }
                 let t = UILabel()
                 t.text = l.shape.name
-                t.font = UIFont(name: "Inter-SemiBold", size: 10) ?? .systemFont(ofSize: 10, weight: .semibold)
+                // Godspeed : nom en 13 pt, couleur de la famille, halo sombre ; MapKit écarte les étiquettes qui se chevauchent
+                t.font = .systemFont(ofSize: 13, weight: .semibold)
                 t.textColor = UIColor(WG.airspace(l.shape.family))
-                t.layer.shadowColor = UIColor.white.cgColor; t.layer.shadowRadius = 2; t.layer.shadowOpacity = 1; t.layer.shadowOffset = .zero
+                t.layer.shadowColor = UIColor.black.cgColor; t.layer.shadowRadius = 2; t.layer.shadowOpacity = 0.9; t.layer.shadowOffset = .zero
                 t.sizeToFit()
                 v.frame = t.bounds; v.addSubview(t)
                 v.displayPriority = .defaultLow; v.collisionMode = .rectangle

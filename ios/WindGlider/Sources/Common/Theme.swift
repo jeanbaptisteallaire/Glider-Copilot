@@ -35,9 +35,17 @@ enum WG {
     /// Couleur de montée des graphiques sur pages blanches (Android chartClimbColor) : teinte soleil plus soutenue en montée forte.
     static func chartClimb(_ ms: Double) -> Color { sun.opacity(min(max(0.3 + ms / 2.5 * 0.7, 0.3), 1.0)) }
 
-    /// Familles d'espaces (charte Android, carte claire) : contrôlés bleu, réglementés rouge-magenta, information vert.
+    /// Familles d'espaces (Godspeed, règle R21 : jamais la couleur seule, le trait porte aussi l'information) :
+/// contrôlés bleu trait plein, réglementés rouge trait plein, information vert tirets, autres gris tirets.
+    static func airspaceDash(_ family: Int32) -> [CGFloat] {
+        switch family { case 0, 1: return []; default: return [10, 6] }
+    }
+    static func airspaceFill(_ family: Int32) -> CGFloat {
+        switch family { case 1: return 0.10; case 0: return 0.06; default: return 0.04 }
+    }
     static func airspace(_ family: Int32) -> Color {
-        switch family { case 0: return rgb(0x1F5FBF); case 1: return rgb(0xC2185B); case 2: return rgb(0x2E9D57); default: return rgb(0x8A8A8A) }
+        // couleurs des zones de Godspeed (zoneInk), lisibles sur satellite comme sur plan
+        switch family { case 0: return rgb(0x6FA0E8); case 1: return rgb(0xE0607A); case 2: return rgb(0x5CCB86); default: return rgb(0xAEB6C0) }
     }
 
     /// Échelle vario (−3 → +4 m/s), comme `vario()` de la charte : vert en descente, orange → rouge en montée.
