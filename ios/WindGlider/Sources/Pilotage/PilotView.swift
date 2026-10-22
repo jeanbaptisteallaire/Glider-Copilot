@@ -93,6 +93,25 @@ struct PilotView: View {
                         .allowsHitTesting(false)
                 }
                 MapOverlay(p: p, ds: ds, showProfile: $showProfile, showVario: $showVario, essential: $essential).padding(.top, topInset).padding(.bottom, bottomInset)
+                // LIGHT PFD (JB, 22/10/2026) : ruban d'altitude à gauche (marge de sécurité), vario en barre à droite ;
+                // Essentiel : seule la marge reste (en-tête), ni ruban ni barre
+                if !essential {
+                    // posés en haut à gauche, sous l'en-tête : les boutons de la carte restent libres
+                    HStack(alignment: .top, spacing: 2) {
+                        AltitudeTapeView(state: AltitudeTape.shared.state(altM: p.altText == "—" ? nil : KotlinDouble(value: p.currentAltM),
+                                                                          minimumM: KotlinDouble(value: p.requiredAltM), marginKnown: p.marginKnown),
+                                         altM: p.currentAltM, dark: dark)
+                        // vario juste à droite de l'altitude, comme sur un PFD : un seul balayage de l'œil
+                        if ds.showVario {
+                            VarioColumn(ms: p.varioMs, text: p.varioText, valid: p.varioText != "—", dark: dark)
+                        }
+                        Spacer(minLength: 0)
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.top, topInset + 44).padding(.bottom, bottomInset)
+                    .frame(maxHeight: .infinity, alignment: .top)
+                    .allowsHitTesting(false)
+                }
                 VStack(spacing: 6) {
                     header(p, ds)
                     // interrupteur « relief » : toujours au même endroit, coin haut droit de la boîte de coupe
@@ -151,7 +170,7 @@ struct PilotView: View {
         .toolbarBackground(dark ? Color.black : Color.clear, for: .tabBar)
         .animation(.easeInOut(duration: 0.25), value: dark)
         .sheet(isPresented: $choosingField) { FieldPicker().environmentObject(app).presentationDetents([.medium]) }
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true }
+        .onAppear { UIApplication.shared.isIdleTimerDisabled = true; app.applyLaunchDemo() }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
     }
 
@@ -248,13 +267,9 @@ struct PilotView: View {
 
     private func varioBar(_ p: PilotUi, details: Bool) -> some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading) {
-                Text(trDyn(p.varioLabel)).font(WG.footnote).foregroundStyle(PI.dim)
-                Text(p.varioText).font(PI.number(40)).foregroundStyle(WG.vario(p.varioMs)).lineLimit(1).minimumScaleFactor(0.6)
-            }
-            .frame(width: 120, alignment: .leading)
             VStack(spacing: 6) {
-                VarioScale(value: p.varioMs).frame(height: 10)
+                // le chiffre et l'échelle sont dans la barre verticale de la carte : ici, la source et les moyennes
+                Text(trDyn(p.varioLabel)).font(WG.footnote).foregroundStyle(PI.dim).frame(maxWidth: .infinity, alignment: .leading)
                 if details {
                     HStack {
                         avg(tr("Spirale"), p.spiralText); avg(tr("Pompe"), p.thermalText); avg(tr("Jour"), p.dayText)
@@ -380,13 +395,6 @@ struct MapOverlay: View {
                 .frame(width: 44).padding(.vertical, 8)
                 .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
                 .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
-                VStack(spacing: 3) {
-                    Text("+4").font(WG.caption2).foregroundStyle(PI.dim)
-                    LinearGradient(colors: [WG.vario(4), WG.vario(1.5), WG.vario(0), WG.vario(-3)], startPoint: .top, endPoint: .bottom)
-                        .frame(width: 4, height: 50).clipShape(Capsule())
-                    Text("−3").font(WG.caption2).foregroundStyle(PI.dim)
-                }
-                .frame(width: 44)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             }
@@ -490,7 +498,7 @@ struct VarioScale: View {
         GeometryReader { g in
             let x = (min(max(value, -3), 4) + 3) / 7 * g.size.width
             ZStack(alignment: .leading) {
-                LinearGradient(colors: [WG.vario(-3), WG.vario(0), WG.vario(1.5), WG.vario(4)], startPoint: .leading, endPoint: .trailing)
+                LinearGradient(colors: [WG.varioFlash(-3), WG.varioFlash(0), WG.varioFlash(1.5), WG.varioFlash(4)], startPoint: .leading, endPoint: .trailing)
                     .clipShape(Capsule())
                 Rectangle().fill(PI.ink).frame(width: 4, height: g.size.height + 8).offset(x: x - 2)
             }
@@ -586,7 +594,7 @@ struct FlightMapView: View {
                     .stroke(WG.airspace(a.family), style: StrokeStyle(lineWidth: 1.5, dash: a.family == 1 ? [6, 4] : []))
             }
             ForEach(Array(segments.enumerated()), id: \.offset) { _, s in
-                MapPolyline(coordinates: s.coords).stroke(WG.vario(s.climb), lineWidth: 4)
+                MapPolyline(coordinates: s.coords).stroke(WG.varioFlash(s.climb), lineWidth: 4)
             }
             if p.hasPosition && (p.fieldLat != 0 || p.fieldLon != 0) {
                 MapPolyline(coordinates: [me, field]).stroke(WG.route, style: StrokeStyle(lineWidth: 2, dash: [4, 5]))
@@ -740,8 +748,8 @@ private struct PumpMark: View {
     let climb: Double
     var body: some View {
         ZStack {
-            Circle().fill(WG.vario(climb).opacity(0.25)).frame(width: 30, height: 30)
-            Circle().stroke(WG.vario(climb), lineWidth: 2).frame(width: 30, height: 30)
+            Circle().fill(WG.varioFlash(climb).opacity(0.25)).frame(width: 30, height: 30)
+            Circle().stroke(WG.varioFlash(climb), lineWidth: 2).frame(width: 30, height: 30)
             Text(formatClimb(climb)).font(WG.caption2.weight(.bold)).foregroundStyle(WG.brandInk)
         }
         .accessibilityLabel(tr("Pompe %@ mètres par seconde", formatClimb(climb)))

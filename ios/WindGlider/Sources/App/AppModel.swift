@@ -40,6 +40,12 @@ final class AppModel: ObservableObject {
     @Published var autoTakeoff: Bool { didSet { UserDefaults.standard.set(autoTakeoff, forKey: "autoTakeoff"); engine.setAutoTakeoff(on: autoTakeoff) } }
     @Published var finesse: Int = 20 { didSet { engine.setFinesse(value: Int32(finesse)) } }
     @Published var demo = false { didSet { engine.setDemo(on: demo) } }
+    /// Build de développement : `-demoFlight` lance le planeur démo dès l'ouverture (captures au simulateur).
+    func applyLaunchDemo() {
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-demoFlight"), !demo { demo = true }
+        #endif
+    }
     private var lastPosition: CLLocationCoordinate2D?
     /// Trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
     let traffic: IosTraffic?  // jamais nil ; optionnel pour garder les appels existants

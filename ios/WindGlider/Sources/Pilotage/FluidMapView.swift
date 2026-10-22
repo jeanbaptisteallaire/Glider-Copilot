@@ -53,6 +53,17 @@ struct FluidMapView: UIViewRepresentable {
         // mode sombre : même fond de carte (couleurs, contraste) qu'en mode clair ; seule la route change de couleur
         if context.coordinator.lastDark != dark {
             context.coordinator.lastDark = dark
+            // LIGHT PFD : en sombre, fond satellite ombré (relief lisible, trace « flash » bien détachée) ;
+            // en clair, plan standard inchangé
+            if dark {
+                let cfg = MKHybridMapConfiguration(elevationStyle: .flat)
+                cfg.pointOfInterestFilter = .excludingAll
+                v.preferredConfiguration = cfg
+            } else {
+                let cfg = MKStandardMapConfiguration(elevationStyle: .flat)
+                cfg.pointOfInterestFilter = .excludingAll
+                v.preferredConfiguration = cfg
+            }
             context.coordinator.restyle(on: v)
         }
         // V5 : échelle et mentions Plans juste au-dessus du panneau vario (plus cachées derrière)
@@ -294,6 +305,10 @@ struct FluidMapView: UIViewRepresentable {
                 key = k; cur.append(c)
             }
             if cur.count > 1 { out.append(TraceOverlay(coordinates: cur, count: cur.count).with(climb: Double(key.0) / 2, fade: key.1)) }
+            if trace.count > 1 {
+                var all = trace.map { CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon) }
+                out.insert(TraceCasing(coordinates: &all, count: all.count), at: 0)
+            }
             return out
         }
 
@@ -330,7 +345,14 @@ struct FluidMapView: UIViewRepresentable {
 
         func mapView(_ m: MKMapView, rendererFor o: MKOverlay) -> MKOverlayRenderer {
             if let t = o as? TraceOverlay {
-                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.vario(t.climb)).withAlphaComponent(t.alpha); r.lineWidth = 4; r.lineCap = .round; return r
+                // couleur « flash » saturée (LIGHT PFD) ; un passage recouvert garde sa teinte, plus fine
+                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.varioFlash(t.climb)).withAlphaComponent(t.alpha)
+                r.lineWidth = t.fade == 0 ? 5 : 4; r.lineCap = .round; r.lineJoin = .round; return r
+            }
+            if let t = o as? TraceCasing {
+                // liseré sombre sous toute la trace : elle ressort sur le relief ombré comme sur le fond clair
+                let r = MKPolylineRenderer(polyline: t); r.strokeColor = UIColor(WG.casing).withAlphaComponent(0.85)
+                r.lineWidth = 8; r.lineCap = .round; r.lineJoin = .round; return r
             }
             if let t = o as? RouteOverlay {
                 let r = RouteRenderer(overlay: t); routeRenderer = r; return r
@@ -404,6 +426,9 @@ final class AirspaceLabel: NSObject, MKAnnotation {
     let shape: AirspaceShape
     init(shape: AirspaceShape, at c: CLLocationCoordinate2D) { self.shape = shape; coordinate = c }
 }
+
+/// Liseré sombre sous la trace entière (un seul tracé, sans anneaux aux jonctions des tronçons).
+final class TraceCasing: MKPolyline {}
 
 final class TraceOverlay: MKPolyline {
     var climb = 0.0
@@ -548,7 +573,7 @@ final class PumpView: MKAnnotationView {
     }
     required init?(coder: NSCoder) { fatalError() }
     func configure(_ t: TrafficPump) {
-        let c = UIColor(WG.vario(t.climbMs))
+        let c = UIColor(WG.varioFlash(t.climbMs))
         layer.borderColor = c.cgColor; backgroundColor = c.withAlphaComponent(0.25)
         let f = NumberFormatter(); f.locale = Locale(identifier: "fr_FR"); f.minimumFractionDigits = 1; f.maximumFractionDigits = 1
         label.text = (t.climbMs >= 0 ? "+" : "") + (f.string(from: NSNumber(value: t.climbMs)) ?? "")
