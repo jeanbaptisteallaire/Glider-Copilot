@@ -49,6 +49,7 @@ struct PilotView: View {
     /// V5 : mode Essentiel (la marge seule) ; mémorisé
     @AppStorage("pilot.essential") private var essential = false
     @State private var airspaceHint = false
+    @AppStorage(Lang.key) private var lang = Lang.current
 
     var body: some View {
         let p = app.pilot
@@ -109,7 +110,7 @@ struct PilotView: View {
         let low = ds.marginLevel == .caution || ds.marginLevel == .alarm
         return HStack(alignment: .top, spacing: 6) {
             VStack(alignment: .leading, spacing: 2) {
-                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, altM: p.currentAltM, dark: dark, essential: essential)
+                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: dark, essential: essential)
                 if essential {
                     // la seule autre information de survie : où est le terrain
                     Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(PI.ink)
@@ -192,6 +193,21 @@ struct PilotView: View {
                 }
                 .frame(width: 44, height: 50).background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
                 .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
+                // orientation de la vue : AUTO (nord en spirale, route sinon) → N↑ → RTE ; toujours visible
+                Button { Haptic.tap(); map.cycleOrientation() } label: {
+                    Group {
+                        if map.orientation == .north {
+                            ZStack {
+                                Image(systemName: "location.north.fill").font(.system(size: 18)).foregroundStyle(WG.bad)
+                                Text("N").font(.system(size: 8, weight: .bold)).foregroundStyle(.white).offset(y: 2)
+                            }
+                        } else {
+                            Text(map.orientation.label).font(.system(size: 12, weight: .bold)).foregroundStyle(PI.ink)
+                        }
+                    }
+                    .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+                }
+                .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
                 if !map.follow {
                     roundButton("scope", tint: WG.sky, a11y: tr("Recentrer la carte")) { map.recenter() }
                 }
@@ -252,7 +268,7 @@ struct PilotView: View {
             Button(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques")) {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             }
-            Button(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label)) { map.cycleOrientation() }
+            Button(lang == "fr" ? "English" : "Français") { lang = lang == "fr" ? "en" : "fr" }
             Toggle(tr("Mode sombre"), isOn: $dark)
             Toggle(tr("DÉMO"), isOn: $app.demo)
         } label: {

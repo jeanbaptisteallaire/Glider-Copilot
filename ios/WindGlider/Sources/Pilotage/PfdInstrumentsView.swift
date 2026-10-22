@@ -31,101 +31,72 @@ struct PanelBackground: ShapeStyle {
     }
 }
 
-/// Bandeau sécurité (haut gauche) : la marge en très gros, l'altitude en tambour à côté, et dessous un ruban
-/// horizontal « ouvert » (±250 m) où le minimum est hachuré cyan et la zone sous le minimum rouge.
-/// Remplace les lignes SÉCU / ALT : la marge et le hachuré disent la même chose sans texte.
+/// Bandeau sécurité (haut gauche) : « Marge sécu. (m) » en petit au-dessus de la marge en très gros, et l'altitude en
+/// tambour à côté (« Altitude (m) »). Le ruban horizontal est retiré (JB, 22/10) : la marge le dit déjà.
 struct SafetyBand: View {
     let marginText: String
     let marginColor: Color
     let tape: AltitudeTapeState
-    let altM: Double
     let dark: Bool
     var essential = false
 
     var body: some View {
         let ink = dark ? Color.white : WG.brandInk
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .center, spacing: 10) {
+        HStack(alignment: .top, spacing: 12) {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(tr("Marge sécu. (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
                 Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.6)
-                if !essential { Drum(tape: tape, ink: ink) }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(tr("Marge %@ mètres", marginText))
             if !essential {
-                HorizontalTape(tape: tape, altM: altM, ink: ink, dark: dark).frame(height: 18)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(tr("Altitude (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
+                    Drum(tape: tape, ink: ink)
+                }
             }
         }
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(tr("Marge %@", marginText))
     }
 }
 
-/// Tambour compact : centaines fixes + rouleau des deux derniers chiffres ; bloc rouge plein sous le minimum.
+/// Tambour d'altitude : centaines fixes + rouleau des deux derniers chiffres, qui va jusqu'au bord de la boîte et
+/// s'estompe en s'éloignant de la lecture ; bloc rouge plein sous le minimum.
 private struct Drum: View {
     let tape: AltitudeTapeState
     let ink: Color
-    private let rowH: CGFloat = 22
+    private let rowH: CGFloat = 24
+    private let boxH: CGFloat = 78
 
     var body: some View {
         let red = tape.belowMinimum
         let fg: Color = red ? .white : ink
-        HStack(spacing: 0) {
+        HStack(spacing: 2) {
             if let d = tape.drum {
-                Text(d.high).font(WG.pfd(24)).foregroundStyle(fg)
+                Text(d.high).font(WG.pfd(30, .bold)).foregroundStyle(fg)
                 ZStack {
                     ForEach(0..<d.rows.count, id: \.self) { i in
                         let off = (CGFloat(i - Int(AltitudeDrum.companion.CENTER)) + CGFloat(d.roll)) * rowH
-                        Text(d.rows[i]).font(WG.pfd(i == Int(AltitudeDrum.companion.CENTER) ? 19 : 16))
-                            .foregroundStyle(fg.opacity(abs(off) < rowH / 2 ? 1 : 0.4))
-                            .offset(y: off)
+                        let fade = max(0, 1 - abs(off) / (boxH / 2 + rowH / 2))
+                        Text(d.rows[i]).font(WG.pfd(abs(off) < rowH / 2 ? 26 : 21, abs(off) < rowH / 2 ? .bold : .semibold))
+                            .foregroundStyle(fg.opacity(abs(off) < rowH / 2 ? 1 : 0.25 + 0.5 * fade))
+                            .fixedSize().offset(y: off)
                     }
                 }
-                .frame(width: 26, height: rowH).clipped()
+                .frame(width: 44, height: boxH).clipped()
+                .mask(LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.3),
+                                             .init(color: .black, location: 0.7), .init(color: .clear, location: 1)],
+                                     startPoint: .top, endPoint: .bottom))
             } else {
-                Text("– – –").font(WG.pfd(20)).foregroundStyle(WG.bad)
+                Text("– – –").font(WG.pfd(22)).foregroundStyle(WG.bad)
             }
         }
-        .padding(.horizontal, 6).frame(height: 36)
-        .background(red ? WG.alarmFill : .clear, in: RoundedRectangle(cornerRadius: 8))
-        .overlay(RoundedRectangle(cornerRadius: 8).stroke(red ? WG.alarmFill : ink.opacity(0.5), lineWidth: 1.5))
+        .padding(.horizontal, 8).frame(height: boxH)
+        .background(red ? WG.alarmFill : .clear, in: RoundedRectangle(cornerRadius: 10))
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(red ? WG.alarmFill : ink.opacity(0.5), lineWidth: 1.5))
         .lineLimit(1).fixedSize()
-    }
-}
-
-/// Ruban horizontal : altitude actuelle au centre (index), plus haut à droite ; minimum hachuré cyan, rouge dessous.
-private struct HorizontalTape: View {
-    let tape: AltitudeTapeState
-    let altM: Double
-    let ink: Color
-    let dark: Bool
-
-    var body: some View {
-        Canvas { ctx, size in
-            let midX = size.width / 2, y = size.height - 4, half = size.width / 2 - 4
-            var rail = Path(); rail.move(to: .init(x: 4, y: y)); rail.addLine(to: .init(x: size.width - 4, y: y))
-            ctx.stroke(rail, with: .color(ink.opacity(0.6)), lineWidth: 2)
-            guard tape.valid else { return }
-            for t in tape.ticksM {
-                let x = midX + CGFloat(AltitudeTape.shared.position(altM: altM, atM: Double(t.intValue))) * half
-                var p = Path(); p.move(to: .init(x: x, y: y)); p.addLine(to: .init(x: x, y: y - (t.intValue % 100 == 0 ? 8 : 5)))
-                ctx.stroke(p, with: .color(ink.opacity(0.6)), lineWidth: 1.5)
-            }
-            if let m = tape.minimum {
-                let x = midX + CGFloat(m.position) * half
-                var red = Path(); red.move(to: .init(x: 4, y: y)); red.addLine(to: .init(x: max(4, x), y: y))
-                ctx.stroke(red, with: .color(WG.bad), lineWidth: 4)
-                let cyan = WG.selected(dark: dark)
-                let box = CGRect(x: x - 5, y: y - 12, width: 10, height: 10)
-                ctx.stroke(Path(box), with: .color(cyan), lineWidth: 1.5)
-                var c = ctx; c.clip(to: Path(box))
-                for k in stride(from: -10.0, to: 12, by: 4) {
-                    var h = Path(); h.move(to: .init(x: box.minX + k, y: box.maxY)); h.addLine(to: .init(x: box.minX + k + 10, y: box.minY))
-                    c.stroke(h, with: .color(cyan), lineWidth: 1.5)
-                }
-            }
-            // index de l'altitude actuelle
-            var idx = Path(); idx.move(to: .init(x: midX, y: y - 1)); idx.addLine(to: .init(x: midX - 6, y: y - 12)); idx.addLine(to: .init(x: midX + 6, y: y - 12)); idx.closeSubpath()
-            ctx.fill(idx, with: .color(ink))
-        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(tape.valid ? tr("Altitude") : tr("Altitude indisponible"))
     }
 }
 
