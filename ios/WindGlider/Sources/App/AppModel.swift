@@ -184,13 +184,18 @@ final class AppModel: ObservableObject {
         applyGlideSettings()
         engine.start()
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in
+        // mode « common » : l'écran de vol reste à jour pendant un défilement ou un menu ouvert (revue résilience M15)
+        let t = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
                 self.pilot = self.engine.ui()
                 if self.demo { self.feedDemo(self.pilot) }
-                self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
-                self.status.gps = self.sensors.authorized && CLLocationManager.locationServicesEnabled()
+                // carte Capteurs de Prévol : 1 Hz suffit ; état republié seulement s'il change (moins de redessins SwiftUI)
+                if self.tick % 4 == 0 {
+                    self.sensorsUi = self.engine.sensors(baroPresent: self.sensors.baroAvailable, gpsAllowed: self.sensors.authorized)
+                    let g = self.sensors.authorized && CLLocationManager.locationServicesEnabled()
+                    if self.status.gps != g { self.status.gps = g }
+                }
                 self.tick += 1
                 if let t = self.traffic, self.tick % 4 == 0 {
                     if !t.running { self.startTraffic() }
@@ -198,6 +203,8 @@ final class AppModel: ObservableObject {
                 }
             }
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     /// Arrière-plan : capteurs et son coupés hors vol (batterie) ; pendant un vol enregistré, tout continue écran éteint

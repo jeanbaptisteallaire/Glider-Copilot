@@ -45,6 +45,12 @@ final class PackStore: ObservableObject {
         }
     }
 
+    /// URL lue dans un manifeste distant : mal formée = erreur de téléchargement, jamais un plantage (revue résilience M14).
+    nonisolated private static func url(_ s: String) throws -> URL {
+        guard let u = URL(string: s), u.scheme == "https" else { throw URLError(.badURL) }
+        return u
+    }
+
     /// Réseau non facturé (Wi-Fi, Ethernet) et non restreint (mode données réduites).
     nonisolated private static func onWifi() async -> Bool {
         await withCheckedContinuation { cont in
@@ -60,7 +66,7 @@ final class PackStore: ObservableObject {
     private func loadCatalog() async {
         let cacheURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("packs-catalog.json")
         do {
-            let (data, resp) = try await URLSession.shared.data(from: URL(string: IosPacks.shared.CATALOG_URL)!)
+            let (data, resp) = try await URLSession.shared.data(from: Self.url(IosPacks.shared.CATALOG_URL))
             guard (resp as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
             try? data.write(to: cacheURL)
             catalog = IosPacks.shared.parseCatalog(text: String(decoding: data, as: UTF8.self))
@@ -95,7 +101,7 @@ final class PackStore: ObservableObject {
     func cancel() { task?.cancel() }
 
     private func install(_ pack: PackInfo) async throws {
-        let (mdata, mresp) = try await URLSession.shared.data(from: URL(string: IosPacks.shared.manifestUrl(pack: pack))!)
+        let (mdata, mresp) = try await URLSession.shared.data(from: Self.url(IosPacks.shared.manifestUrl(pack: pack)))
         guard (mresp as? HTTPURLResponse)?.statusCode == 200 else { throw PackError("manifeste introuvable") }
         let manifestText = String(decoding: mdata, as: UTF8.self)
         guard let manifest = IosPacks.shared.parseManifest(text: manifestText) else { throw PackError("manifeste illisible") }
@@ -113,7 +119,7 @@ final class PackStore: ObservableObject {
                 do {
                     let part = dir.appendingPathComponent(f.name + ".part")
                     let before = done, fileBytes = Double(f.size)
-                    let tmp = try await Self.download(URL(string: f.url)!) { frac in
+                    let tmp = try await Self.download(Self.url(f.url)) { frac in
                         Task { @MainActor in self.progress = (before + frac * fileBytes) / total }
                     }
                     try? FileManager.default.removeItem(at: part)

@@ -18,7 +18,7 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
         self.engine = engine
         super.init()
         location.delegate = self
-        location.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        location.desiredAccuracy = kCLLocationAccuracyBest   // même cadence 1 Hz, moins d'énergie que BestForNavigation (revue énergie 13)
         location.activityType = .airborne
         location.distanceFilter = kCLDistanceFilterNone
     }
@@ -62,6 +62,8 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ m: CLLocationManager, didUpdateLocations locs: [CLLocation]) {
         for l in locs {
+            // revue résilience M3 : jamais de position invalide ni d'une position en cache (parking il y a 2 h)
+            guard l.horizontalAccuracy >= 0, l.horizontalAccuracy < 500, abs(l.timestamp.timeIntervalSinceNow) < 10 else { continue }
             onPosition?(l)
             let ell: Double
             if #available(iOS 15, *) { ell = l.ellipsoidalAltitude } else { ell = l.altitude }

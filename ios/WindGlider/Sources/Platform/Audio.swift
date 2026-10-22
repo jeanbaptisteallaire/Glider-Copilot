@@ -11,7 +11,11 @@ final class VarioTone {
     private var beepPhase = 0.0
     private var gain = 0.0
     private var running = false
+    /// Son voulu par le pilote : après un appel, un casque Bluetooth branché ou débranché, le son revient seul
+    /// (revue résilience M1 : il restait muet jusqu'au redémarrage de l'app).
+    private var wanted = false
     private let lock = NSLock()
+    private var observers: [NSObjectProtocol] = []
 
     init() {
         source = AVAudioSourceNode { [unowned self] _, _, frameCount, abl -> OSStatus in
@@ -44,11 +48,33 @@ final class VarioTone {
         let format = AVAudioFormat(standardFormatWithSampleRate: rate, channels: 1)!
         engine.attach(source)
         engine.connect(source, to: engine.mainMixerNode, format: format)
+        let nc = NotificationCenter.default
+        observers.append(nc.addObserver(forName: AVAudioSession.interruptionNotification, object: nil, queue: .main) { [weak self] n in
+            guard let self, let raw = n.userInfo?[AVAudioSessionInterruptionTypeKey] as? UInt,
+                  let type = AVAudioSession.InterruptionType(rawValue: raw) else { return }
+            if type == .began { self.running = false } else if self.wanted { self.restart() }
+        })
+        // changement de sortie (casque, haut-parleur) : AVAudioEngine s'arrête de lui-même
+        observers.append(nc.addObserver(forName: .AVAudioEngineConfigurationChange, object: engine, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.running = false
+            if self.wanted { self.restart() }
+        })
+        observers.append(nc.addObserver(forName: AVAudioSession.mediaServicesWereResetNotification, object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.running = false
+            if self.wanted { self.restart() }
+        })
     }
+
+    deinit { observers.forEach(NotificationCenter.default.removeObserver) }
+
+    private func restart() { running = false; start() }
 
     func set(_ v: Double) { lock.lock(); vario = v; lock.unlock() }
 
     func start() {
+        wanted = true
         guard !running else { return }
         try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers, .duckOthers])
         try? AVAudioSession.sharedInstance().setActive(true)
@@ -56,6 +82,7 @@ final class VarioTone {
     }
 
     func stop() {
+        wanted = false
         guard running else { return }
         engine.stop(); running = false
     }
@@ -68,6 +95,11 @@ final class Voice {
 
     func speak(_ text: String, force: Bool = false) {
         guard enabled || force else { return }
+        // revue résilience M2 : session audio active même son du vario coupé (mode silencieux, écran verrouillé)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers, .duckOthers])
+        try? AVAudioSession.sharedInstance().setActive(true)
+        // alerte urgente : passe devant les annonces en attente
+        if force, synth.isSpeaking { synth.stopSpeaking(at: .immediate) }
         let u = AVSpeechUtterance(string: text)
         u.voice = AVSpeechSynthesisVoice(language: "fr-FR")
         synth.speak(u)

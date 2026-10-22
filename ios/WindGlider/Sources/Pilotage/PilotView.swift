@@ -322,7 +322,8 @@ struct PilotView: View {
             }
             Button(lang == "fr" ? "English" : "Français") { lang = lang == "fr" ? "en" : "fr" }
             Toggle(tr("Fond satellite"), isOn: $dark)
-            Toggle(tr("DÉMO"), isOn: $app.demo)
+            // revue résilience M8 : la démo remplace le vol réel ; impossible de la lancer pendant un vol
+            Toggle(tr("DÉMO"), isOn: $app.demo).disabled(!app.demo && app.engine.inFlight)
         } label: {
             Image(systemName: "ellipsis").font(.system(size: 20, weight: .bold)).foregroundStyle(PI.ink)
                 .frame(width: 44, height: 44).background(PanelBackground(dark: true), in: Circle())
