@@ -98,9 +98,8 @@ struct ReplayScreen: View {
     var body: some View {
         ZStack(alignment: .top) {
             GeometryReader { g in
-                // marge haute = encoche seule : le tableau de bord de la page se pose tout en haut, à droite de la croix
-                // (la page le place déjà à 70 px du bord gauche pour le bouton fermer)
-                Replay3DView(payloadJson: withInsets(top: g.safeAreaInsets.top, bottom: g.safeAreaInsets.bottom)) { s in status = s }
+                // comme Android : marges réservées en haut (bouton fermer, encoche) et en bas, transmises à la page
+                Replay3DView(payloadJson: withInsets(top: g.safeAreaInsets.top + 56, bottom: g.safeAreaInsets.bottom)) { s in status = s }
                     .ignoresSafeArea()
             }
             HStack {
@@ -109,7 +108,7 @@ struct ReplayScreen: View {
                 Spacer()
                 if !status.isEmpty { Text(status).font(WG.caption).padding(8).background(.white.opacity(0.9), in: Capsule()) }
             }
-            .padding(.horizontal, 12).padding(.top, 6)
+            .padding()
         }
         .background(Color.black.ignoresSafeArea())
     }
