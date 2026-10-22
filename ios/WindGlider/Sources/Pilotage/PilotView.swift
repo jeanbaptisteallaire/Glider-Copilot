@@ -44,7 +44,8 @@ struct PilotView: View {
     @State private var choosingField = false
     @AppStorage("pilot.showProfile") private var showProfile = true
     @AppStorage("pilot.showVario") private var showVario = true
-    @State private var topInset: CGFloat = 0
+    @State private var profileAnimating = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @AppStorage("pilot.dark") private var dark = false
     /// V5 : mode Essentiel (la marge seule) ; mémorisé
     @AppStorage("pilot.essential") private var essential = false
@@ -67,6 +68,8 @@ struct PilotView: View {
                 FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark)   // mentions Plans au-dessus des boutons du bas
                     .ignoresSafeArea(.container, edges: .bottom)
             }
+            // une seule pile : bandeau → coupe (si ouverte) → outils des bords ; c'est la mise en page qui fait
+            // descendre et remonter les icônes avec la coupe, image par image (designer UI, 23/10/2026)
             VStack(spacing: 6) {
                 header(p, ds)
                 statusLine(ds)
@@ -78,23 +81,24 @@ struct PilotView: View {
                     }
                     .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                     .contentShape(Rectangle())
-                    .onTapGesture { Haptic.tap(); showProfile = false }   // un toucher la range dans le bouton montagne
+                    .onTapGesture { setProfile(false) }   // un toucher la range dans le bouton montagne
                     .accessibilityAddTraits(.isButton)
                     .accessibilityHint(tr("Toucher pour ranger la coupe"))
                     .padding(.horizontal, 8)
+                    // déroulée depuis le bandeau comme un store, fondu sur la même durée, sans échelle ni rebond
+                    .transition(.move(edge: .top).combined(with: .opacity))
                 }
+                if !essential { edges(p, ds) }
             }
-            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
-            if !essential { edges(p, ds).padding(.top, topInset + 6) }
+            .clipped()
             bottomBar(p, ds)
         }
         .background(PI.box)
         .animation(.easeInOut(duration: 0.25), value: essential)
-        .animation(.easeInOut(duration: 0.25), value: ds.showProfile)
         // marge qui passe sous le seuil (orange ou rouge) : la coupe se rouvre seule ; le pilote peut la refermer
         .onChange(of: ds.marginLevel) { old, new in
             let low: (MarginLevel) -> Bool = { $0 == .caution || $0 == .alarm }
-            if low(new) && !low(old) { showProfile = true }
+            if low(new) && !low(old) { setProfile(true) }
         }
         .toolbarColorScheme(.dark, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
@@ -155,6 +159,16 @@ struct PilotView: View {
         .padding(.horizontal, 8).padding(.top, 4)
     }
 
+    /// Ouvre ou range la coupe : une seule animation douce sans rebond (≈ 1/3 s, repli un peu plus sec) ;
+    /// un double toucher pendant le mouvement est ignoré ; « Réduire les animations » : simple fondu court.
+    private func setProfile(_ open: Bool) {
+        guard open != showProfile, !profileAnimating else { return }
+        Haptic.tap()
+        profileAnimating = true
+        let anim: Animation = reduceMotion ? .easeInOut(duration: 0.15) : .smooth(duration: open ? 0.32 : 0.26)
+        withAnimation(anim) { showProfile = open } completion: { profileAnimating = false }
+    }
+
     /// Finesse sous la marge : un toucher passe 10 → 20 → 30 (réglage détaillé en Prévol).
     private var finesseButton: some View {
         Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
@@ -168,7 +182,7 @@ struct PilotView: View {
     /// Sous le bandeau, seulement si nécessaire : capteur en défaut, démo (« dark cockpit »).
     @ViewBuilder private func statusLine(_ ds: PilotDisplay) -> some View {
         let noZones = app.showAirspaces && app.airspaces.isEmpty
-        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || app.demo || noZones {
+        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || noZones {
             HStack(spacing: 6) {
                 if ds.gpsAlert { badge("GPS") }
                 if ds.baroAlert { badge("BARO") }
@@ -180,10 +194,6 @@ struct PilotView: View {
                             .font(.system(size: 13, weight: .semibold)).foregroundStyle(WG.warn)
                             .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: true), in: Capsule())
                     }
-                }
-                if app.demo {
-                    Text(tr("DÉMO")).font(.system(size: 13, weight: .bold)).padding(.horizontal, 9).padding(.vertical, 4)
-                        .background(WG.climb, in: Capsule()).foregroundStyle(.white)
                 }
                 Spacer()
             }
@@ -205,7 +215,7 @@ struct PilotView: View {
                 if !ds.showProfile {
                     // en tête de colonne ; coupe dépliée : vent, orientation et recentrage remontent sous elle.
                     // coupe terrain repliée : même taille et même forme que le vent, montagne blanche
-                    Button { Haptic.tap(); showProfile = true } label: {
+                    Button { setProfile(true) } label: {
                         Image(systemName: "mountain.2.fill").font(.system(size: 18, weight: .semibold)).foregroundStyle(.white)
                             .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                     }
@@ -267,10 +277,27 @@ struct PilotView: View {
     // MARK: bas : réglages, enregistrement, zoom, Essentiel
 
     private func bottomBar(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
-        HStack(alignment: .bottom) {
-            if !essential { settingsMenu() }
-            Spacer()
-            // enregistrement : point rouge + durée
+        ZStack(alignment: .bottom) {
+            HStack(alignment: .bottom) {
+                // gauche : DÉMO au-dessus du logo Plans (il ne décale plus les outils du haut), puis réglages
+                VStack(alignment: .leading, spacing: 30) {
+                    if app.demo {
+                        Text(tr("DÉMO")).font(.system(size: 13, weight: .bold)).padding(.horizontal, 9).padding(.vertical, 4)
+                            .background(WG.climb, in: Capsule()).foregroundStyle(.white)
+                    }
+                    if !essential { settingsMenu() }
+                }
+                Spacer()
+                // basique ⇄ complet : petite pastille, toujours au même endroit
+                Button { Haptic.tap(); essential.toggle() } label: {
+                    Text(essential ? tr("COMPLET") : tr("BASIQUE")).font(.system(size: 11, weight: .heavy))
+                        .padding(.horizontal, 9).frame(height: 30)
+                        .background(essential ? AnyShapeStyle(WG.climb) : AnyShapeStyle(PanelBackground(dark: true)), in: Capsule())
+                        .foregroundStyle(essential ? .white : PI.ink)
+                }
+                .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
+            }
+            // enregistrement : point rouge + durée, au centre exact de l'écran
             Button { app.toggleRecording() } label: {
                 HStack(spacing: 6) {
                     Circle().fill(p.recording ? WG.bad : PI.dim).frame(width: 10, height: 10)
@@ -279,25 +306,6 @@ struct PilotView: View {
                 .padding(.horizontal, 12).frame(height: 40).background(PanelBackground(dark: true), in: Capsule())
             }
             .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
-            Spacer()
-            VStack(alignment: .trailing, spacing: 8) {
-                if !essential {
-                    VStack(spacing: 0) {
-                        Button { map.zoomIn() } label: { Image(systemName: "plus").frame(width: 44, height: 44) }.accessibilityLabel("Zoom avant")
-                        Divider().frame(width: 24)
-                        Button { map.zoomOut() } label: { Image(systemName: "minus").frame(width: 44, height: 44) }.accessibilityLabel("Zoom arrière")
-                    }
-                    .font(.system(size: 20, weight: .medium)).foregroundStyle(PI.ink)
-                    .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
-                }
-                Button { Haptic.tap(); essential.toggle() } label: {
-                    Text(essential ? tr("COMPLET") : tr("ESSENTIEL")).font(.system(size: 13, weight: .heavy))
-                        .padding(.horizontal, 12).frame(height: 40)
-                        .background(essential ? AnyShapeStyle(WG.climb) : AnyShapeStyle(PanelBackground(dark: true)), in: Capsule())
-                        .foregroundStyle(essential ? .white : PI.ink)
-                }
-                .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
-            }
         }
         .padding(.horizontal, 10).padding(.bottom, 8)
         .frame(maxHeight: .infinity, alignment: .bottom)
