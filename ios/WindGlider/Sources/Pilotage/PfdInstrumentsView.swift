@@ -139,19 +139,21 @@ struct VarioRail: View {
                 LinearGradient(stops: VarioPalette.shared.flashStops.map {
                     .init(color: WG.argb(($0.second as! KotlinLong).int64Value), location: VarioPalette.shared.fraction(ms: ($0.first as! KotlinDouble).doubleValue))
                 }, startPoint: .bottom, endPoint: .top)
-                .frame(width: 18, height: barH)
-                .overlay(Rectangle().stroke(WG.casing, lineWidth: 1.5))
+                // barre fine (JB : −40 %), terminée par des demi-cercles en haut et en bas
+                .frame(width: 11, height: barH)
+                .clipShape(Capsule())
+                .overlay(Capsule().stroke(WG.casing, lineWidth: 1.5))
                 // traits courts +4 / +2 / 0 / −2, le zéro plus long
                 ForEach([4.0, 2.0, 0.0, -2.0], id: \.self) { v in
-                    Rectangle().fill(v == 0 ? Color.white : WG.casing).frame(width: v == 0 ? 18 : 8, height: v == 0 ? 2 : 1.5)
+                    Rectangle().fill(v == 0 ? Color.white : WG.casing).frame(width: v == 0 ? 11 : 5, height: v == 0 ? 2 : 1.5)
                         .offset(x: 0, y: -CGFloat(VarioPalette.shared.fraction(ms: v)) * barH + 1)
                 }
                 if spiralMs.isFinite {
                     Triangle().stroke(ink, lineWidth: 2).frame(width: 10, height: 12)
-                        .offset(x: -22, y: -CGFloat(VarioPalette.shared.fraction(ms: spiralMs)) * barH + 6)
+                        .offset(x: -15, y: -CGFloat(VarioPalette.shared.fraction(ms: spiralMs)) * barH + 6)
                 }
                 if valid {
-                    Rectangle().fill(ink).frame(width: 30, height: 5).overlay(Rectangle().stroke(WG.casing, lineWidth: 1.5))
+                    Capsule().fill(ink).frame(width: 23, height: 5).overlay(Capsule().stroke(WG.casing, lineWidth: 1.5))
                         .offset(x: 6, y: -CGFloat(VarioPalette.shared.fraction(ms: ms)) * barH + 2.5)
                         .animation(.easeOut(duration: 0.8), value: ms)   // curseur lissé ≈ 1 s ; chiffre et son bruts
                 }
