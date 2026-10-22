@@ -1,5 +1,6 @@
 import CryptoKit
 import Foundation
+import Network
 import WindGliderShared
 
 /// Cartes hors ligne (relief + openAIP) : catalogue des packs régionaux d'Android, téléchargement vérifié par SHA-256.
@@ -15,6 +16,8 @@ final class PackStore: ObservableObject {
     @Published var catalogError: String?
     private var catalog: [PackInfo] = []
     private var task: Task<Void, Never>?
+    /// Téléchargement automatique tenté une fois par lancement (pas de boucle si le réseau échoue).
+    private var autoTried = false
 
     static let root: String = {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("packs")
@@ -34,6 +37,24 @@ final class PackStore: ObservableObject {
         installed = inst
         if let inst, active?.info != inst { active = IosPacks.shared.load(root: Self.root, info: inst) }
         if inst == nil { active = nil }
+        // première installation : sans carte, ni zones aériennes ni relief pour la marge. On la télécharge seule,
+        // en Wi-Fi seulement (jamais sur un forfait mobile) ; sinon le bouton « Télécharger » de Prévol reste là.
+        if inst == nil, available != nil, task == nil, !autoTried, await Self.onWifi() {
+            autoTried = true
+            download(club: club)
+        }
+    }
+
+    /// Réseau non facturé (Wi-Fi, Ethernet) et non restreint (mode données réduites).
+    nonisolated private static func onWifi() async -> Bool {
+        await withCheckedContinuation { cont in
+            let monitor = NWPathMonitor()
+            monitor.pathUpdateHandler = { path in
+                monitor.cancel()
+                cont.resume(returning: path.status == .satisfied && !path.isExpensive && !path.isConstrained)
+            }
+            monitor.start(queue: .global(qos: .utility))
+        }
     }
 
     private func loadCatalog() async {

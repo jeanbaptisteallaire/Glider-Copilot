@@ -157,11 +157,20 @@ struct PilotView: View {
 
     /// Sous le bandeau, seulement si nécessaire : capteur en défaut, démo (« dark cockpit »).
     @ViewBuilder private func statusLine(_ ds: PilotDisplay) -> some View {
-        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || app.demo {
+        let noZones = app.showAirspaces && app.airspaces.isEmpty
+        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || app.demo || noZones {
             HStack(spacing: 6) {
                 if ds.gpsAlert { badge("GPS") }
                 if ds.baroAlert { badge("BARO") }
                 if ds.dataAlert { badge("DATA") }
+                if noZones {
+                    // carte hors ligne absente : le dire plutôt que montrer une carte sans zones (ambre = prudence)
+                    Button { airspaceHint = true } label: {
+                        Label(tr("Zones : carte à télécharger"), systemImage: "square.3.layers.3d.slash")
+                            .font(.system(size: 13, weight: .semibold)).foregroundStyle(WG.warn)
+                            .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: true), in: Capsule())
+                    }
+                }
                 if app.demo {
                     Text(tr("DÉMO")).font(.system(size: 13, weight: .bold)).padding(.horizontal, 9).padding(.vertical, 4)
                         .background(WG.climb, in: Capsule()).foregroundStyle(.white)
