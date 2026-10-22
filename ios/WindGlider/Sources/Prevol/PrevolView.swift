@@ -44,6 +44,7 @@ struct PrevolView: View {
                     }
                     SensorsCard()
                     FlightSettingsCard()
+                    GlideSettingsCard()
                 }
                 .padding(16)
             }
@@ -512,5 +513,40 @@ struct ScoreRing: View {
         .frame(width: size, height: size)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(tr("Score du jour %@ sur 100, indicatif", "\(result.score)"))
+    }
+}
+
+
+/// Réglage du plané (JB, 22/10/2026) : finesse 10 / 20 / 30 et marge d'arrivée au terrain (0, +300 m ou autre).
+/// Alimente directement la marge de sécurité de Pilotage.
+struct GlideSettingsCard: View {
+    @EnvironmentObject var app: AppModel
+
+    private var custom: Bool { !SafetyConfig.companion.ARRIVAL_PRESETS.map { Int(truncating: $0) }.contains(app.arrivalMargin) }
+
+    var body: some View {
+        WGCard(title: tr("Plané"), systemImage: "arrow.down.right", tint: WG.brandInk) {
+            Text(tr("Finesse")).font(WG.subhead).foregroundStyle(WG.dim)
+            Picker(tr("Finesse"), selection: $app.finesse) {
+                ForEach(SafetyConfig.companion.FINESSES.map { Int(truncating: $0) }, id: \.self) { Text("F\($0)").tag($0) }
+            }
+            .pickerStyle(.segmented)
+            Text(tr("Marge d'arrivée au terrain")).font(WG.subhead).foregroundStyle(WG.dim).padding(.top, 4)
+            Picker(tr("Marge d'arrivée"), selection: Binding(get: { custom ? -1 : app.arrivalMargin }, set: { v in
+                app.arrivalMargin = v == -1 ? 200 : v
+            })) {
+                Text("0 m").tag(0)
+                Text("+300 m").tag(300)
+                Text(tr("Autre")).tag(-1)
+            }
+            .pickerStyle(.segmented)
+            if custom {
+                Stepper(value: $app.arrivalMargin, in: 0...1000, step: 50) {
+                    Text("+\(app.arrivalMargin) m").font(WG.number(20)).foregroundStyle(WG.sky)
+                }
+            }
+            Text(tr("Calcul indicatif de la marge de sécurité en Pilotage : finesse réduite par le vent, arrivée à la hauteur choisie au-dessus du terrain."))
+                .font(WG.caption).foregroundStyle(WG.dim)
+        }
     }
 }

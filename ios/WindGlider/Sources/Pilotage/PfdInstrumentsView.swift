@@ -47,6 +47,8 @@ struct SafetyBand: View {
                 Text(tr("Marge sécu. (m)")).font(.system(size: 13, weight: .medium)).foregroundStyle(PI.dim)
                 Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(marginColor)
                     .lineLimit(1).minimumScaleFactor(0.6)
+                    // centré sur la hauteur du tambour : marge et lecture d'altitude sur le même axe
+                    .frame(height: essential ? nil : 78)
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(tr("Marge %@ mètres", marginText))

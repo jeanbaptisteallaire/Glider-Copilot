@@ -125,6 +125,17 @@ data class SafetyConfig(
          * finesse 20 ; en finesse 10, la marge est calculée jusqu'au terrain lui-même.
          */
         fun forFinesse(finesse: Int) = SafetyConfig(finesse.toDouble(), arrivalMarginM = if (finesse >= 20) 300.0 else 0.0)
+
+        /** Finesses proposées en Prévol (JB, 22/10/2026). */
+        val FINESSES = listOf(10, 20, 30)
+        /** Marges d'arrivée proposées (m au-dessus du terrain) ; « autre » = saisie bornée par [arrivalBounded]. */
+        val ARRIVAL_PRESETS = listOf(0, 300)
+
+        fun arrivalBounded(m: Int): Int = m.coerceIn(0, 1000)
+
+        /** Réglage Prévol : finesse et marge d'arrivée choisies séparément par le pilote. */
+        fun of(finesse: Int, arrivalMarginM: Int) =
+            SafetyConfig(finesse.coerceIn(5, 60).toDouble(), arrivalMarginM = arrivalBounded(arrivalMarginM).toDouble())
     }
 }
 

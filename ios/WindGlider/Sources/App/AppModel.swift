@@ -40,7 +40,17 @@ final class AppModel: ObservableObject {
     @Published var soundOn: Bool { didSet { UserDefaults.standard.set(soundOn, forKey: "varioSound"); engine.setSound(on: soundOn); soundOn ? tone.start() : tone.stop() } }
     @Published var voiceOn: Bool { didSet { UserDefaults.standard.set(voiceOn, forKey: "voice"); voice.enabled = voiceOn } }
     @Published var autoTakeoff: Bool { didSet { UserDefaults.standard.set(autoTakeoff, forKey: "autoTakeoff"); engine.setAutoTakeoff(on: autoTakeoff) } }
-    @Published var finesse: Int = 20 { didSet { engine.setFinesse(value: Int32(finesse)) } }
+    /// Finesse (10, 20, 30) et marge d'arrivée au terrain (m), réglées en Prévol et mémorisées (JB, 22/10/2026).
+    @Published var finesse: Int = UserDefaults.standard.object(forKey: "glide.finesse") as? Int ?? 20 {
+        didSet { engine.setFinesse(value: Int32(finesse)); UserDefaults.standard.set(finesse, forKey: "glide.finesse") }
+    }
+    @Published var arrivalMargin: Int = UserDefaults.standard.object(forKey: "glide.arrival") as? Int ?? 300 {
+        didSet { engine.setArrivalMargin(meters: Int32(arrivalMargin)); UserDefaults.standard.set(arrivalMargin, forKey: "glide.arrival") }
+    }
+    /// À appeler une fois le moteur créé : il reçoit les réglages mémorisés.
+    func applyGlideSettings() {
+        engine.setFinesse(value: Int32(finesse)); engine.setArrivalMargin(meters: Int32(arrivalMargin))
+    }
     @Published var demo = false { didSet { engine.setDemo(on: demo) } }
     /// Build de développement : `-demoFlight` lance le planeur démo dès l'ouverture (captures au simulateur).
     func applyLaunchDemo() {
@@ -171,6 +181,7 @@ final class AppModel: ObservableObject {
     func startEngine() {
         sensors.requestPermission()
         sensors.start()
+        applyGlideSettings()
         engine.start()
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.25, repeats: true) { [weak self] _ in

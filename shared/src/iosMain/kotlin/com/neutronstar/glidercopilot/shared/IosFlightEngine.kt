@@ -292,6 +292,10 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         safety.selector.manual = id?.let { i -> fields.firstOrNull { it.id == i } }
     }
     fun setFinesse(value: Int) { finesse = value }
+    /** Marge d'arrivée au terrain réglée en Prévol (m) ; null = règle historique liée à la finesse (300 m en F20). */
+    private var arrivalM: Int? = null
+    fun setArrivalMargin(meters: Int) { arrivalM = SafetyConfig.arrivalBounded(meters) }
+    private fun config(): SafetyConfig = arrivalM?.let { SafetyConfig.of(finesse, it) } ?: SafetyConfig.forFinesse(finesse)
     fun setSound(on: Boolean) { soundOn = on; if (!on) onTone(0.0) }
     fun setAutoTakeoff(on: Boolean) { autoTakeoff = on }
 
@@ -372,7 +376,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         lastAltitudeM = alt
         val armed = if (demo) true else snap.recording
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
-        safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, SafetyConfig.forFinesse(finesse), fix.time, armed) }.getOrNull()
+        safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, config(), fix.time, armed) }.getOrNull()
     }
 
     private fun forecastWind(): Wind? {
@@ -522,7 +526,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             fieldElevM = r?.field?.elevationM ?: 0.0,
             routeKm = r?.distanceKm ?: 0.0,
             profileEndText = r?.let { "${formatFixed(it.distanceKm, 1, decimalComma = true)} km · ${it.field.code} ${it.field.elevationM.roundToInt()} m" } ?: "",
-            finesseNote = "+${SafetyConfig.forFinesse(finesse).arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
+            finesseNote = "+${config().arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
             flightTimeText = chrono(snap?.flightSeconds ?: 0),
             spiralMs = snap?.avgSpiralMs ?: Double.NaN,
             windSpeedKmh = wind?.speedKmh ?: 0.0,

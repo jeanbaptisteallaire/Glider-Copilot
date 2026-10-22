@@ -138,7 +138,7 @@ struct PilotView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(tr("Choisir le terrain de référence"))
-                    Button { Haptic.tap(); app.finesse = app.finesse == 10 ? 20 : 10 } label: {
+                    Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {   // 10 → 20 → 30
                         Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: true))
                             .padding(.horizontal, 8).padding(.vertical, 3)
                             .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
@@ -342,7 +342,7 @@ struct ProfileStrip: View {
 
     var body: some View {
         let pts = p.profile
-        let arrival = app.finesse >= 20 ? 300.0 : 0.0   // tour de piste en finesse 20 seulement
+        let arrival = Double(app.arrivalMargin)   // marge d'arrivée réglée en Prévol
         let total = max(pts.last?.sKm ?? 0, p.routeKm)
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
@@ -360,7 +360,7 @@ struct ProfileStrip: View {
                     .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [5, 4])).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad)
                 PointMark(x: .value("km", total), y: .value("sécu", p.fieldElevM + arrival))
                     .symbolSize(20).foregroundStyle(PI.route)
-                    .annotation(position: .top, alignment: .trailing) { if arrival > 0 { Text("+300").font(WG.caption2).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad) } }
+                    .annotation(position: .top, alignment: .trailing) { if arrival > 0 { Text("+\(Int(arrival))").font(WG.caption2).foregroundStyle(darkMode ? Color(red: 1.0, green: 0.6, blue: 0.1) : WG.bad) } }
             }
         }
         .chartXScale(domain: 0...max(total, 0.1))
