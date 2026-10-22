@@ -44,7 +44,7 @@ struct MyFlightsView: View {
     @State private var photo = PilotProfile.loadPhoto()
     @State private var photoItem: PhotosPickerItem?
     /// « Gérer mon profil » : replié par défaut, ouvert d'office tant que le profil n'est pas créé
-    @State private var managing = false
+    @State private var managing = PilotProfile.load().isEmpty
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
 
@@ -131,10 +131,10 @@ struct MyFlightsView: View {
                             if let photo { Image(uiImage: photo).resizable().scaledToFill() }
                             else { (wgImage("wg_avatar") ?? Image(systemName: "person.circle")).resizable().scaledToFill() }
                         }
-                        .frame(width: 64, height: 64).clipShape(Circle())
-                        .overlay(Circle().stroke(.white, lineWidth: 2))
-                        Image(systemName: "camera.fill").font(.system(size: 11, weight: .bold)).foregroundStyle(.white)
-                            .frame(width: 22, height: 22).background(WG.sky, in: Circle())
+                        .frame(width: 128, height: 128).clipShape(Circle())   // JB : deux fois plus grande
+                        .overlay(Circle().stroke(.white, lineWidth: 3))
+                        Image(systemName: "camera.fill").font(.system(size: 14, weight: .bold)).foregroundStyle(.white)
+                            .frame(width: 30, height: 30).background(WG.sky, in: Circle())
                     }
                 }
                 .accessibilityLabel(tr("Changer la photo de profil"))
@@ -156,7 +156,7 @@ struct MyFlightsView: View {
 
     /// « Gérer mon profil » : un toucher déplie toutes les options (profil, photo, sauvegarde en ligne, suppression du compte).
     private var manageCard: some View {
-        let open = managing || profile.isEmpty
+        let open = managing
         return VStack(alignment: .leading, spacing: 12) {
             Button { withAnimation(.smooth(duration: 0.3)) { managing.toggle() } } label: {
                 HStack {
@@ -168,29 +168,34 @@ struct MyFlightsView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .disabled(profile.isEmpty)
+            .accessibilityHint(open ? tr("Replier") : tr("Déplier"))
             if open {
-                if profile.isEmpty {
-                    Text(tr("Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien."))
-                        .font(WG.subhead).foregroundStyle(WG.dim)
+                // contenu replié vers le haut (sous le titre), en fondu
+                VStack(alignment: .leading, spacing: 12) {
+                    if profile.isEmpty {
+                        Text(tr("Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien."))
+                            .font(WG.subhead).foregroundStyle(WG.dim)
+                    }
+                    Button { editing = true } label: {
+                        Text(profile.isEmpty ? tr("Créer mon profil pilote") : tr("Modifier mon profil")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
+                            .background(profile.isEmpty ? WG.sky : WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14))
+                            .foregroundStyle(profile.isEmpty ? .white : WG.sky)
+                    }
+                    PhotosPicker(selection: $photoItem, matching: .images) {
+                        Label(tr("Changer la photo"), systemImage: "camera").font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
+                            .background(WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14)).foregroundStyle(WG.sky)
+                    }
+                    // sauvegarde en ligne et suppression du compte (comme Android)
+                    AccountCard()
                 }
-                Button { editing = true } label: {
-                    Text(profile.isEmpty ? tr("Créer mon profil pilote") : tr("Modifier mon profil")).font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
-                        .background(profile.isEmpty ? WG.sky : WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14))
-                        .foregroundStyle(profile.isEmpty ? .white : WG.sky)
-                }
-                PhotosPicker(selection: $photoItem, matching: .images) {
-                    Label(tr("Changer la photo"), systemImage: "camera").font(WG.headline).frame(maxWidth: .infinity, minHeight: 50)
-                        .background(WG.sky.opacity(0.14), in: RoundedRectangle(cornerRadius: 14)).foregroundStyle(WG.sky)
-                }
-                // sauvegarde en ligne et suppression du compte (comme Android)
-                AccountCard()
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(WG.cardFill, in: RoundedRectangle(cornerRadius: 16))
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(WG.line))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 
     private var stats: some View {
