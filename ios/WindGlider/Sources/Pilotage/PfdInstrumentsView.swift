@@ -54,7 +54,7 @@ struct SafetyBand: View {
                     .accessibilityLabel(tr("Marge %@ mètres", marginText))
                     // centré sur la hauteur du tambour : marge et lecture d'altitude sur le même axe
                     .frame(height: essential ? nil : 78)
-                    .overlay(alignment: .bottomLeading) { if !essential, let accessory { accessory.offset(y: 2) } }
+                    .overlay(alignment: .bottomLeading) { if !essential, let accessory { accessory.offset(y: 6) } }
                     .offset(y: essential ? 0 : -16)
             }
             if !essential {

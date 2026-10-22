@@ -202,6 +202,15 @@ struct PilotView: View {
     private func edges(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 8) {
+                if !ds.showProfile {
+                    // en tête de colonne ; coupe dépliée : vent, orientation et recentrage remontent sous elle.
+                    // coupe terrain repliée : même taille et même forme que le vent, montagne blanche
+                    Button { Haptic.tap(); showProfile = true } label: {
+                        Image(systemName: "mountain.2.fill").font(.system(size: 18, weight: .semibold)).foregroundStyle(.white)
+                            .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
+                    }
+                    .accessibilityLabel(tr("Afficher la coupe du terrain"))
+                }
                 // vent : flèche + vitesse ; flèche en pointillés si c'est une prévision
                 VStack(spacing: 0) {
                     if p.windKnown {
@@ -214,14 +223,6 @@ struct PilotView: View {
                 }
                 .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                 .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
-                if !ds.showProfile {
-                    // coupe terrain repliée : même taille et même forme que le vent, montagne blanche
-                    Button { Haptic.tap(); showProfile = true } label: {
-                        Image(systemName: "mountain.2.fill").font(.system(size: 18, weight: .semibold)).foregroundStyle(.white)
-                            .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
-                    }
-                    .accessibilityLabel(tr("Afficher la coupe du terrain"))
-                }
                 // orientation de la vue : AUTO (nord en spirale, route sinon) → N↑ → RTE ; toujours visible
                 Button { Haptic.tap(); map.cycleOrientation() } label: {
                     Group {
@@ -332,7 +333,7 @@ struct PilotView: View {
 private extension View {
     /// Panneau de Pilotage : dégradé lavande Godspeed (sombre) ou blanc à 90 % (clair), coins arrondis, sans ombre noire.
     func panel(_ dark: Bool) -> some View {
-        padding(.horizontal, 12).padding(.vertical, 8)
+        padding(.horizontal, 12).padding(.top, 8).padding(.bottom, 4)   // bas remonté de 4 pt (place inutile)
             .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
     }
 }
