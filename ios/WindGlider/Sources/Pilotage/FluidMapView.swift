@@ -360,8 +360,8 @@ struct FluidMapView: UIViewRepresentable {
             if let a = o as? AirspaceOverlay {
                 let r = MKPolygonRenderer(polygon: a.polygon)
                 let c = UIColor(WG.airspace(a.family))
-                // Godspeed : trait de 2 pt (plein ou tirets selon la famille) + voile léger ; visibles sur satellite
-                r.strokeColor = c; r.fillColor = c.withAlphaComponent(WG.airspaceFill(a.family)); r.lineWidth = 2
+                // Godspeed : trait de 1 pt (JB : 2 pt trop épais) (plein ou tirets selon la famille) + voile léger ; visibles sur satellite
+                r.strokeColor = c; r.fillColor = c.withAlphaComponent(WG.airspaceFill(a.family)); r.lineWidth = 1
                 let dash = WG.airspaceDash(a.family)
                 if !dash.isEmpty { r.lineDashPattern = dash.map { NSNumber(value: Double($0)) } }
                 return r

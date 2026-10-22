@@ -442,7 +442,7 @@ struct FlightMapView: View {
             ForEach(airspaces, id: \.id) { a in
                 MapPolygon(coordinates: coords(a))
                     .foregroundStyle(WG.airspace(a.family).opacity(WG.airspaceFill(a.family)))
-                    .stroke(WG.airspace(a.family), style: StrokeStyle(lineWidth: 2, dash: WG.airspaceDash(a.family)))
+                    .stroke(WG.airspace(a.family), style: StrokeStyle(lineWidth: 1, dash: WG.airspaceDash(a.family)))
             }
             ForEach(Array(segments.enumerated()), id: \.offset) { _, s in
                 MapPolyline(coordinates: s.coords).stroke(WG.varioFlash(s.climb), lineWidth: 4)
