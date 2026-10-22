@@ -539,16 +539,18 @@ final class PlaneView: MKAnnotationView {
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         frame = CGRect(x: 0, y: 0, width: 120, height: 36)
         arrow.frame = CGRect(x: 52, y: 0, width: 16, height: 16); arrow.contentMode = .center
-        label.font = UIFont(name: "Inter-SemiBold", size: 11) ?? .systemFont(ofSize: 11, weight: .semibold)
-        label.textColor = UIColor(WG.brandInk); label.backgroundColor = UIColor(WG.card).withAlphaComponent(0.85)
-        label.layer.cornerRadius = 4; label.clipsToBounds = true; label.textAlignment = .center
+        // Godspeed : flèche blanche et étiquette blanche à halo sombre, sans cartouche, lisibles sur le satellite
+        label.font = .monospacedDigitSystemFont(ofSize: 13, weight: .semibold)
+        label.textColor = .white; label.backgroundColor = .clear
+        for l in [arrow.layer, label.layer] { l.shadowColor = UIColor.black.cgColor; l.shadowOpacity = 0.9; l.shadowRadius = 1.5; l.shadowOffset = .zero }
+        label.textAlignment = .center
         addSubview(arrow); addSubview(label)
         collisionMode = .rectangle
     }
     required init?(coder: NSCoder) { fatalError() }
     func configure(_ t: TrafficPlane, mapHeading: Double) {
-        arrow.image = UIImage(systemName: "location.north.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 13))?
-            .withTintColor(UIColor(t.circling ? WG.climb : WG.brandInk), renderingMode: .alwaysOriginal)
+        arrow.image = UIImage(systemName: "location.north.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 15))?
+            .withTintColor(t.circling ? UIColor(WG.climb) : .white, renderingMode: .alwaysOriginal)
         arrow.transform = CGAffineTransform(rotationAngle: ((t.trackDeg?.doubleValue ?? 0) - mapHeading) * .pi / 180)
         let name = t.fullLabel.isEmpty ? (t.shortLabel.isEmpty ? t.typeLabel : t.shortLabel) : t.fullLabel
         label.text = name + (t.relativeAltText.isEmpty ? "" : " " + t.relativeAltText)
