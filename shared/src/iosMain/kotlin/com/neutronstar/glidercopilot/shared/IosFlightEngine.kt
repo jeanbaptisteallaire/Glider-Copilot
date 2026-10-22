@@ -135,6 +135,11 @@ data class PilotUi(
     val finesseNote: String,
     /** Durée du vol (chrono), affichée sur la carte. */
     val flightTimeText: String,
+    /** Moyenne de la spirale (m/s), NaN si inconnue : index creux sur la barre vario. */
+    val spiralMs: Double = Double.NaN,
+    /** Vent : vitesse (km/h) et origine prévision (flèche en pointillés) plutôt que mesure. */
+    val windSpeedKmh: Double = 0.0,
+    val windForecast: Boolean = false,
 )
 
 /**
@@ -519,6 +524,9 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             profileEndText = r?.let { "${formatFixed(it.distanceKm, 1, decimalComma = true)} km · ${it.field.code} ${it.field.elevationM.roundToInt()} m" } ?: "",
             finesseNote = "+${SafetyConfig.forFinesse(finesse).arrivalMarginM.roundToInt()} m · " + (wind?.let { "vent ${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —"),
             flightTimeText = chrono(snap?.flightSeconds ?: 0),
+            spiralMs = snap?.avgSpiralMs ?: Double.NaN,
+            windSpeedKmh = wind?.speedKmh ?: 0.0,
+            windForecast = wind?.source == WindSource.FORECAST,
         )
     }
 

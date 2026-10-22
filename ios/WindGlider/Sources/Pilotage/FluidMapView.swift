@@ -30,7 +30,7 @@ struct FluidMapView: UIViewRepresentable {
         v.delegate = context.coordinator
         // échelle en bas à gauche, sous les pastilles GPS · BARO · DATA, juste au-dessus du logo Plans
         let scale = MKScaleView(mapView: v)
-        scale.scaleVisibility = .visible
+        scale.scaleVisibility = .hidden   // épuré : aucune utilité en vol
         scale.legendAlignment = .leading
         scale.translatesAutoresizingMaskIntoConstraints = false
         v.addSubview(scale)

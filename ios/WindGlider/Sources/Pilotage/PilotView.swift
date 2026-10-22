@@ -13,7 +13,7 @@ enum PI {
     static var dark: Bool { UserDefaults.standard.bool(forKey: "pilot.dark") }
     static var ink: Color { dark ? .white : WG.brandInk }
     static var dim: Color { dark ? Color.white.opacity(0.62) : WG.dim }
-    static var box: Color { dark ? .black : WG.card }
+    static var box: Color { dark ? WG.lavenderBottom : WG.card }   // Godspeed : lavande, jamais noir pur
     static var good: Color { dark ? Color(red: 0.80, green: 1.0, blue: 0.70) : WG.good }      // vert fluo très clair
     static var route: Color { dark ? Color(red: 0.86, green: 0.72, blue: 1.0) : WG.route }    // violet fluo très clair
     /// marge proche du seuil (PilotDeclutter.CAUTION_M) : orange de la charte, plus sombre en clair pour le contraste
@@ -35,16 +35,20 @@ enum Haptic {
     static func tap() { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
 }
 
+/// Écran de vol épuré (JB + revue pilote / FH, 22/10/2026) : chaque information une seule fois, centre de la carte libre.
+/// Haut : marge + altitude (tambour, ruban horizontal) à gauche, terrain à droite. Bord droit : vario vertical.
+/// Bas : réglages « ⋯ », enregistrement, zoom, Essentiel. Essentiel : la marge seule (et la distance au terrain).
 struct PilotView: View {
     @EnvironmentObject var app: AppModel
+    @EnvironmentObject var map: MapControl
     @State private var choosingField = false
     @AppStorage("pilot.showProfile") private var showProfile = true
     @AppStorage("pilot.showVario") private var showVario = true
     @State private var topInset: CGFloat = 0
-    @State private var bottomInset: CGFloat = 0
     @AppStorage("pilot.dark") private var dark = false
-    /// V5 : mode Essentiel (marge, distance, terrain ; ni coupe ni vario) ; mémorisé
+    /// V5 : mode Essentiel (la marge seule) ; mémorisé
     @AppStorage("pilot.essential") private var essential = false
+    @State private var airspaceHint = false
 
     var body: some View {
         let p = app.pilot
@@ -53,110 +57,31 @@ struct PilotView: View {
             marginKnown: p.marginKnown, marginM: p.marginM,
             gpsOk: app.status.gps, baroOk: app.status.baro, dataOk: app.status.data,
             ognConnected: app.trafficSnap?.connected ?? false)
-        VStack(spacing: 0) {
-            // V3 : la carte se déroule derrière l'en-tête (quatre boîtes blanches à 90 %) et la coupe
-            ZStack(alignment: .top) {
-                // V3 : carte fluide (60 images/s, planeur prédit) ; -mapV2 au lancement = carte de la V2
-                if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
-                    FlightMapView(p: p, airspaces: app.airspaces)
-                } else {
-                    FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: bottomInset, dark: dark)
-                        // la carte passe toujours sous le vario et la barre d'onglets : ouvrir ou fermer un panneau
-                        // ne redimensionne jamais la carte (planeur immobile à l'écran)
-                        .ignoresSafeArea(.container, edges: .bottom)
-                }
-                // tout en bas au centre : REC au-dessus du chrono du vol, dans la même petite boîte
-                Button { app.toggleRecording() } label: {
-                    VStack(spacing: 1) {
-                        HStack(spacing: 4) {
-                            Circle().fill(p.recording ? .white : WG.bad).frame(width: 7, height: 7)
-                            Text(tr("REC")).font(WG.caption2.weight(.bold))
-                        }
-                        .foregroundStyle(p.recording ? .white : WG.bad)
-                        Text(p.flightTimeText).font(WG.caption.monospacedDigit()).foregroundStyle(p.recording ? .white : PI.ink)
-                    }
-                    .padding(.horizontal, 10).padding(.vertical, 4)
-                    .background(p.recording ? WG.bad : PI.box.opacity(0.92), in: RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: .black.opacity(0.15), radius: 2)
-                }
-                .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom).padding(.bottom, bottomInset + 4)   // V5 : au-dessus du vario
-
-                // mode sombre : vignettage noir très court sur les bords (les boîtes noires s'y fondent)
-                if dark {
-                    Rectangle().strokeBorder(Color.black, lineWidth: 26).blur(radius: 14)
-                        .padding(-8).ignoresSafeArea().allowsHitTesting(false)
-                    // sous les boîtes du haut : fond noir qui se fond dans la carte
-                    LinearGradient(stops: [.init(color: .black, location: 0), .init(color: .black.opacity(0.85), location: 0.55),
-                                           .init(color: .clear, location: 1)], startPoint: .top, endPoint: .bottom)
-                        .frame(height: max(topInset, 150) + 30).frame(maxHeight: .infinity, alignment: .top)
-                        .allowsHitTesting(false)
-                }
-                MapOverlay(p: p, ds: ds, showProfile: $showProfile, showVario: $showVario, essential: $essential).padding(.top, topInset).padding(.bottom, bottomInset)
-                // LIGHT PFD (JB, 22/10/2026) : ruban d'altitude à gauche (marge de sécurité), vario en barre à droite ;
-                // Essentiel : seule la marge reste (en-tête), ni ruban ni barre
-                if !essential {
-                    // posés en haut à gauche, sous l'en-tête : les boutons de la carte restent libres
-                    HStack(alignment: .top, spacing: 2) {
-                        AltitudeTapeView(state: AltitudeTape.shared.state(altM: p.altText == "—" ? nil : KotlinDouble(value: p.currentAltM),
-                                                                          minimumM: KotlinDouble(value: p.requiredAltM), marginKnown: p.marginKnown),
-                                         altM: p.currentAltM, dark: dark)
-                        // vario juste à droite de l'altitude, comme sur un PFD : un seul balayage de l'œil
-                        if ds.showVario {
-                            VarioColumn(ms: p.varioMs, text: p.varioText, valid: p.varioText != "—", dark: dark)
-                        }
-                        Spacer(minLength: 0)
-                    }
-                    .padding(.horizontal, 6)
-                    .padding(.top, topInset + 44).padding(.bottom, bottomInset)
-                    .frame(maxHeight: .infinity, alignment: .top)
-                    .allowsHitTesting(false)
-                }
-                VStack(spacing: 6) {
-                    header(p, ds)
-                    // interrupteur « relief » : toujours au même endroit, coin haut droit de la boîte de coupe
-                    // (caché en Essentiel, comme la coupe ; en Complet la coupe se rouvre quand la marge devient faible)
-                    ZStack(alignment: .topTrailing) {
-                    if ds.showProfile {
-                        VStack(spacing: 0) {
-                            ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
-                            Text(trDyn(p.fieldElevText)).font(WG.caption).foregroundStyle(PI.dim)
-                                .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
-                        }
-                        .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
-                        .padding(.horizontal, 8)
-                    } else if !essential {
-                        Color.clear.frame(height: 30)
-                    }
-                    if !essential {
-                        PanelToggle(isOn: $showProfile, label: tr("relief"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.top, 2)
-                    }
-                    }
-                }
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
-                VStack(alignment: .leading, spacing: 0) {
-                // vario : même traitement que la coupe ; interrupteur fixe dans le coin bas droit de la boîte
-                ZStack(alignment: .bottomTrailing) {
-                    if ds.showVario {
-                        varioBar(p, details: ds.showVarioDetails)
-                            .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 14))
-                            .padding(.horizontal, 8)
-                    } else {
-                        Color.clear.frame(height: 30)
-                    }
-                    if !essential {
-                        PanelToggle(isOn: $showVario, label: tr("vario"), dark: true, scale: 1.2).padding(.trailing, 10).padding(.bottom, 2)
-                    }
-                }
-                .padding(.bottom, 4)
-                }
-                .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { bottomInset = $0 }
-                .frame(maxHeight: .infinity, alignment: .bottom)
+        ZStack(alignment: .top) {
+            if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
+                FlightMapView(p: p, airspaces: app.airspaces)
+            } else {
+                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark)   // mentions Plans au-dessus des boutons du bas
+                    .ignoresSafeArea(.container, edges: .bottom)
             }
+            VStack(spacing: 6) {
+                header(p, ds)
+                statusLine(ds)
+                if ds.showProfile {
+                    VStack(spacing: 0) {
+                        ProfileStrip(p: p).frame(height: 92).padding(.bottom, 10)
+                        Text(trDyn(p.fieldElevText)).font(.system(size: 12)).foregroundStyle(PI.dim)
+                            .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
+                    }
+                    .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                    .padding(.horizontal, 8)
+                }
+            }
+            .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { topInset = $0 }
+            if !essential { edges(p, ds).padding(.top, topInset + 6) }
+            bottomBar(p, ds)
         }
         .background(PI.box)
-        // V5 (JB, 19/10/2026) : tous les textes plus gras, même taille
-        .fontWeight(dark ? .bold : .semibold)
         .animation(.easeInOut(duration: 0.25), value: essential)
         .animation(.easeInOut(duration: 0.25), value: ds.showProfile)
         // marge qui passe sous le seuil (orange ou rouge) : la coupe se rouvre seule ; le pilote peut la refermer
@@ -164,147 +89,195 @@ struct PilotView: View {
             let low: (MarginLevel) -> Bool = { $0 == .caution || $0 == .alarm }
             if low(new) && !low(old) { showProfile = true }
         }
-        .statusBarHidden(dark)   // mode sombre : heure et batterie noires illisibles sur le bandeau noir
         .toolbarColorScheme(dark ? .dark : .light, for: .tabBar)
         .toolbarBackground(dark ? .visible : .automatic, for: .tabBar)
-        .toolbarBackground(dark ? Color.black : Color.clear, for: .tabBar)
+        .toolbarBackground(dark ? WG.lavenderBottom : Color.clear, for: .tabBar)
         .animation(.easeInOut(duration: 0.25), value: dark)
         .sheet(isPresented: $choosingField) { FieldPicker().environmentObject(app).presentationDetents([.medium]) }
+        .alert(tr("Zones aéronautiques"), isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
+            Text(tr("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP)."))
+        }
         .onAppear { UIApplication.shared.isIdleTimerDisabled = true; app.applyLaunchDemo() }
         .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
     }
 
-    // MARK: en-tête : marge, distance, finesse
+    // MARK: haut : sécurité à gauche, terrain à droite
 
     private func header(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
-        let marginColor = PI.marginColor(ds.marginLevel)
-        let f10 = app.finesse == 10
+        let tape = AltitudeTape.shared.state(altM: p.altText == "—" ? nil : KotlinDouble(value: p.currentAltM),
+                                             minimumM: KotlinDouble(value: p.requiredAltM), marginKnown: p.marginKnown)
+        let low = ds.marginLevel == .caution || ds.marginLevel == .alarm
         return HStack(alignment: .top, spacing: 6) {
-            // gauche : marge (sans unité, évidente), SÉCU, ALT ; cadre coloré seulement en attention / alarme
-            VStack(alignment: .leading, spacing: 0) {
-                Text(tr("Marge sécu.")).font(WG.footnote).foregroundStyle(marginColor)
-                Text(p.marginText).font(PI.number(40)).foregroundStyle(marginColor)
-                    .lineLimit(1).minimumScaleFactor(0.5)
-                if ds.showHeaderDetails {
-                    Spacer(minLength: 2)
-                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text(tr("SÉCU")).font(WG.caption).foregroundStyle(PI.dim); Text(p.secuText).font(PI.number(16))
-                    }
-                    HStack(alignment: .firstTextBaseline, spacing: 4) {
-                        Text(tr("ALT")).font(WG.caption).foregroundStyle(PI.dim); Text(p.altText).font(PI.number(16))
-                    }
+            VStack(alignment: .leading, spacing: 2) {
+                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, altM: p.currentAltM, dark: dark, essential: essential)
+                if essential {
+                    // la seule autre information de survie : où est le terrain
+                    Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(PI.ink)
                 }
             }
-            .lineLimit(1)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .headerBox()
-            .overlay {
-                if ds.marginLevel == .caution || ds.marginLevel == .alarm {
-                    RoundedRectangle(cornerRadius: 12).stroke(marginColor, lineWidth: 3)
-                }
-            }
-            // centre : finesse (haut) et cap GPS (bas) ; absents en Essentiel
-            if ds.showHeaderDetails {
-            VStack(spacing: 6) {
-                VStack(spacing: 4) {
-                    HStack(spacing: 4) {
-                        // F20 : « Fin. +300 m » (tour de piste) ; F10 : « Finesse », sans les 300 m (JB, 12/10/2026)
-                        Text(f10 ? tr("Finesse") : tr("Fin.")).font(WG.footnote)
-                        if !f10 { Text("+300 m").font(WG.caption2).foregroundStyle(PI.dim) }
-                    }
-                    .lineLimit(1).fixedSize()
-                    // un seul bouton : touche = bascule finesse 10 ⇄ 20
-                    Button { Haptic.tap(); app.finesse = f10 ? 20 : 10 } label: {
-                        HStack(alignment: .firstTextBaseline, spacing: 0) {
-                            Text("F").font(WG.caption2)
-                            Text("\(app.finesse)").font(PI.number(20))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .panel(dark)
+            .overlay { if low { RoundedRectangle(cornerRadius: 14).stroke(PI.marginColor(ds.marginLevel), lineWidth: 3) } }
+            if !essential {
+                // terrain : code, distance, route (violet = navigation), finesse touchable
+                VStack(alignment: .trailing, spacing: 2) {
+                    Button { choosingField = true } label: {
+                        VStack(alignment: .trailing, spacing: 0) {
+                            HStack(spacing: 4) {
+                                Text(p.fieldCode).font(.system(size: 17, weight: .semibold))
+                                Image(systemName: "chevron.down").font(.system(size: 11, weight: .bold)).foregroundStyle(PI.route)
+                            }
+                            HStack(alignment: .firstTextBaseline, spacing: 2) {
+                                Text(p.distanceText).font(WG.pfd(32, .bold)).minimumScaleFactor(0.6)
+                                Text("km").font(.system(size: 13)).foregroundStyle(PI.dim)
+                            }
+                            Text(p.bearingText).font(WG.pfd(22)).foregroundStyle(PI.route)
                         }
-                        .lineLimit(1).fixedSize()
-                        .padding(.horizontal, 10).padding(.vertical, 5)
-                        .background(WG.sky.opacity(0.15), in: RoundedRectangle(cornerRadius: 8))
-                        .foregroundStyle(WG.sky)
+                        .foregroundStyle(PI.ink)
                     }
-                }
-                .frame(maxWidth: .infinity).headerBox()
-                VStack(spacing: 0) {
-                    Text(tr("CAP")).font(WG.footnote)
-                    Text(p.hasPosition ? "\(Int(p.trackDeg.rounded()) % 360)°" : "—").font(PI.number(20)).monospacedDigit()
-                }
-                .lineLimit(1)
-                .frame(maxWidth: .infinity).headerBox()
-                .accessibilityElement(children: .combine)
-            }
-            .frame(width: 96)
-            }
-            // droite : distance, terrain, cap vers le terrain (même taille que le cap GPS)
-            Button { choosingField = true } label: {
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text(tr("Dist. ter.")).font(WG.footnote).foregroundStyle(PI.dim)
-                    HStack(alignment: .firstTextBaseline, spacing: 2) {
-                        Text(p.distanceText).font(PI.number(32)).minimumScaleFactor(0.6)
-                        Text("km").font(WG.caption)
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(tr("Choisir le terrain de référence"))
+                    Button { Haptic.tap(); app.finesse = app.finesse == 10 ? 20 : 10 } label: {
+                        Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: dark))
+                            .padding(.horizontal, 8).padding(.vertical, 3)
+                            .overlay(Capsule().stroke(WG.selected(dark: dark).opacity(0.6)))
                     }
-                    Spacer(minLength: 2)
-                    HStack(spacing: 4) {
-                        Text(p.fieldCode).font(WG.headline).foregroundStyle(PI.ink)
-                        Image(systemName: "chevron.down").font(.caption2).foregroundStyle(PI.route)
-                    }
-                    Text(p.bearingText).font(PI.number(20)).foregroundStyle(PI.route)
+                    .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))
                 }
                 .lineLimit(1)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
-                .headerBox()
+                .panel(dark)
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(tr("Choisir le terrain de référence"))
         }
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, 8).padding(.top, 4)
-        .foregroundStyle(PI.ink)
     }
 
-    // MARK: vario
+    /// Sous le bandeau, seulement si nécessaire : capteur en défaut, démo (« dark cockpit »).
+    @ViewBuilder private func statusLine(_ ds: PilotDisplay) -> some View {
+        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || app.demo {
+            HStack(spacing: 6) {
+                if ds.gpsAlert { badge("GPS") }
+                if ds.baroAlert { badge("BARO") }
+                if ds.dataAlert { badge("DATA") }
+                if app.demo {
+                    Text(tr("DÉMO")).font(.system(size: 13, weight: .bold)).padding(.horizontal, 9).padding(.vertical, 4)
+                        .background(WG.climb, in: Capsule()).foregroundStyle(.white)
+                }
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+        }
+    }
 
-    private func varioBar(_ p: PilotUi, details: Bool) -> some View {
-        HStack(alignment: .center) {
-            VStack(spacing: 6) {
-                // le chiffre et l'échelle sont dans la barre verticale de la carte : ici, la source et les moyennes
-                Text(trDyn(p.varioLabel)).font(WG.footnote).foregroundStyle(PI.dim).frame(maxWidth: .infinity, alignment: .leading)
-                if details {
-                    HStack {
-                        avg(tr("Spirale"), p.spiralText); avg(tr("Pompe"), p.thermalText); avg(tr("Jour"), p.dayText)
+    private func badge(_ label: String) -> some View {
+        HStack(spacing: 4) { Circle().fill(WG.bad).frame(width: 7, height: 7); Text(label).font(.system(size: 13, weight: .semibold)).foregroundStyle(PI.ink) }
+            .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: dark), in: Capsule())
+            .accessibilityLabel(tr("%@ inactif", label))
+    }
+
+    // MARK: bords : vent et recentrage à gauche, vario à droite ; le centre reste à la carte
+
+    private func edges(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
+        HStack(alignment: .top) {
+            VStack(spacing: 8) {
+                // vent : flèche + vitesse ; flèche en pointillés si c'est une prévision
+                VStack(spacing: 0) {
+                    if p.windKnown {
+                        Image(systemName: p.windForecast ? "arrow.down.circle.dotted" : "arrow.down").font(.system(size: 18, weight: .semibold))
+                            .rotationEffect(.degrees(p.windFromDeg)).foregroundStyle(PI.route)
+                        Text("\(Int(p.windSpeedKmh.rounded()))").font(WG.pfd(15)).foregroundStyle(PI.ink)
+                    } else {
+                        Image(systemName: "wind").font(.system(size: 15)).foregroundStyle(PI.dim)
                     }
                 }
-            }
-            if details {
-                Button { Haptic.tap(); app.soundOn.toggle() } label: {
-                    Image(systemName: app.soundOn ? "speaker.wave.2" : "speaker.slash").font(.body)
-                        .frame(width: 40, height: 40).overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
+                .frame(width: 44, height: 50).background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
+                if !map.follow {
+                    roundButton("scope", tint: WG.sky, a11y: tr("Recentrer la carte")) { map.recenter() }
                 }
-                .accessibilityLabel(app.soundOn ? tr("Couper le son du vario") : tr("Activer le son du vario"))
-                .frame(maxHeight: .infinity, alignment: .top)
+            }
+            Spacer(minLength: 0)
+            if ds.showVario {
+                VarioRail(ms: p.varioMs, valid: p.varioText != "—", spiralMs: p.spiralMs, dark: dark, soundOn: app.soundOn) { app.soundOn.toggle() }
             }
         }
-        .fixedSize(horizontal: false, vertical: true)
-        .padding(.horizontal, 14).padding(.top, 10).padding(.bottom, 10)
-        .foregroundStyle(PI.ink)
+        .padding(.horizontal, 8)
+        .frame(maxHeight: .infinity, alignment: .top)
     }
 
-    private func avg(_ l: String, _ v: String) -> some View {
-        VStack(alignment: .leading) { Text(l).font(WG.caption).foregroundStyle(PI.dim); Text(v).font(PI.number(17)) }
-            .frame(maxWidth: .infinity, alignment: .leading)
+    // MARK: bas : réglages, enregistrement, zoom, Essentiel
+
+    private func bottomBar(_ p: PilotUi, _ ds: PilotDisplay) -> some View {
+        HStack(alignment: .bottom) {
+            if !essential { settingsMenu() }
+            Spacer()
+            // enregistrement : point rouge + durée
+            Button { app.toggleRecording() } label: {
+                HStack(spacing: 6) {
+                    Circle().fill(p.recording ? WG.bad : PI.dim).frame(width: 10, height: 10)
+                    Text(p.flightTimeText).font(WG.pfd(15)).foregroundStyle(PI.ink)
+                }
+                .padding(.horizontal, 12).frame(height: 40).background(PanelBackground(dark: dark), in: Capsule())
+            }
+            .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
+            Spacer()
+            VStack(alignment: .trailing, spacing: 8) {
+                if !essential {
+                    VStack(spacing: 0) {
+                        Button { map.zoomIn() } label: { Image(systemName: "plus").frame(width: 44, height: 44) }.accessibilityLabel("Zoom avant")
+                        Divider().frame(width: 24)
+                        Button { map.zoomOut() } label: { Image(systemName: "minus").frame(width: 44, height: 44) }.accessibilityLabel("Zoom arrière")
+                    }
+                    .font(.system(size: 20, weight: .medium)).foregroundStyle(PI.ink)
+                    .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                }
+                Button { Haptic.tap(); essential.toggle() } label: {
+                    Text(essential ? tr("COMPLET") : tr("ESSENTIEL")).font(.system(size: 13, weight: .heavy))
+                        .padding(.horizontal, 12).frame(height: 40)
+                        .background(essential ? AnyShapeStyle(WG.climb) : AnyShapeStyle(PanelBackground(dark: dark)), in: Capsule())
+                        .foregroundStyle(essential ? .white : PI.ink)
+                }
+                .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
+            }
+        }
+        .padding(.horizontal, 10).padding(.bottom, 8)
+        .frame(maxHeight: .infinity, alignment: .bottom)
+    }
+
+    /// Réglages : hors du champ de vol (on ne règle pas en spirale).
+    private func settingsMenu() -> some View {
+        Menu {
+            Toggle(tr("Coupe du relief"), isOn: $showProfile)
+            Toggle(tr("Vario"), isOn: $showVario)
+            Button(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques")) {
+                if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
+            }
+            Button(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label)) { map.cycleOrientation() }
+            Toggle(tr("Mode sombre"), isOn: $dark)
+            Toggle(tr("DÉMO"), isOn: $app.demo)
+        } label: {
+            Image(systemName: "ellipsis").font(.system(size: 20, weight: .bold)).foregroundStyle(PI.ink)
+                .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+        }
+        .accessibilityLabel(tr("Réglages de l'écran de vol"))
+    }
+
+    private func roundButton(_ icon: String, tint: Color, a11y: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon).font(.system(size: 18, weight: .medium)).foregroundStyle(tint)
+                .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+        }
+        .accessibilityLabel(a11y)
     }
 }
 
-/// Petit interrupteur orange d'un panneau (coupe, vario).
 private extension View {
-    /// Boîte de l'en-tête de Pilotage (V3) : fond blanc à 90 %, coins légèrement arrondis, carte visible autour.
-    func headerBox() -> some View {
-        padding(.horizontal, 10).padding(.vertical, 6)
-            .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 12))
+    /// Panneau de Pilotage : dégradé lavande Godspeed (sombre) ou blanc à 90 % (clair), coins arrondis, sans ombre noire.
+    func panel(_ dark: Bool) -> some View {
+        padding(.horizontal, 12).padding(.vertical, 8)
+            .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
     }
 }
-
 struct PanelToggle: View {
     @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
     @Binding var isOn: Bool
@@ -340,169 +313,6 @@ struct MiniSwitch: ToggleStyle {
         }
         .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.15), value: configuration.isOn)
-    }
-}
-
-/// Boutons, pastilles et légendes posés sur la carte (disposition de l'écran Android).
-struct MapOverlay: View {
-    @AppStorage("pilot.dark") private var darkMode = false   // redessine au changement de mode
-    @EnvironmentObject var app: AppModel
-    @EnvironmentObject var map: MapControl
-    @State private var airspaceHint = false
-    let p: PilotUi
-    let ds: PilotDisplay
-    @Binding var showProfile: Bool
-    @Binding var showVario: Bool
-    @Binding var essential: Bool
-
-    var body: some View {
-        ZStack {
-            // haut gauche : recentrage (AUTO/LIBRE), orientation (AUTO/N↑/RTE), REC compact
-            VStack(alignment: .leading, spacing: 6) {
-                // légende trafic OGN (maquette v8 : .traffic-key), édition complète, réseau connecté
-                if ds.showOgn, let t = app.trafficSnap, t.connected {
-                    (Text("OGN ").fontWeight(.bold).foregroundColor(PI.ink) + Text(trDyn(t.pill)))
-                        .font(Font.custom("Inter", size: 9)).monospacedDigit().foregroundStyle(PI.dim)
-                        .padding(.horizontal, 8).padding(.vertical, 5)
-                        .background(PI.box.opacity(PI.dark ? 1 : 0.9), in: RoundedRectangle(cornerRadius: 10))
-                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(WG.line))
-                        .accessibilityLabel(tr("Trafic OGN : %@", trDyn(t.pill)))
-                        .offset(y: showProfile ? 0 : -34)
-                }
-                // panneaux masqués : pastilles indépendantes sur la carte
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-
-            // haut droite : DÉMO, vent, échelle vario (outils : absents en Essentiel)
-            if ds.showMapTools {
-            VStack(alignment: .trailing, spacing: 8) {
-                HStack(spacing: 6) {
-                LanguageSwitch(dark: true)
-                Button { app.demo.toggle() } label: {
-                    Text(tr("DÉMO")).font(WG.caption2.weight(.bold)).padding(.horizontal, 9).padding(.vertical, 5)
-                        .background(app.demo ? WG.climb : PI.box, in: Capsule())
-                        .foregroundStyle(app.demo ? .white : PI.ink).shadow(color: .black.opacity(0.15), radius: 2)
-                }
-                }
-                VStack(spacing: 3) {
-                    if p.windKnown {
-                        Image(systemName: "arrow.down").font(.subheadline.weight(.semibold)).rotationEffect(.degrees(p.windFromDeg)).foregroundStyle(PI.route)
-                        Text(trDyn(p.windText).replacingOccurrences(of: "/", with: "\n")).font(WG.caption2).foregroundStyle(PI.ink).multilineTextAlignment(.center)
-                    } else {
-                        Text(tr("vent\n—")).font(WG.caption2).foregroundStyle(PI.dim).multilineTextAlignment(.center)
-                    }
-                }
-                .frame(width: 44).padding(.vertical, 8)
-                .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
-                .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            }
-
-            // bas gauche : recentrage, orientation, capteurs en défaut seulement (« dark cockpit »), jour / nuit
-            VStack(alignment: .leading, spacing: 4) {
-                // position de la carte : recentrer (cible), orientation (boussole rouge en mode nord)
-                VStack(spacing: 8) {
-                    Button { map.recenter() } label: {
-                        Image(systemName: "scope").font(.system(size: 18, weight: .medium))
-                            .foregroundStyle(map.follow ? WG.sky : PI.ink)
-                            .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
-                            .shadow(color: .black.opacity(0.15), radius: 2)
-                    }
-                    .accessibilityLabel(map.follow ? tr("Carte centrée sur le planeur") : tr("Recentrer la carte"))
-                    if ds.showMapTools {
-                    Button { map.cycleOrientation() } label: {
-                        Group {
-                            if map.orientation == .north {
-                                ZStack {
-                                    Image(systemName: "location.north.fill").font(.system(size: 18)).foregroundStyle(WG.bad)
-                                    Text("N").font(Font.custom("Inter", size: 8).weight(.bold)).foregroundStyle(.white).offset(y: 2)
-                                }
-                            } else {
-                                Text(map.orientation.label).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.ink)
-                            }
-                        }
-                        .frame(width: 40, height: 40).background(PI.box.opacity(PI.dark ? 1 : 0.9), in: Circle())
-                        .shadow(color: .black.opacity(0.15), radius: 2)
-                    }
-                    .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
-                    }
-                }
-                .padding(.bottom, 6)
-                // V5 : un capteur n'apparaît que s'il est en défaut, dans tous les modes
-                if ds.gpsAlert { badge("GPS", false) }
-                if ds.baroAlert { badge("BARO", false) }
-                if ds.dataAlert { badge("DATA", false) }
-                // mode clair / sombre, sous les pastilles ; remonte avec elles quand le vario est ouvert
-                if ds.showMapTools { DayNightToggle(dark: $darkMode).padding(.top, 6) }
-            }
-            .accessibilityElement(children: .combine)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading).padding(.bottom, 52)   // V5 : au-dessus de l’échelle et du logo Plans
-
-            // bas droite : zones aéronautiques (au-dessus), zoom, pastille vario repliée
-            VStack(alignment: .trailing, spacing: 8) {
-            if ds.showMapTools {
-            Button {
-                Haptic.tap()
-                if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
-            } label: {
-                Image(systemName: "square.3.layers.3d").font(.system(size: 17, weight: .regular))
-                    .foregroundStyle(app.showAirspaces && !app.airspaces.isEmpty ? WG.sky : PI.ink)
-                    .frame(width: 40, height: 40).background(PI.box, in: Circle()).shadow(color: .black.opacity(0.1), radius: 1)
-            }
-            .accessibilityLabel(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques"))
-            .alert(tr("Zones aéronautiques"), isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
-                Text(tr("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP)."))
-            }
-            VStack(spacing: 0) {
-                Button { map.zoomIn() } label: { Image(systemName: "plus").frame(width: 40, height: 40) }.accessibilityLabel("Zoom avant")
-                Divider().frame(width: 24)
-                Button { map.zoomOut() } label: { Image(systemName: "minus").frame(width: 40, height: 40) }.accessibilityLabel("Zoom arrière")
-            }
-            .font(.title3.weight(.light)).foregroundStyle(PI.ink)
-            .background(PI.box, in: RoundedRectangle(cornerRadius: 20)).shadow(color: .black.opacity(0.1), radius: 1)
-            }
-            // V5 : Essentiel ⇄ Complet, toujours au même endroit, sous le pouce
-            Button { Haptic.tap(); essential.toggle() } label: {
-                Text(essential ? tr("COMPLET") : tr("ESSENTIEL")).font(WG.caption2.weight(.heavy))
-                    .padding(.horizontal, 10).padding(.vertical, 8)
-                    .background(essential ? WG.climb : PI.box, in: Capsule())
-                    .foregroundStyle(essential ? .white : PI.ink).shadow(color: .black.opacity(0.15), radius: 2)
-            }
-            .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)   // au plus bas, au-dessus de « vario »
-        }
-        .padding(10)
-    }
-
-    private func round(_ label: String, a11y: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(label).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.ink)
-                .frame(width: 40, height: 40).background(PI.box, in: Circle()).shadow(color: .black.opacity(0.15), radius: 2)
-        }
-        .accessibilityLabel(a11y)
-    }
-
-    private func badge(_ label: String, _ ok: Bool) -> some View {
-        HStack(spacing: 4) { Circle().fill(ok ? PI.good : WG.bad).frame(width: 6, height: 6); Text(label).font(WG.caption2).foregroundStyle(PI.ink) }
-            .padding(.horizontal, 7).padding(.vertical, 3).background(PI.box, in: Capsule())
-            .accessibilityLabel(tr(ok ? "%@ actif" : "%@ inactif", label))
-    }
-}
-
-/// Barre vario −3 … +4 m/s avec curseur.
-struct VarioScale: View {
-    let value: Double
-    var body: some View {
-        GeometryReader { g in
-            let x = (min(max(value, -3), 4) + 3) / 7 * g.size.width
-            ZStack(alignment: .leading) {
-                LinearGradient(colors: [WG.varioFlash(-3), WG.varioFlash(0), WG.varioFlash(1.5), WG.varioFlash(4)], startPoint: .leading, endPoint: .trailing)
-                    .clipShape(Capsule())
-                Rectangle().fill(PI.ink).frame(width: 4, height: g.size.height + 8).offset(x: x - 2)
-            }
-        }
     }
 }
 
