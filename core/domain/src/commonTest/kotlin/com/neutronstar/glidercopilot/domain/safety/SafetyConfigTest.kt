@@ -21,3 +21,14 @@ class SafetyConfigTest {
         assertEquals(0.0, SafetyConfig.forFinesse(10).arrivalMarginM)
     }
 }
+
+class OfficialAerodromeTest {
+    @Test fun seulementIndicatifOaci() {
+        kotlin.test.assertTrue(FieldOption.isOfficialAerodrome("LFNL"))
+        kotlin.test.assertTrue(FieldOption.isOfficialAerodrome("lfmt"))
+        kotlin.test.assertFalse(FieldOption.isOfficialAerodrome(null))
+        kotlin.test.assertFalse(FieldOption.isOfficialAerodrome("LF34"))
+        kotlin.test.assertFalse(FieldOption.isOfficialAerodrome("ULM-12"))
+        kotlin.test.assertFalse(FieldOption.isOfficialAerodrome("LFN"))
+    }
+}

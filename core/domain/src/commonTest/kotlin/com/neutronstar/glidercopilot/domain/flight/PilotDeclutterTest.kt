@@ -14,8 +14,8 @@ class PilotDeclutterTest {
     @Test fun marginLevels() {
         assertEquals(MarginLevel.UNKNOWN, PilotDeclutter.marginLevel(false, 500.0))
         assertEquals(MarginLevel.UNKNOWN, PilotDeclutter.marginLevel(true, Double.NaN))
-        assertEquals(MarginLevel.OK, PilotDeclutter.marginLevel(true, 200.0))
-        assertEquals(MarginLevel.CAUTION, PilotDeclutter.marginLevel(true, 199.0))
+        assertEquals(MarginLevel.OK, PilotDeclutter.marginLevel(true, 50.0))
+        assertEquals(MarginLevel.CAUTION, PilotDeclutter.marginLevel(true, 49.0))
         assertEquals(MarginLevel.CAUTION, PilotDeclutter.marginLevel(true, 0.0))
         assertEquals(MarginLevel.ALARM, PilotDeclutter.marginLevel(true, -1.0))
     }
@@ -33,7 +33,7 @@ class PilotDeclutterTest {
     }
 
     @Test fun lowMarginColoursMarginWithoutProfileInEssential() {
-        val essential = d(essential = true, margin = 120.0)
+        val essential = d(essential = true, margin = 30.0)
         assertFalse(essential.showProfile || essential.profileForced)
         assertEquals(MarginLevel.CAUTION, essential.marginLevel)
         // Complet : le choix du pilote prime (l'écran rouvre la coupe au passage du seuil, côté interface)

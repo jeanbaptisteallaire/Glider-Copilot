@@ -99,6 +99,14 @@ data class FieldOption(val id: String, val name: String, val position: LatLon, v
     val code: String get() = icao ?: name.split(' ', '-').filter { it.length > 2 }.take(2).joinToString(" ").take(14).ifEmpty { name.take(14) }
 
     companion object {
+        private val OACI = Regex("^[A-Z]{4}$")
+
+        /**
+         * Terrain de repli proposable (JB, 23/10/2026, responsabilité) : seulement un aérodrome officiel, identifié par
+         * un indicatif OACI à 4 lettres. Jamais un champ, une piste privée ou un site sans indicatif.
+         */
+        fun isOfficialAerodrome(icao: String?): Boolean = icao != null && OACI.matches(icao.trim().uppercase())
+
         /** « SAINT MARTIN DE LONDRE » → « Saint-Martin de Londre » lisible à l'écran et à la voix. */
         fun prettyName(raw: String): String {
             if (raw.any { it.isLowerCase() }) return raw

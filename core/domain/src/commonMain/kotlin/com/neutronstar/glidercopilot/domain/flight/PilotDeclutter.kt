@@ -28,8 +28,8 @@ data class PilotDisplay(
 )
 
 object PilotDeclutter {
-    /** Sous ce seuil (m), la marge passe à l'orange et la coupe se déplie. */
-    const val CAUTION_M = 200.0
+    /** Sous ce seuil (m), la marge passe à l'orange et la coupe se déplie (JB, 23/10/2026 : 50 m, au lieu de 200). */
+    const val CAUTION_M = 50.0
 
     fun marginLevel(known: Boolean, marginM: Double): MarginLevel = when {
         !known || marginM.isNaN() -> MarginLevel.UNKNOWN

@@ -267,12 +267,13 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             modelElevation != null -> { fieldElevation = modelElevation; fieldElevationSource = "modèle ARPEGE" }
             else -> { fieldElevation = null; fieldElevationSource = "" }
         }
-        val list = airports.mapNotNull { a ->
+        // terrains de repli : aérodromes officiels à indicatif OACI seulement (JB, 23/10/2026, responsabilité)
+        val list = airports.filter { FieldOption.isOfficialAerodrome(it.icao) }.mapNotNull { a ->
             val elev = a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: return@mapNotNull null
             FieldOption(a.icao ?: a.id, FieldOption.prettyName(a.name), a.position, elev, isClub = a === clubAirport, icao = a.icao)
         }.toMutableList()
         val e = fieldElevation
-        if (clubAirport == null && clubPos != null && e != null) {
+        if (clubAirport == null && clubPos != null && e != null && FieldOption.isOfficialAerodrome(icao)) {
             list += FieldOption(icao ?: "CLUB", FieldOption.prettyName(c.airfieldName ?: c.name), clubPos, e, isClub = true, icao = icao)
         }
         fields = list
@@ -461,7 +462,9 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         val alt = snap?.altitudeM
         val wind = st?.wind
         val pos = snap?.gps?.position
-        val fieldPos = r?.field?.position ?: club?.position
+        // sans calcul de sécurité, le terrain du club n'est montré que s'il est un aérodrome officiel (indicatif OACI)
+        val officialClub = club?.takeIf { FieldOption.isOfficialAerodrome(it.airfieldIcao) }
+        val fieldPos = r?.field?.position ?: officialClub?.position
         val zoom = snap?.let { ThermalZoom.view(it.trace, it.circling, it.circlingSince, it.now) }
         val climb = snap?.climbMs
         return PilotUi(
@@ -476,7 +479,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             secuText = r?.let { grouped(it.requiredM.roundToInt()) } ?: "—",
             distanceText = r?.let { formatFixed(it.distanceKm, 1, decimalComma = true) }
                 ?: if (pos != null && fieldPos != null) formatFixed(Geo.distanceKm(pos, fieldPos), 1, decimalComma = true) else "—",
-            fieldCode = r?.field?.code ?: club?.airfieldIcao ?: "—",
+            fieldCode = r?.field?.code ?: officialClub?.airfieldIcao ?: "—",
             fieldName = r?.field?.name ?: club?.airfieldName ?: club?.name ?: "",
             bearingText = r?.let { "${it.bearingDeg.roundToInt()}°" } ?: "—",
             autoField = st?.choice?.auto ?: true,

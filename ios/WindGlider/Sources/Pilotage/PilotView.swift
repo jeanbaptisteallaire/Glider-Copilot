@@ -121,15 +121,15 @@ struct PilotView: View {
         return HStack(alignment: .top, spacing: 6) {
             VStack(alignment: .leading, spacing: 2) {
                 SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: true, essential: essential,
-                           accessory: AnyView(finesseButton))
+                           accessory: AnyView(finesseButton(alert: low)), alert: low)
                 if essential {
                     // la seule autre information de survie : où est le terrain
-                    Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(PI.ink)
+                    Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(low ? .black : PI.ink)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .panel(dark)
-            .overlay { if low { RoundedRectangle(cornerRadius: 14).stroke(PI.marginColor(ds.marginLevel), lineWidth: 3) } }
+            // marge faible (orange) ou négative (rouge) : toute la boîte change, aplat plein, textes noirs
+            .panel(dark, fill: low ? (ds.marginLevel == .alarm ? WG.marginAlarmBox : WG.marginCautionBox) : nil)
             if !essential {
                 // terrain : code, distance, route (violet = navigation), finesse touchable
                 VStack(alignment: .trailing, spacing: 2) {
@@ -170,11 +170,12 @@ struct PilotView: View {
     }
 
     /// Finesse sous la marge : un toucher passe 10 → 20 → 30 (réglage détaillé en Prévol).
-    private var finesseButton: some View {
-        Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
-            Text("F\(app.finesse)").font(WG.pfd(16.5)).foregroundStyle(WG.selected(dark: true))   // +10 %
+    private func finesseButton(alert: Bool) -> some View {
+        let c: Color = alert ? .black : WG.selected(dark: true)
+        return Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
+            Text("F\(app.finesse)").font(WG.pfd(16.5)).foregroundStyle(c)   // +10 %
                 .padding(.horizontal, 9).padding(.vertical, 3.5)
-                .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
+                .overlay(Capsule().stroke(c.opacity(0.6)))
         }
         .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))
     }
@@ -340,9 +341,9 @@ struct PilotView: View {
 
 private extension View {
     /// Panneau de Pilotage : dégradé lavande Godspeed (sombre) ou blanc à 90 % (clair), coins arrondis, sans ombre noire.
-    func panel(_ dark: Bool) -> some View {
+    func panel(_ dark: Bool, fill: Color? = nil) -> some View {
         padding(.horizontal, 12).padding(.top, 8).padding(.bottom, 4)   // bas remonté de 4 pt (place inutile)
-            .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
+            .background(fill.map { AnyShapeStyle($0) } ?? AnyShapeStyle(PanelBackground(dark: true)), in: RoundedRectangle(cornerRadius: 14))
     }
 }
 struct PanelToggle: View {

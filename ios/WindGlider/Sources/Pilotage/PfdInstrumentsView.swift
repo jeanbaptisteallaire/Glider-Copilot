@@ -15,6 +15,9 @@ extension WG {
     /// Cyan « réglé par le pilote » (minimum) : assombri en clair pour rester lisible sur blanc.
     static func selected(dark: Bool) -> Color { dark ? argb(0x1CB4FF) : argb(0x00739E) }
     static let alarmFill = argb(0xD4141C)
+    /// Boîte de marge en alerte (JB, 23/10/2026) : aplats pleins, texte noir dessus (contraste ≥ 4,5:1).
+    static let marginAlarmBox = argb(0xF2463A)
+    static let marginCautionBox = argb(0xFF9F1C)
     /// Chiffres de vol, police de Godspeed : SF Pro, chiffres tabulaires.
     static func pfd(_ size: CGFloat, _ weight: Font.Weight = .semibold) -> Font { .system(size: size, weight: weight).monospacedDigit() }
     /// Charte Godspeed (ciel lavande de l'horizon Thales) pour les panneaux en mode sombre : dégradé violet, jamais noir pur.
@@ -41,14 +44,17 @@ struct SafetyBand: View {
     var essential = false
     /// Posé sous le chiffre de la marge, aligné à gauche, dans la hauteur du tambour (la boîte ne grandit pas).
     var accessory: AnyView? = nil
+    /// Marge faible ou négative (JB, 23/10/2026) : toute la boîte devient orange ou rouge plein, tous les textes en noir.
+    var alert = false
 
     var body: some View {
-        let ink = dark ? Color.white : WG.brandInk
+        let ink: Color = alert ? .black : (dark ? Color.white : WG.brandInk)
+        let label: Color = alert ? .black : PI.dim
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 0) {
                 // libellés −10 % ; chiffres remontés de 16 pt vers leur libellé (la boîte garde sa taille)
-                Text(tr("Marge sécu. (m)")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(PI.dim)
-                Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(marginColor)
+                Text(tr("Marge sécu. (m)")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(label)
+                Text(marginText).font(WG.pfd(essential ? 64 : 48, .bold)).foregroundStyle(alert ? .black : marginColor)
                     .lineLimit(1).minimumScaleFactor(0.6)
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(tr("Marge %@ mètres", marginText))
@@ -59,8 +65,8 @@ struct SafetyBand: View {
             }
             if !essential {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(tr("Alti.")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(PI.dim)
-                    Drum(tape: tape, ink: ink).offset(y: -16)
+                    Text(tr("Alti.")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(label)
+                    Drum(tape: tape, ink: ink, inAlertBox: alert).offset(y: -16)
                 }
             }
         }
@@ -72,11 +78,13 @@ struct SafetyBand: View {
 private struct Drum: View {
     let tape: AltitudeTapeState
     let ink: Color
+    /// Dans une boîte déjà rouge ou orange : pas de second bloc rouge, chiffres noirs.
+    var inAlertBox = false
     private let rowH: CGFloat = 24
     private let boxH: CGFloat = 78
 
     var body: some View {
-        let red = tape.belowMinimum
+        let red = tape.belowMinimum && !inAlertBox
         let fg: Color = red ? .white : ink
         HStack(spacing: 2) {
             if let d = tape.drum {
@@ -98,7 +106,7 @@ private struct Drum: View {
                                              .init(color: .black, location: 0.7), .init(color: .clear, location: 1)],
                                      startPoint: .top, endPoint: .bottom))
             } else {
-                Text("– – –").font(WG.pfd(22)).foregroundStyle(WG.bad)
+                Text("– – –").font(WG.pfd(22)).foregroundStyle(inAlertBox ? .black : WG.bad)
             }
         }
         .padding(.horizontal, 8).frame(height: boxH)
