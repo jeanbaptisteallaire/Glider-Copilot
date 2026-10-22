@@ -23,7 +23,7 @@ struct WelcomeView: View {
                 Spacer()
                 if signedInAtStart == false {
                     if let msg = account.message, !account.signedIn {
-                        Text(msg).font(WG.footnote).foregroundStyle(WG.brandInk).multilineTextAlignment(.center)
+                        Text(msg).font(WG.footnote).foregroundStyle(WG.paperInk).multilineTextAlignment(.center)
                             .padding(.horizontal, 14).padding(.vertical, 8)
                             .background(Color.white.opacity(0.85), in: RoundedRectangle(cornerRadius: 12))
                             .padding(.bottom, 12)
@@ -51,7 +51,7 @@ struct WelcomeView: View {
                         Text("·")
                         Link(tr("Confidentialité"), destination: Legal.privacy)
                     }
-                    .font(Font.custom("Inter", size: 12).weight(.medium)).foregroundStyle(.white).tint(.white)
+                    .font(Font.system(size: 12).weight(.medium)).foregroundStyle(.white).tint(.white)
                     .shadow(color: .black.opacity(0.6), radius: 4)
                     .padding(.top, 14)
                     Spacer().frame(height: UIScreen.main.bounds.height * 0.16)
@@ -90,8 +90,8 @@ private struct WelcomeButton<Leading: View>: View {
         Button(action: action) {
             HStack(spacing: 14) {
                 leading()
-                Text(text).font(Font.custom("Inter", size: 17).weight(.medium)).tracking(0.2)
-                    .foregroundStyle(enabled ? WG.brandInk : WG.brandInk.opacity(0.4))
+                Text(text).font(Font.system(size: 17).weight(.medium)).tracking(0.2)
+                    .foregroundStyle(enabled ? WG.paperInk : WG.paperInk.opacity(0.4))
             }
             .frame(maxWidth: .infinity, minHeight: 56)
             .background(Color.white.opacity(0.95), in: RoundedRectangle(cornerRadius: 14))
@@ -128,7 +128,7 @@ struct BrandTitle: View {
             Text("WIND")
             Text("GLIDER")
         }
-        .font(Font.custom("Inter", size: size).weight(.medium))
+        .font(Font.system(size: size).weight(.medium))
         .tracking(size * 0.07)
         .foregroundStyle(.white)
         .shadow(color: Color(red: 0, green: 0.1, blue: 0.16).opacity(0.25), radius: 8)

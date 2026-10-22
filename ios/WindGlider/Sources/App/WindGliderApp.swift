@@ -15,6 +15,9 @@ struct WindGliderApp: App {
                 .environmentObject(account)
                 .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
                 .environment(\.locale, Locale(identifier: "fr_FR"))
+                // charte Godspeed : toute l'app en sombre, cyan pour ce qui se touche (interrupteurs, liens)
+                .preferredColorScheme(.dark)
+                .tint(WG.sky)
                 .task { app.startEngine() }
         }
     }

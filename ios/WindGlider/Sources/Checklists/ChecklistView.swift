@@ -41,7 +41,7 @@ struct ChecklistView: View {
             }
             .padding(16)
         }
-        .background(WG.brandPaper)
+        .background(WG.page.ignoresSafeArea())
     }
 
     private func isOpen(_ l: Checklist) -> Bool { open[l.id] ?? l.openByDefault }

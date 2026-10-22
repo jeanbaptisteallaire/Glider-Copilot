@@ -206,7 +206,7 @@ struct FeedbackPage: View {
             }
             .padding(16)
         }
-        .background(WG.brandPaper)
+        .background(WG.page.ignoresSafeArea())
     }
 }
 
@@ -243,9 +243,9 @@ struct TutoHomeView: View {
 
     private func coverButton(_ text: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Text(text).font(Font.custom("Inter", size: 17).weight(.medium)).foregroundStyle(WG.brandInk)
+            Text(text).font(Font.system(size: 17).weight(.medium)).foregroundStyle(WG.brandInk)
                 .frame(maxWidth: 300, minHeight: 56)
-                .background(Color.white.opacity(0.95), in: RoundedRectangle(cornerRadius: 14))
+                .background(WG.card, in: RoundedRectangle(cornerRadius: 14))
                 .shadow(color: .black.opacity(0.2), radius: 10, y: 3)
         }
         .buttonStyle(.plain)

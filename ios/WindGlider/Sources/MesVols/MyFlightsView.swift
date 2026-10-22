@@ -88,7 +88,7 @@ struct MyFlightsView: View {
                 }
                 .padding(16)
             }
-            .background(WG.brandPaper)
+            .background(WG.page.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
             .refreshable { app.refreshFlights() }
             .onAppear {
@@ -119,7 +119,7 @@ struct MyFlightsView: View {
                     .frame(height: 196).frame(maxWidth: .infinity).clipped()
                 LinearGradient(colors: [Color(red: 0.06, green: 0.16, blue: 0.27).opacity(0.33), .clear], startPoint: .top, endPoint: .center)
                 Text(profile.username.isEmpty ? tr("Mon profil") : "@\(profile.username)")
-                    .font(Font.custom("Inter", size: 28).weight(.bold)).foregroundStyle(.white)
+                    .font(Font.system(size: 28).weight(.bold)).foregroundStyle(.white)
                     .shadow(color: .black.opacity(0.4), radius: 5).padding(.leading, 18).padding(.top, 12)
                 LanguageSwitch().frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 12).padding(.top, 12)
             }
@@ -282,7 +282,7 @@ struct FlightDetail: View {
             }
             .padding(16)
         }
-        .background(WG.brandPaper)
+        .background(WG.page.ignoresSafeArea())
         .navigationTitle("")
         .toolbar { ToolbarItem(placement: .principal) { EmptyView() } }
         .navigationBarBackButtonHidden(false)

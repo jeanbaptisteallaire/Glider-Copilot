@@ -43,10 +43,10 @@ struct LanguageSwitch: View {
     var body: some View {
         Button { lang = lang == "fr" ? "en" : "fr" } label: {
             Text(lang == "fr" ? "EN" : "FR").font(WG.subhead.weight(.semibold))
-                .foregroundStyle(dark ? .white : WG.brandInk)
+                .foregroundStyle(WG.brandInk)
                 .frame(minWidth: 40, minHeight: 32)
-                .background((dark ? Color.black.opacity(0.85) : Color.white.opacity(0.9)), in: Capsule())
-                .overlay(Capsule().stroke(dark ? Color.clear : WG.line))
+                .background(WG.cardFill, in: Capsule())   // charte Godspeed, sur toutes les pages
+                .overlay(Capsule().stroke(WG.line))
         }
         .accessibilityLabel(lang == "fr" ? "Switch to English" : "Passer en français")
     }

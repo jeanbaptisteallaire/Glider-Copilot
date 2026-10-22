@@ -27,7 +27,7 @@ struct DisclaimerView: View {
                 Spacer()
             }
             VStack(alignment: .leading, spacing: 12) {
-                Text("WIND GLIDER").font(Font.custom("Inter", size: 22).weight(.medium)).tracking(3).foregroundStyle(WG.brandInk)
+                Text("WIND GLIDER").font(Font.system(size: 22).weight(.medium)).tracking(3).foregroundStyle(WG.brandInk)
                 Text(tr("Aide secondaire au vol à voile. Ne remplace ni le vario, ni le calculateur, ni le FLARM, ni une navigation certifiée. Instruments de bord et veille extérieure priment. Le pilote reste seul responsable."))
                     .font(WG.body).foregroundStyle(WG.brandInk)
                 Text(tr("Données météo : PRECOG — precog-api.com (Source : Météo-France). Relief : Copernicus GLO-30. Terrains : openAIP. Estimations thermiques calculées dans l'app : à confronter au ciel."))
@@ -44,7 +44,7 @@ struct DisclaimerView: View {
                 .foregroundStyle(.white)
             }
             .padding(22)
-            .background(Color.white.opacity(0.94), in: RoundedRectangle(cornerRadius: 24))
+            .background(WG.card, in: RoundedRectangle(cornerRadius: 24))
             .padding(20)
         }
     }
@@ -74,7 +74,7 @@ struct PilotNoticeView: View {
                     .padding(.top, 4)
             }
             .padding(22)
-            .background(Color.white.opacity(0.93), in: RoundedRectangle(cornerRadius: 24))
+            .background(WG.card, in: RoundedRectangle(cornerRadius: 24))
             .padding(.horizontal, 20).padding(.bottom, 24)
         }
     }

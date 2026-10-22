@@ -46,7 +46,7 @@ struct PrevolView: View {
                 }
                 .padding(16)
             }
-            .background(WG.brandPaper)
+            .background(WG.page.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $picking) { ClubPicker().environmentObject(app) }
             .sheet(isPresented: $showSources) { SourcesSheet().environmentObject(app) }

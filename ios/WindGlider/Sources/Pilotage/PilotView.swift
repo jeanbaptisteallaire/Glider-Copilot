@@ -10,7 +10,7 @@ import WindGliderShared
 /// Palette de Pilotage : mode clair (charte blanche) ou mode sombre (V3, inspiré de l'avionique : boîtes noires,
 /// textes blancs un peu plus gras, vert et violet fluo très clairs, vignettage noir sur les bords).
 enum PI {
-    static var dark: Bool { UserDefaults.standard.bool(forKey: "pilot.dark") }
+    static var dark: Bool { true }   // charte Godspeed sur toute l'app ; « pilot.dark » ne choisit que le fond satellite
     static var ink: Color { dark ? .white : WG.brandInk }
     static var dim: Color { dark ? Color.white.opacity(0.62) : WG.dim }
     static var box: Color { dark ? WG.lavenderBottom : WG.card }   // Godspeed : lavande, jamais noir pur
@@ -19,7 +19,7 @@ enum PI {
     /// marge proche du seuil (PilotDeclutter.CAUTION_M) : orange de la charte, plus sombre en clair pour le contraste
     static var caution: Color { dark ? WG.climb : WG.warn }
     // V5 (JB, 19/10/2026) : chiffres plus gras, même taille
-    static func number(_ size: CGFloat) -> Font { Font.custom("Inter", size: size).weight(dark ? .heavy : .bold).monospacedDigit() }
+    static func number(_ size: CGFloat) -> Font { Font.system(size: size).weight(dark ? .heavy : .bold).monospacedDigit() }
     static func marginColor(_ level: MarginLevel) -> Color {
         switch level {
         case .ok: return good
@@ -74,7 +74,7 @@ struct PilotView: View {
                         Text(trDyn(p.fieldElevText)).font(.system(size: 12)).foregroundStyle(PI.dim)
                             .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 16).padding(.bottom, 2)
                     }
-                    .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                    .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                     .padding(.horizontal, 8)
                 }
             }
@@ -90,9 +90,9 @@ struct PilotView: View {
             let low: (MarginLevel) -> Bool = { $0 == .caution || $0 == .alarm }
             if low(new) && !low(old) { showProfile = true }
         }
-        .toolbarColorScheme(dark ? .dark : .light, for: .tabBar)
-        .toolbarBackground(dark ? .visible : .automatic, for: .tabBar)
-        .toolbarBackground(dark ? WG.lavenderBottom : Color.clear, for: .tabBar)
+        .toolbarColorScheme(.dark, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
+        .toolbarBackground(WG.lavenderBottom, for: .tabBar)
         .animation(.easeInOut(duration: 0.25), value: dark)
         .sheet(isPresented: $choosingField) { FieldPicker().environmentObject(app).presentationDetents([.medium]) }
         .alert(tr("Zones aéronautiques"), isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
@@ -110,7 +110,7 @@ struct PilotView: View {
         let low = ds.marginLevel == .caution || ds.marginLevel == .alarm
         return HStack(alignment: .top, spacing: 6) {
             VStack(alignment: .leading, spacing: 2) {
-                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: dark, essential: essential)
+                SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: true, essential: essential)
                 if essential {
                     // la seule autre information de survie : où est le terrain
                     Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(PI.ink)
@@ -139,9 +139,9 @@ struct PilotView: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel(tr("Choisir le terrain de référence"))
                     Button { Haptic.tap(); app.finesse = app.finesse == 10 ? 20 : 10 } label: {
-                        Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: dark))
+                        Text("F\(app.finesse)").font(WG.pfd(15)).foregroundStyle(WG.selected(dark: true))
                             .padding(.horizontal, 8).padding(.vertical, 3)
-                            .overlay(Capsule().stroke(WG.selected(dark: dark).opacity(0.6)))
+                            .overlay(Capsule().stroke(WG.selected(dark: true).opacity(0.6)))
                     }
                     .accessibilityLabel(tr("Finesse %@", "\(app.finesse)"))
                 }
@@ -172,7 +172,7 @@ struct PilotView: View {
 
     private func badge(_ label: String) -> some View {
         HStack(spacing: 4) { Circle().fill(WG.bad).frame(width: 7, height: 7); Text(label).font(.system(size: 13, weight: .semibold)).foregroundStyle(PI.ink) }
-            .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: dark), in: Capsule())
+            .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: true), in: Capsule())
             .accessibilityLabel(tr("%@ inactif", label))
     }
 
@@ -191,7 +191,7 @@ struct PilotView: View {
                         Image(systemName: "wind").font(.system(size: 15)).foregroundStyle(PI.dim)
                     }
                 }
-                .frame(width: 44, height: 50).background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                .frame(width: 44, height: 50).background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                 .accessibilityLabel(p.windKnown ? tr("Vent %@", trDyn(p.windText)) : tr("Vent pas encore estimé : spiralez"))
                 // orientation de la vue : AUTO (nord en spirale, route sinon) → N↑ → RTE ; toujours visible
                 Button { Haptic.tap(); map.cycleOrientation() } label: {
@@ -205,7 +205,7 @@ struct PilotView: View {
                             Text(map.orientation.label).font(.system(size: 12, weight: .bold)).foregroundStyle(PI.ink)
                         }
                     }
-                    .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+                    .frame(width: 44, height: 44).background(PanelBackground(dark: true), in: Circle())
                 }
                 .accessibilityLabel(tr("Orientation de la carte : %@", map.orientation == .north ? tr("nord en haut") : map.orientation.label))
                 if !map.follow {
@@ -214,7 +214,7 @@ struct PilotView: View {
             }
             Spacer(minLength: 0)
             if ds.showVario {
-                VarioRail(ms: p.varioMs, valid: p.varioText != "—", spiralMs: p.spiralMs, dark: dark, soundOn: app.soundOn) { app.soundOn.toggle() }
+                VarioRail(ms: p.varioMs, valid: p.varioText != "—", spiralMs: p.spiralMs, dark: true, soundOn: app.soundOn) { app.soundOn.toggle() }
             }
         }
         .padding(.horizontal, 8)
@@ -233,7 +233,7 @@ struct PilotView: View {
                     Circle().fill(p.recording ? WG.bad : PI.dim).frame(width: 10, height: 10)
                     Text(p.flightTimeText).font(WG.pfd(15)).foregroundStyle(PI.ink)
                 }
-                .padding(.horizontal, 12).frame(height: 40).background(PanelBackground(dark: dark), in: Capsule())
+                .padding(.horizontal, 12).frame(height: 40).background(PanelBackground(dark: true), in: Capsule())
             }
             .accessibilityLabel(p.recording ? tr("Arrêter l'enregistrement") : tr("Démarrer l'enregistrement"))
             Spacer()
@@ -245,12 +245,12 @@ struct PilotView: View {
                         Button { map.zoomOut() } label: { Image(systemName: "minus").frame(width: 44, height: 44) }.accessibilityLabel("Zoom arrière")
                     }
                     .font(.system(size: 20, weight: .medium)).foregroundStyle(PI.ink)
-                    .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+                    .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
                 }
                 Button { Haptic.tap(); essential.toggle() } label: {
                     Text(essential ? tr("COMPLET") : tr("ESSENTIEL")).font(.system(size: 13, weight: .heavy))
                         .padding(.horizontal, 12).frame(height: 40)
-                        .background(essential ? AnyShapeStyle(WG.climb) : AnyShapeStyle(PanelBackground(dark: dark)), in: Capsule())
+                        .background(essential ? AnyShapeStyle(WG.climb) : AnyShapeStyle(PanelBackground(dark: true)), in: Capsule())
                         .foregroundStyle(essential ? .white : PI.ink)
                 }
                 .accessibilityLabel(essential ? tr("Afficher tout Pilotage") : tr("N'afficher que l'essentiel"))
@@ -269,11 +269,11 @@ struct PilotView: View {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             }
             Button(lang == "fr" ? "English" : "Français") { lang = lang == "fr" ? "en" : "fr" }
-            Toggle(tr("Mode sombre"), isOn: $dark)
+            Toggle(tr("Fond satellite"), isOn: $dark)
             Toggle(tr("DÉMO"), isOn: $app.demo)
         } label: {
             Image(systemName: "ellipsis").font(.system(size: 20, weight: .bold)).foregroundStyle(PI.ink)
-                .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+                .frame(width: 44, height: 44).background(PanelBackground(dark: true), in: Circle())
         }
         .accessibilityLabel(tr("Réglages de l'écran de vol"))
     }
@@ -281,7 +281,7 @@ struct PilotView: View {
     private func roundButton(_ icon: String, tint: Color, a11y: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: icon).font(.system(size: 18, weight: .medium)).foregroundStyle(tint)
-                .frame(width: 44, height: 44).background(PanelBackground(dark: dark), in: Circle())
+                .frame(width: 44, height: 44).background(PanelBackground(dark: true), in: Circle())
         }
         .accessibilityLabel(a11y)
     }
@@ -291,7 +291,7 @@ private extension View {
     /// Panneau de Pilotage : dégradé lavande Godspeed (sombre) ou blanc à 90 % (clair), coins arrondis, sans ombre noire.
     func panel(_ dark: Bool) -> some View {
         padding(.horizontal, 12).padding(.vertical, 8)
-            .background(PanelBackground(dark: dark), in: RoundedRectangle(cornerRadius: 14))
+            .background(PanelBackground(dark: true), in: RoundedRectangle(cornerRadius: 14))
     }
 }
 struct PanelToggle: View {
@@ -303,7 +303,7 @@ struct PanelToggle: View {
 
     var body: some View {
         Toggle(isOn: $isOn) {
-            Text(label).font(Font.custom("Inter", size: 11 * scale)).foregroundStyle(dark ? .white : PI.dim)
+            Text(label).font(Font.system(size: 11 * scale)).foregroundStyle(dark ? .white : PI.dim)
         }
             .toggleStyle(MiniSwitch(scale: scale))
             .padding(.horizontal, dark ? 4 : 0)
