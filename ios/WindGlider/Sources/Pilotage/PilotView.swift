@@ -59,7 +59,7 @@ struct PilotView: View {
         let ds = PilotDeclutter.shared.display(
             essential: essential, profileWanted: showProfile, varioWanted: showVario,
             marginKnown: p.marginKnown, marginM: p.marginM,
-            gpsOk: app.status.gps, baroOk: app.status.baro, dataOk: app.status.data,
+            gpsOk: app.status.gps && p.gpsOk, baroOk: app.status.baro, dataOk: app.status.data,   // GPS : position de moins de 5 s, pas seulement l'autorisation
             ognConnected: app.trafficSnap?.connected ?? false)
         ZStack(alignment: .top) {
             if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
@@ -121,7 +121,7 @@ struct PilotView: View {
         return HStack(alignment: .top, spacing: 6) {
             VStack(alignment: .leading, spacing: 2) {
                 SafetyBand(marginText: p.marginText, marginColor: PI.marginColor(ds.marginLevel), tape: tape, dark: true, essential: essential,
-                           accessory: AnyView(finesseButton(alert: low)), alert: low)
+                           accessory: AnyView(finesseButton(alert: low)), alert: low, altRef: trDyn(p.altRefText))
                 if essential {
                     // la seule autre information de survie : où est le terrain
                     Text("\(p.fieldCode) · \(p.distanceText) km").font(WG.pfd(20)).foregroundStyle(low ? .black : PI.ink)

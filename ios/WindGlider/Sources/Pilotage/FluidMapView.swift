@@ -95,7 +95,7 @@ struct FluidMapView: UIViewRepresentable {
         private var lastFrame = CACurrentMediaTime()
         // contenu déjà posé
         private var airspaceIds: [String] = []
-        private var traceCount = -1
+        private var traceVersion: Int64 = -1
         private var traceOverlays: [MKOverlay] = []
         private let route = RouteOverlay()
         private weak var routeRenderer: RouteRenderer?
@@ -215,9 +215,10 @@ struct FluidMapView: UIViewRepresentable {
                 airspaceShapes = airspaces
             }
             placeAirspaceLabels(on: v)
-            // trace : seulement quand elle change de longueur
-            if p.trace.count != traceCount {
-                traceCount = p.trace.count
+            // trace : seulement quand un point est ajouté (version = instant du dernier point ; le nombre de points
+            // plafonne à 600 et ne suffit pas à voir qu'elle avance)
+            if p.traceVersion != traceVersion {
+                traceVersion = p.traceVersion
                 v.removeOverlays(traceOverlays)
                 traceOverlays = Self.segments(p.trace)
                 v.addOverlays(traceOverlays, level: .aboveLabels)

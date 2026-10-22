@@ -46,6 +46,8 @@ struct SafetyBand: View {
     var accessory: AnyView? = nil
     /// Marge faible ou négative (JB, 23/10/2026) : toute la boîte devient orange ou rouge plein, tous les textes en noir.
     var alert = false
+    /// Référence de l'altitude (« calé terrain », « alt. pression »…) : une altitude non calée se voit (revue résilience C2).
+    var altRef = ""
 
     var body: some View {
         let ink: Color = alert ? .black : (dark ? Color.white : WG.brandInk)
@@ -65,7 +67,8 @@ struct SafetyBand: View {
             }
             if !essential {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(tr("Alti.")).font(.system(size: 11.7, weight: .medium)).foregroundStyle(label)
+                    Text(altRef.isEmpty ? tr("Alti.") : tr("Alti.") + " · " + altRef).font(.system(size: 11.7, weight: .medium)).foregroundStyle(label)
+                        .lineLimit(1).minimumScaleFactor(0.8)
                     Drum(tape: tape, ink: ink, inAlertBox: alert).offset(y: -16)
                 }
             }

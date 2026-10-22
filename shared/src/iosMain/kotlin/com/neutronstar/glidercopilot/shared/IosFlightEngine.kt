@@ -5,6 +5,7 @@ import com.neutronstar.glidercopilot.domain.EPOCH
 import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.domain.Terrain
+import com.neutronstar.glidercopilot.domain.flight.TracePoint
 import com.neutronstar.glidercopilot.domain.flight.AltitudeRef
 import com.neutronstar.glidercopilot.domain.flight.DemoFlight
 import com.neutronstar.glidercopilot.domain.flight.FlightEngineCore
@@ -142,6 +143,11 @@ data class PilotUi(
     val windForecast: Boolean = false,
     /** Fréquence radio du terrain de référence (openAIP du pack), virgule française ; « — » si inconnue, jamais inventée. */
     val fieldFrequencyText: String = "—",
+    /**
+     * Version de la trace (instant du dernier point, ms ; 0 = vide). La trace est bornée à 600 points : passé ce cap
+     * le nombre ne change plus, seule la version dit qu'elle a avancé (la carte se figeait au bout de 10 min).
+     */
+    val traceVersion: Long = 0,
 )
 
 /**
@@ -253,7 +259,12 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
      * fermés) + terrain du club. Altitude du terrain du club : openAIP, sinon relief Copernicus du pack, sinon sol du modèle
      * ARPEGE (hypothèse affichée) ; inconnue = pas de marge calculée.
      */
+    /** Un relief ou un pack corrompu ne doit jamais faire planter l'app (revue résilience C4) : terrains vides au pire. */
     private fun rebuildFields() {
+        runCatching { rebuildFieldsUnsafe() }.onFailure { fields = emptyList(); frequencies = emptyMap() }
+    }
+
+    private fun rebuildFieldsUnsafe() {
         val c = club
         val icao = c?.airfieldIcao
         val terrain = pack?.terrain ?: Terrain.NONE
@@ -281,6 +292,19 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         frequencies = airports.mapNotNull { a -> a.frequency?.takeIf { it.isNotBlank() }?.let { (a.icao ?: a.id) to it } }.toMap()
     }
     private var frequencies: Map<String, String> = emptyMap()
+
+    /** Trace convertie pour Swift, recopiée seulement quand un point est ajouté (1 Hz au lieu de 4 Hz). */
+    private var traceCacheKey = -1L
+    private var traceCache: List<TraceDot> = emptyList()
+    private fun traceDots(trace: List<TracePoint>?): List<TraceDot> {
+        if (trace.isNullOrEmpty()) { traceCacheKey = -1L; traceCache = emptyList(); return traceCache }
+        val key = trace.last().time.toEpochMilliseconds() * 1000 + trace.size
+        if (key != traceCacheKey) {
+            traceCacheKey = key
+            traceCache = trace.map { TraceDot(it.position.lat, it.position.lon, it.climbMs) }
+        }
+        return traceCache
+    }
 
     /** Terrains proposés au choix : alternatives calculées par la sécurité, sinon les plus proches. */
     fun fieldChoices(): List<FieldChoice> {
@@ -380,7 +404,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         val snap = core.snapshot(ns, fix.time)
         val alt = snap.altitudeM ?: return
         lastAltitudeM = alt
-        val armed = if (demo) true else snap.recording
+        // alertes armées dès qu'un vol est détecté ou enregistré, pas seulement après REC (revue résilience C3)
+        val armed = demo || snap.recording || snap.phase == FlightPhase.FLYING
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
         safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, config(), fix.time, armed) }.getOrNull()
     }
@@ -447,7 +472,17 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
 
     // ------------------------------------------------------------------ publication (Swift, 4 Hz)
 
-    fun ui(): PilotUi {
+    /**
+     * Image de l'écran, 4 Hz. Ne lève jamais d'exception vers Swift (revue résilience C4) : en cas d'erreur de calcul,
+     * la dernière image est rendue avec marge, vario et altitude en tirets (l'information fausse doit avoir l'air fausse).
+     */
+    fun ui(): PilotUi = runCatching { uiUnsafe() }.onSuccess { lastUi = it }.getOrElse {
+        lastUi?.copy(hasData = false, marginText = "—", marginKnown = false, altText = "—", secuText = "—", varioText = "—", distanceText = "—")
+            ?: run { val was = running; running = false; try { uiUnsafe() } finally { running = was } }
+    }
+    private var lastUi: PilotUi? = null
+
+    private fun uiUnsafe(): PilotUi {
         val ns = clockNs()
         val snap: FlightSnapshot? = if (running) core.snapshot(ns, clockNow()) else null
         if (snap != null && snap.phase != lastPhase) {
@@ -456,12 +491,15 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         }
         if (snap != null && snap.source == VarioSource.NONE && soundOn) onTone(0.0)
         val st = if (running) safetyState else null
-        val r = st?.choice?.result
         val gpsOk = snap != null && snap.gps != null && (snap.gpsAgeS ?: 99.0) < 5
+        // revue résilience C1 / C2 : pas de marge sur une position de plus de 5 s ni sur l'altitude pression standard
+        // (1013 hPa, erreur de ±200 m selon le QNH) : tirets plutôt qu'une valeur figée ou fausse
+        val altUsable = snap != null && snap.altitudeRef != AltitudeRef.BARO_ISA && snap.altitudeRef != AltitudeRef.NONE
+        val r = st?.choice?.result?.takeIf { gpsOk && altUsable && it.marginM.isFinite() }
         val hasData = snap != null && (snap.source != VarioSource.NONE || snap.altitudeM != null || gpsOk)
         val alt = snap?.altitudeM
         val wind = st?.wind
-        val pos = snap?.gps?.position
+        val pos = snap?.gps?.position?.takeIf { gpsOk }
         // sans calcul de sécurité, le terrain du club n'est montré que s'il est un aérodrome officiel (indicatif OACI)
         val officialClub = club?.takeIf { FieldOption.isOfficialAerodrome(it.airfieldIcao) }
         val fieldPos = r?.field?.position ?: officialClub?.position
@@ -491,25 +529,21 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             profile = r?.profile?.map { ProfileDot(it.sKm, it.terrainM ?: (r.field.elevationM)) }.orEmpty(),
             requiredAltM = r?.requiredM ?: 0.0,
             currentAltM = alt ?: 0.0,
-            varioLabel = when (snap?.source) {
-                VarioSource.BARO_ACCEL -> "Vario baro+accél."
-                VarioSource.BARO -> "Vario baro"
-                VarioSource.OGN -> "Vario OGN"
-                else -> "Vario indisponible"
-            },
+            varioLabel = varioLabel(snap?.source),
             varioText = climb?.let { (if (it >= 0) "+" else "") + formatFixed(it, 1, decimalComma = true) } ?: "—",
             varioMs = climb ?: 0.0,
             spiralText = snap?.avgSpiralMs?.let { signedMs(it) } ?: "—",
             thermalText = snap?.avgThermalMs?.let { signedMs(it) } ?: "—",
             dayText = snap?.avgDayMs?.let { signedMs(it) } ?: "—",
             circling = snap?.circling ?: false,
-            lat = pos?.lat ?: (fieldPos?.lat ?: 0.0),
-            lon = pos?.lon ?: (fieldPos?.lon ?: 0.0),
+            // carte : dernière position connue (le planeur ne saute pas au terrain) ; distance et marge, elles, en tirets
+            lat = (snap?.gps?.position ?: fieldPos)?.lat ?: 0.0,
+            lon = (snap?.gps?.position ?: fieldPos)?.lon ?: 0.0,
             trackDeg = snap?.gps?.trackDeg ?: 0.0,
-            hasPosition = pos != null,
+            hasPosition = snap?.gps?.position != null,
             fieldLat = fieldPos?.lat ?: 0.0,
             fieldLon = fieldPos?.lon ?: 0.0,
-            trace = snap?.trace?.map { TraceDot(it.position.lat, it.position.lon, it.climbMs) }.orEmpty(),
+            trace = traceDots(snap?.trace),
             zoomLat = zoom?.centre?.lat ?: 0.0,
             zoomLon = zoom?.centre?.lon ?: 0.0,
             zoomRadiusM = zoom?.radiusM ?: 0.0,
@@ -539,6 +573,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             spiralMs = snap?.avgSpiralMs ?: Double.NaN,
             windSpeedKmh = wind?.speedKmh ?: 0.0,
             windForecast = wind?.source == WindSource.FORECAST,
+            traceVersion = snap?.trace?.lastOrNull()?.time?.toEpochMilliseconds() ?: 0L,
             fieldFrequencyText = (r?.field?.id ?: club?.airfieldIcao)?.let { frequencies[it] }?.replace('.', ',') ?: "—",
         )
     }
@@ -550,7 +585,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             sourceLabel = when {
                 snap == null -> "Moteur de vol en pause (arrière-plan)"
                 demo -> "Démo : capteurs simulés"
-                else -> ui().varioLabel + if (!baroPresent) " · pas de baromètre sur ce téléphone" else ""
+                else -> varioLabel(snap.source) + if (!baroPresent) " · pas de baromètre sur ce téléphone" else ""
             },
             sourceOk = snap?.source == VarioSource.BARO_ACCEL || snap?.source == VarioSource.BARO,
             baroHz = snap?.baroHz?.takeIf { it > 0 }?.let { "${it.roundToInt()} Hz" } ?: if (baroPresent) "—" else "absent",
@@ -569,8 +604,15 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         )
     }
 
-    /** Vrai tant qu'un vol est enregistré : l'app garde capteurs et son en arrière-plan. */
-    val inFlight: Boolean get() = running && core.recording
+    /** Vrai tant qu'un vol est enregistré ou détecté : l'app garde capteurs, son et sécurité en arrière-plan. */
+    val inFlight: Boolean get() = running && (core.recording || lastPhase == FlightPhase.FLYING)
+
+    private fun varioLabel(src: VarioSource?) = when (src) {
+        VarioSource.BARO_ACCEL -> "Vario baro+accél."
+        VarioSource.BARO -> "Vario baro"
+        VarioSource.OGN -> "Vario OGN"
+        else -> "Vario indisponible"
+    }
 
     private fun refLabel(r: AltitudeRef) = when (r) {
         AltitudeRef.BARO_FIELD -> "calé terrain"

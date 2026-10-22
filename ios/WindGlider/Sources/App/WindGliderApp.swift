@@ -26,14 +26,24 @@ struct WindGliderApp: App {
 /// Édition Lite : Prévol, Pilotage, Mes vols (comme BuildConfig.LITE sur Android, sans l'onglet Tuto pour l'instant).
 /// Premier lancement : avertissement de sécurité ; « Avant de voler » une fois par lancement avant Pilotage.
 struct RootView: View {
+    /// Build de développement seulement : `-bench` ouvre directement Pilotage (mesures d'énergie reproductibles
+    /// sur l'iPhone, sans toucher l'écran). L'avertissement de prévol doit avoir été acquitté une fois ; jamais en version publiée.
+    static var bench: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-bench")
+        #else
+        false
+        #endif
+    }
+
     @EnvironmentObject var app: AppModel
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
-    @State private var tab: AppTab = .prevol
+    @State private var tab: AppTab = RootView.bench ? .pilotage : .prevol
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
-    @State private var pilotNoticeSeen = false
+    @State private var pilotNoticeSeen = RootView.bench
     @Environment(\.scenePhase) private var phase
     /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
-    @State private var welcomeDone = false
+    @State private var welcomeDone = RootView.bench
     @EnvironmentObject var account: AccountModel
     /// profils (« guest » ou identifiant du compte) ayant terminé le tutoriel sur cet iPhone (V20.1 d'Android)
     @AppStorage("tutorialSeen") private var tutorialSeen = ""
