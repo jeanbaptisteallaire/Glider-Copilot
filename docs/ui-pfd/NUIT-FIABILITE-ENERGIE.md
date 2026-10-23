@@ -88,3 +88,45 @@ Limites :
 - en build de développement, le Kotlin n'est pas optimisé : les chiffres absolus sont plus élevés qu'en version publiée ;
 - l'iPhone est branché : la courbe de batterie n'a pas de valeur ;
 - le travail du processeur graphique (MapKit, satellite) n'est pas compté.
+
+## Seconde relecture des correctifs de la nuit
+
+Une seconde revue « logiciel critique » a relu le diff de la nuit. Elle a trouvé des défauts que ces correctifs avaient introduits. Tous sont corrigés (commit d5cf178).
+
+**Bloquants**
+- Après un redémarrage en vol, la marge restait en tirets alors que les alertes parlaient.
+- En baromètre seul, le vario doublait la montée.
+
+**À corriger**
+- Reprise intempestive au sol après un redémarrage.
+- « Enregistrement repris » annoncé à tort.
+- Annonce « mémoire pleine » en démo.
+- L'écran et la voix ne parlaient pas toujours du même terrain.
+- Le repli de `ui()` laissait des valeurs périmées affichées.
+- « Recentrer » restait sans effet sur un planeur immobile.
+
+## Autres corrections de fiabilité (fin de nuit)
+
+| Constat | Correction |
+|---|---|
+| **M4** relief inconnu dessiné comme un sol plat | La coupe montre un trou là où le relief est inconnu. Une pastille ambre « Relief non vérifié » apparaît quand la marge ne tient pas compte du relief. |
+| **M5** calage « terrain » sur le sol du modèle ARPEGE | Plus de calage sur ce sol : calage GPS à la place. |
+| **M6** IGC fermé par REC en départ automatique | REC ne ferme plus l'IGC d'un enregistrement automatique qui continue. |
+| **M7** « Chrono lancé » annoncé sans fichier | L'annonce n'est faite que si l'IGC est vraiment ouvert. |
+| **M9** redémarrage de l'app en vol | Retour direct à Pilotage. Au-dessus de 30 km/h, l'enregistrement reprend et les alertes sont armées. |
+| **M10** perte du GPS ou du vario jamais annoncée | Annonce vocale de la perte du GPS (après 10 s) ou du vario (après 5 s), puis de leur retour. Composant commun `SensorWatchdog`, testé. |
+| **M11** vario baro jamais disponible sur iPhone | Voir plus haut. |
+| Mineurs | Le planeur passe en ambre quand le GPS est périmé. Une altitude infinie affiche des tirets. Une arrivée sous le terrain s'affiche en rouge. |
+| Énergie | Mode économie automatique quand l'iPhone chauffe ou en mode Économie d'énergie : carte à 20 i/s, OGN en pause, pastille « Économie ». |
+
+## Non fait, ou à valider par JB
+
+1. **Carte par pas**, pour environ −45 % de processeur. La carte se recentre par à-coups au lieu de glisser. C'est une décision visuelle : à tester en vol avec `-benchStep` (build de développement).
+2. **Tester en vol** :
+   - la réactivité du vario, qui reçoit désormais environ 1 mesure baro par seconde, fusionnée avec l'accéléromètre ;
+   - la fluidité de la carte avec le seuil invisible ;
+   - la reprise après un redémarrage.
+3. **Le seuil d'alerte « au sol »** (30 s sous 30 km/h, hors spirale) est dans le code commun : Android en profite aussi. À valider.
+4. **Fuites mémoire** : test d'endurance d'une heure en cours (voir ci-dessous).
+5. **Reste de la revue** : trace en un seul calque (recommandation énergie 4), capteurs hors du fil principal (14), `ui()` découpé en champs rapides et lents (15), tests unitaires de `IosFlightEngine`.
+6. **Android** : aucune de ces corrections iOS n'est encore portée. Seules les corrections du code commun s'appliquent à Android.
