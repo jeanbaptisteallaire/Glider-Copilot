@@ -262,6 +262,7 @@ struct FluidMapView: UIViewRepresentable {
         func update(p: PilotUi, airspaces: [AirspaceShape], traffic: TrafficSnapshot?, on v: MKMapView) {
             let first = self.p == nil
             self.p = p
+            (v.view(for: ownship) as? OwnshipView)?.setStale(p.hasPosition && !p.gpsOk && !p.demo)
             if first { camDistance = control.distance }
             // espaces aériens : une fois (ou si le pack change)
             let airspaces = FluidMapView.benchFlag("-benchNoZones") ? [] : airspaces
@@ -577,6 +578,7 @@ final class OwnshipView: MKAnnotationView {
     }
     required init?(coder: NSCoder) { fatalError() }
     func rotate(_ deg: Double) { icon.transform = CGAffineTransform(rotationAngle: deg * .pi / 180) }
+    func setStale(_ s: Bool) { icon.stale = s }
 }
 
 final class GliderIcon: UIView {
@@ -612,13 +614,16 @@ final class GliderIcon: UIView {
         return [wing, body, tail]
     }
 
+    /// Position périmée (GPS perdu) : planeur ambre, comme dans Godspeed (« l'information fausse doit avoir l'air fausse »).
+    var stale = false { didSet { if stale != oldValue { setNeedsDisplay() } } }
+
     override func draw(_ rect: CGRect) {
         let r = bounds.insetBy(dx: 1.5, dy: 1.5)
         let paths = parts(in: r)
         // contour de la silhouette entière : trait noir sous les pièces, puis remplissage blanc par-dessus
         UIColor.black.setStroke()
         for p in paths { p.lineWidth = 1.2; p.lineJoinStyle = .round; p.stroke() }
-        UIColor.white.setFill()
+        (stale ? UIColor(WG.warn) : UIColor.white).setFill()
         for p in paths { p.fill() }
     }
 }

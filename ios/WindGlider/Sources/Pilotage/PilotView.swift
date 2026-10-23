@@ -440,7 +440,7 @@ struct ProfileStrip: View {
         .chartXAxis { AxisMarks(values: .automatic(desiredCount: 3)) { AxisGridLine() } }
         .chartYAxis { AxisMarks(position: .leading, values: .automatic(desiredCount: 3)) { AxisGridLine().foregroundStyle(darkMode ? Color.white.opacity(0.25) : Color.gray.opacity(0.3)); AxisValueLabel().foregroundStyle(darkMode ? Color.white : WG.dim).font(darkMode ? WG.caption2.weight(.semibold) : WG.caption2) } }
         .overlay(alignment: .topTrailing) {
-            if !p.arrivalText.isEmpty { Text(p.arrivalText).font(WG.caption2.weight(.semibold)).foregroundStyle(PI.good).padding(.trailing, 80) }
+            if !p.arrivalText.isEmpty { Text(p.arrivalText).font(WG.caption2.weight(.semibold)).foregroundStyle(p.arrivalAltM >= p.fieldElevM ? PI.good : WG.bad).padding(.trailing, 80) }
         }
         .overlay(alignment: .bottomTrailing) {
             if !p.profileEndText.isEmpty { Text(p.profileEndText).font(WG.caption2).foregroundStyle(PI.dim).offset(y: 12) }

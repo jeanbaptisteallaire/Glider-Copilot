@@ -156,7 +156,7 @@ object AltitudeTape {
     }
 
     fun state(altM: Double?, minimumM: Double?, marginKnown: Boolean): AltitudeTapeState {
-        if (altM == null || altM.isNaN()) {
+        if (altM == null || !altM.isFinite()) {   // NaN ou infini : tirets, jamais un tambour qui tourne sans fin
             return AltitudeTapeState(false, null, null, MarginLevel.UNKNOWN, false, "", emptyList())
         }
         val margin = if (marginKnown && minimumM != null && !minimumM.isNaN()) altM - minimumM else null
