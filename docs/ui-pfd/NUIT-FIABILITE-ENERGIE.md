@@ -59,6 +59,31 @@ Méthode : `-bench` (build de développement seulement) ouvre Pilotage en démo.
 | **Seuil invisible** (pas de caméra pour moins d'un demi-point d'écran et moins de 0,2°) | **29** | **Retenu : environ −30 % pour l'app, sans changement à l'écran attendu** |
 | Carte par pas (`-benchStep` : recentrage à 15 % de l'écran ou 10° de route) | 23 | Environ −45 %, mais avec un changement visible : **à décider par JB** |
 
+### Version optimisée (Kotlin et Swift en Release, signée pour le développement)
+
+| Essai | Processeur (% d'un cœur) |
+|---|---|
+| Pilotage en démo, carte | 27 à 28 |
+| Pilotage en démo, sans carte | 13 |
+
+**Profil Time Profiler** (20 s, sans carte), sur environ 11 % de processeur :
+- interface SwiftUI de Pilotage : environ 5 % ;
+- calcul de l'image de l'écran (`ui()`) : environ 5 %, dont **`formatFixed` pour 3,9 %** ;
+- sécurité et relief : environ 3 %, dont 2 % pour le relief ;
+- nettoyage mémoire de Kotlin : environ 2 %.
+
+`formatFixed` créait un `NSNumberFormatter` à chaque appel. Il est maintenant mis en cache, avec une sortie identique, vérifiée par les tests de format sur la cible iOS. Dans ce scénario de démo, le gain est faible : 13,4 % → 13,0 %.
+
+**À retenir** : l'app consomme environ 27 % d'un cœur en vol, dont environ 15 points pour la carte. Le plus gros levier restant est la carte par pas (essai : 23 % en build de développement). C'est une décision pour JB.
+
+### Découverte en mesurant : le vario barométrique ne marchait pas sur iPhone
+
+Le baromètre de l'iPhone livre environ 1 mesure par seconde. Le moteur, réglé pour Android (environ 25 Hz, seuil de fraîcheur de 1 s), jugeait chaque mesure périmée. De plus, l'horodatage du capteur dérive par rapport à l'horloge du moteur. Résultat : « Vario indisponible » en permanence.
+
+Corrigé : seuil de 3 s sur iOS, et chaque mesure est datée à son arrivée. Sur 25 relevés consécutifs, le vario affiche 25 fois « Vario baro+accél. ».
+
+**À vérifier en vol** : la réactivité du vario, qui reçoit désormais 1 mesure baro par seconde fusionnée avec l'accéléromètre à 50 Hz.
+
 Limites :
 - en build de développement, le Kotlin n'est pas optimisé : les chiffres absolus sont plus élevés qu'en version publiée ;
 - l'iPhone est branché : la courbe de batterie n'a pas de valeur ;
