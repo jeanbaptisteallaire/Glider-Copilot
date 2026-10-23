@@ -362,6 +362,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     }
 
     fun startChrono() { core.startManual(clockNow()) }
+    /** Redémarrage de l'app en vol : alertes armées sans délai, enregistrement relancé. */
+    fun resumeInFlight() { safety.resumeInFlight(); core.startManual(clockNow()) }
     /**
      * Arrêt manuel. En départ automatique, toucher REC en vol ne doit pas fermer l'IGC d'un enregistrement qui continue
      * (revue résilience M6 : le vol était perdu sans signe) : le fichier n'est fermé que si l'enregistrement s'arrête.

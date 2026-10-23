@@ -287,6 +287,9 @@ class SafetyAlerts(
     /** Armé seulement une fois la marge confortable atteinte : pas d'alerte au remorqué ni au treuil. */
     var established = false
         private set
+
+    /** Reprise en vol après redémarrage de l'app : armé d'emblée (revue résilience M9). */
+    fun establishNow() { established = true }
     private val last = HashMap<SafetyAlert.Kind, Instant>()
 
     private fun ok(k: SafetyAlert.Kind, now: Instant, every: Duration = cooldown): Boolean {
@@ -390,6 +393,12 @@ class SafetyEngine(
     }
 
     fun onFix(fix: GpsFix) = wind.onFix(fix)
+
+    /**
+     * Reprise après un redémarrage de l'app en vol (revue résilience M9) : les alertes sont armées tout de suite,
+     * sans attendre que la marge remonte au-dessus du seuil (elles ne se seraient peut-être jamais armées).
+     */
+    fun resumeInFlight() = alerts.establishNow()
 
     /** [armed] : alertes vocales seulement en vol. */
     fun update(fix: GpsFix, altitudeM: Double, climbMs: Double, circling: Boolean, cfg: SafetyConfig, now: Instant, armed: Boolean): SafetyState? {

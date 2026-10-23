@@ -37,14 +37,21 @@ struct RootView: View {
         #endif
     }
 
+    /// Redémarrage de l'app pendant un vol (mémoire, plantage) : retour direct à Pilotage, sans accueil ni tutoriel
+    /// (revue résilience M9). Vrai si un enregistrement était en cours il y a moins de 6 h.
+    static let resumeInFlight: Bool = {
+        let t = UserDefaults.standard.double(forKey: AppModel.flightInProgressKey)
+        return t > 0 && Date().timeIntervalSince1970 - t < 6 * 3600
+    }()
+
     @EnvironmentObject var app: AppModel
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
-    @State private var tab: AppTab = RootView.bench ? .pilotage : .prevol
+    @State private var tab: AppTab = RootView.bench || RootView.resumeInFlight ? .pilotage : .prevol
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
-    @State private var pilotNoticeSeen = RootView.bench
+    @State private var pilotNoticeSeen = RootView.bench || RootView.resumeInFlight
     @Environment(\.scenePhase) private var phase
     /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
-    @State private var welcomeDone = RootView.bench
+    @State private var welcomeDone = RootView.bench || RootView.resumeInFlight
     @EnvironmentObject var account: AccountModel
     /// profils (« guest » ou identifiant du compte) ayant terminé le tutoriel sur cet iPhone (V20.1 d'Android)
     @AppStorage("tutorialSeen") private var tutorialSeen = ""
@@ -54,7 +61,7 @@ struct RootView: View {
             WelcomeView { welcomeDone = true }
         } else if disclaimerVersion < DisclaimerView.version {
             DisclaimerView { disclaimerVersion = DisclaimerView.version }
-        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.isRecording {
+        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.isRecording && !RootView.resumeInFlight {
             // tutoriel complet et obligatoire au premier lancement de chaque profil (ni « Passer »)
             TutorialView(mandatory: true) {
                 tutorialSeen = (tutorialSeen.isEmpty ? "" : tutorialSeen + ",") + account.tutorialKey

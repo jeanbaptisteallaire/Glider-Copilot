@@ -30,11 +30,17 @@ final class AppModel: ObservableObject {
         get { flight.pilot }
         set {
             flight.pilot = newValue
-            if isRecording != newValue.recording { isRecording = newValue.recording }
+            if isRecording != newValue.recording {
+                isRecording = newValue.recording
+                // vol en cours mémorisé : un redémarrage de l'app en vol reprend directement (revue résilience M9)
+                if newValue.recording { UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.flightInProgressKey) }
+                else { UserDefaults.standard.removeObject(forKey: Self.flightInProgressKey) }
+            }
         }
     }
     /// Enregistrement en cours : seul champ du vol lu hors de Pilotage, republié seulement quand il change.
     @Published private(set) var isRecording = false
+    static let flightInProgressKey = "flightInProgressAt"
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
     /// Pastilles de Pilotage, même sens qu'Android (DeviceState.kt) : GPS = autorisation et localisation actives,
@@ -205,6 +211,12 @@ final class AppModel: ObservableObject {
         #endif
         applyGlideSettings()
         engine.start()
+        // reprise après un redémarrage en vol : nouvel IGC (le précédent est déjà fermé et gardé) et annonce
+        if RootView.resumeInFlight && !resumed {
+            resumed = true
+            engine.resumeInFlight()
+            voice.speak(tr("Application redémarrée en vol. Enregistrement repris."), force: true)
+        }
         timer?.invalidate()
         // mode « common » : l'écran de vol reste à jour pendant un défilement ou un menu ouvert (revue résilience M15)
         let t = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
@@ -249,6 +261,7 @@ final class AppModel: ObservableObject {
 
     /// Écran éteint pendant un vol : le minuteur ne fait plus que le strict nécessaire.
     private var inBackground = false
+    private var resumed = false
 
     func enterForeground() {
         inBackground = false
