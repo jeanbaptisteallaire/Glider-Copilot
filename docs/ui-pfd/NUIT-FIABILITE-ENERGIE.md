@@ -47,10 +47,17 @@ Ce document liste ce qui a été corrigé, ce qui a été mesuré sur l'iPhone 1
 
 Méthode : `-bench` (build de développement seulement) ouvre Pilotage en démo. `BenchMeter` écrit toutes les 30 s le temps processeur de l'app (en % d'un cœur), l'état thermique et la batterie dans `Documents/bench.log`. Le journal est relu depuis le Mac avec `devicectl`. Instruments (`xctrace`) n'a pas réussi à joindre l'iPhone par le réseau.
 
-| Version | Processeur (% d'un cœur) | Thermique |
+| Version / essai | Processeur (% d'un cœur) | Lecture |
 |---|---|---|
-| Avant (529f7f5) | 40,7 | nominal |
-| Après | (en cours) | |
+| Avant (529f7f5) | 40,7 | Référence |
+| Optimisations de cette nuit, avant le seuil caméra | 40,8 | Pas d'effet sur ce scénario : les postes allégés (onglets cachés, OGN, écran éteint) n'y jouent pas |
+| Sans carte (`-benchNoMap`) | 15,3 | La carte coûte environ 25 points |
+| Carte à 15 i/s (`-benchFps 15`) | 35 | La cadence n'est pas le principal levier |
+| Sans zones aériennes / sans trace | 39,5 / 40,5 | Ni l'une ni l'autre |
+| Carte immobile (`-benchStill`) | 22 | **Le mouvement de la caméra coûte environ 19 points** |
+| Caméra animée par MapKit à 2 Hz / 1 Hz | 44 / 44 | Pire : MapKit dessine alors à 60 i/s. Abandonné |
+| **Seuil invisible** (pas de caméra pour moins d'un demi-point d'écran et moins de 0,2°) | **29** | **Retenu : environ −30 % pour l'app, sans changement à l'écran attendu** |
+| Carte par pas (`-benchStep` : recentrage à 15 % de l'écran ou 10° de route) | 23 | Environ −45 %, mais avec un changement visible : **à décider par JB** |
 
 Limites :
 - en build de développement, le Kotlin n'est pas optimisé : les chiffres absolus sont plus élevés qu'en version publiée ;

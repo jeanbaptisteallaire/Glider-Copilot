@@ -6,6 +6,21 @@ import WindGliderShared
 /// prédit entre deux positions GPS (OwnshipPredictor), cap et zoom lissés, contenu mis à jour par différence.
 /// Même contenu et même comportement que FlightMapView (V2) : trace colorée, route, terrain, espaces aériens, OGN.
 struct FluidMapView: UIViewRepresentable {
+    /// Réglages de mesure d'énergie (build de développement seulement).
+    static var benchCameraHz: Double? {
+        #if DEBUG
+        let a = ProcessInfo.processInfo.arguments
+        if let i = a.firstIndex(of: "-benchCamHz"), i + 1 < a.count { return Double(a[i + 1]) }
+        #endif
+        return nil
+    }
+    static func benchFlag(_ f: String) -> Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains(f)
+        #else
+        false
+        #endif
+    }
     let p: PilotUi
     var airspaces: [AirspaceShape] = []
     var traffic: TrafficSnapshot?
@@ -110,6 +125,7 @@ struct FluidMapView: UIViewRepresentable {
         private var lastLabelsAt = 0.0
         private weak var lastTraffic: TrafficSnapshot?
         private var lastCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
+        private var shownCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var airspaceLabels: [String: AirspaceLabel] = [:]
 
         init(predictor: OwnshipPredictor, control: MapControl) {
@@ -153,6 +169,7 @@ struct FluidMapView: UIViewRepresentable {
         @objc private func frame() {
             // onglet Pilotage caché : aucune image (la carte tournait à 30 i/s derrière Prévol)
             guard let v = view, let p, v.window != nil else { return }
+            if FluidMapView.benchFlag("-benchStill") { return }
             let now = CACurrentMediaTime()
             let dt = min(now - lastFrame, 0.1)
             lastFrame = now
@@ -203,13 +220,32 @@ struct FluidMapView: UIViewRepresentable {
             }
             // planeur immobile (au sol, démo arrêtée) : on ne redemande pas d'image à MapKit pour rien
             let c = camCenter!
-            if let l = lastCamera, abs(l.lat - c.latitude) < 1e-7, abs(l.lon - c.longitude) < 1e-7,
-               abs(l.dist - camDistance) < camDistance * 0.001, abs(OwnshipPredictor.angleDiff(l.head, camHeading)) < 0.05 {
+            // seuil invisible : moins d'un demi-point d'écran, 0,2° de cap, 0,3 % de zoom. Le lissage produit sans fin des
+            // déplacements infimes (spirale surtout) qui faisaient redessiner MapKit à 30 i/s pour rien (mesuré : la
+            // caméra coûte ~19 points de processeur sur 41).
+            let mPerPt = camDistance * 0.8 / Double(max(v.bounds.height, 1))
+            if let l = lastCamera,
+               CLLocation(latitude: l.lat, longitude: l.lon).distance(from: CLLocation(latitude: c.latitude, longitude: c.longitude)) < 0.5 * mPerPt,
+               abs(l.dist - camDistance) < camDistance * 0.003, abs(OwnshipPredictor.angleDiff(l.head, camHeading)) < 0.2 {
                 (v.view(for: ownship) as? OwnshipView)?.rotate(track - camHeading)
                 return
             }
             lastCamera = (c.latitude, c.longitude, camDistance, camHeading)
-            v.camera = MKMapCamera(lookingAtCenter: c, fromDistance: camDistance, pitch: 0, heading: camHeading)
+            let cam = MKMapCamera(lookingAtCenter: c, fromDistance: camDistance, pitch: 0, heading: camHeading)
+            if FluidMapView.benchFlag("-benchStep"), let shown = shownCamera {
+                // carte par pas : le planeur bouge sur une carte fixe ; recentrage quand il s'écarte de 15 % de la
+                // hauteur visible, quand la route a tourné de plus de 10°, ou quand le zoom change de plus de 8 %
+                let visibleM = camDistance * 0.9
+                let moved = CLLocation(latitude: c.latitude, longitude: c.longitude).distance(from: CLLocation(latitude: shown.lat, longitude: shown.lon))
+                let turned = abs(OwnshipPredictor.angleDiff(camHeading, shown.head))
+                let zoomed = abs(camDistance - shown.dist) / shown.dist
+                if moved < visibleM * 0.15 && turned < 10 && zoomed < 0.08 {
+                    (v.view(for: ownship) as? OwnshipView)?.rotate(track - shown.head)
+                    return
+                }
+            }
+            shownCamera = (c.latitude, c.longitude, camDistance, camHeading)
+            v.camera = cam
             (v.view(for: ownship) as? OwnshipView)?.rotate(track - camHeading)
         }
 
@@ -228,6 +264,7 @@ struct FluidMapView: UIViewRepresentable {
             self.p = p
             if first { camDistance = control.distance }
             // espaces aériens : une fois (ou si le pack change)
+            let airspaces = FluidMapView.benchFlag("-benchNoZones") ? [] : airspaces
             let ids = airspaces.map(\.id)
             if ids != airspaceIds {
                 v.removeOverlays(v.overlays.filter { $0 is AirspaceOverlay })
@@ -247,7 +284,7 @@ struct FluidMapView: UIViewRepresentable {
             if now - lastLabelsAt >= 1 { lastLabelsAt = now; placeAirspaceLabels(on: v) }
             // trace : seulement quand un point est ajouté (version = instant du dernier point ; le nombre de points
             // plafonne à 600 et ne suffit pas à voir qu'elle avance)
-            if p.traceVersion != traceVersion {
+            if p.traceVersion != traceVersion && !FluidMapView.benchFlag("-benchNoTrace") {
                 traceVersion = p.traceVersion
                 v.removeOverlays(traceOverlays)
                 traceOverlays = Self.segments(p.trace)
