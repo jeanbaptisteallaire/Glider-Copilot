@@ -32,6 +32,8 @@ struct FluidMapView: UIViewRepresentable {
     var dark = false
     /// Économie (chaleur, mode Économie d'énergie) : carte à 20 i/s.
     var economy = false
+    /// Carte économe : le planeur se déplace sur une carte fixe, recentrée par pas.
+    var stepMap = false
     @EnvironmentObject var map: MapControl
 
     func makeCoordinator() -> Coordinator { Coordinator(predictor: predictor, control: map) }
@@ -68,6 +70,7 @@ struct FluidMapView: UIViewRepresentable {
     func updateUIView(_ v: MKMapView, context: Context) {
         context.coordinator.update(p: p, airspaces: airspaces, traffic: traffic, on: v)
         context.coordinator.setEconomy(economy)
+        context.coordinator.stepMode = stepMap
         // mode sombre : même fond de carte (couleurs, contraste) qu'en mode clair ; seule la route change de couleur
         if context.coordinator.lastDark != dark {
             context.coordinator.lastDark = dark
@@ -130,6 +133,8 @@ struct FluidMapView: UIViewRepresentable {
         private var lastCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var shownCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var lastPlanesHeading = 0.0
+        /// « Carte économe » (option du menu ⋯, désactivée par défaut) : recentrage par pas (~−45 % de processeur mesuré).
+        var stepMode = false
         private var baseFps: Float = 30
         /// Économie (chaleur, mode Économie d'énergie) : carte à 20 i/s.
         func setEconomy(_ on: Bool) {
@@ -244,7 +249,7 @@ struct FluidMapView: UIViewRepresentable {
             }
             lastCamera = (c.latitude, c.longitude, camDistance, camHeading)
             let cam = MKMapCamera(lookingAtCenter: c, fromDistance: camDistance, pitch: 0, heading: camHeading)
-            if FluidMapView.benchFlag("-benchStep"), let shown = shownCamera {
+            if (stepMode || FluidMapView.benchFlag("-benchStep")), let shown = shownCamera {
                 // carte par pas : le planeur bouge sur une carte fixe ; recentrage quand il s'écarte de 15 % de la
                 // hauteur visible, quand la route a tourné de plus de 10°, ou quand le zoom change de plus de 8 %
                 let visibleM = camDistance * 0.9

@@ -62,6 +62,8 @@ struct PilotView: View {
     @AppStorage(Lang.key) private var lang = Lang.current
     /// Option du menu « ⋯ » : fréquence radio du terrain de référence (JB, 22/10/2026).
     @AppStorage("pilot.showRadio") private var showRadio = false
+    /// Option « Carte économe » (recentrage par pas, moins de batterie) ; désactivée par défaut.
+    @AppStorage("map.stepMode") private var stepMap = false
 
     var body: some View {
         let p = flight.pilot
@@ -76,7 +78,7 @@ struct PilotView: View {
             } else if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                 FlightMapView(p: p, airspaces: app.airspaces)
             } else {
-                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: flight.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark, economy: app.economy)   // mentions Plans au-dessus des boutons du bas
+                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: flight.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark, economy: app.economy, stepMap: stepMap)   // mentions Plans au-dessus des boutons du bas
                     .ignoresSafeArea(.container, edges: .bottom)
             }
             // une seule pile : bandeau → coupe (si ouverte) → outils des bords ; c'est la mise en page qui fait
@@ -342,6 +344,7 @@ struct PilotView: View {
         Menu {
             Toggle(tr("Vario"), isOn: $showVario)
             Toggle(tr("Fréquence radio du terrain"), isOn: $showRadio)
+            Toggle(tr("Carte économe (recentrage par pas)"), isOn: $stepMap)
             Button(app.showAirspaces ? tr("Masquer les zones aéronautiques") : tr("Afficher les zones aéronautiques")) {
                 if app.airspaces.isEmpty { airspaceHint = true } else { app.showAirspaces.toggle() }
             }
