@@ -121,7 +121,7 @@ Une seconde revue « logiciel critique » a relu le diff de la nuit. Elle a trou
 
 ## Non fait, ou à valider par JB
 
-1. **Carte par pas**, pour environ −45 % de processeur. La carte se recentre par à-coups au lieu de glisser. C'est une décision visuelle : à tester en vol avec `-benchStep` (build de développement).
+1. **Carte par pas** : option « Carte économe (recentrage par pas) » dans le menu « ⋯ », désactivée par défaut. Gain mesuré : environ −45 % en build de développement, mais seulement 28 % → 22,5 % (environ −20 %) en version optimisée. En échange, la carte se recentre par à-coups au lieu de glisser. C'est une décision visuelle, à tester en vol.
 2. **Tester en vol** :
    - la réactivité du vario, qui reçoit désormais environ 1 mesure baro par seconde, fusionnée avec l'accéléromètre ;
    - la fluidité de la carte avec le seuil invisible ;
