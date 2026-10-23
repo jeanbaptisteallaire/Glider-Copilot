@@ -11,16 +11,28 @@ import platform.Foundation.decomposedStringWithCanonicalMapping
 actual fun formatFixed(value: Double, decimals: Int, decimalComma: Boolean): String {
     if (value.isNaN()) return "NaN"
     if (value.isInfinite()) return if (value > 0) "Infinity" else "-Infinity"
-    val f = NSNumberFormatter()
-    f.locale = NSLocale(localeIdentifier = "en_US_POSIX")
-    f.minimumFractionDigits = decimals.toULong()
-    f.maximumFractionDigits = decimals.toULong()
-    f.minimumIntegerDigits = 1u
-    f.usesGroupingSeparator = false
-    f.roundingMode = NSNumberFormatterRoundHalfUp
-    f.decimalSeparator = if (decimalComma) "," else "."
-    f.minusSign = "-"
-    return f.stringFromNumber(NSNumber(value)) ?: value.toString()
+    return FormatterCache.get(decimals, decimalComma).stringFromNumber(NSNumber(value)) ?: value.toString()
+}
+
+/**
+ * Un NSNumberFormatter par réglage et par fil (il n'est pas sûr entre fils) : en créer un à chaque appel coûtait
+ * ~35 % du calcul de l'écran de vol (profil Time Profiler sur iPhone 15, nuit du 23/10/2026). Sortie identique.
+ */
+@kotlin.native.concurrent.ThreadLocal
+private object FormatterCache {
+    private val cache = HashMap<Int, NSNumberFormatter>()
+    fun get(decimals: Int, decimalComma: Boolean): NSNumberFormatter = cache.getOrPut(decimals * 2 + if (decimalComma) 1 else 0) {
+        NSNumberFormatter().apply {
+            locale = NSLocale(localeIdentifier = "en_US_POSIX")
+            minimumFractionDigits = decimals.toULong()
+            maximumFractionDigits = decimals.toULong()
+            minimumIntegerDigits = 1u
+            usesGroupingSeparator = false
+            roundingMode = NSNumberFormatterRoundHalfUp
+            decimalSeparator = if (decimalComma) "," else "."
+            minusSign = "-"
+        }
+    }
 }
 
 @Suppress("CAST_NEVER_SUCCEEDS")

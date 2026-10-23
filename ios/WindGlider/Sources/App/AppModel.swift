@@ -33,7 +33,10 @@ final class AppModel: ObservableObject {
             if isRecording != newValue.recording {
                 isRecording = newValue.recording
                 // vol en cours mémorisé : un redémarrage de l'app en vol reprend directement (revue résilience M9)
-                if newValue.recording { UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.flightInProgressKey) }
+                if newValue.recording {
+                    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.flightInProgressKey)
+                    sensors?.motionWanted = true   // vol : vario complet, quel que soit l'onglet
+                }
                 else { UserDefaults.standard.removeObject(forKey: Self.flightInProgressKey) }
             }
         }

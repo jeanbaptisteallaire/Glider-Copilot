@@ -43,6 +43,7 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
     func requestPermission() { location.requestWhenInUseAuthorization() }
 
     func start() {
+        running = true
         location.allowsBackgroundLocationUpdates = true   // vol écran éteint (UIBackgroundModes location)
         location.pausesLocationUpdatesAutomatically = false
         location.startUpdatingLocation()
@@ -57,6 +58,21 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
                 self?.engine?.onPressure(kPa: d.pressure.doubleValue, uptimeS: ProcessInfo.processInfo.systemUptime)
             }
         }
+        if motionWanted { startMotion() }
+    }
+
+    /// Accéléromètre et gyroscope à 50 Hz : seulement quand le vario sert (Pilotage affiché ou vol en cours).
+    /// Au sol sur Prévol, le GPS suffit (club, décollage automatique) — revue énergie 10.
+    var motionWanted = false {
+        didSet {
+            guard motionWanted != oldValue, running else { return }
+            if motionWanted { startMotion() } else { motion.stopDeviceMotionUpdates() }
+        }
+    }
+    private var running = false
+
+    private func startMotion() {
+        guard !motion.isDeviceMotionActive else { return }
         if motion.isDeviceMotionAvailable {
             motion.deviceMotionUpdateInterval = 1.0 / 50
             motion.startDeviceMotionUpdates(to: .main) { [weak self] m, _ in
@@ -71,6 +87,7 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
     }
 
     func stop() {
+        running = false
         location.stopUpdatingLocation()
         altimeter.stopRelativeAltitudeUpdates()
         motion.stopDeviceMotionUpdates()

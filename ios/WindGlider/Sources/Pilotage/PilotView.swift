@@ -119,8 +119,9 @@ struct PilotView: View {
         .alert(tr("Zones aéronautiques"), isPresented: $airspaceHint) { Button("OK", role: .cancel) {} } message: {
             Text(tr("Téléchargez la carte hors ligne de votre région dans Prévol pour afficher les zones aéronautiques (openAIP)."))
         }
-        .onAppear { UIApplication.shared.isIdleTimerDisabled = true; app.applyLaunchDemo() }
-        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false }
+        .onAppear { UIApplication.shared.isIdleTimerDisabled = true; app.applyLaunchDemo(); app.sensors.motionWanted = true }
+        // hors de Pilotage, accéléromètre coupé sauf pendant un vol (le vario sonore en a besoin écran éteint)
+        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false; app.sensors.motionWanted = app.isRecording }
     }
 
     // MARK: haut : sécurité à gauche, terrain à droite
