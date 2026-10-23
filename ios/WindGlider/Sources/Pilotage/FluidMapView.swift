@@ -30,6 +30,8 @@ struct FluidMapView: UIViewRepresentable {
     var bottomInset: CGFloat = 0
     /// Mode sombre de Pilotage : fond de carte sombre d'Apple, route et terrain en violet fluo très clair.
     var dark = false
+    /// Économie (chaleur, mode Économie d'énergie) : carte à 20 i/s.
+    var economy = false
     @EnvironmentObject var map: MapControl
 
     func makeCoordinator() -> Coordinator { Coordinator(predictor: predictor, control: map) }
@@ -65,6 +67,7 @@ struct FluidMapView: UIViewRepresentable {
 
     func updateUIView(_ v: MKMapView, context: Context) {
         context.coordinator.update(p: p, airspaces: airspaces, traffic: traffic, on: v)
+        context.coordinator.setEconomy(economy)
         // mode sombre : même fond de carte (couleurs, contraste) qu'en mode clair ; seule la route change de couleur
         if context.coordinator.lastDark != dark {
             context.coordinator.lastDark = dark
@@ -126,6 +129,12 @@ struct FluidMapView: UIViewRepresentable {
         private weak var lastTraffic: TrafficSnapshot?
         private var lastCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var shownCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
+        private var baseFps: Float = 30
+        /// Économie (chaleur, mode Économie d'énergie) : carte à 20 i/s.
+        func setEconomy(_ on: Bool) {
+            let f: Float = on ? min(20, baseFps) : baseFps
+            if link?.preferredFrameRateRange.preferred != f { link?.preferredFrameRateRange = CAFrameRateRange(minimum: f, maximum: f, preferred: f) }
+        }
         private var airspaceLabels: [String: AirspaceLabel] = [:]
 
         init(predictor: OwnshipPredictor, control: MapControl) {
@@ -143,6 +152,7 @@ struct FluidMapView: UIViewRepresentable {
             if let i = ProcessInfo.processInfo.arguments.firstIndex(of: "-benchFps"), i + 1 < ProcessInfo.processInfo.arguments.count,
                let f = Float(ProcessInfo.processInfo.arguments[i + 1]) { fps = f }
             #endif
+            baseFps = fps
             l.preferredFrameRateRange = CAFrameRateRange(minimum: fps, maximum: fps, preferred: fps)
             l.add(to: .main, forMode: .common)
             link = l

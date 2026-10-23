@@ -41,6 +41,28 @@ final class AppModel: ObservableObject {
     /// Enregistrement en cours : seul champ du vol lu hors de Pilotage, republié seulement quand il change.
     @Published private(set) var isRecording = false
     static let flightInProgressKey = "flightInProgressAt"
+    /// Économie (JB, nuit du 23/10) : iPhone chaud (« serious » ou plus) ou mode Économie d'énergie. Carte à 20 i/s,
+    /// OGN en pause ; vario sonore, marge et IGC jamais dégradés.
+    @Published private(set) var economy = AppModel.economyNow()
+    private static func economyNow() -> Bool {
+        ProcessInfo.processInfo.isLowPowerModeEnabled || ProcessInfo.processInfo.thermalState.rawValue >= ProcessInfo.ThermalState.serious.rawValue
+    }
+    private var powerObservers: [NSObjectProtocol] = []
+    private func watchPower() {
+        let nc = NotificationCenter.default
+        for name in [ProcessInfo.thermalStateDidChangeNotification, Notification.Name.NSProcessInfoPowerStateDidChange] {
+            powerObservers.append(nc.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                Task { @MainActor in
+                    guard let self else { return }
+                    let e = AppModel.economyNow()
+                    if e != self.economy {
+                        self.economy = e
+                        if e { self.traffic?.stop() }
+                    }
+                }
+            })
+        }
+    }
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
     /// Pastilles de Pilotage, même sens qu'Android (DeviceState.kt) : GPS = autorisation et localisation actives,
@@ -125,6 +147,7 @@ final class AppModel: ObservableObject {
             self.predictor.gyro(turnDegS: rate, at: t)
         }
 
+        watchPower()
         engine.onSpeak = { [weak self] text, level in
             self?.voice.speak(text)
             if level.intValue > 0 { UINotificationFeedbackGenerator().notificationOccurred(level.intValue > 1 ? .error : .warning) }
@@ -239,7 +262,7 @@ final class AppModel: ObservableObject {
                 }
                 self.tick += 1
                 if let t = self.traffic, self.tick % 4 == 0 {
-                    if !t.running { self.startTraffic() }
+                    if !t.running && !self.economy { self.startTraffic() }
                     self.trafficSnap = t.snapshot(ownAltitudeM: self.pilot.hasData ? self.pilot.currentAltM : .nan)
                 }
             }

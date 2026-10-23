@@ -76,7 +76,7 @@ struct PilotView: View {
             } else if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                 FlightMapView(p: p, airspaces: app.airspaces)
             } else {
-                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: flight.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark)   // mentions Plans au-dessus des boutons du bas
+                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: flight.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark, economy: app.economy)   // mentions Plans au-dessus des boutons du bas
                     .ignoresSafeArea(.container, edges: .bottom)
             }
             // une seule pile : bandeau → coupe (si ouverte) → outils des bords ; c'est la mise en page qui fait
@@ -195,11 +195,17 @@ struct PilotView: View {
     @ViewBuilder private func statusLine(_ ds: PilotDisplay) -> some View {
         let noZones = app.showAirspaces && app.airspaces.isEmpty
         let noRelief = flight.pilot.marginKnown && !flight.pilot.reliefChecked
-        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || noZones || noRelief {
+        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || noZones || noRelief || app.economy {
             HStack(spacing: 6) {
                 if ds.gpsAlert { badge("GPS") }
                 if ds.baroAlert { badge("BARO") }
                 if ds.dataAlert { badge("DATA") }
+                if app.economy {
+                    // iPhone chaud ou mode Économie : carte moins fluide et OGN en pause, le pilote sait pourquoi
+                    Label(tr("Économie"), systemImage: "thermometer.high")
+                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(WG.warn)
+                        .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: true), in: Capsule())
+                }
                 if noRelief {
                     // marge calculée sans relief (hors carte ou carte absente) : à ne pas lire comme une marge vérifiée
                     Label(tr("Relief non vérifié"), systemImage: "mountain.2")
