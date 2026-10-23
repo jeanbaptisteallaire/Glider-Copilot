@@ -127,6 +127,6 @@ Une seconde revue « logiciel critique » a relu le diff de la nuit. Elle a trou
    - la fluidité de la carte avec le seuil invisible ;
    - la reprise après un redémarrage.
 3. **Le seuil d'alerte « au sol »** (30 s sous 30 km/h, hors spirale) est dans le code commun : Android en profite aussi. À valider.
-4. **Fuites mémoire** : test d'endurance d'une heure en cours (voir ci-dessous).
+4. **Fuites mémoire** : test d'endurance d'une heure fait (version optimisée, Pilotage en démo). La mémoire passe de 302 à environ 360 Mo en 35 min, puis reste stable entre 355 et 369 Mo. C'est le cache de tuiles de la carte, pas une fuite. Le processeur reste stable autour de 30 %, et l'état thermique « nominal » pendant toute l'heure.
 5. **Reste de la revue** : trace en un seul calque (recommandation énergie 4), capteurs hors du fil principal (14), `ui()` découpé en champs rapides et lents (15), tests unitaires de `IosFlightEngine`.
 6. **Android** : aucune de ces corrections iOS n'est encore portée. Seules les corrections du code commun s'appliquent à Android.
