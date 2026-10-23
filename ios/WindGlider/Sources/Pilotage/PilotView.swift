@@ -121,7 +121,7 @@ struct PilotView: View {
         }
         .onAppear { UIApplication.shared.isIdleTimerDisabled = true; app.applyLaunchDemo(); app.sensors.motionWanted = true }
         // hors de Pilotage, accéléromètre coupé sauf pendant un vol (le vario sonore en a besoin écran éteint)
-        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false; app.sensors.motionWanted = app.isRecording }
+        .onDisappear { UIApplication.shared.isIdleTimerDisabled = false; app.sensors.motionWanted = app.isRecording || app.engine.inFlight }
     }
 
     // MARK: haut : sécurité à gauche, terrain à droite
@@ -424,8 +424,9 @@ struct ProfileStrip: View {
         let total = max(pts.last?.sKm ?? 0, p.routeKm)
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
-            ForEach(Array(pts.enumerated()).filter { $0.element.terrainM.isFinite }, id: \.offset) { _, d in
-                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(darkMode ? Color(red: 0.55, green: 1.0, blue: 0.45).opacity(0.75) : PI.good.opacity(0.35))
+            // une série par tronçon de relief connu : un vrai trou là où il est inconnu (pas de sol interpolé)
+            ForEach(Array(pts.enumerated()).filter { $0.element.terrainM.isFinite }, id: \.offset) { i, d in
+                AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM), series: .value("tronçon", reliefSegment(pts, i))).foregroundStyle(darkMode ? Color(red: 0.55, green: 1.0, blue: 0.45).opacity(0.75) : PI.good.opacity(0.35))
             }
             if total > 0 {
                 LineMark(x: .value("km", 0.0), y: .value("alt", p.currentAltM), series: .value("s", "plané"))
@@ -455,6 +456,13 @@ struct ProfileStrip: View {
         .overlay { if total == 0 { Text(tr("Coupe disponible dès la première position")).font(WG.caption).foregroundStyle(PI.dim) } }
         .padding(.horizontal, 12).padding(.top, 14)
     }
+}
+
+/// Numéro du tronçon de relief connu auquel appartient le point i (change à chaque trou NaN).
+func reliefSegment(_ pts: [ProfileDot], _ i: Int) -> Int {
+    var seg = 0
+    for k in 0..<i where !pts[k].terrainM.isFinite && (k + 1 < pts.count && pts[k + 1].terrainM.isFinite) { seg += 1 }
+    return seg
 }
 
 /// État de la carte partagé avec les boutons : recentrage, orientation, zoom (comme le contrôleur de carte Android).

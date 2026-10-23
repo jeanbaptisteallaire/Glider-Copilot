@@ -66,6 +66,8 @@ class FlightEngineCore(
      * iPhone 15, revue résilience M11).
      */
     private val baroFreshS: Double = 1.0,
+    /** Faux en démo : pas d'IGC voulu, ce n'est pas une panne (pas d'annonce « mémoire pleine »). */
+    private val igcEnabled: () -> Boolean = { true },
 ) {
     private val baroFreshNs = (baroFreshS * 1e9).toLong()
     private val filter = VarioFilter()
@@ -165,7 +167,7 @@ class FlightEngineCore(
         manualStart = now; manualStop = null
         startRecording(now)
         // revue résilience M7 : ne jamais annoncer un enregistrement qui n'a pas pu s'ouvrir (mémoire pleine)
-        announce(if (recorder != null) "Chrono lancé" else "Enregistrement impossible, mémoire pleine")
+        announce(if (recorder != null || !igcEnabled()) "Chrono lancé" else "Enregistrement impossible, mémoire pleine")
     }
 
     fun stopManual(now: Instant) {
@@ -178,6 +180,7 @@ class FlightEngineCore(
     val recording: Boolean get() = recorder != null
 
     private fun startRecording(start: Instant) {
+        if (recorder != null) return   // déjà en cours (reprise après redémarrage puis décollage détecté) : un seul IGC
         val sink = igc.open(start) ?: return
         recorder = IgcRecorder(header(start), sink)
     }
@@ -186,7 +189,9 @@ class FlightEngineCore(
 
     private fun calibrate(fix: GpsFix, ns: Long) {
         if (!baroFresh(ns) || baroAlt.isNaN()) return
-        if (detector.phase == FlightPhase.FLYING || recording) return   // calage figé en vol
+        // calage figé en vol… s'il existe : sans calage (app relancée en vol, REC avant 10 fixes), on cale encore sur le
+        // GPS plutôt que de rester en altitude pression standard tout le vol (relecture de la nuit du 23/10/2026)
+        if ((detector.phase == FlightPhase.FLYING || recording) && offset != null) return
         val slow = (fix.groundSpeedKmh ?: 0.0) < 10.0
         val fe = fieldElevationM(); val fp = field()
         if (slow && fe != null && fp != null && Geo.distanceKm(fp, fix.position) < 1.5 && (fix.accuracyM ?: 99.0) < 50) {

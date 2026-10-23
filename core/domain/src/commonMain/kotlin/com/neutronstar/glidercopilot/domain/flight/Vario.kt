@@ -97,7 +97,9 @@ class VarioFilter(
     }
 
     private fun predict(timeNs: Long, accel: Double, withAccel: Boolean) {
-        val dt = ((timeNs - lastTimeNs) / 1e9).coerceIn(0.0, 0.5)
+        // borne du pas : 0,5 s avec l'accéléromètre (50 Hz) ; en baro seul, le pas réel (iPhone : ~1 s par mesure).
+        // Borner à 0,5 s un pas de 1 s doublait la montée estimée (relecture de la nuit du 23/10/2026).
+        val dt = ((timeNs - lastTimeNs) / 1e9).coerceIn(0.0, if (withAccel) 0.5 else 5.0)
         lastTimeNs = timeNs
         if (dt <= 0.0) return
         val a = if (withAccel) accel - bias else 0.0

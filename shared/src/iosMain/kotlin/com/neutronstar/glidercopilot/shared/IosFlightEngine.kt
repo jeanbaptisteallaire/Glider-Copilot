@@ -6,6 +6,7 @@ import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.domain.Terrain
 import com.neutronstar.glidercopilot.domain.flight.TracePoint
+import com.neutronstar.glidercopilot.domain.flight.VarioPalette
 import com.neutronstar.glidercopilot.domain.flight.SensorWatchdog
 import com.neutronstar.glidercopilot.domain.flight.AltitudeRef
 import com.neutronstar.glidercopilot.domain.flight.DemoFlight
@@ -202,6 +203,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         igc = IgcSinkFactory { start -> if (demo) null else openIgc(start) },
         announce = { onSpeak(it, 0) },
         autoTakeoff = { autoTakeoff || demo },
+        igcEnabled = { !demo },
         baroFreshS = 3.0,   // CMAltimeter : ~1 Hz avec retard (mesuré sur iPhone 15)
         // revue résilience M5 : calage « terrain » seulement sur une altitude mesurée (openAIP, relief) ; le sol du modèle
         // ARPEGE (maille ~10 km) fausserait la marge vers les autres terrains et le relief : calage GPS à la place
@@ -363,7 +365,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
 
     fun startChrono() { core.startManual(clockNow()) }
     /** Redémarrage de l'app en vol : alertes armées sans délai, enregistrement relancé. */
-    fun resumeInFlight() { safety.resumeInFlight(); core.startManual(clockNow()) }
+    fun resumeInFlight() { pendingResumeNs = uptimeNs() }
+    private var pendingResumeNs: Long? = null
     /**
      * Arrêt manuel. En départ automatique, toucher REC en vol ne doit pas fermer l'IGC d'un enregistrement qui continue
      * (revue résilience M6 : le vol était perdu sans signe) : le fichier n'est fermé que si l'enregistrement s'arrête.
@@ -420,7 +423,20 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         val alt = snap.altitudeM ?: return
         lastAltitudeM = alt
         // alertes armées dès qu'un vol est détecté ou enregistré, pas seulement après REC (revue résilience C3)
-        val armed = demo || snap.recording || snap.phase == FlightPhase.FLYING
+        val altCalibrated = snap.altitudeRef != AltitudeRef.BARO_ISA && snap.altitudeRef != AltitudeRef.NONE
+        // jamais d'alerte vocale sur l'altitude pression standard (±200 m) : l'écran, lui, montre des tirets
+        val armed = altCalibrated && (demo || snap.recording || snap.phase == FlightPhase.FLYING)
+        // reprise après redémarrage : seulement si l'on vole vraiment (> 30 km/h dans les 2 min)
+        pendingResumeNs?.let { since ->
+            when {
+                (fix.groundSpeedKmh ?: 0.0) > 30 -> {
+                    pendingResumeNs = null
+                    safety.resumeInFlight(); core.startManual(fix.time)
+                    if (core.recording) onSpeak("Application redémarrée en vol. Enregistrement repris.", 1)
+                }
+                ns - since > 120_000_000_000L -> pendingResumeNs = null
+            }
+        }
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
         safetyState = runCatching { safety.update(fix, alt, climb, snap.circling, config(), fix.time, armed) }.getOrNull()
     }
@@ -493,7 +509,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
      * la dernière image est rendue avec marge, vario et altitude en tirets (l'information fausse doit avoir l'air fausse).
      */
     fun ui(): PilotUi = runCatching { uiUnsafe() }.onSuccess { lastUi = it }.getOrElse {
-        lastUi?.copy(hasData = false, marginText = "—", marginKnown = false, altText = "—", secuText = "—", varioText = "—", distanceText = "—")
+        lastUi?.copy(hasData = false, marginText = "—", marginKnown = false, altText = "—", secuText = "—", varioText = "—", distanceText = "—",
+            varioMs = 0.0, arrivalText = "", bearingText = "—", profile = emptyList(), gpsOk = false, baroOk = false)
             ?: run { val was = running; running = false; try { uiUnsafe() } finally { running = was } }
     }
     private var lastUi: PilotUi? = null
@@ -522,7 +539,10 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         val pos = snap?.gps?.position?.takeIf { gpsOk }
         // sans calcul de sécurité, le terrain du club n'est montré que s'il est un aérodrome officiel (indicatif OACI)
         val officialClub = club?.takeIf { FieldOption.isOfficialAerodrome(it.airfieldIcao) }
-        val fieldPos = r?.field?.position ?: officialClub?.position
+        // terrain (nom, position, route, fréquence) depuis le dernier choix de la sécurité, même quand les chiffres sont
+        // masqués : la voix et l'écran parlent du même terrain (relecture de la nuit du 23/10/2026)
+        val chosen = st?.choice?.result?.field
+        val fieldPos = chosen?.position ?: officialClub?.position
         val zoom = snap?.let { ThermalZoom.view(it.trace, it.circling, it.circlingSince, it.now) }
         val climb = snap?.climbMs
         return PilotUi(
@@ -537,8 +557,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             secuText = r?.let { grouped(it.requiredM.roundToInt()) } ?: "—",
             distanceText = r?.let { formatFixed(it.distanceKm, 1, decimalComma = true) }
                 ?: if (pos != null && fieldPos != null) formatFixed(Geo.distanceKm(pos, fieldPos), 1, decimalComma = true) else "—",
-            fieldCode = r?.field?.code ?: officialClub?.airfieldIcao ?: "—",
-            fieldName = r?.field?.name ?: club?.airfieldName ?: club?.name ?: "",
+            fieldCode = chosen?.code ?: officialClub?.airfieldIcao ?: "—",
+            fieldName = chosen?.name ?: club?.airfieldName ?: club?.name ?: "",
             bearingText = r?.let { "${it.bearingDeg.roundToInt()}°" } ?: "—",
             autoField = st?.choice?.auto ?: true,
             arrivalText = r?.let { "arrivée ${signed(it.arrivalAglM.roundToInt())} m/sol" } ?: "",
@@ -552,7 +572,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             requiredAltM = r?.requiredM ?: 0.0,
             currentAltM = alt ?: 0.0,
             varioLabel = varioLabel(snap?.source),
-            varioText = climb?.let { (if (it >= 0) "+" else "") + formatFixed(it, 1, decimalComma = true) } ?: "—",
+            varioText = climb?.let { VarioPalette.valueText(it) } ?: "—",   // « 0,0 » et jamais « −0,0 », vrai signe moins
             varioMs = climb ?: 0.0,
             spiralText = snap?.avgSpiralMs?.let { signedMs(it) } ?: "—",
             thermalText = snap?.avgThermalMs?.let { signedMs(it) } ?: "—",
@@ -597,7 +617,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             windSpeedKmh = wind?.speedKmh ?: 0.0,
             windForecast = wind?.source == WindSource.FORECAST,
             traceVersion = snap?.trace?.lastOrNull()?.time?.toEpochMilliseconds() ?: 0L,
-            fieldFrequencyText = (r?.field?.id ?: club?.airfieldIcao)?.let { frequencies[it] }?.replace('.', ',') ?: "—",
+            fieldFrequencyText = (chosen?.id ?: club?.airfieldIcao)?.let { frequencies[it] }?.replace('.', ',') ?: "—",
         )
     }
 
@@ -628,7 +648,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     }
 
     /** Vrai tant qu'un vol est enregistré ou détecté : l'app garde capteurs, son et sécurité en arrière-plan. */
-    val inFlight: Boolean get() = running && (core.recording || lastPhase == FlightPhase.FLYING)
+    val inFlight: Boolean get() = running && !demo && (core.recording || lastPhase == FlightPhase.FLYING)
 
     private fun varioLabel(src: VarioSource?) = when (src) {
         VarioSource.BARO_ACCEL -> "Vario baro+accél."

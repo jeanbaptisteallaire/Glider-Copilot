@@ -38,10 +38,10 @@ struct RootView: View {
     }
 
     /// Redémarrage de l'app pendant un vol (mémoire, plantage) : retour direct à Pilotage, sans accueil ni tutoriel
-    /// (revue résilience M9). Vrai si un enregistrement était en cours il y a moins de 6 h.
+    /// (revue résilience M9). Vrai si un enregistrement battait encore il y a moins de 10 min.
     static let resumeInFlight: Bool = {
         let t = UserDefaults.standard.double(forKey: AppModel.flightInProgressKey)
-        return t > 0 && Date().timeIntervalSince1970 - t < 6 * 3600
+        return t > 0 && Date().timeIntervalSince1970 - t < 10 * 60   // battement de cœur toutes les 30 s pendant un vol
     }()
 
     @EnvironmentObject var app: AppModel

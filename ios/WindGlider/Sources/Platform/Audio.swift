@@ -96,7 +96,8 @@ final class Voice {
     func speak(_ text: String, force: Bool = false) {
         guard enabled || force else { return }
         // revue résilience M2 : session audio active même son du vario coupé (mode silencieux, écran verrouillé)
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio, options: [.mixWithOthers, .duckOthers])
+        // même catégorie et même mode que le vario : pas de changement de configuration (et de trou dans le son) à chaque annonce
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers, .duckOthers])
         try? AVAudioSession.sharedInstance().setActive(true)
         // alerte urgente : passe devant les annonces en attente
         if force, synth.isSpeaking { synth.stopSpeaking(at: .immediate) }

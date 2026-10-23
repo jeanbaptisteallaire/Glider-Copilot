@@ -33,11 +33,7 @@ final class AppModel: ObservableObject {
             if isRecording != newValue.recording {
                 isRecording = newValue.recording
                 // vol en cours mémorisé : un redémarrage de l'app en vol reprend directement (revue résilience M9)
-                if newValue.recording {
-                    UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: Self.flightInProgressKey)
-                    sensors?.motionWanted = true   // vol : vario complet, quel que soit l'onglet
-                }
-                else { UserDefaults.standard.removeObject(forKey: Self.flightInProgressKey) }
+                if newValue.recording { sensors?.motionWanted = true }   // vol : vario complet, quel que soit l'onglet
             }
         }
     }
@@ -240,8 +236,7 @@ final class AppModel: ObservableObject {
         // reprise après un redémarrage en vol : nouvel IGC (le précédent est déjà fermé et gardé) et annonce
         if RootView.resumeInFlight && !resumed {
             resumed = true
-            engine.resumeInFlight()
-            voice.speak(tr("Application redémarrée en vol. Enregistrement repris."), force: true)
+            engine.resumeInFlight()   // le moteur reprend (et l'annonce) seulement s'il voit > 30 km/h dans les 2 min
         }
         timer?.invalidate()
         // mode « common » : l'écran de vol reste à jour pendant un défilement ou un menu ouvert (revue résilience M15)
@@ -251,11 +246,14 @@ final class AppModel: ObservableObject {
                 // écran éteint en vol : un tour léger à 1 Hz (atterrissage → fermeture de l'IGC), rien n'est publié
                 // à SwiftUI ; sécurité et son vario restent pilotés par les capteurs (revue énergie 11)
                 if self.inBackground {
-                    if self.tick % 4 == 0 { _ = self.engine.ui() }
+                    if self.tick % 4 == 0 { let ui = self.engine.ui(); self.heartbeat(ui.recording) }
                     self.tick += 1
                     return
                 }
                 self.pilot = self.engine.ui()
+                self.heartbeat(self.pilot.recording)
+                // vol détecté (même sans REC) : accéléromètre gardé, le vario baro seul est moins précis
+                if self.engine.inFlight && self.sensors.motionWanted == false { self.sensors.motionWanted = true }
                 if self.demo { self.feedDemo(self.pilot) }
                 // carte Capteurs de Prévol : 1 Hz suffit ; état republié seulement s'il change (moins de redessins SwiftUI)
                 if self.tick % 4 == 0 {
@@ -287,6 +285,18 @@ final class AppModel: ObservableObject {
 
     /// Écran éteint pendant un vol : le minuteur ne fait plus que le strict nécessaire.
     private var inBackground = false
+    private var lastHeartbeat = 0.0
+
+    /// Vol en cours mémorisé comme un battement de cœur (toutes les 30 s pendant l'enregistrement, effacé sinon, en
+    /// premier plan comme écran éteint) : un redémarrage n'est pris pour une reprise en vol que dans les 10 min.
+    private func heartbeat(_ recording: Bool) {
+        let now = Date().timeIntervalSince1970
+        if recording {
+            if now - lastHeartbeat >= 30 { lastHeartbeat = now; UserDefaults.standard.set(now, forKey: Self.flightInProgressKey) }
+        } else if lastHeartbeat != -1 {
+            lastHeartbeat = -1; UserDefaults.standard.removeObject(forKey: Self.flightInProgressKey)
+        }
+    }
     private var resumed = false
 
     func enterForeground() {

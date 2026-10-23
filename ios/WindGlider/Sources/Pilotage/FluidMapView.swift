@@ -129,6 +129,7 @@ struct FluidMapView: UIViewRepresentable {
         private weak var lastTraffic: TrafficSnapshot?
         private var lastCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var shownCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
+        private var lastPlanesHeading = 0.0
         private var baseFps: Float = 30
         /// Économie (chaleur, mode Économie d'énergie) : carte à 20 i/s.
         func setEconomy(_ on: Bool) {
@@ -161,7 +162,8 @@ struct FluidMapView: UIViewRepresentable {
         func detach() { link?.invalidate(); link = nil }
 
         @objc func userGesture(_ g: UIGestureRecognizer) {
-            if g.state == .began { control.follow = false }
+            // geste : la prochaine caméra est toujours posée (sinon « recentrer » sur un planeur immobile restait sans effet)
+            if g.state == .began { control.follow = false; lastCamera = nil }
             // fin d'un geste : le zoom choisi par le pilote devient le zoom de référence ; « recentrer » ne fait
             // alors que ramener le planeur au centre, sans rezoomer
             if g.state == .ended || g.state == .cancelled, let v = view {
@@ -324,6 +326,12 @@ struct FluidMapView: UIViewRepresentable {
                     if !rect.isNull { r.setNeedsDisplay(rect) }
                 }
                 lastRouteRect = rect
+            }
+            // flèches OGN : réorientées dès que la carte a tourné de plus de 2° (cap en haut), sans attendre le trafic
+            let head = v.camera.heading
+            if abs(OwnshipPredictor.angleDiff(head, lastPlanesHeading)) > 2 {
+                lastPlanesHeading = head
+                for (_, a) in planes { (v.view(for: a) as? PlaneView)?.configure(a.plane, mapHeading: head) }
             }
             // trafic OGN : seulement quand l'instantané change (1 Hz), pas à chaque tour de 4 Hz
             guard traffic !== lastTraffic else { return }
@@ -545,7 +553,9 @@ final class RouteOverlay: NSObject, MKOverlay {
         let q = 50 * MKMapPointsPerMeterAtLatitude(to.latitude)
         func r(_ v: Double) -> Double { (v / q).rounded() * q }
         let rect = MKMapRect(x: r(min(a.x, b.x)), y: r(min(a.y, b.y)), width: r(abs(a.x - b.x)), height: r(abs(a.y - b.y)))
-        return rect.insetBy(dx: -4 * q, dy: -4 * q)
+        // marge ≥ 200 m : le trait reste couvert même au zoom le plus large
+        let pad = max(4 * q, 200 * MKMapPointsPerMeterAtLatitude(to.latitude))
+        return rect.insetBy(dx: -pad, dy: -pad)
     }
 }
 
