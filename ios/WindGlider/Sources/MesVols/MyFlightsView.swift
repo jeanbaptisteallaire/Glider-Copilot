@@ -89,7 +89,7 @@ struct MyFlightsView: View {
             .refreshable { app.refreshFlights() }
             .onAppear {
                 app.refreshFlights()
-                account.isRecording = { [weak app] in app?.pilot.recording ?? false }
+                account.isRecording = { [weak app] in app?.isRecording ?? false }
                 account.onShown()
             }
             .onChange(of: account.restoredTick) { _, _ in app.refreshFlights() }

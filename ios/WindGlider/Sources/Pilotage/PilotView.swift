@@ -39,7 +39,16 @@ enum Haptic {
 /// Haut : marge + altitude (tambour, ruban horizontal) à gauche, terrain à droite. Bord droit : vario vertical.
 /// Bas : réglages « ⋯ », enregistrement, zoom, Essentiel. Essentiel : la marge seule (et la distance au terrain).
 struct PilotView: View {
+    static var benchNoMap: Bool {
+        #if DEBUG
+        ProcessInfo.processInfo.arguments.contains("-benchNoMap")
+        #else
+        false
+        #endif
+    }
     @EnvironmentObject var app: AppModel
+    /// état du vol (4 Hz) : seule cette vue s'y abonne
+    @EnvironmentObject var flight: FlightModel
     @EnvironmentObject var map: MapControl
     @State private var choosingField = false
     @AppStorage("pilot.showProfile") private var showProfile = true
@@ -55,17 +64,19 @@ struct PilotView: View {
     @AppStorage("pilot.showRadio") private var showRadio = false
 
     var body: some View {
-        let p = app.pilot
+        let p = flight.pilot
         let ds = PilotDeclutter.shared.display(
             essential: essential, profileWanted: showProfile, varioWanted: showVario,
             marginKnown: p.marginKnown, marginM: p.marginM,
             gpsOk: app.status.gps && p.gpsOk, baroOk: app.status.baro, dataOk: app.status.data,   // GPS : position de moins de 5 s, pas seulement l'autorisation
-            ognConnected: app.trafficSnap?.connected ?? false)
+            ognConnected: flight.trafficSnap?.connected ?? false)
         ZStack(alignment: .top) {
-            if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
+            if PilotView.benchNoMap {
+                Color.black.ignoresSafeArea()   // mesures d'énergie seulement (build de développement)
+            } else if ProcessInfo.processInfo.arguments.contains("-mapV2") || UserDefaults.standard.bool(forKey: "fluidMapOff") {
                 FlightMapView(p: p, airspaces: app.airspaces)
             } else {
-                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: app.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark)   // mentions Plans au-dessus des boutons du bas
+                FluidMapView(p: p, airspaces: app.showAirspaces ? app.airspaces : [], traffic: flight.trafficSnap, predictor: app.predictor, bottomInset: 56, dark: dark)   // mentions Plans au-dessus des boutons du bas
                     .ignoresSafeArea(.container, edges: .bottom)
             }
             // une seule pile : bandeau → coupe (si ouverte) → outils des bords ; c'est la mise en page qui fait

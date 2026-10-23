@@ -11,6 +11,7 @@ struct WindGliderApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(app)
+                .environmentObject(app.flight)
                 .environmentObject(mapControl)
                 .environmentObject(account)
                 .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
@@ -53,7 +54,7 @@ struct RootView: View {
             WelcomeView { welcomeDone = true }
         } else if disclaimerVersion < DisclaimerView.version {
             DisclaimerView { disclaimerVersion = DisclaimerView.version }
-        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.pilot.recording {
+        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.isRecording {
             // tutoriel complet et obligatoire au premier lancement de chaque profil (ni « Passer »)
             TutorialView(mandatory: true) {
                 tutorialSeen = (tutorialSeen.isEmpty ? "" : tutorialSeen + ",") + account.tutorialKey

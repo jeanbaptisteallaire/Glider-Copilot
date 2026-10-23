@@ -32,3 +32,24 @@ class OfficialAerodromeTest {
         kotlin.test.assertFalse(FieldOption.isOfficialAerodrome("LFN"))
     }
 }
+
+class OnGroundTest {
+    private fun t(s: Long) = kotlinx.datetime.Instant.fromEpochSeconds(1_800_000_000 + s)
+    private fun engine() = SafetyEngine({ com.neutronstar.glidercopilot.domain.Terrain.NONE }, { emptyList() }, {})
+
+    @Test fun lentPendant30sEgalSol() {
+        val e = engine()
+        kotlin.test.assertFalse(e.onGround(20.0, false, t(0)))
+        kotlin.test.assertFalse(e.onGround(20.0, false, t(29)))
+        kotlin.test.assertTrue(e.onGround(20.0, false, t(30)))
+    }
+
+    @Test fun spiraleFaceAuVentPasAuSol() {
+        val e = engine()
+        kotlin.test.assertFalse(e.onGround(15.0, true, t(0)))
+        kotlin.test.assertFalse(e.onGround(15.0, true, t(60)))
+        kotlin.test.assertFalse(e.onGround(25.0, false, t(61)))
+        kotlin.test.assertFalse(e.onGround(80.0, false, t(80)))
+        kotlin.test.assertFalse(e.onGround(25.0, false, t(100)))
+    }
+}

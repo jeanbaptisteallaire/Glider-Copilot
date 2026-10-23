@@ -376,6 +376,18 @@ class SafetyEngine(
     val selector = FieldSelector()
     private val alerts = SafetyAlerts()
     var state: SafetyState? = null; private set
+    /** Début d'une vitesse sol sous 30 km/h (au sol ou roulage) ; null si plus rapide. */
+    private var slowSince: Instant? = null
+
+    /**
+     * « Au sol » pour couper les alertes : vitesse sol sous 30 km/h tenue 30 s, hors spirale. Une branche face au vent
+     * en spirale par vent fort ne coupe plus les alertes (revue résilience M13).
+     */
+    internal fun onGround(groundSpeedKmh: Double?, circling: Boolean, now: Instant): Boolean {
+        if (circling || (groundSpeedKmh ?: 99.0) >= 30) { slowSince = null; return false }
+        val since = slowSince ?: now.also { slowSince = it }
+        return secondsBetween(since, now) >= 30
+    }
 
     fun onFix(fix: GpsFix) = wind.onFix(fix)
 
@@ -400,7 +412,8 @@ class SafetyEngine(
         val projected = GlideComputer.toField(pp, pa, choice.field, cfg, w, t, stepKm = 0.25).marginM
         val s = SafetyState(choice, projected, pp, w, results.sortedByDescending { it.marginM })
         state = s
-        if (armed) alerts.update(choice, projected, now, onGround = (fix.groundSpeedKmh ?: 99.0) < 30).forEach(alert)
+        val ground = onGround(fix.groundSpeedKmh, circling, now)
+        if (armed) alerts.update(choice, projected, now, onGround = ground).forEach(alert)
         return s
     }
 }

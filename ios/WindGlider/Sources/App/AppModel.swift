@@ -23,7 +23,18 @@ final class AppModel: ObservableObject {
     @Published var weather: WeatherState = .idle
     /// Jour de la météo Prévol : 0 aujourd'hui, 1 demain, 2 après-demain (aujourd'hui avant 17 h, demain ensuite).
     @Published var dayOffset = Int(WindGliderWeather.companion.defaultOffset())
-    @Published var pilot: PilotUi
+    /// État du vol publié à 4 Hz : dans un objet à part, observé par Pilotage seulement. Prévol, Mes vols et la racine
+    /// ne sont plus réévalués 4 fois par seconde (revue énergie 9).
+    let flight: FlightModel
+    var pilot: PilotUi {
+        get { flight.pilot }
+        set {
+            flight.pilot = newValue
+            if isRecording != newValue.recording { isRecording = newValue.recording }
+        }
+    }
+    /// Enregistrement en cours : seul champ du vol lu hors de Pilotage, republié seulement quand il change.
+    @Published private(set) var isRecording = false
     @Published var flights: [FlightEntry] = []
     @Published var sensorsUi: SensorsUi?
     /// Pastilles de Pilotage, même sens qu'Android (DeviceState.kt) : GPS = autorisation et localisation actives,
@@ -61,7 +72,10 @@ final class AppModel: ObservableObject {
     private var lastPosition: CLLocationCoordinate2D?
     /// Trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
     let traffic: IosTraffic?  // jamais nil ; optionnel pour garder les appels existants
-    @Published var trafficSnap: TrafficSnapshot?
+    var trafficSnap: TrafficSnapshot? {
+        get { flight.trafficSnap }
+        set { flight.trafficSnap = newValue }
+    }
     private var tick = 0
     /// V3 : position du planeur à chaque image pour la carte fluide (affichage seulement).
     let predictor = OwnshipPredictor()
@@ -78,6 +92,7 @@ final class AppModel: ObservableObject {
         clubs = ClubDirectory(jsonPath: json)
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
         engine = IosFlightEngine(igcDir: AppModel.igcDir, appVersion: version)
+        flight = FlightModel(pilot: engine.ui())
         library = FlightLibrary(dir: AppModel.igcDir)
         // vol d'exemple (Saint-Martin-de-Londres), le même qu'Android, importé une seule fois
         if !UserDefaults.standard.bool(forKey: "demoFlightImported"),
@@ -87,7 +102,7 @@ final class AppModel: ObservableObject {
         }
         weatherApi = AppModel.makeWeather(version: version)
         traffic = IosTraffic(cacheDir: NSTemporaryDirectory(), installId: AppModel.installId, appVersion: version)   // comme la 2.0.4 Lite : trafic OGN dans Pilotage
-        pilot = engine.ui()
+        // état initial du vol : déjà posé dans FlightModel(pilot:)
         let d = UserDefaults.standard
         soundOn = d.bool(forKey: "varioSound")
         voiceOn = d.object(forKey: "voice") as? Bool ?? true
@@ -181,6 +196,9 @@ final class AppModel: ObservableObject {
     func startEngine() {
         sensors.requestPermission()
         sensors.start()
+        #if DEBUG
+        BenchMeter.startIfRequested()
+        #endif
         applyGlideSettings()
         engine.start()
         timer?.invalidate()
@@ -188,6 +206,13 @@ final class AppModel: ObservableObject {
         let t = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
+                // écran éteint en vol : un tour léger à 1 Hz (atterrissage → fermeture de l'IGC), rien n'est publié
+                // à SwiftUI ; sécurité et son vario restent pilotés par les capteurs (revue énergie 11)
+                if self.inBackground {
+                    if self.tick % 4 == 0 { _ = self.engine.ui() }
+                    self.tick += 1
+                    return
+                }
                 self.pilot = self.engine.ui()
                 if self.demo { self.feedDemo(self.pilot) }
                 // carte Capteurs de Prévol : 1 Hz suffit ; état republié seulement s'il change (moins de redessins SwiftUI)
@@ -210,13 +235,19 @@ final class AppModel: ObservableObject {
     /// Arrière-plan : capteurs et son coupés hors vol (batterie) ; pendant un vol enregistré, tout continue écran éteint
     /// (localisation en arrière-plan + audio, comme le service de premier plan d'Android).
     func enterBackground() {
-        guard !engine.inFlight else { return }
+        // en vol écran éteint : sécurité, IGC et son continuent ; OGN s'arrête (personne ne regarde la carte,
+        // l'anticollision reste le rôle du FLARM) et reprend au retour (revue énergie 1)
+        guard !engine.inFlight else { traffic?.stop(); inBackground = true; return }
         engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
         tone.stop()
         traffic?.stop()   // pas de réseau OGN en arrière-plan hors vol (comme OgnLiveRepository.stop)
     }
 
+    /// Écran éteint pendant un vol : le minuteur ne fait plus que le strict nécessaire.
+    private var inBackground = false
+
     func enterForeground() {
+        inBackground = false
         guard timer == nil else { return }
         startEngine()
         if soundOn { tone.start() }
@@ -306,3 +337,11 @@ final class AppModel: ObservableObject {
 import Combine
 import CoreLocation
 import Network
+
+/// Valeurs du vol rafraîchies 4 fois par seconde (écran Pilotage).
+@MainActor
+final class FlightModel: ObservableObject {
+    @Published var pilot: PilotUi
+    @Published var trafficSnap: TrafficSnapshot?
+    init(pilot: PilotUi) { self.pilot = pilot }
+}

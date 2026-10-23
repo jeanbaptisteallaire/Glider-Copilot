@@ -415,7 +415,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         val alt = lastAltitudeM ?: return null
         val now = clockNow()
         val hour = day.hours.minByOrNull { abs(secondsBetween(it.analysis.validTime, now)) } ?: return null
-        if (abs(secondsBetween(hour.analysis.validTime, now) / 3600) > 3) return null
+        // revue résilience M12 : la division entière acceptait une prévision décalée de 3 h 59
+        if (abs(secondsBetween(hour.analysis.validTime, now)) > 3 * 3600) return null
         val layer = hour.winds.minByOrNull { abs(it.altitudeMslM - alt) } ?: return null
         return Wind(layer.fromDeg, layer.speedKmh, WindSource.FORECAST, hour.analysis.validTime)
     }

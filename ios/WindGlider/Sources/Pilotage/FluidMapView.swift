@@ -100,10 +100,16 @@ struct FluidMapView: UIViewRepresentable {
         private let route = RouteOverlay()
         private weak var routeRenderer: RouteRenderer?
         private var routeAdded = false
+        private var lastRouteRect = MKMapRect.null
         private var field = MKPointAnnotation()
         private var planes: [String: PlaneAnnotation] = [:]
         private var pumps: [String: PumpAnnotation] = [:]
         private var airspaceShapes: [AirspaceShape] = []
+        /// Sommets des zones convertis une seule fois (revue énergie 3 : plus d'accès KotlinDouble à 4 Hz) + boîte englobante.
+        private var airspaceGeo: [(id: String, shape: AirspaceShape, pts: [(Double, Double)], box: (Double, Double, Double, Double))] = []
+        private var lastLabelsAt = 0.0
+        private weak var lastTraffic: TrafficSnapshot?
+        private var lastCamera: (lat: Double, lon: Double, dist: Double, head: Double)?
         private var airspaceLabels: [String: AirspaceLabel] = [:]
 
         init(predictor: OwnshipPredictor, control: MapControl) {
@@ -115,7 +121,13 @@ struct FluidMapView: UIViewRepresentable {
         func attach(_ v: MKMapView) {
             view = v
             let l = CADisplayLink(target: self, selector: #selector(frame))
-            l.preferredFrameRateRange = CAFrameRateRange(minimum: 30, maximum: 30, preferred: 30)   // 30 i/s : batterie (JB)
+            var fps: Float = 30   // 30 i/s : batterie (JB)
+            #if DEBUG
+            // mesures d'énergie : `-benchFps N` impose une autre cadence
+            if let i = ProcessInfo.processInfo.arguments.firstIndex(of: "-benchFps"), i + 1 < ProcessInfo.processInfo.arguments.count,
+               let f = Float(ProcessInfo.processInfo.arguments[i + 1]) { fps = f }
+            #endif
+            l.preferredFrameRateRange = CAFrameRateRange(minimum: fps, maximum: fps, preferred: fps)
             l.add(to: .main, forMode: .common)
             link = l
         }
@@ -139,7 +151,8 @@ struct FluidMapView: UIViewRepresentable {
         // MARK: image par image
 
         @objc private func frame() {
-            guard let v = view, let p else { return }
+            // onglet Pilotage caché : aucune image (la carte tournait à 30 i/s derrière Prévol)
+            guard let v = view, let p, v.window != nil else { return }
             let now = CACurrentMediaTime()
             let dt = min(now - lastFrame, 0.1)
             lastFrame = now
@@ -188,7 +201,15 @@ struct FluidMapView: UIViewRepresentable {
             } else {
                 camCenter = target
             }
-            v.camera = MKMapCamera(lookingAtCenter: camCenter!, fromDistance: camDistance, pitch: 0, heading: camHeading)
+            // planeur immobile (au sol, démo arrêtée) : on ne redemande pas d'image à MapKit pour rien
+            let c = camCenter!
+            if let l = lastCamera, abs(l.lat - c.latitude) < 1e-7, abs(l.lon - c.longitude) < 1e-7,
+               abs(l.dist - camDistance) < camDistance * 0.001, abs(OwnshipPredictor.angleDiff(l.head, camHeading)) < 0.05 {
+                (v.view(for: ownship) as? OwnshipView)?.rotate(track - camHeading)
+                return
+            }
+            lastCamera = (c.latitude, c.longitude, camDistance, camHeading)
+            v.camera = MKMapCamera(lookingAtCenter: c, fromDistance: camDistance, pitch: 0, heading: camHeading)
             (v.view(for: ownship) as? OwnshipView)?.rotate(track - camHeading)
         }
 
@@ -213,8 +234,17 @@ struct FluidMapView: UIViewRepresentable {
                 v.addOverlays(airspaces.map { AirspaceOverlay(shape: $0) }, level: .aboveRoads)
                 airspaceIds = ids
                 airspaceShapes = airspaces
+                airspaceGeo = airspaces.map { a in
+                    let k = a.coords.map(\.doubleValue)
+                    let pts = stride(from: 0, to: k.count - 1, by: 2).map { (k[$0], k[$0 + 1]) }
+                    let box = pts.reduce((90.0, 180.0, -90.0, -180.0)) { b, q in (min(b.0, q.0), min(b.1, q.1), max(b.2, q.0), max(b.3, q.1)) }
+                    return (a.id, a, pts, box)
+                }
+                lastLabelsAt = 0
             }
-            placeAirspaceLabels(on: v)
+            // noms des zones : 1 fois par seconde suffit (le planeur fait ~30 m)
+            let now = CACurrentMediaTime()
+            if now - lastLabelsAt >= 1 { lastLabelsAt = now; placeAirspaceLabels(on: v) }
             // trace : seulement quand un point est ajouté (version = instant du dernier point ; le nombre de points
             // plafonne à 600 et ne suffit pas à voir qu'elle avance)
             if p.traceVersion != traceVersion {
@@ -238,8 +268,18 @@ struct FluidMapView: UIViewRepresentable {
                     route.to = fieldC
                 }
             }
-            routeRenderer?.setNeedsDisplay()
-            // trafic OGN
+            // ne redessiner que la zone de la ligne (avant / après), et seulement si elle a bougé (revue énergie 7)
+            let rect = route.lineRect
+            if !MKMapRectEqualToRect(rect, lastRouteRect) {
+                if let r = routeRenderer {
+                    if !lastRouteRect.isNull { r.setNeedsDisplay(lastRouteRect) }
+                    if !rect.isNull { r.setNeedsDisplay(rect) }
+                }
+                lastRouteRect = rect
+            }
+            // trafic OGN : seulement quand l'instantané change (1 Hz), pas à chaque tour de 4 Hz
+            guard traffic !== lastTraffic else { return }
+            lastTraffic = traffic
             let planeList = traffic?.planes ?? []
             let seen = Set(planeList.map(\.id))
             for (id, a) in planes where !seen.contains(id) { v.removeAnnotation(a); planes[id] = nil }
@@ -269,15 +309,16 @@ struct FluidMapView: UIViewRepresentable {
             let c = ownship.coordinate.latitude != 0 ? ownship.coordinate : v.centerCoordinate
             let span = max(v.region.span.latitudeDelta, 0.05)
             var keep = Set<String>()
-            for a in airspaceShapes {
-                let k = a.coords
+            let cosLat = cos(c.latitude * .pi / 180)
+            for g in airspaceGeo {
+                let a = g.shape
+                // zone loin de la vue : pas de parcours de ses sommets
+                let m = span * 0.6
+                if c.latitude < g.box.0 - m || c.latitude > g.box.2 + m || c.longitude < g.box.1 - m / cosLat || c.longitude > g.box.3 + m / cosLat { continue }
                 var best = (d: Double.infinity, lat: 0.0, lon: 0.0)
-                var i = 0
-                while i + 1 < k.count {
-                    let la = k[i].doubleValue, lo = k[i + 1].doubleValue
-                    let d = abs(la - c.latitude) + abs(lo - c.longitude) * cos(c.latitude * .pi / 180)
+                for (la, lo) in g.pts {
+                    let d = abs(la - c.latitude) + abs(lo - c.longitude) * cosLat
                     if d < best.d { best = (d, la, lo) }
-                    i += 2
                 }
                 guard best.d < span * 0.6 else { continue }
                 keep.insert(a.id)
@@ -390,6 +431,8 @@ struct FluidMapView: UIViewRepresentable {
                 t.font = .systemFont(ofSize: 13, weight: .semibold)
                 t.textColor = UIColor(WG.airspace(l.shape.family))
                 t.layer.shadowColor = UIColor.black.cgColor; t.layer.shadowRadius = 2; t.layer.shadowOpacity = 0.9; t.layer.shadowOffset = .zero
+                // halo calculé une fois puis gardé en image (sinon rendu hors écran à chaque image de la carte)
+                t.layer.shouldRasterize = true; t.layer.rasterizationScale = UIScreen.main.scale
                 t.sizeToFit()
                 v.frame = t.bounds; v.addSubview(t)
                 v.displayPriority = .defaultLow; v.collisionMode = .rectangle
@@ -447,6 +490,15 @@ final class RouteOverlay: NSObject, MKOverlay {
     var to = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     var coordinate: CLLocationCoordinate2D { to }
     var boundingMapRect: MKMapRect { .world }
+    /// Rectangle de la ligne, arrondi à ~50 m (évite de redessiner pour un déplacement invisible), marge pour le trait.
+    var lineRect: MKMapRect {
+        guard let from else { return .null }
+        let a = MKMapPoint(from), b = MKMapPoint(to)
+        let q = 50 * MKMapPointsPerMeterAtLatitude(to.latitude)
+        func r(_ v: Double) -> Double { (v / q).rounded() * q }
+        let rect = MKMapRect(x: r(min(a.x, b.x)), y: r(min(a.y, b.y)), width: r(abs(a.x - b.x)), height: r(abs(a.y - b.y)))
+        return rect.insetBy(dx: -4 * q, dy: -4 * q)
+    }
 }
 
 final class RouteRenderer: MKOverlayRenderer {
@@ -546,6 +598,7 @@ final class PlaneView: MKAnnotationView {
         label.font = .monospacedDigitSystemFont(ofSize: 13, weight: .semibold)
         label.textColor = .white; label.backgroundColor = .clear
         for l in [arrow.layer, label.layer] { l.shadowColor = UIColor.black.cgColor; l.shadowOpacity = 0.9; l.shadowRadius = 1.5; l.shadowOffset = .zero }
+        label.layer.shouldRasterize = true; label.layer.rasterizationScale = UIScreen.main.scale   // étiquette fixe : halo mis en cache
         label.textAlignment = .center
         addSubview(arrow); addSubview(label)
         collisionMode = .rectangle

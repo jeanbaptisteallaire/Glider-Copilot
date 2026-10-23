@@ -171,7 +171,8 @@ struct VarioRail: View {
                 if valid {
                     Capsule().fill(ink).frame(width: 23, height: 5).overlay(Capsule().stroke(WG.casing, lineWidth: 1.5))
                         .offset(x: 6, y: -CGFloat(VarioPalette.shared.fraction(ms: ms)) * barH + 2.5)
-                        .animation(.easeOut(duration: 0.8), value: ms)   // curseur lissé ≈ 1 s ; chiffre et son bruts
+                        // pas d'animation : à 4 Hz, une animation de 0,8 s ne s'arrêtait jamais et forçait tout l'écran
+                        // à 60 i/s (revue énergie 2) ; le vario du moteur est déjà amorti (τ ≈ 1 s)
                 }
             }
             .frame(width: 40, height: barH, alignment: .bottomTrailing)

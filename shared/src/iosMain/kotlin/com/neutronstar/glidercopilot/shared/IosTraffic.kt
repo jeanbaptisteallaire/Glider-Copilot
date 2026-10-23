@@ -22,7 +22,9 @@ class IosTraffic(cacheDir: String, installId: Long, appVersion: String) {
     private val ddb = runCatching {
         OgnDeviceDatabase(KtorHttpClient(userAgent = "WindGlider/$appVersion (iOS)", timeoutMs = 30_000), FileResponseCache((cacheDir.trimEnd('/') + "/ogn").toPath()))
     }.getOrNull()
-    private val session = OgnLiveSession(ddb, AprsClient.userFor(installId), appVersion)
+    // filtre APRS réduit au rayon utile (60 km au lieu de 250) : beaucoup moins de trames, radio cellulaire moins
+    // sollicitée en vol (revue énergie 1) ; Android garde son rayon
+    private val session = OgnLiveSession(ddb, AprsClient.userFor(installId), appVersion, radiusKm = OgnLiveSession.DETAIL_KM.toInt())
 
     val running: Boolean get() = session.running
 
