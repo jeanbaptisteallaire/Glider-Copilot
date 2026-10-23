@@ -23,6 +23,9 @@ kotlin {
         }
     }
     sourceSets {
+        iosTest.dependencies {
+            implementation(kotlin("test"))
+        }
         iosMain.dependencies {
             api(project(":core:domain"))
             api(project(":data:precog"))
