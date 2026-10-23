@@ -197,6 +197,10 @@ final class AppModel: ObservableObject {
         sensors.requestPermission()
         sensors.start()
         #if DEBUG
+        BenchMeter.extra = { [weak self] in
+            guard let self, let s = self.sensorsUi else { return "" }
+            return "baro \(s.baroHz) bruit \(s.baroNoise) · mouvement \(self.sensors.motionAuthorization) \(self.sensors.baroError ?? "") n=\(self.sensors.baroCount) p=\(self.sensors.lastPressureKPa) · accél \(s.accelHz) · \(s.sourceLabel) · \(self.pilot.varioText)"
+        }
         BenchMeter.startIfRequested()
         #endif
         applyGlideSettings()

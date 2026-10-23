@@ -60,7 +60,14 @@ class FlightEngineCore(
     private val fieldElevationM: () -> Double? = { null },
     private val field: () -> LatLon? = { null },
     private val header: (Instant) -> Igc.Header = { Igc.Header(it.toLocalDateTime(TimeZone.UTC).date) },
+    /**
+     * Âge maximal d'une mesure baro encore « fraîche » (s). 1 s pour le baromètre Android (~25 Hz) ; l'iPhone livre
+     * ~1 mesure par seconde avec retard : il lui faut 3 s, sinon le vario baro n'est jamais disponible (mesuré sur
+     * iPhone 15, revue résilience M11).
+     */
+    private val baroFreshS: Double = 1.0,
 ) {
+    private val baroFreshNs = (baroFreshS * 1e9).toLong()
     private val filter = VarioFilter()
     private val display = Damper(1.0)
     private val sound = Damper(0.3)
@@ -103,7 +110,7 @@ class FlightEngineCore(
     fun onBaro(hPa: Double, ns: Long) {
         if (hPa !in 100.0..1100.0) return
         val alt = Isa.pressureAltitude(hPa)
-        if (lastBaroNs != 0L && ns - lastBaroNs > 2_000_000_000L) filter.reset(alt, ns)
+        if (lastBaroNs != 0L && ns - lastBaroNs > maxOf(2_000_000_000L, 2 * baroFreshNs)) filter.reset(alt, ns)
         filter.onBaroAltitude(alt, ns)
         lastBaroNs = ns
         baroStats.add(alt, ns)
@@ -199,7 +206,7 @@ class FlightEngineCore(
         }
     }
 
-    private fun baroFresh(ns: Long) = lastBaroNs != 0L && ns - lastBaroNs < 1_000_000_000L
+    private fun baroFresh(ns: Long) = lastBaroNs != 0L && ns - lastBaroNs < baroFreshNs
 
     fun source(ns: Long): VarioSource = when {
         baroFresh(ns) && filter.usesAccelerometer(ns) -> VarioSource.BARO_ACCEL

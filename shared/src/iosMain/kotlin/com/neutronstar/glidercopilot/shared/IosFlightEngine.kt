@@ -149,6 +149,8 @@ data class PilotUi(
      * le nombre ne change plus, seule la version dit qu'elle a avancé (la carte se figeait au bout de 10 min).
      */
     val traceVersion: Long = 0,
+    /** Marge calculée avec le relief le long de la route ; faux = relief inconnu sur plus de la moitié du trajet. */
+    val reliefChecked: Boolean = true,
 )
 
 /**
@@ -200,7 +202,10 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         igc = IgcSinkFactory { start -> if (demo) null else openIgc(start) },
         announce = { onSpeak(it, 0) },
         autoTakeoff = { autoTakeoff || demo },
-        fieldElevationM = { fieldElevation },
+        baroFreshS = 3.0,   // CMAltimeter : ~1 Hz avec retard (mesuré sur iPhone 15)
+        // revue résilience M5 : calage « terrain » seulement sur une altitude mesurée (openAIP, relief) ; le sol du modèle
+        // ARPEGE (maille ~10 km) fausserait la marge vers les autres terrains et le relief : calage GPS à la place
+        fieldElevationM = { fieldElevation.takeIf { fieldElevationSource != "modèle ARPEGE" } },
         field = { club?.position },
         header = { start ->
             Igc.Header(
@@ -539,7 +544,9 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             windText = wind?.let { "${(it.fromDeg.roundToInt() + 360) % 360}°/${it.speedKmh.roundToInt()}" + if (it.source == WindSource.FORECAST) " prévu" else "" } ?: "vent —",
             windFromDeg = wind?.fromDeg ?: 0.0,
             windKnown = wind != null,
-            profile = r?.profile?.map { ProfileDot(it.sKm, it.terrainM ?: (r.field.elevationM)) }.orEmpty(),
+            // relief inconnu : NaN (trou dans la coupe), jamais un sol plat inventé (revue résilience M4)
+            profile = r?.profile?.map { ProfileDot(it.sKm, it.terrainM ?: Double.NaN) }.orEmpty(),
+            reliefChecked = r?.terrainKnown ?: true,
             requiredAltM = r?.requiredM ?: 0.0,
             currentAltM = alt ?: 0.0,
             varioLabel = varioLabel(snap?.source),
@@ -562,7 +569,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             zoomRadiusM = zoom?.radiusM ?: 0.0,
             zoomActive = zoom != null,
             gpsOk = gpsOk,
-            baroOk = (snap?.baroHz ?: 0.0) > 3,
+            // baro utilisé par le vario (l'iPhone livre ~1 Hz : l'ancien seuil « > 3 Hz » le disait toujours absent)
+            baroOk = snap?.source == VarioSource.BARO || snap?.source == VarioSource.BARO_ACCEL,
             recording = snap?.recording ?: false,
             chronoText = chrono(snap?.flightSeconds ?: 0),
             phaseText = when {

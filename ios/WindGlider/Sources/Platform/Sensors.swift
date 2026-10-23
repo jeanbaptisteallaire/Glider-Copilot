@@ -13,6 +13,21 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
     /// V3 : taux de virage (°/s, positif à droite) = rotation du téléphone autour de la verticale (gyroscope).
     var onTurnRate: ((Double, TimeInterval) -> Void)?
     private(set) var authorized = false
+    /// Dernière erreur du baromètre (autorisation « Mouvements et forme physique » refusée, matériel…), pour l'écran.
+    private(set) var baroError: String?
+    /// Nombre de mesures du baromètre reçues (diagnostic).
+    private(set) var baroCount = 0
+    private(set) var lastPressureKPa = 0.0
+    /// Autorisation « Mouvements et forme physique » d'iOS : sans elle, ni baromètre ni vario.
+    var motionAuthorization: String {
+        switch CMAltimeter.authorizationStatus() {
+        case .authorized: return "autorisé"
+        case .denied: return "refusé"
+        case .restricted: return "restreint"
+        case .notDetermined: return "en attente"
+        @unknown default: return "inconnu"
+        }
+    }
 
     init(engine: IosFlightEngine) {
         self.engine = engine
@@ -32,9 +47,14 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
         location.pausesLocationUpdatesAutomatically = false
         location.startUpdatingLocation()
         if CMAltimeter.isRelativeAltitudeAvailable() {
-            altimeter.startRelativeAltitudeUpdates(to: .main) { [weak self] data, _ in
+            altimeter.startRelativeAltitudeUpdates(to: .main) { [weak self] data, error in
+                if let error { self?.baroError = error.localizedDescription }
                 guard let d = data else { return }
-                self?.engine?.onPressure(kPa: d.pressure.doubleValue, uptimeS: d.timestamp)
+                self?.baroError = nil
+                self?.baroCount += 1; self?.lastPressureKPa = d.pressure.doubleValue
+                // daté à l'arrivée (même horloge que le moteur) : l'horodatage de CMAltimeter dérive et faisait juger
+                // la mesure périmée, vario baro « indisponible » par intermittence (mesuré sur iPhone 15)
+                self?.engine?.onPressure(kPa: d.pressure.doubleValue, uptimeS: ProcessInfo.processInfo.systemUptime)
             }
         }
         if motion.isDeviceMotionAvailable {

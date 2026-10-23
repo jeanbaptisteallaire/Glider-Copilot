@@ -68,7 +68,7 @@ struct PilotView: View {
         let ds = PilotDeclutter.shared.display(
             essential: essential, profileWanted: showProfile, varioWanted: showVario,
             marginKnown: p.marginKnown, marginM: p.marginM,
-            gpsOk: app.status.gps && p.gpsOk, baroOk: app.status.baro, dataOk: app.status.data,   // GPS : position de moins de 5 s, pas seulement l'autorisation
+            gpsOk: app.status.gps && p.gpsOk, baroOk: app.status.baro && (p.baroOk || p.demo || !p.running), dataOk: app.status.data,   // GPS : position de moins de 5 s, pas seulement l'autorisation
             ognConnected: flight.trafficSnap?.connected ?? false)
         ZStack(alignment: .top) {
             if PilotView.benchNoMap {
@@ -194,11 +194,18 @@ struct PilotView: View {
     /// Sous le bandeau, seulement si nécessaire : capteur en défaut, démo (« dark cockpit »).
     @ViewBuilder private func statusLine(_ ds: PilotDisplay) -> some View {
         let noZones = app.showAirspaces && app.airspaces.isEmpty
-        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || noZones {
+        let noRelief = flight.pilot.marginKnown && !flight.pilot.reliefChecked
+        if ds.gpsAlert || ds.baroAlert || ds.dataAlert || noZones || noRelief {
             HStack(spacing: 6) {
                 if ds.gpsAlert { badge("GPS") }
                 if ds.baroAlert { badge("BARO") }
                 if ds.dataAlert { badge("DATA") }
+                if noRelief {
+                    // marge calculée sans relief (hors carte ou carte absente) : à ne pas lire comme une marge vérifiée
+                    Label(tr("Relief non vérifié"), systemImage: "mountain.2")
+                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(WG.warn)
+                        .padding(.horizontal, 8).padding(.vertical, 4).background(PanelBackground(dark: true), in: Capsule())
+                }
                 if noZones {
                     // carte hors ligne absente : le dire plutôt que montrer une carte sans zones (ambre = prudence)
                     Button { airspaceHint = true } label: {
@@ -410,7 +417,7 @@ struct ProfileStrip: View {
         let total = max(pts.last?.sKm ?? 0, p.routeKm)
         let top = max(500, (max(p.currentAltM, p.requiredAltM) / 500).rounded(.up) * 500)
         Chart {
-            ForEach(Array(pts.enumerated()), id: \.offset) { _, d in
+            ForEach(Array(pts.enumerated()).filter { $0.element.terrainM.isFinite }, id: \.offset) { _, d in
                 AreaMark(x: .value("km", d.sKm), y: .value("relief", d.terrainM)).foregroundStyle(darkMode ? Color(red: 0.55, green: 1.0, blue: 0.45).opacity(0.75) : PI.good.opacity(0.35))
             }
             if total > 0 {

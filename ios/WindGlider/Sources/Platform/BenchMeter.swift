@@ -9,12 +9,14 @@ enum BenchMeter {
     private static var timer: Timer?
     private static var lastCpu = 0.0
     private static var lastWall = 0.0
+    /// Ligne supplémentaire fournie par l'app (cadence baro, source du vario…).
+    static var extra: () -> String = { "" }
 
     static func startIfRequested() {
         guard RootView.bench, timer == nil else { return }
         UIDevice.current.isBatteryMonitoringEnabled = true
         lastCpu = cpuSeconds(); lastWall = CACurrentMediaTime()
-        let t = Timer(timeInterval: 30, repeats: true) { _ in sample() }
+        let t = Timer(timeInterval: ProcessInfo.processInfo.arguments.contains("-benchFast") ? 2 : 30, repeats: true) { _ in sample() }
         RunLoop.main.add(t, forMode: .common)
         timer = t
         log("start \(ProcessInfo.processInfo.arguments.joined(separator: " "))")
@@ -26,7 +28,7 @@ enum BenchMeter {
         lastCpu = cpu; lastWall = wall
         let thermal = ["nominal", "fair", "serious", "critical"][min(ProcessInfo.processInfo.thermalState.rawValue, 3)]
         log(String(format: "cpu %.1f %% · thermique %@ · batterie %.0f %% · basse conso %@", pct, thermal,
-                   UIDevice.current.batteryLevel * 100, ProcessInfo.processInfo.isLowPowerModeEnabled ? "oui" : "non"))
+                   UIDevice.current.batteryLevel * 100, ProcessInfo.processInfo.isLowPowerModeEnabled ? "oui" : "non") + " · " + extra())
     }
 
     /// Temps processeur cumulé de tous les fils du processus (s).
