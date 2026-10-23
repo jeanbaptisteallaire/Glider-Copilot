@@ -27,8 +27,18 @@ enum BenchMeter {
         let pct = (cpu - lastCpu) / max(wall - lastWall, 0.001) * 100
         lastCpu = cpu; lastWall = wall
         let thermal = ["nominal", "fair", "serious", "critical"][min(ProcessInfo.processInfo.thermalState.rawValue, 3)]
-        log(String(format: "cpu %.1f %% · thermique %@ · batterie %.0f %% · basse conso %@", pct, thermal,
+        log(String(format: "cpu %.1f %% · mém %.0f Mo · thermique %@ · batterie %.0f %% · basse conso %@", pct, memoryMB(), thermal,
                    UIDevice.current.batteryLevel * 100, ProcessInfo.processInfo.isLowPowerModeEnabled ? "oui" : "non") + " · " + extra())
+    }
+
+    /// Empreinte mémoire du processus (Mo), comme Xcode l'affiche.
+    private static func memoryMB() -> Double {
+        var info = task_vm_info_data_t()
+        var count = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<natural_t>.size)
+        let kr = withUnsafeMutablePointer(to: &info) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: Int(count)) { task_info(mach_task_self_, task_flavor_t(TASK_VM_INFO), $0, &count) }
+        }
+        return kr == KERN_SUCCESS ? Double(info.phys_footprint) / 1e6 : -1
     }
 
     /// Temps processeur cumulé de tous les fils du processus (s).
