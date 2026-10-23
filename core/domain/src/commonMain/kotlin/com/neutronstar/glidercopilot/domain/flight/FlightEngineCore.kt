@@ -157,7 +157,8 @@ class FlightEngineCore(
         if (recorder != null) return
         manualStart = now; manualStop = null
         startRecording(now)
-        announce("Chrono lancé")
+        // revue résilience M7 : ne jamais annoncer un enregistrement qui n'a pas pu s'ouvrir (mémoire pleine)
+        announce(if (recorder != null) "Chrono lancé" else "Enregistrement impossible, mémoire pleine")
     }
 
     fun stopManual(now: Instant) {

@@ -6,6 +6,7 @@ import com.neutronstar.glidercopilot.domain.Geo
 import com.neutronstar.glidercopilot.domain.LatLon
 import com.neutronstar.glidercopilot.domain.Terrain
 import com.neutronstar.glidercopilot.domain.flight.TracePoint
+import com.neutronstar.glidercopilot.domain.flight.SensorWatchdog
 import com.neutronstar.glidercopilot.domain.flight.AltitudeRef
 import com.neutronstar.glidercopilot.domain.flight.DemoFlight
 import com.neutronstar.glidercopilot.domain.flight.FlightEngineCore
@@ -356,7 +357,14 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     }
 
     fun startChrono() { core.startManual(clockNow()) }
-    fun stopChrono() { core.stopManual(clockNow()); closeIgc() }
+    /**
+     * Arrêt manuel. En départ automatique, toucher REC en vol ne doit pas fermer l'IGC d'un enregistrement qui continue
+     * (revue résilience M6 : le vol était perdu sans signe) : le fichier n'est fermé que si l'enregistrement s'arrête.
+     */
+    fun stopChrono() {
+        core.stopManual(clockNow())
+        if (!core.recording) closeIgc() else onSpeak("Enregistrement automatique en cours, il s'arrêtera à l'atterrissage", 0)
+    }
 
     // ------------------------------------------------------------------ capteurs (Swift, fil principal)
 
@@ -482,6 +490,7 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             ?: run { val was = running; running = false; try { uiUnsafe() } finally { running = was } }
     }
     private var lastUi: PilotUi? = null
+    private val watchdog = SensorWatchdog()
 
     private fun uiUnsafe(): PilotUi {
         val ns = clockNs()
@@ -491,6 +500,9 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
             if (snap.phase == FlightPhase.LANDED) closeIgc()
         }
         if (snap != null && snap.source == VarioSource.NONE && soundOn) onTone(0.0)
+        // revue résilience M10 : perte ou retour du GPS / du vario annoncés en vol (pas en démo)
+        if (!demo) watchdog.update(ns / 1e9, inFlight, snap?.gpsAgeS, snap != null && snap.source != VarioSource.NONE)
+            .forEach { onSpeak(it.text, it.level) }
         val st = if (running) safetyState else null
         val gpsOk = snap != null && snap.gps != null && (snap.gpsAgeS ?: 99.0) < 5
         // revue résilience C1 / C2 : pas de marge sur une position de plus de 5 s ni sur l'altitude pression standard
