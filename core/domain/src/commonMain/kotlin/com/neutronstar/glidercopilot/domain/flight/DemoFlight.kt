@@ -36,7 +36,10 @@ object DemoFlight {
      * planeur part en spirale après 5 s de vol). La boucle étant fermée, la rotation ne crée aucune rupture ;
      * les heures sont recalées sur [start], à 1 Hz.
      */
-    fun startingNearFirstSpiral(loop: List<IgcFix>, field: LatLon, leadS: Int = 5, start: Instant = EPOCH): List<IgcFix> {
+    /** Secondes de vol avant l'entrée dans la première pompe de la démo (JB, 24/10/2026). */
+    const val LEAD_S = 6
+
+    fun startingNearFirstSpiral(loop: List<IgcFix>, field: LatLon, leadS: Int = LEAD_S, start: Instant = EPOCH): List<IgcFix> {
         if (loop.isEmpty()) return loop
         val core = Geo.destination(field, LEGS.first().bearingFromField, LEGS.first().distanceKm)
         val entry = loop.indexOfFirst { Geo.distanceKm(it.position, core) <= 0.15 }
@@ -56,6 +59,8 @@ object DemoFlight {
         seed: Int = 3,
         spiralWanderMs: Double = 0.0,
         spiralGainM: Double = 60.0,
+        /** JB (24/10/2026) : cercles vraiment ronds, centrés sur le cœur de la pompe, sans dérive (démo de Pilotage). */
+        centeredSpirals: Boolean = false,
     ): List<IgcFix> {
         val rnd = Random(seed)
         val wander = Random(seed + 101)   // tirages à part : la trace par défaut reste identique
@@ -81,7 +86,10 @@ object DemoFlight {
             val core = Geo.destination(field, leg.bearingFromField, leg.distanceKm)
             // transition : cap corrigé de la dérive, jusqu'à 150 m du cœur
             var guard = 0
-            while (Geo.distanceKm(pos, core) > 0.15 && guard++ < 2000) {
+            val period0 = 26.0 + 6 * rnd.nextDouble()
+            val radiusKm = (80 / 3.6) * period0 / (2 * PI) / 1000
+            val reach = if (centeredSpirals) radiusKm else 0.15
+            while (Geo.distanceKm(pos, core) > reach && guard++ < 2000) {
                 val brg = toRadians(Geo.bearingDeg(pos, core))
                 heading = brg
                 val tas = glideKmh / 3.6
@@ -91,10 +99,20 @@ object DemoFlight {
             }
             // spirale jusqu'à retrouver l'altitude de base + un peu (dernière pompe : exactement la base)
             val target = baseAltM + if (i == LEGS.lastIndex) 0.0 else spiralGainM + 30.0 * rnd.nextDouble()
-            val period = 26.0 + 6 * rnd.nextDouble()
+            val period = period0
             var phase = heading   // continuité du cap à l'entrée en spirale
             val tas = 80 / 3.6
-            while (alt < target) {
+            // spirale centrée : angle autour du cœur, sens horaire, rayon presque constant (±2 %)
+            var around = Geo.bearingDeg(core, pos)
+            while (centeredSpirals && alt < target) {
+                around = (around + 360.0 / period) % 360
+                heading = toRadians(around + 90)
+                val r = radiusKm * (1 + 0.04 * (wander.nextDouble() - 0.5))
+                pos = Geo.destination(core, around, r)
+                alt += leg.climbMs + 0.9 * sin(toRadians(around) - 1.0)
+                emit()
+            }
+            while (!centeredSpirals && alt < target) {
                 phase += 2 * PI / period
                 heading = phase
                 if (spiralWanderMs > 0) {
