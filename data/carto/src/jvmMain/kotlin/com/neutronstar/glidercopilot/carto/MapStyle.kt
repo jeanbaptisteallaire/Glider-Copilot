@@ -31,6 +31,12 @@ data class MapPalette(
     val airspaceFillOpacity: Double = 0.05,
     val airspaceLineWidth: Double = 1.6,
     val hillshadeExaggeration: Double = 0.55,
+    /**
+     * V21 « Godspeed » (comme iOS) : contrôlés et réglementés en trait plein, information et autres en tirets
+     * (la couleur n'est jamais seule à porter l'information), étiquettes 13 à halo sombre, trace « flash » 5 sur liseré 8.
+     */
+    val godspeed: Boolean = false,
+    val traceCasing: String = "#0B0E13",
 )
 
 /** JSON brut à insérer tel quel (GeoJSON déjà sérialisé). */
@@ -137,7 +143,10 @@ object MapStyle {
         // traits pleins pour les espaces contrôlés et d'information, tiretés pour les zones réglementées
         // (line-dasharray n'accepte pas d'expression par entité : deux couches)
         val restrictedTypes = listOf(1, 2, 3, 8, 9, 12, 16, 17, 18, 19, 25, 29, 30, 31)
-        val isRestricted = listOf("in", listOf("get", "type"), listOf("literal", restrictedTypes))
+        val controlledTypes = listOf(4, 7, 13, 14, 23, 24, 26, 36)
+        // Godspeed : les tirets marquent information et autres ; sinon (historique) les zones réglementées
+        val isRestricted = if (p.godspeed) listOf("!", listOf("in", listOf("get", "type"), listOf("literal", restrictedTypes + controlledTypes)))
+        else listOf("in", listOf("get", "type"), listOf("literal", restrictedTypes))
         layers += mapOf("id" to "airspace-line", "type" to "line", "source" to "aero", "filter" to listOf("all", isAirspace, listOf("!", isRestricted)),
             "paint" to mapOf("line-color" to familyColor, "line-width" to listOf("match", listOf("get", "type"), 33, 1.0, p.airspaceLineWidth),
                 "line-opacity" to listOf("match", listOf("get", "type"), 33, 0.3, 0.85)))
@@ -146,8 +155,8 @@ object MapStyle {
                 "line-dasharray" to listOf("literal", listOf(4, 2))))
         layers += mapOf("id" to "airspace-label", "type" to "symbol", "source" to "aero", "minzoom" to 9.5, "filter" to listOf("all", isAirspace, listOf("!=", listOf("get", "type"), 33)),
             "layout" to mapOf("symbol-placement" to "line", "symbol-spacing" to 420, "text-field" to listOf("get", "name"),
-                "text-font" to listOf("Noto Sans Medium"), "text-size" to 10, "text-offset" to listOf("literal", listOf(0, 0.9))),
-            "paint" to mapOf("text-color" to familyColor, "text-halo-color" to p.halo, "text-halo-width" to 1.2))
+                "text-font" to listOf("Noto Sans Medium"), "text-size" to if (p.godspeed) 13 else 10, "text-offset" to listOf("literal", listOf(0, 0.9))),
+            "paint" to mapOf("text-color" to familyColor, "text-halo-color" to p.halo, "text-halo-width" to if (p.godspeed) 1.6 else 1.2))
         // localités
         if ("fond" in sources) {
             layers += mapOf(
@@ -225,8 +234,10 @@ object MapStyle {
         // couches dynamiques : route vers le terrain, trace colorée par le vario, planeur
         layers += mapOf("id" to "route", "type" to "line", "source" to SRC_ROUTE,
             "paint" to mapOf("line-color" to p.route, "line-width" to 2.5, "line-dasharray" to listOf("literal", listOf(1, 1.6))))
+        if (p.godspeed) layers += mapOf("id" to "trace-casing", "type" to "line", "source" to SRC_TRACE, "layout" to mapOf("line-cap" to "round"),
+            "paint" to mapOf("line-color" to p.traceCasing, "line-width" to 8))
         layers += mapOf("id" to "trace", "type" to "line", "source" to SRC_TRACE, "layout" to mapOf("line-cap" to "round"),
-            "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 3.5))
+            "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to if (p.godspeed) 5 else 3.5))
         // vue centrage : trace recalée du vent (en pointillé) et cœur estimé
         layers += mapOf("id" to "air-trace", "type" to "line", "source" to SRC_AIR_TRACE, "layout" to mapOf("line-cap" to "round"),
             "paint" to mapOf("line-color" to listOf("get", "color"), "line-width" to 2.2, "line-opacity" to 0.85, "line-dasharray" to listOf("literal", listOf(2.2, 1.4))))
