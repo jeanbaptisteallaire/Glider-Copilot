@@ -31,6 +31,20 @@ object DemoFlight {
      * [spiralWanderMs] > 0 (iOS) : en spirale, le cercle dérive lentement au hasard (quelques mètres par tour) et
      * n'est pas parfaitement rond ; [spiralGainM] : gain de chaque pompe (iOS : plus de tours superposés), pour que les tours ne se superposent pas exactement. 0 = trace inchangée (Android).
      */
+    /**
+     * Même boucle, commencée [leadS] secondes avant l'entrée dans la première pompe (JB, 24/10/2026 : en démo, le
+     * planeur part en spirale après 5 s de vol). La boucle étant fermée, la rotation ne crée aucune rupture ;
+     * les heures sont recalées sur [start], à 1 Hz.
+     */
+    fun startingNearFirstSpiral(loop: List<IgcFix>, field: LatLon, leadS: Int = 5, start: Instant = EPOCH): List<IgcFix> {
+        if (loop.isEmpty()) return loop
+        val core = Geo.destination(field, LEGS.first().bearingFromField, LEGS.first().distanceKm)
+        val entry = loop.indexOfFirst { Geo.distanceKm(it.position, core) <= 0.15 }
+        if (entry < 0) return loop
+        val from = (entry - leadS).coerceAtLeast(0)
+        return (loop.drop(from) + loop.take(from)).mapIndexed { i, f -> f.copy(time = start + i.toLong().seconds) }
+    }
+
     fun generate(
         field: LatLon,
         start: Instant = EPOCH,

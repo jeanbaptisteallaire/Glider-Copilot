@@ -175,7 +175,13 @@ struct FluidMapView: UIViewRepresentable {
                 let d = min(max(v.camera.centerCoordinateDistance, 600), 200_000)
                 camDistance = d
                 camHeading = v.camera.heading
-                if !(p?.zoomActive ?? false) { control.distance = d }
+                // en spirale aussi : le zoom du pilote est gardé, ramené à l'échelle de la spirale (distance = rayon × 7
+                // × facteur). Sinon un changement d'orientation, qui recentre, ramenait le zoom automatique serré.
+                if let p, p.zoomActive, p.zoomRadiusM > 0 {
+                    control.distance = min(max(d * 9000 / (p.zoomRadiusM * 7), 600), 200_000)
+                } else {
+                    control.distance = d
+                }
             }
         }
 

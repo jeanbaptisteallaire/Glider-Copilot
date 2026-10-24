@@ -32,3 +32,17 @@ class SensorWatchdogTest {
         assertEquals(listOf(Event.GPS_LOST), w.update(101.0, true, null, true))
     }
 }
+
+class DemoStartTest {
+    @Test fun spiraleApresCinqSecondes() {
+        val field = com.neutronstar.glidercopilot.domain.LatLon(43.8, 3.78)
+        val raw = DemoFlight.generate(field, windKmh = 0.0)
+        val loop = DemoFlight.startingNearFirstSpiral(raw, field)
+        assertEquals(raw.size, loop.size)
+        val core = com.neutronstar.glidercopilot.domain.Geo.destination(field, DemoFlight.LEGS.first().bearingFromField, DemoFlight.LEGS.first().distanceKm)
+        val entry = loop.indexOfFirst { com.neutronstar.glidercopilot.domain.Geo.distanceKm(it.position, core) <= 0.15 }
+        assertEquals(5, entry)
+        // heures à 1 Hz depuis le début
+        assertEquals(1L, (loop[1].time - loop[0].time).inWholeSeconds)
+    }
+}

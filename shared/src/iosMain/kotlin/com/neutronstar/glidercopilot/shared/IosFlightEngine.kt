@@ -457,7 +457,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
     private suspend fun runDemo() {
         val center = club?.position ?: LatLon(43.80028, 3.78167)
         // iOS V3 : spirales sans vent (cercles au même endroit), légèrement irrégulières, quelques mètres de dérive par tour
-        val loop = DemoFlight.generate(center, windKmh = 0.0, spiralWanderMs = 0.35, spiralGainM = 220.0)
+        // JB (24/10/2026) : la démo part en spirale après 5 s de vol
+        val loop = DemoFlight.startingNearFirstSpiral(DemoFlight.generate(center, windKmh = 0.0, spiralWanderMs = 0.35, spiralGainM = 220.0), center)
         val loopNs = loop.size.toLong() * 1_000_000_000L
         var k = 0L
         while (true) {
