@@ -65,7 +65,9 @@ fun GcCard(
     if (Gc.social) {
         val t = tint ?: accent ?: c.cardTitle
         Column(
-            modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(c.panel).padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(c.cardBrush)
+                // V21 Godspeed : carte lavande en dégradé léger, filet blanc à 10 % (WGCard d'iOS)
+                .border(1.dp, c.line, RoundedCornerShape(16.dp)).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             if (title != null || trailing != null) {

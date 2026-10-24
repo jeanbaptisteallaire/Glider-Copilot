@@ -37,6 +37,10 @@ object GcIcons {
     val Pilotage = stroke("pilotage", 1.8f, "M12 4v15M2 10.5h20M8.5 19.5h7")
     val Sound = stroke("sound", 2f, "M4 9h4l5-4v14l-5-4H4z", "M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12")
     val SoundOff = stroke("soundOff", 2f, "M4 9h4l5-4v14l-5-4H4z", "M16.5 9.5l5 5M21.5 9.5l-5 5")
+    /** V21 Pilotage PFD : coupe terrain repliée (montagne), fréquence radio (antenne), recentrage (viseur). */
+    val Mountain = stroke("mountain", 2f, "M2 19l6.5-11 4 6.5 2.5-4 7 8.5z")
+    val Antenna = stroke("antenna", 2f, "M12 11v10M9.5 21h5", "M12 11a1.5 1.5 0 1 0 0-.01", "M8.5 7.5a5 5 0 0 0 0 7M15.5 7.5a5 5 0 0 1 0 7M6 5a8.5 8.5 0 0 0 0 12M18 5a8.5 8.5 0 0 1 0 12")
+    val Recenter = stroke("recenter", 2f, "M18 12a6 6 0 1 1 -12 0a6 6 0 1 1 12 0", "M12 2v4M12 18v4M2 12h4M18 12h4")
     val ChevronDown = stroke("chevronDown", 2f, "M6 9l6 6 6-6")
     val ChevronUp = stroke("chevronUp", 2f, "M6 15l6-6 6 6")
     val ChevronRight = stroke("chevronRight", 2f, "M9 6l6 6-6 6")

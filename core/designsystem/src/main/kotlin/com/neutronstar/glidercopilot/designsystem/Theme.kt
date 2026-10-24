@@ -86,6 +86,96 @@ data class GcColors(
     val brandInk: Color = Color(0xFF1D3550),
     val brandPaper: Color = Color(0xFFF6F3EE),
     val brandSky: Color = Color(0xFF6C8FB7),
+    /*
+     * V21 « Godspeed » (JB, 22/10/2026, miroir d'ios/WindGlider/Sources/Common/Theme.swift) : fond de page en dégradé
+     * lavande (haut → bas), panneaux lavande, cyan pour ce qui se touche. Vide = fond uni [background].
+     */
+    val pageGradient: List<Color> = emptyList(),
+    val cardGradient: List<Color> = emptyList(),
+    /** Panneaux de Pilotage : dégradé lavande de l'horizon Thales, jamais noir pur. */
+    val panelTop: Color = panel,
+    val panelBottom: Color = panel,
+    /** Boîte de marge en alerte : aplats pleins, texte noir dessus (contraste ≥ 4,5:1). */
+    val marginAlarmBox: Color = bad,
+    val marginCautionBox: Color = warn,
+    /** Bloc rouge plein du tambour sous le minimum. */
+    val alarmFill: Color = danger,
+    /** Cyan « réglé par le pilote » (minimum, finesse, fréquence). */
+    val selected: Color = sky,
+)
+
+/*
+ * V21 — charte « Godspeed » de LIGHT PFD sur toute l'app (JB, 22/10/2026) : sombre lavande, jamais noir pur,
+ * cyan pour ce qui se touche ou se sélectionne, magenta pour la navigation. Sur iOS : SF Pro ; sur Android : Inter
+ * (SF Pro n'est pas redistribuable hors des plateformes Apple). Mêmes valeurs que `WG` côté Swift.
+ */
+val GodspeedColors = GcColors(
+    background = Color(0xFF24233A),
+    panel = Color(0xFF34334A),
+    control = Color(0xFF3B3A52),
+    controlOn = Color(0xFF4F4F6B),
+    line = Color(0x1AFFFFFF),
+    lineSoft = Color(0x14FFFFFF),
+    lineFaint = Color(0x0DFFFFFF),
+    sunken = Color(0xFF2F2E43),
+    sunkenField = Color(0xFF2B2A3A),
+    sunkenPlan = Color(0xFF2F2E43),
+    inkSoft = Color(0xFFE8EDF2),
+    planText = Color(0xFFD5DAE1),
+    inputLine = Color(0x33FFFFFF),
+    ink = Color(0xFFE8EDF2),
+    dim = Color(0xFFA3ABB7),
+    faint = Color(0xFF8A91A0),
+    cardTitle = Color(0xFFE8EDF2),
+    ok = Color(0xFF38D67F),
+    warn = Color(0xFFFFB52E),
+    bad = Color(0xFFFF4A3D),
+    danger = Color(0xFFFF4A3D),
+    onAccent = Color(0xFF0B0E13),
+    // les pages emploient « route » comme couleur d'interaction : cyan Godspeed ; la navigation de Pilotage
+    // (cap, route, vent) prend « heading », violet très clair (PI.route d'iOS)
+    route = Color(0xFF12A4F0),
+    heading = Color(0xFFDBB8FF),
+    air = Color(0xFF6FA0E8),
+    finesseIdle = Color(0xFFA3ABB7),
+    statusOn = Color(0xFF38D67F),
+    statusOff = Color(0xFFFF4A3D),
+    overlay = Color(0xF02B2A3A),
+    terrainTop = Color(0xFF8CFF73),
+    terrainBottom = Color(0xFF3E7A35),
+    mapLow = Color(0xFF1C1B29),
+    mapHigh = Color(0xFF2B2A3A),
+    varioStops = listOf(
+        -3.0 to Color(0xFFFF2A2A),
+        -1.5 to Color(0xFFFF8A00),
+        0.0 to Color(0xFFFFE500),
+        1.0 to Color(0xFF46E83C),
+        2.0 to Color(0xFF14D27A),
+        3.0 to Color(0xFF00D9FF),
+        4.0 to Color(0xFF3D8BFF),
+    ),
+    windLayer = Color(0xFF12A4F0),
+    accentFill = Color(0xFF12A4F0),
+    onAccentFill = Color(0xFFFFFFFF),
+    trace = Color(0xFFFF4A3D),
+    sky = Color(0xFF12A4F0),
+    sun = Color(0xFFF29900),
+    wind = Color(0xFF12A4F0),
+    altitude = Color(0xFF9B9FD0),
+    heart = Color(0xFFFF4A3D),
+    mint = Color(0xFF38D67F),
+    // pages illustrées claires (couverture, accueil) : l'encre bleu nuit de la marque reste sur leurs cartes blanches
+    brandInk = Color(0xFF1D3550),
+    brandPaper = Color(0xFF24233A),
+    brandSky = Color(0xFF073E60),
+    pageGradient = listOf(Color(0xFF3D3E53), Color(0xFF24233A), Color(0xFF1C1B29)),
+    cardGradient = listOf(Color(0xFF3B3A52), Color(0xFF2F2E43)),
+    panelTop = Color(0xF04F4F6B),
+    panelBottom = Color(0xF02B2A3A),
+    marginAlarmBox = Color(0xFFF2463A),
+    marginCautionBox = Color(0xFFFF9F1C),
+    alarmFill = Color(0xFFD4141C),
+    selected = Color(0xFF1CB4FF),
 )
 
 val GlidyColors = GcColors(
@@ -394,6 +484,10 @@ fun GlidyTheme(content: @Composable () -> Unit) {
  */
 @Composable
 fun GlidyFlightTheme(light: Boolean, content: @Composable () -> Unit) {
+    if (GODSPEED) {
+        GodspeedTheme(content)
+        return
+    }
     if (!light) {
         GlidyTheme(content)
         return
@@ -424,6 +518,10 @@ fun GlidyFlightTheme(light: Boolean, content: @Composable () -> Unit) {
  */
 @Composable
 fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
+    if (GODSPEED) {
+        GodspeedTheme(content)
+        return
+    }
     val c = if (light) GlidyLightColors else GlidyColors
     val scheme = if (light) {
         lightColorScheme(
@@ -442,3 +540,35 @@ fun GlidyAdaptiveTheme(light: Boolean, content: @Composable () -> Unit) {
         MaterialTheme(colorScheme = scheme, typography = interTypography(), content = content)
     }
 }
+
+/** V21 : charte Godspeed sur toute l'app, forcée en sombre comme sur iOS (le réglage clair/sombre n'agit plus). */
+const val GODSPEED = true
+
+/** Thème Godspeed : couleurs [GodspeedColors], échelle typographique d'Apple en Inter (pages et Pilotage). */
+@Composable
+fun GodspeedTheme(content: @Composable () -> Unit) {
+    val c = GodspeedColors
+    val scheme = darkColorScheme(
+        primary = c.sky, onPrimary = c.onAccentFill, secondary = c.route, tertiary = c.air,
+        background = c.background, onBackground = c.ink, surface = c.panel, onSurface = c.ink,
+        surfaceVariant = c.control, onSurfaceVariant = c.dim, outline = c.line, error = c.bad,
+        surfaceContainer = c.panel, surfaceContainerHigh = c.control, surfaceContainerLow = c.sunken,
+    )
+    CompositionLocalProvider(LocalGcColors provides c, LocalGcType provides gcType(c, social = true), LocalGcSocial provides true) {
+        MaterialTheme(colorScheme = scheme, typography = interTypography(), content = content)
+    }
+}
+
+/** Fond de page : dégradé lavande Godspeed quand la charte en a un, sinon fond uni. */
+val GcColors.pageBrush: androidx.compose.ui.graphics.Brush
+    get() = if (pageGradient.size >= 2) androidx.compose.ui.graphics.Brush.verticalGradient(pageGradient)
+    else androidx.compose.ui.graphics.SolidColor(background)
+
+/** Fond de carte de page : dégradé lavande léger, sinon le panneau uni. */
+val GcColors.cardBrush: androidx.compose.ui.graphics.Brush
+    get() = if (cardGradient.size >= 2) androidx.compose.ui.graphics.Brush.verticalGradient(cardGradient)
+    else androidx.compose.ui.graphics.SolidColor(panel)
+
+/** Panneau de Pilotage : dégradé lavande, jamais noir pur. */
+val GcColors.panelBrush: androidx.compose.ui.graphics.Brush
+    get() = androidx.compose.ui.graphics.Brush.verticalGradient(listOf(panelTop, panelBottom))
