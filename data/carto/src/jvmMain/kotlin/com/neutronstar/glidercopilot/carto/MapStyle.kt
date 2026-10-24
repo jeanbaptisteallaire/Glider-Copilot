@@ -62,6 +62,13 @@ object MapStyle {
     const val IMG_DOT = "glidy-dot-icon"
     const val LAYER_TRAFFIC = "traffic"
     const val LAYER_TRAFFIC_DOTS = "traffic-dots"
+    /** V21 : fond satellite Sentinel-2 cloudless (EOX, 2016, CC BY 4.0), en ligne, affiché sur demande. */
+    const val SRC_SATELLITE = "glidy-satellite"
+    const val LAYER_SATELLITE = "satellite"
+    const val SATELLITE_TILES = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless_3857/default/g/{z}/{y}/{x}.jpg"
+    const val SATELLITE_CREDIT = "Sentinel-2 cloudless 2016 © EOX IT Services (CC BY 4.0, données Copernicus)"
+    /** Couches des zones aériennes, masquables depuis le menu ⋯. */
+    val AIRSPACE_LAYERS = listOf("airspace-fill", "airspace-line", "airspace-line-restricted", "airspace-label")
 
     /**
      * Style MapLibre complet du pack installé dans [packDir]. Tout est local : PMTiles en file://, glyphes dans les assets,
@@ -80,6 +87,10 @@ object MapStyle {
         pm("fond")?.let { sources["fond"] = mapOf("type" to "vector", "url" to it, "attribution" to "© OpenStreetMap") }
         pm("relief")?.let { sources["relief"] = mapOf("type" to "raster-dem", "url" to it, "encoding" to "terrarium", "tileSize" to 512) }
         pm("courbes")?.let { sources["courbes"] = mapOf("type" to "vector", "url" to it) }
+        if (p.godspeed) sources[SRC_SATELLITE] = mapOf(
+            "type" to "raster", "tiles" to listOf(SATELLITE_TILES), "tileSize" to 256, "maxzoom" to 14,
+            "attribution" to SATELLITE_CREDIT,
+        )
         sources["aero"] = mapOf("type" to "geojson", "data" to (aeroGeoJson?.let(::RawJson) ?: EMPTY_FC))
         sources[SRC_ROUTE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
         sources[SRC_TRACE] = mapOf("type" to "geojson", "data" to EMPTY_FC)
@@ -112,6 +123,9 @@ object MapStyle {
             layers += line("rivers", "fond", "water", p.waterLine, width = zoomInterp(9, 0.6, 14, 2.0),
                 filter = listOf("all", listOf("==", listOf("geometry-type"), "LineString"), listOf("in", listOf("get", "kind"), listOf("literal", listOf("river", "canal")))))
         }
+        // V21 : fond satellite (option du menu ⋯, comme iOS), masqué par défaut ; tuiles en ligne, rien de vital
+        if (p.godspeed) layers += mapOf("id" to LAYER_SATELLITE, "type" to "raster", "source" to SRC_SATELLITE,
+            "layout" to mapOf("visibility" to "none"), "paint" to mapOf("raster-opacity" to 1.0))
         if ("courbes" in sources) {
             val index = listOf("==", listOf("%", listOf("get", "ele"), 500), 0)
             layers += line("contours", "courbes", "contours", p.contour, width = 0.5, opacity = p.contourOpacity, filter = listOf("!", index), minzoom = 10.0)

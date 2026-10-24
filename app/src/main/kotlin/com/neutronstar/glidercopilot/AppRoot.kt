@@ -511,16 +511,18 @@ private fun paperChartPalette() = com.neutronstar.glidercopilot.carto.MapPalette
 )
 
 /**
- * V21 — carte Godspeed (miroir de WG.airspace d'iOS) : relief lavande sombre, contrôlés bleu, réglementés rouge,
- * information vert, autres gris ; route magenta ; trafic blanc à halo sombre.
+ * V21 — carte Godspeed (miroir d'iOS) : plan clair façon Apple Plans (JB : la carte lavande était trop sombre), zones
+ * de WG.airspace (contrôlés bleu, réglementés rouge, information vert, autres gris), route magenta, trafic blanc à halo
+ * sombre ; fond satellite en option (menu ⋯).
  */
 private fun godspeedPalette(): com.neutronstar.glidercopilot.carto.MapPalette {
     fun h(color: androidx.compose.ui.graphics.Color) = String.format("#%06X", color.toArgb() and 0xFFFFFF)
     val c = com.neutronstar.glidercopilot.designsystem.GodspeedColors
     return com.neutronstar.glidercopilot.carto.MapPalette(
-        background = h(c.mapLow), earth = h(c.mapLow), wood = "#1F2A26", water = "#14263A", waterLine = "#2A4A6A",
-        roadMajor = "#55546E", roadMinor = "#3A394F", label = h(c.dim), halo = h(c.mapLow),
-        contour = "#FFFFFF", hillShadow = "#000000", hillHighlight = "#5A5A78",
+        background = "#F2EFE9", earth = "#F2EFE9", wood = "#D3E6C6", water = "#A8D4F2", waterLine = "#7DB9E8",
+        roadMajor = "#F7C873", roadMinor = "#FFFFFF", label = "#3A3A3C", halo = "#FFFFFF",
+        contour = "#8A6D3B", hillShadow = "#7A6E5A", hillHighlight = "#FFFFFF",
+        contourOpacity = 0.18, contourIndexOpacity = 0.32, hillshadeExaggeration = 0.35,
         controlled = "#6FA0E8", restricted = "#E0607A", information = "#5CCB86", other = "#AEB6C0",
         airport = "#E35BE6", navaid = h(c.dim), route = "#E35BE6", glider = "#FFFFFF", traffic = "#FFFFFF",
         airspaceFillOpacity = 0.06, airspaceLineWidth = 1.0, godspeed = true,

@@ -370,6 +370,8 @@ fun FlightScreen(
                     }
                 }
                 if (!essential) SettingsMenu(
+                    airspacesOn = controller.showAirspaces, onAirspaces = { controller.showAirspaces = !controller.showAirspaces },
+                    satelliteOn = controller.satellite, onSatellite = { controller.satellite = !controller.satellite },
                     varioOn = varioOpen, onVario = { varioOpen = !varioOpen },
                     radioOn = showRadio, onRadio = { showRadio = !showRadio },
                     demoOn = live.demo, onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
@@ -401,7 +403,7 @@ fun FlightScreen(
             )
         }
         if (map != null) Text(
-            map.attribution,
+            map.attribution + if (controller.satellite) " · " + com.neutronstar.glidercopilot.carto.MapStyle.SATELLITE_CREDIT else "",
             style = TextStyle(fontFamily = GcFonts.ui, fontSize = 7.sp, color = c.faint), maxLines = 1,
             modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 1.dp),
         )
@@ -455,6 +457,8 @@ private fun StatusLine(ds: PilotDisplay, noMap: Boolean, noRelief: Boolean, tag:
 /** Réglages : hors du champ de vol (on ne règle pas en spirale). */
 @Composable
 private fun SettingsMenu(
+    airspacesOn: Boolean, onAirspaces: () -> Unit,
+    satelliteOn: Boolean, onSatellite: () -> Unit,
     varioOn: Boolean, onVario: () -> Unit,
     radioOn: Boolean, onRadio: () -> Unit,
     demoOn: Boolean, onDemo: (() -> Unit)?, demoLocked: Boolean,
@@ -475,6 +479,8 @@ private fun SettingsMenu(
             )
             item("Vario", varioOn, action = onVario)
             item("Fréquence radio du terrain", radioOn, action = onRadio)
+            item(if (airspacesOn) "Masquer les zones aéronautiques" else "Afficher les zones aéronautiques", null, action = onAirspaces)
+            item("Fond satellite", satelliteOn, action = onSatellite)
             // revue résilience M8 : la démo remplace le vol réel ; impossible de la lancer pendant un vol
             if (onDemo != null) item("DÉMO", demoOn, enabled = !demoLocked, action = onDemo)
             if (onCalibration != null) item("Calibration des capteurs", calibrationOn, action = onCalibration)

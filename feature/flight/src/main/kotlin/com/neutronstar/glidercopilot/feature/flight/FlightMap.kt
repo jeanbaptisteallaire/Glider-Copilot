@@ -130,6 +130,9 @@ class MapController {
         MapOrientation.NORTH -> "N↑"
         MapOrientation.TRACK -> "RTE"
     }
+    /** V21 (comme iOS) : zones aériennes affichées ou masquées, fond satellite (menu ⋯ de Pilotage). */
+    var showAirspaces by mutableStateOf(true)
+    var satellite by mutableStateOf(false)
     var zoom by mutableDoubleStateOf(DEFAULT_ZOOM)
         internal set
     /** Zoom réellement affiché (vue centrage comprise) : sert à l'échelle graphique. */
@@ -260,6 +263,11 @@ internal fun LiveMap(
 
     SideEffect {
         val s = style ?: return@SideEffect
+        if (!trafficOnly) {
+            val vis = { on: Boolean -> org.maplibre.android.style.layers.PropertyFactory.visibility(if (on) "visible" else "none") }
+            MapStyle.AIRSPACE_LAYERS.forEach { id -> s.getLayer(id)?.setProperties(vis(controller.showAirspaces)) }
+            s.getLayer(MapStyle.LAYER_SATELLITE)?.setProperties(vis(controller.satellite))
+        }
         val centering = frame.circling && controller.orientation == MapOrientation.AUTO
         controller.centering = centering
         if (trafficOnly) {
