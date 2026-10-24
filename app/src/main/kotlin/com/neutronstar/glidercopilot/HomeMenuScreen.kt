@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.pageBrush
 import com.neutronstar.glidercopilot.designsystem.GcFonts
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GlidyAdaptiveTheme
@@ -71,7 +72,7 @@ internal fun HomeMenuScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .background(c.brandPaper)
+                .background(c.pageBrush)
                 .verticalScroll(rememberScrollState())
                 .statusBarsPadding()
                 .navigationBarsPadding()
@@ -81,7 +82,7 @@ internal fun HomeMenuScreen(
             Row(Modifier.padding(start = 4.dp, top = 14.dp, bottom = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                 Image(painterResource(R.drawable.wg_logo), contentDescription = null, modifier = Modifier.size(44.dp).clip(CircleShape))
                 Spacer(Modifier.width(12.dp))
-                Text(APP_NAME_CAPS, style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 20.sp, letterSpacing = 3.sp, color = c.brandInk))
+                Text(APP_NAME_CAPS, style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.Medium, fontSize = 20.sp, letterSpacing = 3.sp, color = c.ink))
             }
 
             // V19.1 — case fine « Tutoriel », tout en haut
@@ -95,9 +96,9 @@ internal fun HomeMenuScreen(
                     .padding(horizontal = 18.dp, vertical = 11.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(GcIcons.Tab.Tuto, contentDescription = null, tint = c.brandInk, modifier = Modifier.size(20.dp))
+                Icon(GcIcons.Tab.Tuto, contentDescription = null, tint = c.ink, modifier = Modifier.size(20.dp))
                 Spacer(Modifier.width(10.dp))
-                Text(if (fr) "Tutoriel" else "Tutorial", style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 17.sp, color = c.brandInk), modifier = Modifier.weight(1f))
+                Text(if (fr) "Tutoriel" else "Tutorial", style = TextStyle(fontFamily = GcFonts.ui, fontWeight = FontWeight.SemiBold, fontSize = 17.sp, color = c.ink), modifier = Modifier.weight(1f))
                 Icon(GcIcons.ChevronRight, contentDescription = null, tint = c.faint, modifier = Modifier.size(14.dp))
             }
 
@@ -113,7 +114,7 @@ internal fun HomeMenuScreen(
                     .padding(horizontal = 20.dp, vertical = 18.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                MenuTitle(if (fr) "Prévol & météo" else "Pre-flight & weather", c.brandInk)
+                MenuTitle(if (fr) "Prévol & météo" else "Pre-flight & weather", c.ink)
                 Box {
                     PrevolDayPreview(prevol)
                     // le graphique capte ses propres touchers : un voile transparent renvoie tout appui vers Prévol
