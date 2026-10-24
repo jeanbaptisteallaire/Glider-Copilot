@@ -82,6 +82,8 @@ data class PrevolUiState(
     val selectedHour: Int = 0,
     val now: Instant = Clock.System.now(),
     val pairing: PairingUi = PairingUi(),
+    /** V21 : jour de la météo, 0 = aujourd'hui, 1 = demain, 2 = après-demain. */
+    val dayOffset: Int = com.neutronstar.glidercopilot.precog.DayChoice.defaultOffset(),
 )
 
 class PrevolViewModel(
@@ -135,7 +137,8 @@ class PrevolViewModel(
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             _state.update { it.copy(loading = true, error = null, now = Clock.System.now()) }
-            when (val r = weather.loadDay(pos, club.departement)) {
+            val offset = _state.value.dayOffset
+            when (val r = weather.loadDay(pos, club.departement, com.neutronstar.glidercopilot.precog.DayChoice.date(offset))) {
                 is WeatherResult.Success -> _state.update { s ->
                     val best = r.day.summary.best?.let { b -> r.day.hours.indexOfFirst { it.analysis.validTime == b.validTime } } ?: -1
                     s.copy(loading = false, day = r.day, selectedHour = if (best >= 0) best else 0)
@@ -146,6 +149,12 @@ class PrevolViewModel(
     }
 
     fun selectHour(index: Int) = _state.update { it.copy(selectedHour = index) }
+
+    fun selectDay(offset: Int) {
+        if (offset == _state.value.dayOffset) return
+        _state.update { it.copy(dayOffset = offset, day = null) }
+        refresh()
+    }
 
     fun selectClub(id: String) {
         viewModelScope.launch { clubSource.select(id) }

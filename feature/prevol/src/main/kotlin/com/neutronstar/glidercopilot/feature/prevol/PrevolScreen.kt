@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neutronstar.glidercopilot.designsystem.Gc
+import com.neutronstar.glidercopilot.designsystem.pageBrush
 import com.neutronstar.glidercopilot.designsystem.GcCard
 import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcKpi
@@ -73,6 +74,8 @@ fun PrevolScreen(
     modifier: Modifier = Modifier,
     /** S18 Lite : seulement météo + cartes hors ligne (sans planeur FLARM, OGN, capteurs). */
     lite: Boolean = false,
+    /** V21 : réglage du plané (finesse, marge d'arrivée) lu par Pilotage. */
+    glideSource: GlideSettingsSource? = null,
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val map by mapSource.state.collectAsStateWithLifecycle()
@@ -85,7 +88,8 @@ fun PrevolScreen(
     // V18.1 : couleur d'interaction = bleu ciel sur pages blanches, vert de la charte en sombre
     val action = if (social) c.route else c.ok
 
-    Column(modifier.fillMaxSize().background(c.background)) {
+    // V21 Godspeed : fond de page en dégradé lavande
+    Column(modifier.fillMaxSize().background(c.pageBrush)) {
         Header(state, onPickClub = { picking = true }, onRefresh = viewModel::refresh, onInfo = { showSources = true })
         LazyColumn(
             Modifier.fillMaxSize(),
@@ -108,6 +112,8 @@ fun PrevolScreen(
                 )
             }
             item { OfflineMapCard(map, mapSource::download, mapSource::cancel, mapSource::refreshCatalog) }
+            // V21 (comme iOS) : météo d'aujourd'hui, de demain ou d'après-demain
+            item { DayPicker(state.dayOffset, viewModel::selectDay) }
             if (!lite) item { OgnNetworkCard(ogn) }
             if (!lite) item { SensorsCard(sensors, sensorsSource) }
             val day = state.day
@@ -128,6 +134,10 @@ fun PrevolScreen(
                         TextButton(onClick = { picking = true }) { Text("Choisir un club", color = action) }
                     }
                 }
+            }
+            if (glideSource != null) item {
+                val g by glideSource.glide.collectAsStateWithLifecycle()
+                GlideSettingsCard(g, glideSource)
             }
             item { AirspacesCard(map) }
             item { NotamCard(state.club) }
@@ -164,7 +174,7 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
     val c = Gc.colors
     val social = Gc.social
     Row(
-        Modifier.fillMaxWidth().background(c.background)
+        Modifier.fillMaxWidth()
             .padding(start = 16.dp, end = 4.dp, top = if (social) 12.dp else 10.dp, bottom = if (social) 8.dp else 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -231,7 +241,8 @@ private fun DaySummaryCard(day: DayWeather, selected: Int, onSelectHour: (Int) -
         title = "La journée",
         icon = GcIcons.Prevol,
         tint = c.sun,
-        trailing = { GcPill("Thermique · ${s.quality.label}", qColor) },
+        // V21 : score du jour sur 100, anneau façon Apple Watch (remplace la pastille de qualité : même information)
+        trailing = { ScoreRing(com.neutronstar.glidercopilot.precog.DayChoice.score(day)) },
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             GcKpi(s.triggerTime?.let(Fmt::hm) ?: "—", "Déclenchement", Modifier.weight(1f), labelColor = c.sun)
