@@ -142,6 +142,15 @@ fun FlightScreen(
     val controller = remember { MapController() }
     val snap = live.snapshot
     val real = live.hasData
+    // V21 (comme iOS) : la carte avance à chaque image (10 Hz) entre deux positions GPS, trajectoire prolongée en virage
+    val predictor = remember { com.neutronstar.glidercopilot.domain.flight.OwnshipPredictor() }
+    var frameT by remember { mutableDoubleStateOf(System.nanoTime() / 1e9) }
+    LaunchedEffect(Unit) { while (true) { frameT = System.nanoTime() / 1e9; delay(100) } }
+    val gps = snap?.gps
+    LaunchedEffect(gps?.time, gps?.position) {
+        if (gps == null) predictor.reset()
+        else predictor.fix(gps.position.lat, gps.position.lon, (gps.groundSpeedKmh ?: 0.0) / 3.6, gps.trackDeg ?: -1.0, System.nanoTime() / 1e9)
+    }
     /** Signal simulé seulement dans les aperçus sans moteur de vol ; dans l'app, le mode démo est une bascule explicite. */
     val showDemo = !real && controls == null
     val waiting = !real && !showDemo
@@ -196,7 +205,12 @@ fun FlightScreen(
     val distKnown = result != null || (gliderPos != null && field != null) || showDemo
     val fieldElevShown = result?.field?.elevationM ?: fieldElev
     val need = result?.requiredM ?: (fieldElev + ARRIVAL_MARGIN + (if (distKnown) distKm * 1000 / finesse else 0.0))
-    val marge = result?.let { r -> alt?.let { it - r.requiredM } } ?: alt?.takeIf { distKnown }?.let { it - need }
+    // revue résilience C1 / C2 (comme iOS) : pas de marge sur une position de plus de 5 s ni sur l'altitude pression
+    // standard (1013 hPa, ±200 m selon le QNH) : tirets plutôt qu'une valeur figée ou fausse
+    val altUsable = !real || (snap!!.altitudeRef != com.neutronstar.glidercopilot.domain.flight.AltitudeRef.BARO_ISA &&
+        snap.altitudeRef != com.neutronstar.glidercopilot.domain.flight.AltitudeRef.NONE)
+    val marginTrusted = !real || (altUsable && (live.gpsFresh || ownOgn != null))
+    val marge = (result?.let { r -> alt?.let { it - r.requiredM } } ?: alt?.takeIf { distKnown }?.let { it - need })?.takeIf { marginTrusted && it.isFinite() }
     val trend: Double? = when {
         real -> snap!!.avgSpiralMs
         showDemo -> 40 / 30.0 * cos(t / 30)
@@ -250,7 +264,7 @@ fun FlightScreen(
     Box(modifier.fillMaxSize().background(c.mapLow)) {
         if (map != null) {
             val frame = when {
-                real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field)
+                real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field, predictor.state(frameT))
                 ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
                 showDemo -> demoFrame(map.field, t)
                 else -> GeoFrame(map.field, 0.0, emptyList(), map.field)
@@ -522,14 +536,18 @@ private fun chronoAction(live: FlightLive, controls: FlightControls?): (() -> Un
 
 /** Planeur réel : position GPS, route, trace des 4 dernières minutes colorée par le vario. */
 @Composable
-private fun liveFrame(s: com.neutronstar.glidercopilot.domain.flight.FlightSnapshot, field: LatLon): GeoFrame {
+private fun liveFrame(s: com.neutronstar.glidercopilot.domain.flight.FlightSnapshot, field: LatLon, predicted: com.neutronstar.glidercopilot.domain.flight.OwnshipPredictor.State? = null): GeoFrame {
     val c = Gc.colors
     val pts = s.trace.takeLast(240)
     val trace = pts.zipWithNext().map { (a, b) -> Triple(a.position, b.position, c.vario(b.climbMs)) }
     val g = s.gps!!
     // V20.1 — zoom spirale : spirale détectée par le moteur, tour complet bouclé, montée moyenne positive
     val thermal = remember(s.now) { com.neutronstar.glidercopilot.domain.flight.ThermalZoom.view(s.trace, s.circling, s.circlingSince, s.now) }
-    return GeoFrame(g.position, g.trackDeg ?: 0.0, trace, field, thermal = thermal)
+    // planeur à sa position prolongée (affichage seulement) ; la trace se raccorde au planeur
+    val shown = predicted?.takeIf { it.valid }
+    val pos = shown?.let { LatLon(it.lat, it.lon) } ?: g.position
+    val tail = if (shown != null && pts.isNotEmpty()) trace + Triple(pts.last().position, pos, c.vario(pts.last().climbMs)) else trace
+    return GeoFrame(pos, shown?.course ?: g.trackDeg ?: 0.0, tail, field, thermal = thermal)
 }
 
 private data class Sample(val t: Double, val alt: Double, val need: Double, val v: Double)
