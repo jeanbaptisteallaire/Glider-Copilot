@@ -36,6 +36,7 @@ import com.neutronstar.glidercopilot.ogn.OgnFix
 import com.neutronstar.glidercopilot.domain.flight.CalibrationRecorder
 import com.neutronstar.glidercopilot.domain.flight.FlightEngineCore
 import com.neutronstar.glidercopilot.domain.flight.FlightPhase
+import com.neutronstar.glidercopilot.domain.flight.AltitudeRef
 import com.neutronstar.glidercopilot.domain.flight.FlightSnapshot
 import com.neutronstar.glidercopilot.domain.flight.GpsFix
 import com.neutronstar.glidercopilot.domain.flight.Igc
@@ -176,7 +177,8 @@ class FlightEngine(
         val alt = lastAltitudeM ?: return null
         val now = clockNow()
         val hour = day.hours.minByOrNull { kotlin.math.abs(secondsBetween(it.analysis.validTime, now)) } ?: return null
-        if (kotlin.math.abs(secondsBetween(hour.analysis.validTime, now) / 3600) > 3) return null
+        // revue résilience M12 (comme iOS) : la division entière acceptait une prévision décalée de 3 h 59
+        if (kotlin.math.abs(secondsBetween(hour.analysis.validTime, now)) > 3 * 3600) return null
         val layer = hour.winds.minByOrNull { kotlin.math.abs(it.altitudeMslM - alt) } ?: return null
         return com.neutronstar.glidercopilot.domain.safety.Wind(
             layer.fromDeg, layer.speedKmh,
@@ -237,7 +239,12 @@ class FlightEngine(
 
     @Volatile private var club: com.neutronstar.glidercopilot.domain.Club? = null
 
+    /** Un relief ou un pack corrompu ne doit jamais faire planter l'app (revue résilience C4) : terrains vides au pire. */
     private fun updateField() {
+        runCatching { updateFieldUnsafe() }.onFailure { Log.w(TAG, "terrains", it); fields = emptyList(); frequencies = emptyMap() }
+    }
+
+    private fun updateFieldUnsafe() {
         val icao = club?.airfieldIcao
         val active = carto.active.value
         fieldElevation = icao?.let { i -> active?.aero?.airports?.firstOrNull { it.icao == i }?.elevationM?.toDouble() }
@@ -285,6 +292,8 @@ class FlightEngine(
             }
             OwnshipMode.FOLLOW -> jobs += scope.launch { ogn.followFixes.collect { onFollowFix(it) } }
             OwnshipMode.PHONE -> {
+                val beat = flightPrefs.getLong("beat", 0L)
+                if (beat > 0 && System.currentTimeMillis() - beat < 10 * 60_000L) pendingResumeNs = clockNs()
                 registerSensors()
                 registerGps()
                 // reprise d'un enregistrement de calibration resté armé après un arrêt/relance du moteur
@@ -443,8 +452,22 @@ class FlightEngine(
         val snap = core.snapshot(ns, fix.time)
         val alt = snap.altitudeM ?: return
         lastAltitudeM = alt
+        // revue résilience C3 (comme iOS) : alertes armées dès qu'un vol est détecté ou enregistré, jamais sur l'altitude
+        // pression standard (±200 m selon le QNH)
+        val altCalibrated = snap.altitudeRef != AltitudeRef.BARO_ISA && snap.altitudeRef != AltitudeRef.NONE
+        // reprise après redémarrage en vol : seulement si l'on vole vraiment (> 30 km/h dans les 2 min)
+        pendingResumeNs?.let { since ->
+            when {
+                mode == OwnshipMode.PHONE && (fix.groundSpeedKmh ?: 0.0) > 30 -> {
+                    pendingResumeNs = null
+                    safety.resumeInFlight(); core.startManual(fix.time)
+                    if (core.recording) speak("Application redémarrée en vol. Enregistrement repris.", force = true)
+                }
+                ns - since > 120_000_000_000L -> pendingResumeNs = null
+            }
+        }
         val armed = when (mode) {
-            OwnshipMode.PHONE -> snap.recording
+            OwnshipMode.PHONE -> altCalibrated && (snap.recording || snap.phase == FlightPhase.FLYING)
             OwnshipMode.REPLAY -> snap.phase == FlightPhase.FLYING
             OwnshipMode.DEMO, OwnshipMode.FOLLOW -> true
         }
@@ -711,11 +734,30 @@ class FlightEngine(
     private suspend fun publishLoop() {
         while (true) {
             publish()
-            delay(250)
+            // JB (24/10/2026) : au moins 10 images/s en Pilotage (était 4 Hz) ; la carte prolonge en plus la trajectoire
+            delay(PUBLISH_MS)
         }
     }
 
     private var lastPhase = FlightPhase.GROUND
+    private val watchdog = com.neutronstar.glidercopilot.domain.flight.SensorWatchdog()
+
+    /**
+     * Vol en cours mémorisé comme un battement de cœur (toutes les 30 s pendant l'enregistrement, effacé sinon) : un
+     * redémarrage de l'app n'est pris pour une reprise en vol que dans les 10 min (comme iOS).
+     */
+    private val flightPrefs by lazy { context.getSharedPreferences("flight_in_progress", android.content.Context.MODE_PRIVATE) }
+    private var lastHeartbeatMs = 0L
+    private fun heartbeat(recording: Boolean) {
+        val now = System.currentTimeMillis()
+        if (recording) {
+            if (now - lastHeartbeatMs >= 30_000) { lastHeartbeatMs = now; flightPrefs.edit().putLong("beat", now).apply() }
+        } else if (lastHeartbeatMs != -1L) {
+            lastHeartbeatMs = -1L; flightPrefs.edit().remove("beat").apply()
+        }
+    }
+    /** Redémarrage pendant un vol : alertes armées sans délai et enregistrement relancé dès que l'on vole (> 30 km/h). */
+    @Volatile private var pendingResumeNs: Long? = null
 
     private fun publish() {
         val snap: FlightSnapshot? = if (running) core.snapshot(clockNs(), clockNow()) else null
@@ -727,6 +769,12 @@ class FlightEngine(
         }
         if (running && mode == OwnshipMode.FOLLOW) lastFollow?.let { f ->
             core.onOgn(f.climbMs, f.altitudeM, Duration.between(f.time.toJavaInstant(), java.time.Instant.now()).seconds.coerceAtLeast(0))
+        }
+        // revue résilience M10 (comme iOS) : perte ou retour du GPS / du vario annoncés en vol, téléphone seulement
+        if (snap != null && mode == OwnshipMode.PHONE) {
+            val flying = snap.recording || snap.phase == FlightPhase.FLYING
+            watchdog.update(clockNs() / 1e9, flying, snap.gpsAgeS, snap.source != VarioSource.NONE).forEach { speak(it.text, force = it.level > 0) }
+            heartbeat(snap.recording)
         }
         // vidage périodique (4 Hz, ce même tour de boucle) plutôt qu'à chaque échantillon : baro+accél. tournent jusqu'à 75 Hz
         runCatching { calibWriter?.flush() }
@@ -812,5 +860,9 @@ class FlightEngine(
 
     init { wire() }
 
-    companion object { private const val TAG = "GlidyFlight" }
+    companion object {
+        private const val TAG = "GlidyFlight"
+        /** Période de publication vers l'écran (10 Hz). */
+        const val PUBLISH_MS = 100L
+    }
 }
