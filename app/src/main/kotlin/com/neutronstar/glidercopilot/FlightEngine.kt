@@ -54,6 +54,7 @@ import com.neutronstar.glidercopilot.feature.prevol.IgcFileUi
 import com.neutronstar.glidercopilot.feature.prevol.SensorsSource
 import com.neutronstar.glidercopilot.feature.prevol.SensorsUi
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -100,7 +101,7 @@ class FlightEngine(
     private val weather: com.neutronstar.glidercopilot.precog.WeatherRepository,
     /** S10 : reçoit chaque fichier IGC une fois fermé (carnet Mes vols). Ne doit jamais bloquer ni lever. */
     private val onIgcClosed: (File) -> Unit = {},
-) : FlightControls, SensorsSource {
+) : FlightControls, SensorsSource, com.neutronstar.glidercopilot.feature.prevol.GlideSettingsSource {
     private val thread = HandlerThread("glidy-flight").apply { start() }
     private val handler = Handler(thread.looper)
     private val scope = CoroutineScope(SupervisorJob() + handler.asCoroutineDispatcher())
@@ -227,6 +228,9 @@ class FlightEngine(
         scope.launch { carto.active.collect { updateField() } }
         scope.launch { prefs.followEnabled.collect { on -> if (on != followOn) { followOn = on; restartForMode() } } }
         scope.launch { loadForecast() }
+        // V21 : réglage du plané fait en Prévol (finesse, marge d'arrivée), mémorisé
+        scope.launch { prefs.glideFinesse.collect { finesse = it } }
+        scope.launch { prefs.arrivalMargin.collect { arrivalM = SafetyConfig.arrivalBounded(it) } }
         scope.launch { refreshFlights() }
         scope.launch { refreshCalibrations() }
     }
@@ -249,15 +253,19 @@ class FlightEngine(
         val airports = active?.aero?.airports.orEmpty().filter { it.type !in setOf(4, 7, 8, 10) }
         val clubPos = club?.position
         val clubAirport = icao?.let { i -> airports.firstOrNull { it.icao == i } }
-        val list = airports.map { a ->
+        // terrains de repli : aérodromes officiels à indicatif OACI seulement (JB, 23/10/2026, comme iOS)
+        val list = airports.filter { FieldOption.isOfficialAerodrome(it.icao) }.map { a ->
             val id = a.icao ?: a.id
             FieldOption(id, FieldOption.prettyName(a.name), a.position, a.elevationM?.toDouble() ?: terrain.elevationM(a.position) ?: 0.0, isClub = a === clubAirport, icao = a.icao)
         }.toMutableList()
-        if (clubAirport == null && clubPos != null) {
+        if (clubAirport == null && clubPos != null && FieldOption.isOfficialAerodrome(icao)) {
             list += FieldOption(icao ?: "CLUB", FieldOption.prettyName(club?.airfieldName ?: club?.name ?: "Terrain du club"), clubPos, fieldElevation ?: terrain.elevationM(clubPos) ?: 0.0, isClub = true, icao = icao)
         }
         fields = list
+        // fréquences openAIP des terrains, par identifiant de FieldOption (jamais devinées)
+        frequencies = airports.mapNotNull { a -> a.frequency?.takeIf { it.isNotBlank() }?.let { (a.icao ?: a.id) to it } }.toMap()
     }
+    @Volatile private var frequencies: Map<String, String> = emptyMap()
 
     // ---------------------------------------------------------------- cycle de vie
 
@@ -442,7 +450,7 @@ class FlightEngine(
         }
         val climb = snap.avgSpiralMs ?: snap.climbMs ?: 0.0
         safetyState = runCatching {
-            safety.update(fix, alt, climb, snap.circling, SafetyConfig(finesse.toDouble()), fix.time, armed)
+            safety.update(fix, alt, climb, snap.circling, config(), fix.time, armed)
         }.onFailure { Log.w(TAG, "calcul de sécurité", it) }.getOrNull()
     }
 
@@ -464,7 +472,18 @@ class FlightEngine(
         }
     }
 
-    override fun setFinesse(value: Int) { finesse = value }
+    override fun setFinesse(value: Int) { finesse = value; scope.launch { prefs.setGlideFinesse(value) }; handler.post { publish() } }
+    /** Marge d'arrivée au terrain réglée en Prévol (m) ; null = règle historique d'Android (300 m). */
+    @Volatile private var arrivalM: Int? = null
+    override val glide: kotlinx.coroutines.flow.StateFlow<com.neutronstar.glidercopilot.feature.prevol.GlideSettings> =
+        kotlinx.coroutines.flow.combine(prefs.glideFinesse, prefs.arrivalMargin) { f, a -> com.neutronstar.glidercopilot.feature.prevol.GlideSettings(f, a) }
+            .stateIn(scope, kotlinx.coroutines.flow.SharingStarted.Eagerly, com.neutronstar.glidercopilot.feature.prevol.GlideSettings())
+    override fun setArrivalMargin(meters: Int) {
+        arrivalM = SafetyConfig.arrivalBounded(meters)
+        scope.launch { prefs.setArrivalMargin(SafetyConfig.arrivalBounded(meters)) }
+        handler.post { publish() }
+    }
+    private fun config(): SafetyConfig = arrivalM?.let { SafetyConfig.of(finesse, it) } ?: SafetyConfig(finesse.toDouble())
 
     override fun setDemo(on: Boolean) { handler.post { if (on != demo) { demo = on; restartForMode() } } }
 
@@ -499,7 +518,8 @@ class FlightEngine(
     /** Mode démo : boucle de pompes et transitions autour du terrain du club, rejouée sans fin en temps réel. */
     private suspend fun runDemo() {
         val center = fieldPosition ?: LatLon(43.80028, 3.78167)
-        val loop = DemoFlight.generate(center)
+        // JB (24/10/2026, comme iOS) : la démo part en spirale après 5 s de vol
+        val loop = DemoFlight.startingNearFirstSpiral(DemoFlight.generate(center), center)
         val loopNs = (loop.size.toLong()) * 1_000_000_000L
         var k = 0L
         while (true) {
@@ -721,6 +741,8 @@ class FlightEngine(
             reliefLoaded = terrain !== Terrain.NONE,
             calibrationOn = calibrationOn,
             calibrationSamples = calibRecorder?.samples ?: 0,
+            fieldFrequency = (safetyState?.choice?.result?.field?.id ?: club?.airfieldIcao)?.let { frequencies[it] }?.replace('.', ','),
+            arrivalMarginM = config().arrivalMarginM,
         )
         val ognDelay = ogn.traffic.value.own?.let { (it.latencyS ?: 0.0) + it.ageS }
         _sensors.value = SensorsUi(
@@ -773,7 +795,17 @@ class FlightEngine(
     }
 
     override fun startChrono() { handler.post { core.startManual(clockNow()); publish() } }
-    override fun stopChrono() { handler.post { core.stopManual(clockNow()); closeIgc(); publish() } }
+    /**
+     * Arrêt manuel. En départ automatique, toucher REC en vol ne doit pas fermer l'IGC d'un enregistrement qui continue
+     * (revue résilience M6, comme iOS) : le fichier n'est fermé que si l'enregistrement s'arrête.
+     */
+    override fun stopChrono() {
+        handler.post {
+            core.stopManual(clockNow())
+            if (!core.recording) closeIgc() else speak("Enregistrement automatique en cours, il s'arrêtera à l'atterrissage")
+            publish()
+        }
+    }
 
     init { wire() }
 

@@ -60,6 +60,11 @@ interface UserPreferences {
     suspend fun setFollowEnabled(on: Boolean)
     suspend fun setFollowRegistration(registration: String)
     suspend fun setLightMode(on: Boolean)
+    /** V21 (comme iOS) : réglage du plané en Prévol — finesse 10 / 20 / 30 et marge d'arrivée au terrain (m). */
+    val glideFinesse: Flow<Int> get() = kotlinx.coroutines.flow.flowOf(20)
+    val arrivalMargin: Flow<Int> get() = kotlinx.coroutines.flow.flowOf(300)
+    suspend fun setGlideFinesse(value: Int) {}
+    suspend fun setArrivalMargin(meters: Int) {}
 }
 
 class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPreferences {
@@ -154,6 +159,13 @@ class LocalUserPreferences(private val store: DataStore<Preferences>) : UserPref
     override suspend fun setFollowEnabled(on: Boolean) { store.edit { it[kFollow] = on } }
     override suspend fun setFollowRegistration(registration: String) { store.edit { it[kFollowReg] = registration } }
     override suspend fun setLightMode(on: Boolean) { store.edit { it[kLightMode] = on } }
+
+    private val kFinesse = intPreferencesKey("glide_finesse")
+    private val kArrival = intPreferencesKey("arrival_margin_m")
+    override val glideFinesse: Flow<Int> = store.data.map { it[kFinesse] ?: 20 }
+    override val arrivalMargin: Flow<Int> = store.data.map { it[kArrival] ?: 300 }
+    override suspend fun setGlideFinesse(value: Int) { store.edit { it[kFinesse] = value } }
+    override suspend fun setArrivalMargin(meters: Int) { store.edit { it[kArrival] = meters } }
 }
 
 /** V20.1 — clé du profil invité pour le tutoriel obligatoire. */

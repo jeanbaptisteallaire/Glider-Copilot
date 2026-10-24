@@ -31,6 +31,10 @@ data class FlightLive(
     /** Calibration (V7.3) : enregistrement des données brutes en cours, pour affiner le filtre baro/accél. après le vol. */
     val calibrationOn: Boolean = false,
     val calibrationSamples: Int = 0,
+    /** Fréquence radio du terrain de référence (openAIP du pack), virgule française ; null si inconnue, jamais inventée. */
+    val fieldFrequency: String? = null,
+    /** Hauteur d'arrivée au terrain retenue par la sécurité (m), réglée en Prévol. */
+    val arrivalMarginM: Double = 300.0,
 ) {
     /** Vrai dès qu'une vraie source (baro, GPS, OGN) alimente l'écran : plus aucune valeur de démonstration. */
     val hasData: Boolean
@@ -62,6 +66,8 @@ interface FlightControls {
     fun startChrono()
     fun stopChrono()
     fun setFinesse(value: Int)
+    /** Marge d'arrivée au terrain (m), réglée en Prévol. */
+    fun setArrivalMargin(meters: Int) {}
     fun setDemo(on: Boolean)
     /** Terrain choisi à la main, null pour revenir au choix automatique. */
     fun selectField(id: String?)
