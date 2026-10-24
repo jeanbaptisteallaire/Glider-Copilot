@@ -47,13 +47,16 @@ Les pages viennent du dossier `site/` du dépôt et sont publiées par `.github/
 | Type de données | Collectée | Partagée | Éphémère | Obligatoire ? | Finalités |
 |---|---|---|---|---|---|
 | Position → **Position précise** | Oui (traces des vols sauvegardés en ligne) | Non | Non | Facultative | Fonctionnalités de l'appli |
+| Position → **Position approximative** | Oui (coordonnées du terrain choisi envoyées à PRECOG et OGN ; V21 : tuiles satellite EOX de la zone affichée si l'option est activée) | Non (prestataires) | Oui | Facultative | Fonctionnalités de l'appli |
 | Infos personnelles → **Adresse e-mail** | Oui | Non | Non | Facultative | Fonctionnalités de l'appli, Gestion du compte |
 | Infos personnelles → **Nom** | Oui (nom Google, nom du pilote dans l'IGC) | Non | Non | Facultative | Fonctionnalités de l'appli, Gestion du compte |
 | Infos personnelles → **ID utilisateur** | Oui (identifiant du compte) | Non | Non | Facultative | Gestion du compte |
 | Fichiers et documents → **Fichiers et documents** | Oui (fichiers IGC) | Non | Non | Facultative | Fonctionnalités de l'appli |
 | Activité dans l'appli → **Autre contenu généré par l'utilisateur** | Oui (V19.1 : commentaire libre du tutoriel) | Non | Non | Facultative | Fonctionnalités de l'appli |
 
-Non déclarés (et pourquoi) : la position approximative, les capteurs, les vols non sauvegardés et le profil local restent sur
+V21 (24/10/2026) : la position approximative est déclarée (ligne ci-dessus), suite au refus passé portant sur la localisation et au fond satellite EOX.
+
+Non déclarés (et pourquoi) : les capteurs, les vols non sauvegardés et le profil local restent sur
 le téléphone (non « collectés » au sens de Google) ; aucune donnée d'activité, de diagnostic, d'identifiant d'appareil,
 de contact, de photo, de santé ou de paiement n'est transmise. Supabase et Google agissent comme prestataires de services
 (pas un « partage »).
