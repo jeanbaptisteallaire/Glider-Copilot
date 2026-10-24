@@ -203,7 +203,9 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     val flightMapDark = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, mapPalette(GlidyColors)) }
     // V18.7 — carte claire façon carte VFR papier (Pilotage et Carte en thème clair)
     val flightMapLight = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, paperChartPalette()) }
-    val flightMap = if (lightMode) flightMapLight else flightMapDark
+    // V21 — charte Godspeed (comme iOS) : carte lavande sombre, zones aériennes Godspeed, trace « flash »
+    val flightMapGodspeed = remember(activeMap, club?.id) { buildFlightMapConfig(activeMap, club, godspeedPalette()) }
+    val flightMap = if (com.neutronstar.glidercopilot.designsystem.GODSPEED) flightMapGodspeed else if (lightMode) flightMapLight else flightMapDark
 
     // Localisation demandée une seule fois : club le plus proche et pastille GPS. Refus = club par défaut.
     val asked by container.prefs.locationAsked.collectAsState(initial = true)
@@ -253,7 +255,8 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
     }
     // S15 — thème social blanc ; V18.7 : Pilotage passe aussi sur fond blanc (accord JB), barre d'onglets claire
     val social = lightMode && replayed == null
-    SystemBarsFor(social)
+    // V21 Godspeed : app forcée en sombre (comme iOS), icônes claires de la barre d'état
+    SystemBarsFor(social && !com.neutronstar.glidercopilot.designsystem.GODSPEED)
     val replay = replayed
     if (replay != null) {
         BackHandler { replayed = null }
@@ -293,19 +296,19 @@ private fun MainScaffold(container: AppContainer, startTab: Tab, onHome: () -> U
         return
     }
 
-    Column(Modifier.fillMaxSize().background(if (social) (if (tab == Tab.PILOTAGE) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
+    Column(Modifier.fillMaxSize().background(if (com.neutronstar.glidercopilot.designsystem.GODSPEED) com.neutronstar.glidercopilot.designsystem.GodspeedColors.background else if (social) (if (tab == Tab.PILOTAGE) GlidyFlightLightColors.background else GlidyLightColors.background) else c.background).statusBarsPadding()) {
         // S15 : l'interrupteur clair/sombre est dans l'en-tête de chaque écran (jamais sur Pilotage)
         val themeToggle = remember(lightMode) { GcThemeToggle(lightMode) { on -> scope.launch { container.prefs.setLightMode(on) } } }
         Box(Modifier.weight(1f)) { CompositionLocalProvider(LocalGcThemeToggle provides themeToggle) {
             when (tab) {
                 Tab.FEED -> GlidyAdaptiveTheme(lightMode) { FeedApp(container.social) }
                 Tab.TUTO -> TutoHomeScreen(lang, setLang, onTutorial = { tour = true }, onFeedback = { feedbackOnly = true })
-                Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE) }
+                Tab.PREVOL -> GlidyAdaptiveTheme(lightMode) { PrevolScreen(prevolVm, container.carto, container.ogn, container.flight, lite = BuildConfig.LITE, glideSource = container.flight) }
                 Tab.CHECKLIST -> GlidyAdaptiveTheme(lightMode) { ChecklistScreen(container.checklist) }
                 Tab.PILOTAGE -> GlidyFlightTheme(lightMode) { FlightScreen(status, map = flightMap, traffic = traffic, live = live, controls = container.flight) }
                 Tab.CARTE -> GlidyAdaptiveTheme(lightMode) {
                     TrafficMapScreen(
-                        map = if (lightMode) flightMapLight else flightMapDark, traffic = traffic, networkLabel = ognUi.statusLabel,
+                        map = if (com.neutronstar.glidercopilot.designsystem.GODSPEED) flightMapGodspeed else if (lightMode) flightMapLight else flightMapDark, traffic = traffic, networkLabel = ognUi.statusLabel,
                         // « Suivre » : l'aéronef touché passe au centre de Pilotage, et l'app y bascule (V7.1)
                         onFollow = { a ->
                             scope.launch { container.glider.followAddress(a.id, a.fullLabel) }
@@ -370,7 +373,8 @@ private fun TabButton(label: String, icon: ImageVector, selected: Boolean, modif
     val c = Gc.colors
     val social = Gc.social
     // V18.1 : bleu ciel sélectionné / gris Apple sinon ; sous Pilotage (sombre) : vert / gris, inchangé
-    val color = if (social) (if (selected) c.route else c.faint) else if (selected) c.route else c.dim
+    // V21 Godspeed : cyan pour ce qui se touche ou se sélectionne
+    val color = if (com.neutronstar.glidercopilot.designsystem.GODSPEED) (if (selected) c.sky else c.dim) else if (social) (if (selected) c.route else c.faint) else if (selected) c.route else c.dim
     Column(
         modifier.fillMaxHeight().clickable(role = Role.Tab, onClick = onClick).semantics { this.selected = selected },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -505,6 +509,23 @@ private fun paperChartPalette() = com.neutronstar.glidercopilot.carto.MapPalette
     contourOpacity = 0.25, contourIndexOpacity = 0.45, airspaceFillOpacity = 0.07, airspaceLineWidth = 2.0,
     hillshadeExaggeration = 0.4,
 )
+
+/**
+ * V21 — carte Godspeed (miroir de WG.airspace d'iOS) : relief lavande sombre, contrôlés bleu, réglementés rouge,
+ * information vert, autres gris ; route magenta ; trafic blanc à halo sombre.
+ */
+private fun godspeedPalette(): com.neutronstar.glidercopilot.carto.MapPalette {
+    fun h(color: androidx.compose.ui.graphics.Color) = String.format("#%06X", color.toArgb() and 0xFFFFFF)
+    val c = com.neutronstar.glidercopilot.designsystem.GodspeedColors
+    return com.neutronstar.glidercopilot.carto.MapPalette(
+        background = h(c.mapLow), earth = h(c.mapLow), wood = "#1F2A26", water = "#14263A", waterLine = "#2A4A6A",
+        roadMajor = "#55546E", roadMinor = "#3A394F", label = h(c.dim), halo = h(c.mapLow),
+        contour = "#FFFFFF", hillShadow = "#000000", hillHighlight = "#5A5A78",
+        controlled = "#6FA0E8", restricted = "#E0607A", information = "#5CCB86", other = "#AEB6C0",
+        airport = "#E35BE6", navaid = h(c.dim), route = "#E35BE6", glider = "#FFFFFF", traffic = "#FFFFFF",
+        airspaceFillOpacity = 0.06, airspaceLineWidth = 1.0, godspeed = true,
+    )
+}
 
 private fun buildFlightMapConfig(
     activeMap: ActiveMap?,

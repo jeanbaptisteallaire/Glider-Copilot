@@ -35,7 +35,7 @@ data class ActiveMap(val pack: PackInfo, val dir: File, val aeroText: String?, v
  * téléchargement vérifié, lecture des données openAIP. Rien ici n'est nécessaire à la sécurité en vol.
  */
 class CartoRepository(
-    context: Context,
+    private val context: Context,
     private val http: HttpClient,
     private val clubs: ClubRepository,
     userAgent: String,
@@ -54,6 +54,8 @@ class CartoRepository(
     @Volatile private var club: Club? = null
     @Volatile private var cancelRequested = false
     private var job: Job? = null
+    /** Téléchargement automatique tenté une fois par lancement (pas de boucle si le réseau échoue). */
+    @Volatile private var autoTried = false
 
     init {
         scope.launch {
@@ -106,7 +108,22 @@ class CartoRepository(
                 now = Clock.System.now(),
             )
         }
+        // V21 (comme iOS) : première installation sans carte, ni zones aériennes ni relief pour la marge. On la
+        // télécharge seule, en Wi-Fi seulement (réseau non facturé, jamais sur un forfait mobile) ; sinon le bouton
+        // « Télécharger » de Prévol reste là.
+        if (installed == null && available != null && job?.isActive != true && !autoTried && onUnmeteredNetwork()) {
+            autoTried = true
+            download()
+        }
     }
+
+    /** Réseau non facturé (Wi-Fi, Ethernet) et validé ; faux en cas de doute. */
+    private fun onUnmeteredNetwork(): Boolean = runCatching {
+        val cm = context.getSystemService(android.net.ConnectivityManager::class.java) ?: return false
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_NOT_METERED) &&
+            caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED) && !cm.isActiveNetworkMetered
+    }.getOrDefault(false)
 
     private fun loadActive(p: PackInfo): ActiveMap {
         _active.value?.let { if (it.pack == p) return it }
