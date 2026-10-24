@@ -17,9 +17,12 @@ empreintes `tools/en-vol/check_en_vol.py --update` régénérées.
   ne ferme plus l'IGC (M6) ; démo qui part en spirale après 5 s.
 - **Carte hors ligne** : téléchargée seule au premier lancement de chaque session si aucune n'est installée, seulement sur réseau non facturé.
 - Vérifié sur émulateur Pixel 8 Pro (DÉMO) : `docs/ui-pfd/captures/android-v21-*.png`. Tests `test` + `jvmTest` verts.
-- **Reste à porter** (non fait) : Mes vols iOS (photo dans la couverture, « Gérer mon profil » dépliable), zones masquables et fond
-  satellite, choix FR/EN dans le menu ⋯, revues résilience iOS côté moteur Android (alertes armées dès le vol détecté, tirets sur GPS
-  périmé / altitude non calée, reprise après redémarrage en vol, chien de garde capteurs).
+- **Suite du 24/10** : carte claire façon Apple Plans ; fond satellite Sentinel-2 cloudless (EOX, CC BY, en ligne, option ⋯,
+  déclaré dans la politique) ; zones masquables ; démo à pompes rondes centrées, entrée à 6 s (`DemoFlight.LEAD_S`, Android et iOS) ;
+  Pilotage à 10 Hz + `OwnshipPredictor` commun (trajectoire prolongée entre deux fixes) ; fiabilité iOS portée (alertes dès le vol
+  détecté, tirets GPS périmé / altitude non calée, chien de garde, reprise après redémarrage, vent prévu ≤ 3 h) ; Mes vols : photo locale
+  dans la couverture (`PilotPhoto`, sélecteur sans autorisation), « Gérer mon profil » dépliable, import IGC sous les vols.
+- **Reste** : choix FR/EN dans le menu ⋯ ; mesure batterie à 10 Hz sur un vrai téléphone ; satellite flou au zoom spirale (10 m/pixel).
 - Play : notes `docs/play-store/notes-version-2.1.0.txt`. Aucune nouvelle donnée collectée (formulaire Sécurité des données inchangé).
 
 ## iOS 1.0 — publication App Store, build 8 en vérification (12 → 19/10/2026)
