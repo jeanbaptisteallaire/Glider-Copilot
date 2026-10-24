@@ -1,0 +1,18 @@
+Notes de version Play — Wind Glider 2.1.0-lite (V21, charte « Godspeed »)
+(limite Play : 500 caractères par langue)
+
+<fr-FR>
+Nouveau design sombre lavande, plus lisible en vol.
+• Pilotage façon instrument : marge de sécurité et tambour d'altitude en haut, vario en barre au bord, coupe du terrain repliable, mode Basique.
+• Fréquence radio du terrain (données openAIP) dans le menu ⋯.
+• Prévol : score du jour sur 100 (indicatif), météo d'aujourd'hui, demain ou après-demain, réglage de la finesse et de la marge d'arrivée.
+• La carte hors ligne de votre région se télécharge seule en Wi-Fi au premier lancement.
+</fr-FR>
+
+<en-US>
+New dark lavender design, easier to read in flight.
+• Instrument-style Flight screen: safety margin and altitude drum at the top, vario bar on the edge, foldable terrain profile, Basic mode.
+• Airfield radio frequency (openAIP data) in the ⋯ menu.
+• Pre-flight: day score out of 100 (indicative), weather for today, tomorrow or the day after, glide ratio and arrival margin settings.
+• Your region's offline map downloads by itself on Wi-Fi at first launch.
+</en-US>

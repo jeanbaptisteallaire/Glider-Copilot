@@ -1,5 +1,27 @@
 # HANDOFF — état du projet (Wind Glider, ex-spiral, ex-GLIDY, ex-Glider Copilot)
 
+## V21 Android — charte « Godspeed » et Pilotage PFD portés depuis iOS, V2.1.0-lite (24/10/2026)
+
+Branche `android-pfd` (depuis `ui-pfd-windglider`). **Accord explicite de JB (24/10/2026) pour refondre Pilotage Android** :
+empreintes `tools/en-vol/check_en_vol.py --update` régénérées.
+
+- **Charte** : `GodspeedColors` / `GodspeedTheme` dans `Theme.kt` (miroir de `WG` iOS), app forcée en sombre (`GODSPEED`),
+  dégradés `pageBrush` / `cardBrush` / `panelBrush`, cyan pour ce qui se touche. Police : Inter (SF Pro non redistribuable sur Android).
+- **Pilotage** (`FlightScreen.kt` + `PfdInstruments.kt`) : marge + tambour (`AltitudeTape`), boîte orange/rouge en alerte, F10/20/30
+  sous la marge, terrain/distance/cap à droite, coupe repliable (bouton montagne, rouverte seule sous le seuil), vent, AUTO/N↑/RTE,
+  vario en barre (`VarioPalette`), menu ⋯ (vario, fréquence radio, DÉMO verrouillée en vol, calibration), REC au centre, BASIQUE/COMPLET.
+  Carte : palette Godspeed (zones Godspeed, étiquettes 13, trace « flash » 5 sur liseré 8).
+- **Prévol** : `DayChoice` (commun, testé : jour par défaut, date bornée, score) ; anneau du score, Aujourd'hui/Demain/Après-demain,
+  carte « Plané » (finesse, marge d'arrivée) mémorisée et lue par la sécurité (`SafetyConfig.of`).
+- **Moteur Android, parité iOS** : terrains de repli = aérodromes OACI seulement ; fréquence openAIP du terrain ; REC en départ auto
+  ne ferme plus l'IGC (M6) ; démo qui part en spirale après 5 s.
+- **Carte hors ligne** : téléchargée seule au premier lancement de chaque session si aucune n'est installée, seulement sur réseau non facturé.
+- Vérifié sur émulateur Pixel 8 Pro (DÉMO) : `docs/ui-pfd/captures/android-v21-*.png`. Tests `test` + `jvmTest` verts.
+- **Reste à porter** (non fait) : Mes vols iOS (photo dans la couverture, « Gérer mon profil » dépliable), zones masquables et fond
+  satellite, choix FR/EN dans le menu ⋯, revues résilience iOS côté moteur Android (alertes armées dès le vol détecté, tirets sur GPS
+  périmé / altitude non calée, reprise après redémarrage en vol, chien de garde capteurs).
+- Play : notes `docs/play-store/notes-version-2.1.0.txt`. Aucune nouvelle donnée collectée (formulaire Sécurité des données inchangé).
+
 ## iOS 1.0 — publication App Store, build 8 en vérification (12 → 19/10/2026)
 
 - **App Store Connect** : app « Wind Glider » (UGS `WINDGLIDER-IOS-001`, Apple ID 6821932221), Lite, iPhone uniquement (`TARGETED_DEVICE_FAMILY = 1`), 4+, gratuite, 175 pays. Étiquette de confidentialité : localisation précise **et** approximative, e-mail, nom, identifiant, contenu utilisateur ; aucun suivi. Fiche, réponses à App Review et captures : `docs/app-store/`.
