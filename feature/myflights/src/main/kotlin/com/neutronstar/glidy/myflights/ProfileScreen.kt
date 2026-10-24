@@ -77,6 +77,8 @@ import com.neutronstar.glidy.social.PilotProfile
 import com.neutronstar.glidy.social.Usernames
 import com.neutronstar.glidy.social.totalFlightMinutes
 import java.util.Locale
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.asImageBitmap
 
 /*
  * S16 — Mes vols devient la page profil du pilote : en-tête (avatar, nom, pseudo, bio, club, niveau, heures),
@@ -102,8 +104,15 @@ internal fun ProfileScreen(
 ) {
     val c = Gc.colors
     val social = Gc.social
-    // Lite : le compte (sauvegarde en ligne) est visible d'emblée sous l'en-tête
-    var showAccount by rememberSaveable { mutableStateOf(!sharingEnabled) }
+    // V21 (comme iOS) : photo du pilote dans la couverture, choisie avec le sélecteur de photos (sans autorisation)
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var photo by remember { mutableStateOf(PilotPhoto.load(context)) }
+    val pickPhoto = androidx.activity.compose.rememberLauncherForActivityResult(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) PilotPhoto.save(context, uri)?.let { photo = it }
+    }
+    val onPhoto = { pickPhoto.launch(androidx.activity.result.PickVisualMediaRequest(androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly)) }
+    // « Gérer mon profil » : replié par défaut, ouvert d'office tant que le profil n'est pas créé
+    var managing by rememberSaveable { mutableStateOf(profile.isEmpty) }
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize().testTag("flight-list"),
@@ -116,15 +125,16 @@ internal fun ProfileScreen(
             ProfileHeader(
                 profile = profile,
                 flights = flights,
-                onEditProfile = onEditProfile,
-                onImport = onImport,
-                onShowAccount = { showAccount = !showAccount },
-                onEditIdentity = onEditIdentity,
-                onDeleteAccount = onDeleteAccount,
+                photo = photo,
+                onPhoto = onPhoto,
             )
         }
-        if (showAccount && account != null) {
-            item(span = { GridItemSpan(maxLineSpan) }) { AccountCard(account, accountActions) }
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            ManageCard(
+                open = managing, onToggle = { managing = !managing }, profileEmpty = profile.isEmpty,
+                onEditProfile = onEditProfile, onEditIdentity = onEditIdentity, onPhoto = onPhoto,
+                onDeleteAccount = onDeleteAccount, account = account, accountActions = accountActions,
+            )
         }
         if (notice != null) {
             item(span = { GridItemSpan(maxLineSpan) }) {
@@ -154,6 +164,18 @@ internal fun ProfileScreen(
         items(flights, key = { it.id }) { flight ->
             FlightTile(flight, sharingEnabled, onClick = { onFlightSelected(flight) }, onToggleShare = { onToggleShare(flight) })
         }
+        // V21 (comme iOS) : sous les vols, ajouter un vol venu d'un autre instrument
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Row(
+                Modifier.fillMaxWidth().padding(top = 6.dp).height(50.dp).clip(RoundedCornerShape(14.dp)).background(c.sky.copy(alpha = 0.14f))
+                    .clickable(role = Role.Button, onClick = onImport).testTag("import-igc"),
+                horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(GcIcons.Import, contentDescription = null, tint = c.sky, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Importer un IGC", style = Gc.type.headline.copy(color = c.sky))
+            }
+        }
         item(span = { GridItemSpan(maxLineSpan) }) {
             Text(
                 if (sharingEnabled) "Fichiers IGC gardés sur ce téléphone. Un vol n'apparaît sur le fil que si vous le partagez. " +
@@ -173,11 +195,8 @@ internal fun ProfileScreen(
 private fun ProfileHeader(
     profile: PilotProfile,
     flights: List<FlightCardUi>,
-    onEditProfile: () -> Unit,
-    onImport: () -> Unit,
-    onShowAccount: () -> Unit,
-    onEditIdentity: () -> Unit,
-    onDeleteAccount: () -> Unit,
+    photo: android.graphics.Bitmap?,
+    onPhoto: () -> Unit,
 ) {
     val c = Gc.colors
     val social = Gc.social
@@ -186,45 +205,42 @@ private fun ProfileHeader(
     val totalMinutes = totalFlightMinutes(profile, carnetSeconds)
     var menu by remember { mutableStateOf(false) }
     Column(Modifier.fillMaxWidth().padding(top = if (social) 6.dp else 10.dp, bottom = 6.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        val profileMenu: @Composable (onImage: Boolean) -> Unit = { onImage ->
-            Box {
-                Box(
-                    Modifier.padding(start = 8.dp).size(34.dp).clip(CircleShape)
-                        .background(if (onImage) Color.White.copy(alpha = 0.85f) else c.control)
-                        .clickable(role = Role.Button, onClickLabel = "Menu du profil") { menu = true }
-                        .testTag("profile-menu"),
-                    contentAlignment = Alignment.Center,
-                ) { Icon(GcIcons.More, contentDescription = "Menu du profil", tint = if (onImage) WgInk else c.ink, modifier = Modifier.size(18.dp)) }
-                DropdownMenu(expanded = menu, onDismissRequest = { menu = false }, containerColor = c.panel) {
-                    MenuEntry("Voir le compte") { menu = false; onShowAccount() }
-                    MenuEntry("Modifier nom et pseudo") { menu = false; onEditIdentity() }
-                    MenuEntry("Modifier le profil") { menu = false; onEditProfile() }
-                    MenuEntry("Supprimer le compte", danger = true) { menu = false; onDeleteAccount() }
-                }
-            }
-        }
-        val title = if (profile.username.isNotBlank()) "@${profile.username}" else "Mon profil"
+        val title = profile.displayName.ifBlank { "Mon profil" }
         if (social) {
-            // V20 « Wind Glider » : bandeau illustré en haut de Mes vols ; titre, thème et menu posés sur le ciel,
-            // avatar illustré du pilote à cheval sur le bord bas du bandeau
-            Box(Modifier.fillMaxWidth().height(232.dp)) {
-                Box(Modifier.fillMaxWidth().height(196.dp).clip(RoundedCornerShape(22.dp))) {
-                    Image(
-                        painterResource(R.drawable.wg_flights_header), contentDescription = null,
-                        contentScale = ContentScale.Crop, alignment = Alignment.Center, modifier = Modifier.fillMaxSize(),
-                    )
-                    Box(Modifier.fillMaxWidth().height(90.dp).background(Brush.verticalGradient(listOf(Color(0x55102A44), Color.Transparent))))
-                    Row(Modifier.fillMaxWidth().padding(start = 18.dp, end = 10.dp, top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            title,
-                            style = Gc.type.title1.copy(color = Color.White, shadow = Shadow(Color(0x66000000), blurRadius = 10f)),
-                            modifier = Modifier.weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis,
-                        )
-                        GcThemeToggleButton(Modifier.padding(start = 8.dp))
-                        profileMenu(true)
+            // V21 (comme iOS) : nom en haut à gauche, photo intégrée en bas à gauche (touchable pour la changer),
+            // pseudo, club et niveau à côté ; plus d'avatar à cheval sur le bord
+            Box(Modifier.fillMaxWidth().height(196.dp).clip(RoundedCornerShape(22.dp))) {
+                Image(
+                    painterResource(R.drawable.wg_flights_header), contentDescription = null,
+                    contentScale = ContentScale.Crop, alignment = Alignment.Center, modifier = Modifier.fillMaxSize(),
+                )
+                Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Black.copy(alpha = 0.35f), Color.Transparent, Color.Black.copy(alpha = 0.45f)))))
+                Text(
+                    title,
+                    style = Gc.type.title1.copy(color = Color.White, shadow = Shadow(Color(0x66000000), blurRadius = 10f)),
+                    maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.align(Alignment.TopStart).padding(start = 18.dp, top = 12.dp, end = 18.dp),
+                )
+                Row(Modifier.align(Alignment.BottomStart).padding(14.dp), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Box(Modifier.size(128.dp).clickable(role = Role.Button, onClickLabel = "Changer la photo de profil", onClick = onPhoto)) {
+                        if (photo != null) Image(
+                            photo.asImageBitmap(), contentDescription = "Photo du pilote", contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize().clip(CircleShape).border(3.dp, Color.White, CircleShape),
+                        ) else Avatar(profile.initials, Modifier.fillMaxSize())
+                        Box(Modifier.align(Alignment.BottomEnd).size(30.dp).background(c.sky, CircleShape), contentAlignment = Alignment.Center) {
+                            Text("📷", style = Gc.type.caption1)
+                        }
+                    }
+                    Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                        val shadow = Shadow(Color(0x80000000), blurRadius = 6f)
+                        if (profile.username.isNotBlank()) Text("@${profile.username}", style = Gc.type.subhead.copy(color = Color.White, fontWeight = FontWeight.SemiBold, shadow = shadow), maxLines = 1)
+                        if (profile.club.isNotBlank()) Text(profile.club, style = Gc.type.caption1.copy(color = Color.White.copy(alpha = 0.85f), shadow = shadow), maxLines = 1)
+                        profile.experience?.let {
+                            Text(it.label, style = Gc.type.caption1.copy(color = Color.White, fontWeight = FontWeight.SemiBold),
+                                modifier = Modifier.background(c.sky.copy(alpha = 0.85f), RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 2.dp))
+                        }
                     }
                 }
-                Avatar(profile.initials, Modifier.align(Alignment.BottomStart).padding(start = 16.dp).size(76.dp))
             }
         } else {
             // ligne du haut : pseudo (ou titre) + interrupteur de thème + menu du profil
@@ -237,19 +253,11 @@ private fun ProfileHeader(
                     overflow = TextOverflow.Ellipsis,
                 )
                 GcThemeToggleButton(Modifier.padding(start = 8.dp))
-                profileMenu(false)
+
             }
         }
         val distanceKm = formatKm(real.sumOf { it.distanceMeters ?: 0L })
         if (social) {
-            // V18.1 (Apple Santé) : avatar + identité, puis une carte blanche de chiffres clés teintés par catégorie
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f).padding(start = 4.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text(profile.displayName.ifBlank { "Pilote Wind Glider" }, style = Gc.type.headline, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (profile.club.isNotBlank()) Text(profile.club, style = Gc.type.subhead.copy(color = c.dim), maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    profile.experience?.let { GcPill(it.label, c.route, Modifier.padding(top = 4.dp)) }
-                }
-            }
             if (profile.bio.isNotBlank()) Text(profile.bio, style = Gc.type.subhead)
             GcCard {
                 Row(Modifier.fillMaxWidth()) {
@@ -287,24 +295,6 @@ private fun ProfileHeader(
                     )
                 }
             }
-        }
-        if (profile.isEmpty) {
-            GcCard(title = "Crée ton profil pilote", icon = GcIcons.MesVols, tint = c.sky) {
-                Text(
-                    "Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien.",
-                    style = if (social) Gc.type.subhead.copy(color = c.dim) else Gc.type.bodySmall,
-                )
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            GcButton(
-                if (profile.isEmpty) "Créer mon profil" else "Modifier",
-                onClick = onEditProfile,
-                primary = profile.isEmpty,
-                modifier = Modifier.weight(1f).testTag("edit-profile"),
-                fontSize = 13f,
-            )
-            GcButton("Importer un IGC", onClick = onImport, modifier = Modifier.weight(1f).testTag("import-igc"), fontSize = 13f)
         }
     }
 }
@@ -651,3 +641,48 @@ private fun formatKm(meters: Long): String = when {
 
 /** V20 — encre bleu nuit de l'univers « Wind Glider » (icônes posées sur les illustrations). */
 private val WgInk = Color(0xFF1D3550)
+
+/** « Gérer mon profil » (comme iOS) : un toucher déplie profil, photo, sauvegarde en ligne et suppression du compte. */
+@Composable
+private fun ManageCard(
+    open: Boolean, onToggle: () -> Unit, profileEmpty: Boolean,
+    onEditProfile: () -> Unit, onEditIdentity: () -> Unit, onPhoto: () -> Unit, onDeleteAccount: () -> Unit,
+    account: AccountCardState?, accountActions: AccountActions?,
+) {
+    val c = Gc.colors
+    val rotation by androidx.compose.animation.core.animateFloatAsState(if (open) 180f else 0f, label = "chevron")
+    GcCard {
+        Row(
+            Modifier.fillMaxWidth().clickable(role = Role.Button, onClickLabel = if (open) "Replier" else "Déplier", onClick = onToggle).testTag("manage-profile"),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(GcIcons.MesVols, contentDescription = null, tint = c.ink, modifier = Modifier.size(20.dp))
+            Spacer(Modifier.width(8.dp))
+            Text("Gérer mon profil", style = Gc.type.headline, modifier = Modifier.weight(1f))
+            Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.dim, modifier = Modifier.size(16.dp).graphicsLayer { rotationZ = rotation })
+        }
+        androidx.compose.animation.AnimatedVisibility(open, enter = androidx.compose.animation.expandVertically() + androidx.compose.animation.fadeIn(),
+            exit = androidx.compose.animation.shrinkVertically() + androidx.compose.animation.fadeOut()) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (profileEmpty) Text("Nom, pseudo, club et niveau. Tout reste sur ce téléphone tant que tu ne partages rien.", style = Gc.type.subhead.copy(color = c.dim))
+                ManageButton(if (profileEmpty) "Créer mon profil pilote" else "Modifier mon profil", primary = profileEmpty, tag = "edit-profile", onClick = onEditProfile)
+                ManageButton("Changer la photo", onClick = onPhoto)
+                ManageButton("Modifier nom et pseudo", onClick = onEditIdentity)
+                // sauvegarde en ligne et suppression du compte (comme iOS)
+                if (account != null) AccountCard(account, accountActions)
+                Text("Supprimer le compte", style = Gc.type.subhead.copy(color = c.danger),
+                    modifier = Modifier.clickable(role = Role.Button, onClick = onDeleteAccount).padding(vertical = 6.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun ManageButton(text: String, primary: Boolean = false, tag: String? = null, onClick: () -> Unit) {
+    val c = Gc.colors
+    Box(
+        Modifier.fillMaxWidth().height(50.dp).clip(RoundedCornerShape(14.dp)).background(if (primary) c.sky else c.sky.copy(alpha = 0.14f))
+            .clickable(role = Role.Button, onClick = onClick).then(if (tag != null) Modifier.testTag(tag) else Modifier),
+        contentAlignment = Alignment.Center,
+    ) { Text(text, style = Gc.type.headline.copy(color = if (primary) Color.White else c.sky)) }
+}
