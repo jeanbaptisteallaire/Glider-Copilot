@@ -1,6 +1,21 @@
 package com.neutronstar.glidercopilot.feature.flight
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import com.neutronstar.glidercopilot.designsystem.panelBrush
+import com.neutronstar.glidercopilot.domain.flight.AltitudeTape
+import com.neutronstar.glidercopilot.domain.flight.MarginLevel
+import com.neutronstar.glidercopilot.domain.flight.PilotDeclutter
+import com.neutronstar.glidercopilot.domain.flight.PilotDisplay
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,6 +51,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -108,7 +125,14 @@ fun FlightScreen(
 ) {
     val c = Gc.colors
     var t by remember { mutableDoubleStateOf(0.0) }
-    var finesse by rememberSaveable { mutableIntStateOf(20) }
+    var localFinesse by rememberSaveable { mutableIntStateOf(20) }
+    // V21 : finesse tenue par le moteur de vol (réglée aussi en Prévol) ; locale seulement en aperçu
+    val finesse = if (controls != null) live.finesse else localFinesse
+    val setFinesse: (Int) -> Unit = { f -> if (controls != null) controls.setFinesse(f) else localFinesse = f }
+    /** Mode Essentiel : la marge seule (et la distance au terrain). */
+    var essential by rememberSaveable { mutableStateOf(false) }
+    /** Option du menu « ⋯ » : fréquence radio du terrain de référence (openAIP, jamais inventée). */
+    var showRadio by rememberSaveable { mutableStateOf(false) }
     var pendingRaise by remember { mutableStateOf<Int?>(null) }
     var profileOpen by rememberSaveable { mutableStateOf(true) }
     var varioOpen by rememberSaveable { mutableStateOf(true) }
@@ -164,7 +188,6 @@ fun FlightScreen(
         ownOgn != null -> ownOgn.position
         else -> null
     }
-    LaunchedEffect(finesse, controls) { controls?.setFinesse(finesse) }
     val safety = live.safety?.takeIf { real }
     val result = safety?.choice?.result
     val field = result?.field?.position ?: map?.field
@@ -202,102 +225,283 @@ fun FlightScreen(
         onDispose { tone.stop() }
     }
 
+    // V21 — Pilotage façon PFD (Godspeed), miroir de PilotView.swift : carte plein écran, marge et altitude en haut,
+    // terrain à droite, vario au bord droit, coupe repliable dans un bouton montagne, réglages dans « ⋯ ».
+    val level = PilotDeclutter.marginLevel(marge != null, marge ?: Double.NaN)
+    val low = level == MarginLevel.CAUTION || level == MarginLevel.ALARM
+    val ds = PilotDeclutter.display(
+        essential = essential, profileWanted = profileOpen, varioWanted = varioOpen,
+        marginKnown = marge != null, marginM = marge ?: Double.NaN,
+        gpsOk = showDemo || live.gpsFresh || ownOgn != null, baroOk = showDemo || live.baroActive || !real || live.demo, dataOk = status.data || showDemo,
+        ognConnected = traffic.live,
+    )
+    // marge qui passe sous le seuil (orange ou rouge) : la coupe se rouvre seule ; le pilote peut la refermer
+    var lastLevel by remember { mutableStateOf(level) }
+    LaunchedEffect(level) {
+        if (low && lastLevel != MarginLevel.CAUTION && lastLevel != MarginLevel.ALARM) profileOpen = true
+        lastLevel = level
+    }
+    val tape = AltitudeTape.state(alt, need.takeIf { !waiting }, marge != null)
+    val marginColor = when (level) { MarginLevel.OK -> c.ok; MarginLevel.CAUTION -> c.warn; MarginLevel.ALARM -> c.bad; else -> c.dim }
+    val wind = safety?.wind
+    val capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 1.5 || (result.distanceKm < 3.0 && result.arrivalAglM > -50 && result.relief == null) || (snap?.gps?.groundSpeedKmh ?: 99.0) < 30)) "CAP TERRAIN · ${result.field.code} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null
+
     androidx.compose.runtime.CompositionLocalProvider(LocalFieldId provides fieldLabel, LocalFieldElev provides fieldElevShown) {
-    Column(modifier.fillMaxSize().background(c.background)) {
-        SafetyZone(
-            marge, alt, need.takeIf { !waiting }, trend, trendNote, finesse, pendingRaise, distKm.takeIf { distKnown }, brg,
-            auto = safety?.choice?.auto ?: true,
-            windLabel = safety?.wind?.let { w -> "vent ${((w.fromDeg / 10).roundToInt() * 10) % 360}°/${w.speedKmh.roundToInt()}" } ?: if (showDemo) "vent ✓" else "vent —",
-            onPickField = if (controls != null && live.fieldChoices.isNotEmpty()) ({ picking = true }) else null,
-            picker = {
-                androidx.compose.material3.DropdownMenu(expanded = picking, onDismissRequest = { picking = false }, containerColor = c.panel) {
-                    androidx.compose.material3.DropdownMenuItem(
-                        text = { Text("AUTO · terrain du club, sinon le meilleur rejoignable", style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, color = c.ok)) },
-                        onClick = { controls?.selectField(null); picking = false },
+    Box(modifier.fillMaxSize().background(c.mapLow)) {
+        if (map != null) {
+            val frame = when {
+                real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field)
+                ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
+                showDemo -> demoFrame(map.field, t)
+                else -> GeoFrame(map.field, 0.0, emptyList(), map.field)
+            }
+            LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
+        } else {
+            if (real && snap?.gps != null) TraceOnlyMap(snap) else if (showDemo) DemoMap(t, v ?: 0.0) else Box(Modifier.fillMaxSize().background(c.mapLow))
+        }
+        // une seule pile : bandeau → coupe (si ouverte) → outils des bords
+        Column(Modifier.fillMaxSize().statusBarsPadding(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(
+                Modifier.fillMaxWidth().height(IntrinsicSize.Min).padding(start = 8.dp, end = 8.dp, top = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Column(
+                    Modifier.weight(1f).fillMaxHeight()
+                        .pfdPanel(fill = if (low) (if (level == MarginLevel.ALARM) c.marginAlarmBox else c.marginCautionBox) else null)
+                        .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                ) {
+                    SafetyBand(
+                        marginText = marge?.let { signed(it) } ?: "—", marginColor = marginColor, tape = tape,
+                        essential = essential, alert = low, altRef = snap?.let { altitudeRefLabel(it.altitudeRef) }.orEmpty(),
+                    ) { FinesseChip(finesse, low) { setFinesse(if (finesse >= 30) 10 else finesse + 10) } }
+                    if (essential) Text(
+                        "$fieldLabel · ${distKm.takeIf { distKnown }?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—"} km",
+                        style = pfd(20f).copy(color = if (low) c.onAccent else c.ink),
                     )
-                    live.fieldChoices.take(8).forEach { f ->
-                        androidx.compose.material3.DropdownMenuItem(
-                            text = {
-                                Text(
-                                    listOfNotNull(
-                                        f.code.takeIf { it != f.name },
-                                        f.name.take(26),
-                                        f.distanceKm?.let { km(it) },
-                                        f.marginM?.let { "${signed(it)} m" },
-                                    ).joinToString(" · "),
-                                    style = TextStyle(fontFamily = GcFonts.ui, fontFeatureSettings = "tnum", fontSize = 13.sp, color = if ((f.marginM ?: 0.0) >= 0) c.ink else c.bad),
-                                )
-                            },
-                            onClick = { controls?.selectField(f.id); picking = false },
-                        )
+                }
+                if (!essential) Column(
+                    Modifier.fillMaxHeight().pfdPanel()
+                        .then(if (controls != null && live.fieldChoices.isNotEmpty()) Modifier.clickable(role = Role.Button, onClickLabel = "Choisir le terrain de référence") { picking = true } else Modifier)
+                        .padding(start = 12.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text(fieldLabel, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
+                        Icon(GcIcons.ChevronDown, contentDescription = null, tint = c.heading, modifier = Modifier.size(11.dp))
+                    }
+                    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                        val distText = distKm.takeIf { distKnown }?.let { String.format(Locale.FRANCE, "%.1f", it) } ?: "—"
+                        Text(distText, style = pfd(32f * shrink(distText.length), FontWeight.Bold).copy(color = c.ink), maxLines = 1,
+                            modifier = Modifier.semantics { contentDescription = if (distKnown) "Distance au terrain ${km(distKm)}" else "Distance au terrain inconnue" })
+                        Text("km", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, color = c.dim), modifier = Modifier.padding(bottom = 5.dp))
+                    }
+                    Text(if (distKnown) "${brg.roundToInt()}°" else "—", style = pfd(22f).copy(color = c.heading))
+                    FieldPickerMenu(picking, { picking = false }, live, controls)
+                }
+            }
+            StatusLine(ds, map == null, result != null && !result.terrainKnown, tag(live, map, traffic, real, ownOgn, showDemo), capBanner)
+            AnimatedVisibility(ds.showProfile, enter = expandVertically(tween(320)) + fadeIn(tween(320)), exit = shrinkVertically(tween(260)) + fadeOut(tween(260))) {
+                Column(
+                    Modifier.padding(horizontal = 8.dp).fillMaxWidth().clip(RoundedCornerShape(14.dp)).pfdPanel()
+                        .clickable(role = Role.Button, onClickLabel = "Ranger la coupe du terrain") { profileOpen = false }
+                        .padding(top = 6.dp, bottom = 4.dp),
+                ) {
+                    if (waiting) Text(
+                        "Coupe disponible dès la première position",
+                        style = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, color = c.dim),
+                        modifier = Modifier.fillMaxWidth().height(88.dp).padding(start = 16.dp, top = 34.dp),
+                    ) else ProfileCanvas(alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge ?: 0.0, distKm, brg, result, if (showDemo) CEILING else null)
+                    Text("Terrain $fieldLabel ${fieldElevShown.roundToInt()} m · arrivée +${live.arrivalMarginM.roundToInt()} m", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, color = c.dim), modifier = Modifier.padding(horizontal = 16.dp))
+                }
+            }
+            if (!essential) Row(Modifier.fillMaxWidth().weight(1f).padding(horizontal = 8.dp), verticalAlignment = Alignment.Top) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    if (!ds.showProfile) PfdTool("Afficher la coupe du terrain", onClick = { profileOpen = true }) {
+                        Icon(GcIcons.Mountain, contentDescription = null, tint = c.ink, modifier = Modifier.size(20.dp))
+                    }
+                    // vent : flèche + vitesse ; flèche estompée si c'est une prévision
+                    PfdTool(wind?.let { "Vent ${((it.fromDeg + 360) % 360).roundToInt()} degrés ${it.speedKmh.roundToInt()} kilomètres heure" + if (it.source == com.neutronstar.glidercopilot.domain.safety.WindSource.FORECAST) ", prévu" else "" } ?: "Vent pas encore estimé : spiralez") {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            if (wind != null) {
+                                val forecast = wind.source == com.neutronstar.glidercopilot.domain.safety.WindSource.FORECAST
+                                Icon(GcIcons.WindArrow, contentDescription = null, tint = c.heading.copy(alpha = if (forecast) 0.55f else 1f), modifier = Modifier.size(18.dp).rotate(wind.fromDeg.toFloat() + 180f))
+                                Text("${wind.speedKmh.roundToInt()}", style = pfd(15f).copy(color = c.ink))
+                            } else Icon(GcIcons.WindArrow, contentDescription = null, tint = c.dim, modifier = Modifier.size(15.dp))
+                        }
+                    }
+                    // orientation de la vue : AUTO (nord en spirale, route sinon) → N↑ → RTE
+                    PfdTool("Orientation de la carte : ${controller.orientationLabel}", round = true, onClick = controller::cycleOrientation) {
+                        Text(controller.orientationLabel, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, fontWeight = FontWeight.Bold, color = if (controller.orientation == MapOrientation.NORTH) c.bad else c.ink))
+                    }
+                    if (!controller.follow) PfdTool("Recentrer la carte", round = true, onClick = controller::recenter) {
+                        Icon(GcIcons.Recenter, contentDescription = null, tint = c.sky, modifier = Modifier.size(20.dp))
+                    }
+                    if (showRadio) Column(
+                        Modifier.pfdPanel().padding(6.dp).semantics(mergeDescendants = true) { contentDescription = "Fréquence $fieldLabel : ${live.fieldFrequency ?: "inconnue"}" },
+                        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp),
+                    ) {
+                        Icon(GcIcons.Antenna, contentDescription = null, tint = c.dim, modifier = Modifier.size(15.dp))
+                        Text(fieldLabel, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = c.ink), maxLines = 1)
+                        Text(live.fieldFrequency ?: "—", style = pfd(13f).copy(color = c.selected), maxLines = 1)
                     }
                 }
-            },
-        ) { f ->
-            when {
-                f == finesse -> Unit
-                f < finesse -> { finesse = f; pendingRaise = null }
-                pendingRaise == f -> { finesse = f; pendingRaise = null }
-                else -> pendingRaise = f
+                Spacer(Modifier.weight(1f))
+                if (ds.showVario) VarioRail(v, if (real) snap!!.avgSpiralMs else if (showDemo) 1.4 else null, soundOn) {
+                    if (controls != null) controls.setSound(!soundOn) else localSound = !localSound
+                }
             }
         }
-        ReturnProfile(profileOpen, { profileOpen = !profileOpen }, alt, need, result?.effectiveFinesse ?: finesse.toDouble(), marge, distKm, brg, result, ceiling = if (showDemo) CEILING else null, waiting = waiting)
-        Box(Modifier.weight(1f).heightIn(min = 200.dp).fillMaxWidth().background(c.background)) {
-            if (map != null) {
-                val frame = when {
-                    real && live.gpsFresh -> liveFrame(snap!!, field ?: map.field)
-                    ownOgn != null -> GeoFrame(ownOgn.position, ownOgn.trackDeg ?: 0.0, emptyList(), map.field)
-                    showDemo -> demoFrame(map.field, t)
-                    else -> GeoFrame(map.field, 0.0, emptyList(), map.field)
+        // bas : réglages, enregistrement au centre, Basique ⇄ Complet
+        Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().navigationBarsPadding().padding(start = 10.dp, end = 10.dp, bottom = 8.dp)) {
+            Column(Modifier.align(Alignment.BottomStart), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                if (live.demo || showDemo) Text("DÉMO", style = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Color.White),
+                    modifier = Modifier.background(c.marginCautionBox, RoundedCornerShape(50)).padding(horizontal = 9.dp, vertical = 4.dp))
+                if (map != null) {
+                    val (scaleLabel, scaleDp) = controller.scale()
+                    Column {
+                        Text(scaleLabel, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 10.sp, color = c.ink))
+                        Canvas(Modifier.padding(top = 2.dp).size(width = scaleDp.dp, height = 5.dp)) {
+                            val s = 1.5.dp.toPx()
+                            drawLine(c.ink, Offset(0f, size.height), Offset(size.width, size.height), s)
+                            drawLine(c.ink, Offset(s / 2, 0f), Offset(s / 2, size.height), s)
+                            drawLine(c.ink, Offset(size.width - s / 2, 0f), Offset(size.width - s / 2, size.height), s)
+                        }
+                    }
                 }
-                LiveMap(map, frame, controller, traffic, { c.vario(it) }, Modifier.fillMaxSize())
-            } else {
-                if (real && snap?.gps != null) TraceOnlyMap(snap) else if (showDemo) DemoMap(t, v ?: 0.0) else Box(Modifier.fillMaxSize().background(c.mapLow))
+                if (!essential) SettingsMenu(
+                    varioOn = varioOpen, onVario = { varioOpen = !varioOpen },
+                    radioOn = showRadio, onRadio = { showRadio = !showRadio },
+                    demoOn = live.demo, onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
+                    demoLocked = !live.demo && snap?.recording == true,
+                    calibrationOn = live.calibrationOn, onCalibration = controls?.let { ctl -> { ctl.setCalibration(!live.calibrationOn) } },
+                )
             }
-            val tag = when {
-                live.mode == OwnshipMode.DEMO -> "DÉMO · planeur simulé · trafic OGN réel"
-                live.mode == OwnshipMode.FOLLOW -> "SUIVI ${live.followLabel ?: ""} · " + (snap?.gpsAgeS?.let { "FLARM via OGN · ${it.roundToInt()} s" } ?: "en attente d'une trame OGN")
-                map == null -> "Carte hors ligne à télécharger dans Prévol"
-                live.replay -> "REJEU VOL · capteurs simulés" + if (traffic.replay) " · OGN rejoué" else ""
-                real && live.gpsFresh -> null
-                ownOgn != null -> "Position OGN de mon planeur"
-                real -> "Position GPS indisponible"
-                traffic.replay && showDemo -> "REJEU OGN · planeur simulé"
-                showDemo -> "DÉMO · planeur simulé"
-                else -> "Position GPS en attente"
+            // enregistrement : point rouge + durée, au centre exact de l'écran
+            val recording = snap?.recording == true
+            Row(
+                Modifier.align(Alignment.BottomCenter).height(40.dp).background(c.panelBrush, RoundedCornerShape(50))
+                    .then(if (controls != null && snap != null) Modifier.clickable(role = Role.Switch, onClickLabel = if (recording) "Arrêter l'enregistrement" else "Démarrer l'enregistrement") {
+                        if (recording) controls.stopChrono() else controls.startChrono()
+                    } else Modifier)
+                    .padding(horizontal = 12.dp)
+                    .semantics { contentDescription = "Enregistrement ${if (recording) "en cours" else "arrêté"}, ${chrono(snap?.flightSeconds ?: 0)}" },
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Box(Modifier.size(10.dp).background(if (recording) c.bad else c.dim, CircleShape))
+                Text(chrono(snap?.flightSeconds ?: 0), style = pfd(15f).copy(color = c.ink))
             }
-            val shown = if (snap != null) status.copy(gps = live.gpsFresh, baro = live.baroActive) else status
-            val nearTraffic = gliderPos?.let { p -> traffic.aircraft.count { Geo.distanceKm(p, it.position) <= 15.0 } }
-            MapOverlays(
-                shown, snap?.flightSeconds ?: 0, tag, map, controller, traffic, chronoAction(live, controls),
-                recording = snap?.recording == true,
-                wind = safety?.wind?.let { it.fromDeg to it.speedKmh },
-                capBanner = if (result != null && marge != null && marge < 0 && !(result.distanceKm < 1.5 || (result.distanceKm < 3.0 && result.arrivalAglM > -50 && result.relief == null) || (snap?.gps?.groundSpeedKmh ?: 99.0) < 30)) "CAP TERRAIN · ${result.field.code} ${result.bearingDeg.roundToInt()}° · ${km(result.distanceKm)}" + (if (result.relief != null) " · RELIEF" else "") else null,
-                demoOn = live.demo,
-                onDemo = controls?.let { ctl -> { ctl.setDemo(!live.demo) } },
-                calibrationOn = live.calibrationOn,
-                onCalibration = controls?.let { ctl -> { ctl.setCalibration(!live.calibrationOn) } },
-                nearTraffic = if (live.mode == OwnshipMode.DEMO) nearTraffic else null,
+            Text(
+                if (essential) "COMPLET" else "BASIQUE",
+                style = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, fontWeight = FontWeight.ExtraBold, color = if (essential) Color.White else c.ink),
+                modifier = Modifier.align(Alignment.BottomEnd)
+                    .then(if (essential) Modifier.background(c.marginCautionBox, RoundedCornerShape(50)) else Modifier.background(c.panelBrush, RoundedCornerShape(50)))
+                    .clickable(role = Role.Button, onClickLabel = if (essential) "Afficher tout Pilotage" else "N'afficher que l'essentiel") { essential = !essential }
+                    .padding(horizontal = 9.dp, vertical = 8.dp),
             )
         }
-        VarioPanel(
-            open = varioOpen,
-            soundOn = soundOn,
-            v = v,
-            label = varioLabel,
-            averages = when {
-                real -> Triple(snap!!.avgSpiralMs, snap.avgThermalMs, snap.avgDayMs)
-                showDemo -> Triple(1.4, 1.2, 1.0)
-                else -> Triple(null, null, null)
-            },
-            history = history,
-            alt = alt,
-            need = need,
-            ceiling = if (showDemo) CEILING else null,
-            onSound = { if (controls != null) controls.setSound(!soundOn) else localSound = !localSound },
-            onToggle = { varioOpen = !varioOpen },
+        if (map != null) Text(
+            map.attribution,
+            style = TextStyle(fontFamily = GcFonts.ui, fontSize = 7.sp, color = c.faint), maxLines = 1,
+            modifier = Modifier.align(Alignment.BottomCenter).navigationBarsPadding().padding(bottom = 1.dp),
         )
     }
+    }
+}
+
+/** Origine de la position affichée (rejeu, suivi, secours), seulement quand ce n'est pas le GPS du téléphone. */
+private fun tag(live: FlightLive, map: FlightMapConfig?, traffic: FlightTraffic, real: Boolean, ownOgn: OwnOgn?, showDemo: Boolean): String? = when {
+    live.mode == OwnshipMode.DEMO -> null
+    live.mode == OwnshipMode.FOLLOW -> "SUIVI ${live.followLabel ?: ""} · " + (live.snapshot?.gpsAgeS?.let { "FLARM via OGN · ${it.roundToInt()} s" } ?: "en attente d'une trame OGN")
+    live.replay -> "REJEU VOL · capteurs simulés" + if (traffic.replay) " · OGN rejoué" else ""
+    real && live.gpsFresh -> null
+    ownOgn != null -> "Position OGN de mon planeur"
+    real -> "Position GPS indisponible"
+    showDemo -> null
+    map == null -> null
+    else -> "Position GPS en attente"
+}
+
+/** Sous le bandeau, seulement si nécessaire : capteur en défaut, relief non vérifié, carte absente (« dark cockpit »). */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun StatusLine(ds: PilotDisplay, noMap: Boolean, noRelief: Boolean, tag: String?, capBanner: String?) {
+    val c = Gc.colors
+    if (!(ds.gpsAlert || ds.baroAlert || ds.dataAlert || noMap || noRelief || tag != null || capBanner != null)) return
+    androidx.compose.foundation.layout.FlowRow(
+        Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        if (capBanner != null) Text(capBanner, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, fontWeight = FontWeight.Bold, color = c.onAccent),
+            modifier = Modifier.background(c.marginAlarmBox, RoundedCornerShape(9.dp)).padding(horizontal = 10.dp, vertical = 5.dp).semantics { contentDescription = capBanner })
+        listOfNotNull("GPS".takeIf { ds.gpsAlert }, "BARO".takeIf { ds.baroAlert }, "DATA".takeIf { ds.dataAlert }).forEach { label ->
+            Row(
+                Modifier.background(c.panelBrush, RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp).semantics(mergeDescendants = true) { contentDescription = "$label inactif" },
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Box(Modifier.size(7.dp).background(c.bad, CircleShape))
+                Text(label, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.ink))
+            }
+        }
+        @Composable fun warnPill(text: String) = Text(text, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = c.warn),
+            modifier = Modifier.background(c.panelBrush, RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp))
+        if (noRelief) warnPill("Relief non vérifié")
+        if (noMap) warnPill("Zones : carte à télécharger")
+        if (tag != null) Text(tag, style = TextStyle(fontFamily = GcFonts.ui, fontSize = 11.sp, color = c.dim),
+            modifier = Modifier.background(c.panelBrush, RoundedCornerShape(50)).padding(horizontal = 8.dp, vertical = 4.dp))
+    }
+}
+
+/** Réglages : hors du champ de vol (on ne règle pas en spirale). */
+@Composable
+private fun SettingsMenu(
+    varioOn: Boolean, onVario: () -> Unit,
+    radioOn: Boolean, onRadio: () -> Unit,
+    demoOn: Boolean, onDemo: (() -> Unit)?, demoLocked: Boolean,
+    calibrationOn: Boolean, onCalibration: (() -> Unit)?,
+) {
+    val c = Gc.colors
+    var open by remember { mutableStateOf(false) }
+    Box {
+        PfdTool("Réglages de l'écran de vol", round = true, onClick = { open = true }) {
+            Icon(GcIcons.More, contentDescription = null, tint = c.ink, modifier = Modifier.size(20.dp))
+        }
+        androidx.compose.material3.DropdownMenu(expanded = open, onDismissRequest = { open = false }, containerColor = c.panel) {
+            @Composable fun item(label: String, on: Boolean?, enabled: Boolean = true, action: () -> Unit) = androidx.compose.material3.DropdownMenuItem(
+                text = { Text(label, style = Gc.type.body.copy(color = if (enabled) c.ink else c.faint)) },
+                trailingIcon = { if (on == true) Icon(GcIcons.Check, contentDescription = "activé", tint = c.sky, modifier = Modifier.size(16.dp)) },
+                enabled = enabled,
+                onClick = { action(); open = false },
+            )
+            item("Vario", varioOn, action = onVario)
+            item("Fréquence radio du terrain", radioOn, action = onRadio)
+            // revue résilience M8 : la démo remplace le vol réel ; impossible de la lancer pendant un vol
+            if (onDemo != null) item("DÉMO", demoOn, enabled = !demoLocked, action = onDemo)
+            if (onCalibration != null) item("Calibration des capteurs", calibrationOn, action = onCalibration)
+        }
+    }
+}
+
+/** Terrain de référence : automatique (meilleure marge, retour au club) ou choisi à la main. */
+@Composable
+private fun FieldPickerMenu(expanded: Boolean, onDismiss: () -> Unit, live: FlightLive, controls: FlightControls?) {
+    val c = Gc.colors
+    androidx.compose.material3.DropdownMenu(expanded = expanded, onDismissRequest = onDismiss, containerColor = c.panel) {
+        androidx.compose.material3.DropdownMenuItem(
+            text = { Text("Automatique (meilleure marge)", style = Gc.type.body.copy(color = c.sky)) },
+            onClick = { controls?.selectField(null); onDismiss() },
+        )
+        live.fieldChoices.take(8).forEach { f ->
+            androidx.compose.material3.DropdownMenuItem(
+                text = {
+                    Text(
+                        listOfNotNull(f.code.takeIf { it != f.name }, f.name.take(26), f.distanceKm?.let { km(it) }, f.marginM?.let { "${signed(it)} m" }).joinToString(" · "),
+                        style = Gc.type.subhead.copy(color = if ((f.marginM ?: 0.0) >= 0) c.ink else c.bad, fontFeatureSettings = "tnum"),
+                    )
+                },
+                onClick = { controls?.selectField(f.id); onDismiss() },
+            )
+        }
     }
 }
 
@@ -502,7 +706,7 @@ private fun ProfileCanvas(
     val tm = rememberTextMeasurer()
     val FIELD_ID = LocalFieldId.current
     val FIELD_ELEV = LocalFieldElev.current
-    Canvas(Modifier.fillMaxWidth().height(88.dp).semantics { contentDescription = "Coupe du terrain vers $FIELD_ID" }) {
+    Canvas(Modifier.fillMaxWidth().height(88.dp).clipToBounds().semantics { contentDescription = "Coupe du terrain vers $FIELD_ID" }) {
         val w = size.width
         val h = size.height
         val d = distKm.coerceAtLeast(0.3)

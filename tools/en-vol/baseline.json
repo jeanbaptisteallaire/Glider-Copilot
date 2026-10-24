@@ -1,6 +1,6 @@
 {
-  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightScreen.kt": "5ae8b60c715f6e89d9332c729f3da1b3eb72d4f09385e23a5ba7e370526ae43d",
-  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightLive.kt": "8631e1e630e17b31119ddc58858b8b778eee94874746ab0592eebf652b426882",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightScreen.kt": "4ec275a42bffbf9fa534648a4b206bf5485ded84c4216a83f0cacdd1023bea6e",
+  "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightLive.kt": "51ed4da96c1eb554b9719ee22fe65e1daa9c8e7700179ac4ba3bc491e421d77e",
   "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/FlightMap.kt": "700a338ebc6be40b82d6f639d7218de54845557db996c12e57d48d3ee51dac1e",
   "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/VarioTone.kt": "e0f865fb3ec9c24208438577ea91942fc65db0d8aef8172fcd274b161227cca6",
   "feature/flight/src/main/kotlin/com/neutronstar/glidercopilot/feature/flight/UiMask.kt": "996d3297d48d0e71ca14764ca29c34073f91138c0732f517dc813701428f5dd7",
@@ -8,5 +8,5 @@
   "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#gcTypeSombre": "a4d0f0eb87fed960b9f1819efda1cd7935b4f665fdd3872149260986d11e96da",
   "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyTheme": "5e851094f1ddf91670d658a57f31bda4d3bbbf9f3e777a3601c29575fc9cde08",
   "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyFlightLightColors": "75c816a63c3f88cd090e38f12357b792044669f7d40bacfb9e9fbf63ec31a8a7",
-  "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyFlightTheme": "766d13ec31c42f301554345ee2d04ba364e1f85230840c47dda5a783bc5d5b59"
+  "core/designsystem/src/main/kotlin/com/neutronstar/glidercopilot/designsystem/Theme.kt#GlidyFlightTheme": "a47128403650c13c6f9c0cbca21381bf94f1bd904acc7bc37d556dd2789a4729"
 }
