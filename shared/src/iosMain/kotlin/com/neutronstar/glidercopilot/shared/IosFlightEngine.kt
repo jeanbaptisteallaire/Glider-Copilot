@@ -472,7 +472,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
                     is SensorSample.Baro -> { core.onBaro(s.hPa, t); if (soundOn) onTone(core.fastClimb) }
                     is SensorSample.Accel -> core.onAcceleration(s.upMs2, t)
                     is SensorSample.Gps -> {
-                        val fix = s.fix.copy(time = demoStartWall + t.nanoseconds, ellipsoidAltM = s.fix.altitudeM)
+                        // précision GPS simulée : sans elle, le moteur refuse le calage GPS et la marge reste en tirets
+                        val fix = s.fix.copy(time = demoStartWall + t.nanoseconds, ellipsoidAltM = s.fix.altitudeM, accuracyM = s.fix.accuracyM ?: 5.0)
                         lastGpsNs = t
                         core.onGps(fix, t)
                         afterGps(fix, t)

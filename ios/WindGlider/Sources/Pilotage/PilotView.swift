@@ -187,7 +187,7 @@ struct PilotView: View {
     private func finesseButton(alert: Bool) -> some View {
         let c: Color = alert ? .black : WG.selected(dark: true)
         return Button { Haptic.tap(); app.finesse = app.finesse >= 30 ? 10 : app.finesse + 10 } label: {
-            Text("F\(app.finesse)").font(WG.pfd(16.5)).foregroundStyle(c)   // +10 %
+            Text("F\(app.finesse)").font(WG.pfd(16.5)).foregroundStyle(c).lineLimit(1).fixedSize()   // +10 % ; jamais coupé en deux lignes
                 .padding(.horizontal, 9).padding(.vertical, 3.5)
                 .overlay(Capsule().stroke(c.opacity(0.6)))
         }
