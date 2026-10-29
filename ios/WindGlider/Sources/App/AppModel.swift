@@ -14,7 +14,7 @@ final class AppModel: ObservableObject {
     let packs = PackStore()
     private var packSink: AnyCancellable?
     private let weatherApi: WindGliderWeather
-    private(set) var sensors: Sensors!
+    let sensors: Sensors
     private let tone = VarioTone()
     private let voice = Voice()
     private var timer: Timer?
@@ -33,7 +33,7 @@ final class AppModel: ObservableObject {
             if isRecording != newValue.recording {
                 isRecording = newValue.recording
                 // vol en cours mémorisé : un redémarrage de l'app en vol reprend directement (revue résilience M9)
-                if newValue.recording { sensors?.motionWanted = true }   // vol : vario complet, quel que soit l'onglet
+                if newValue.recording { sensors.motionWanted = true }   // vol : vario complet, quel que soit l'onglet
             }
         }
     }
@@ -56,7 +56,7 @@ final class AppModel: ObservableObject {
                     let e = AppModel.economyNow()
                     if e != self.economy {
                         self.economy = e
-                        if e { self.traffic?.stop() }
+                        if e { self.traffic.stop() }
                     }
                 }
             })
@@ -98,7 +98,7 @@ final class AppModel: ObservableObject {
     }
     private var lastPosition: CLLocationCoordinate2D?
     /// Trafic OGN autour du terrain (même session qu'Android, OgnLiveSession).
-    let traffic: IosTraffic?  // jamais nil ; optionnel pour garder les appels existants
+    let traffic: IosTraffic
     var trafficSnap: TrafficSnapshot? {
         get { flight.trafficSnap }
         set { flight.trafficSnap = newValue }
@@ -214,7 +214,6 @@ final class AppModel: ObservableObject {
 
     /// Centre du trafic : terrain du club, sinon la position.
     private func startTraffic() {
-        guard let traffic else { return }
         if let pos = club?.position { traffic.start(lat: pos.lat, lon: pos.lon) }
         else if let l = lastPosition { traffic.start(lat: l.latitude, lon: l.longitude) }
     }
@@ -262,7 +261,8 @@ final class AppModel: ObservableObject {
                     if self.status.gps != g { self.status.gps = g }
                 }
                 self.tick += 1
-                if let t = self.traffic, self.tick % 4 == 0 {
+                if self.tick % 4 == 0 {
+                    let t = self.traffic
                     if !t.running && !self.economy { self.startTraffic() }
                     self.trafficSnap = t.snapshot(ownAltitudeM: self.pilot.hasData ? self.pilot.currentAltM : .nan)
                 }
@@ -272,15 +272,13 @@ final class AppModel: ObservableObject {
         timer = t
     }
 
-    /// Arrière-plan : capteurs et son coupés hors vol (batterie) ; pendant un vol enregistré, tout continue écran éteint
-    /// (localisation en arrière-plan + audio, comme le service de premier plan d'Android).
+    /// Arrière-plan : son vario toujours coupé (pas de mode « audio » en arrière-plan, App Review 2.5.4).
+    /// Hors vol, capteurs et moteur s'arrêtent aussi ; pendant un vol, seuls GPS et enregistrement IGC continuent.
     func enterBackground() {
-        // en vol écran éteint : sécurité, IGC et son continuent ; OGN s'arrête (personne ne regarde la carte,
-        // l'anticollision reste le rôle du FLARM) et reprend au retour (revue énergie 1)
-        guard !engine.inFlight else { traffic?.stop(); inBackground = true; return }
-        engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
         tone.stop()
-        traffic?.stop()   // pas de réseau OGN en arrière-plan hors vol (comme OgnLiveRepository.stop)
+        traffic.stop()   // OGN : personne ne regarde la carte, l'anticollision reste le rôle du FLARM (revue énergie 1)
+        guard !engine.inFlight else { inBackground = true; return }
+        engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
     }
 
     /// Écran éteint pendant un vol : le minuteur ne fait plus que le strict nécessaire.
@@ -301,9 +299,9 @@ final class AppModel: ObservableObject {
 
     func enterForeground() {
         inBackground = false
+        if soundOn { tone.start() }   // coupé à chaque passage en arrière-plan, vol ou non
         guard timer == nil else { return }
         startEngine()
-        if soundOn { tone.start() }
     }
 
     private func updateAirspaces(_ p: ActivePack?) {
