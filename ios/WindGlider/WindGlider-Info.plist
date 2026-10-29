@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>8</string>
+	<string>9</string>
 	<key>GIDClientID</key>
 	<string>$(GOOGLE_IOS_CLIENT_ID)</string>
 	<key>GIDServerClientID</key>
@@ -54,7 +54,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>audio</string>
 		<string>location</string>
 	</array>
 	<key>UILaunchScreen</key>
