@@ -21,6 +21,7 @@ struct PrevolView: View {
                             .padding(8).frame(maxWidth: .infinity).background(WG.bad, in: RoundedRectangle(cornerRadius: 10))
                     }
                     PackCard()
+                    PairingCard()
                     DayPicker()
                     switch app.weather {
                     case .idle, .loading:
@@ -102,6 +103,11 @@ enum Fmt {
         guard let i else { return "—" }
         let f = DateFormatter(); f.timeZone = paris; f.dateFormat = "HH:mm"
         return f.string(from: date(i))
+    }
+    /// « 29 oct. 14:05 » (date d'une base téléchargée).
+    static func dayHm(_ d: Date) -> String {
+        let f = DateFormatter(); f.timeZone = paris; f.locale = Locale(identifier: Lang.en ? "en_GB" : "fr_FR"); f.dateFormat = "d MMM HH:mm"
+        return f.string(from: d)
     }
     static func hour(_ i: Kotlinx_datetimeInstant) -> String {
         let f = DateFormatter(); f.timeZone = paris; f.dateFormat = "H'h'"
@@ -449,6 +455,67 @@ struct PackCard: View {
             }
             if let e = packs.error { Text(e).font(WG.caption).foregroundStyle(WG.bad) }
             Text(tr("Relief Copernicus GLO-30 · terrains openAIP · vérifiez SUP AIP et NOTAM avant le vol")).font(WG.caption).foregroundStyle(WG.dim)
+        }
+    }
+}
+
+/// Planeur du jour · FLARM (PairingCard d'Android) : l'immatriculation retrouve les boîtiers FLARM/OGN du planeur
+/// dans la base OGN. Mon planeur reste suivi par le réseau et n'apparaît pas comme un trafic autour de moi.
+struct PairingCard: View {
+    @EnvironmentObject var app: AppModel
+    @State private var input = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        WGCard(title: tr("Planeur du jour · FLARM"), systemImage: "airplane", tint: WG.sky) {
+            HStack(spacing: 8) {
+                TextField(tr("Immatriculation, ex. F-CJAB"), text: $input)
+                    .font(WG.subhead.weight(.bold)).textInputAutocapitalization(.characters).autocorrectionDisabled()
+                    .submitLabel(.done).focused($focused).onSubmit(validate)
+                    .padding(.horizontal, 10).padding(.vertical, 8)
+                    .background(WG.page.opacity(0.6), in: RoundedRectangle(cornerRadius: 10))
+                    .accessibilityLabel(tr("Immatriculation du planeur"))
+                Button(tr("Appairer"), action: validate)
+                    .font(WG.subhead).buttonStyle(.borderedProminent).tint(WG.sky)
+                    .disabled(!Registration.shared.isValid(normalized: Registration.shared.normalize(raw: input)))
+            }
+            HStack(spacing: 7) {
+                if app.pairingBusy { ProgressView().controlSize(.mini) }
+                else { Circle().fill(dot).frame(width: 7, height: 7) }
+                Text(status).font(WG.caption).foregroundStyle(WG.dim)
+                Spacer(minLength: 0)
+                if app.pairedRegistration != nil {
+                    Button(tr("Retirer")) { app.unpair(); input = "" }.font(WG.caption)
+                }
+            }
+            Text(tr("Le FLARM du planeur est retrouvé dans la base OGN : votre planeur n'est pas affiché comme un trafic. L'anticollision reste le rôle du FLARM."))
+                .font(WG.caption).foregroundStyle(WG.dim)
+        }
+        .onAppear { if input.isEmpty { input = app.pairedRegistration ?? "" } }
+    }
+
+    private func validate() {
+        focused = false
+        app.pair(input)
+        input = app.pairedRegistration ?? input
+    }
+
+    private var dot: Color {
+        guard app.pairedRegistration != nil, let p = app.pairing else { return WG.dim }
+        return p.state == .paired ? WG.good : WG.warn
+    }
+
+    private var status: String {
+        guard let reg = app.pairedRegistration else { return tr("Non appairé") }
+        if app.pairingBusy { return tr("%@ · recherche dans la base OGN…", reg) }
+        guard let p = app.pairing else { return reg }
+        let date = Fmt.dayHm(Date(timeIntervalSince1970: TimeInterval(p.fetchedAtEpochS)))
+        let source = p.offline ? tr("copie locale OGN du %@", date) : tr("base OGN du %@", date)
+        switch p.state {
+        case .paired: return "\(reg) · \(p.device) · \(source)"
+        case .notFound: return tr("%@ absent de la base OGN · %@", reg, source)
+        case .notTracked: return tr("%@ : le propriétaire refuse le suivi OGN", reg)
+        default: return tr("%@ · base OGN injoignable, non vérifié", reg)
         }
     }
 }

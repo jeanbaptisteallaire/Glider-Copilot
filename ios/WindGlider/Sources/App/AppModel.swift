@@ -89,6 +89,38 @@ final class AppModel: ObservableObject {
     func applyGlideSettings() {
         engine.setFinesse(value: Int32(finesse)); engine.setArrivalMargin(meters: Int32(arrivalMargin))
     }
+    /// Planeur du jour · FLARM (comme PairingCard d'Android) : immatriculation mémorisée, ses boîtiers sont cherchés
+    /// dans la base OGN. Mon planeur est alors suivi par le réseau et retiré du trafic affiché.
+    @Published private(set) var pairedRegistration: String? = UserDefaults.standard.string(forKey: "glider.registration")
+    @Published private(set) var pairing: IosPairing?
+    @Published private(set) var pairingBusy = false
+
+    func pair(_ raw: String) {
+        let reg = Registration.shared.normalize(raw: raw)
+        guard Registration.shared.isValid(normalized: reg) else { return }
+        pairedRegistration = reg
+        UserDefaults.standard.set(reg, forKey: "glider.registration")
+        refreshPairing()
+    }
+
+    func unpair() {
+        pairedRegistration = nil; pairing = nil
+        UserDefaults.standard.removeObject(forKey: "glider.registration")
+        traffic?.unpair()
+    }
+
+    /// Relit la base OGN (réseau, sinon copie locale) hors du fil principal.
+    func refreshPairing() {
+        guard let reg = pairedRegistration, let traffic else { return }
+        pairingBusy = true
+        Task.detached(priority: .utility) {
+            let r = traffic.pair(registration: reg)
+            await MainActor.run {
+                guard self.pairedRegistration == reg else { return }
+                self.pairing = r; self.pairingBusy = false
+            }
+        }
+    }
     @Published var demo = false { didSet { engine.setDemo(on: demo) } }
     /// Build de développement : `-demoFlight` lance le planeur démo dès l'ouverture (captures au simulateur).
     func applyLaunchDemo() {
@@ -231,6 +263,7 @@ final class AppModel: ObservableObject {
         }
         BenchMeter.startIfRequested()
         #endif
+        refreshPairing()   // boîtiers du planeur du jour, avant le premier démarrage du trafic
         applyGlideSettings()
         engine.start()
         // reprise après un redémarrage en vol : nouvel IGC (le précédent est déjà fermé et gardé) et annonce

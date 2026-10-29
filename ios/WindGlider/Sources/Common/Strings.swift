@@ -70,6 +70,16 @@ private let DYN: [(String, String)] = [
 
 /// Français → anglais. Clé = texte exact affiché en français.
 let EN: [String: String] = [
+    // Planeur du jour · FLARM (29/10/2026)
+    "Planeur du jour · FLARM": "Today's glider · FLARM", "Immatriculation, ex. F-CJAB": "Registration, e.g. F-CJAB",
+    "Immatriculation du planeur": "Glider registration", "Appairer": "Pair", "Retirer": "Remove", "Non appairé": "Not paired",
+    "%@ · recherche dans la base OGN…": "%@ · searching the OGN database…",
+    "copie locale OGN du %@": "local OGN copy of %@", "base OGN du %@": "OGN database of %@",
+    "%@ absent de la base OGN · %@": "%@ not in the OGN database · %@",
+    "%@ : le propriétaire refuse le suivi OGN": "%@: the owner refuses OGN tracking",
+    "%@ · base OGN injoignable, non vérifié": "%@ · OGN database unreachable, not verified",
+    "Le FLARM du planeur est retrouvé dans la base OGN : votre planeur n'est pas affiché comme un trafic. L'anticollision reste le rôle du FLARM.":
+        "The glider's FLARM is found in the OGN database: your glider is not shown as traffic. Collision avoidance remains FLARM's job.",
     // Pilotage Godspeed, Prévol (score, jour, plané), Mes vols (profil) — nuit du 23/10/2026
     "Afficher la coupe du terrain": "Show terrain profile",
     "Alti.": "Alt.",
