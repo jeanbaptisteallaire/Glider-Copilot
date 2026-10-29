@@ -208,7 +208,11 @@ struct FluidMapView: UIViewRepresentable {
             // cible : spirale (centre du thermique), planeur, ou terrain sans position
             let target: CLLocationCoordinate2D
             var distance = control.distance
-            if p.zoomActive {
+            // carte toujours centrée sur le planeur (JB, 29/10/2026), spirale comprise : le zoom de spirale reste
+            if p.zoomActive && p.hasPosition {
+                target = me
+                distance = p.zoomRadiusM * 7 * control.distance / 9000
+            } else if p.zoomActive {
                 target = .init(latitude: p.zoomLat, longitude: p.zoomLon)
                 distance = p.zoomRadiusM * 7 * control.distance / 9000
             } else if p.hasPosition {
@@ -225,22 +229,8 @@ struct FluidMapView: UIViewRepresentable {
             // lissage exponentiel : cap ~0,4 s, zoom ~0,3 s, centre de spirale ~0,5 s ; planeur suivi sans retard
             camHeading = OwnshipPredictor.norm(camHeading + OwnshipPredictor.angleDiff(heading, camHeading) * (1 - exp(-dt / 0.4)))
             camDistance += (distance - camDistance) * (1 - exp(-dt / 0.3))
-            if p.zoomActive, let c = camCenter {
-                let k = 1 - exp(-dt / 0.5)
-                camCenter = .init(latitude: c.latitude + (target.latitude - c.latitude) * k, longitude: c.longitude + (target.longitude - c.longitude) * k)
-            } else if p.hasPosition, v.bounds.height > 0 {
-                // planeur un peu plus bas que le centre (10 % de l'espace sous le centre, soit 5 % de la hauteur) :
-                // le centre de la carte est avancé d'autant dans la direction du haut de l'écran
-                let mid = CGPoint(x: v.bounds.midX, y: v.bounds.midY)
-                let a = v.convert(mid, toCoordinateFrom: v), b = v.convert(CGPoint(x: mid.x, y: mid.y + 100), toCoordinateFrom: v)
-                let mPerPt = CLLocation(latitude: a.latitude, longitude: a.longitude).distance(from: CLLocation(latitude: b.latitude, longitude: b.longitude)) / 100
-                let ahead = Double(v.bounds.height) * 0.05 * mPerPt
-                let h = camHeading * .pi / 180
-                let (lat, lon) = OwnshipPredictor.offset(lat: target.latitude, lon: target.longitude, east: ahead * sin(h), north: ahead * cos(h))
-                camCenter = .init(latitude: lat, longitude: lon)
-            } else {
-                camCenter = target
-            }
+            // planeur au centre de l'écran, sans décalage vers l'avant ni lissage : il ne glisse jamais du centre
+            camCenter = target
             // planeur immobile (au sol, démo arrêtée) : on ne redemande pas d'image à MapKit pour rien
             let c = camCenter!
             // seuil invisible : moins d'un demi-point d'écran, 0,2° de cap, 0,3 % de zoom. Le lissage produit sans fin des
