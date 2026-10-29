@@ -129,7 +129,7 @@ class FlightTest {
 
     // --- décollage, atterrissage ------------------------------------------------------------------------
 
-    private fun fix(sec: Long, kmh: Double) = GpsFix(t0.plusSeconds(sec), field, 200.0, kmh, 0.0, 5.0)
+    private fun fix(sec: Long, kmh: Double, alt: Double = 200.0) = GpsFix(t0.plusSeconds(sec), field, alt, kmh, 0.0, 5.0)
 
     @Test fun takeoffAndLandingDetected() {
         val d = TakeoffDetector()
@@ -141,12 +141,14 @@ class FlightTest {
         repeat(5) { d.onFix(fix(s++, 20.0))?.let(events::add) }
         assertEquals(FlightPhase.GROUND, d.phase)
         val takeoffAt = s
-        repeat(600) { d.onFix(fix(s++, 95.0))?.let(events::add) }
+        // treuil : 95 km/h, montée de 5 m/s ; relief à 200 m → 150 m sol au bout de 30 s, confirmation à 1 min
+        var alt = 200.0
+        repeat(600) { alt = minOf(alt + 5, 900.0); d.onFix(fix(s++, 95.0, alt), groundElevationM = 200.0)?.let(events::add) }
         // arrêt de 20 s (thermique serré à faible vitesse sol : impossible, mais on vérifie la tenue)
-        repeat(20) { d.onFix(fix(s++, 5.0))?.let(events::add) }
-        repeat(600) { d.onFix(fix(s++, 90.0))?.let(events::add) }
+        repeat(20) { d.onFix(fix(s++, 5.0, alt), groundElevationM = 200.0)?.let(events::add) }
+        repeat(600) { alt = maxOf(alt - 1, 210.0); d.onFix(fix(s++, 90.0, alt), groundElevationM = 200.0)?.let(events::add) }
         val landAt = s
-        repeat(40) { d.onFix(fix(s++, 2.0))?.let(events::add) }
+        repeat(70) { d.onFix(fix(s++, 2.0, 200.0), groundElevationM = 200.0)?.let(events::add) }
         assertEquals(2, events.size)
         assertEquals(FlightEvent.Takeoff(t0.plusSeconds(takeoffAt)), events[0])
         val landing = events[1] as FlightEvent.Landing
@@ -286,6 +288,7 @@ class FlightEngineTest {
             announce = { spoken += it },
             fieldElevationM = { 183.0 },
             field = { field },
+            groundElevationM = { 183.0 },
         )
         var maxAltErr = 0.0
         var circlingSeen = 0
@@ -316,7 +319,8 @@ class FlightEngineTest {
         }
         val end = engine.snapshot((replay.durationS * 1e9).toLong(), start.plusSeconds(replay.durationS.toLong()))
         assertEquals(VarioSource.BARO_ACCEL, sourceSeen)
-        assertTrue("décollage à $flyingAt s", flyingAt in 60.0..75.0)
+        // décollage confirmé après 1 min au-dessus de 50 km/h et à plus de 150 m sol (règle anti-voiture du 29/10/2026)
+        assertTrue("décollage à $flyingAt s", flyingAt in 60.0..140.0)
         assertEquals(FlightPhase.LANDED, end.phase)
         assertTrue("écart altitude $maxAltErr m", maxAltErr < 6.0)
         assertTrue("spirale vue $circlingSeen s", circlingSeen > 150)
@@ -388,5 +392,43 @@ class FlightEngineTest {
         engine.stopManual(t.plusSeconds(70))
         assertEquals(60L, engine.snapshot(90_000_000_000L, t.plusSeconds(90)).flightSeconds)
         assertEquals(60, lines.count { it.startsWith("B") })
+    }
+
+    @Test fun manualRecordingStopsAtLanding() {
+        val lines = ArrayList<String>()
+        val engine = FlightEngineCore(igc = { lines::add }, autoTakeoff = { false })
+        val t = Instant.parse("2026-07-14T11:00:00Z")
+        fun gps(i: Int, kmh: Double, alt: Double = 200.0) = engine.onGps(GpsFix(t.plusSeconds(i.toLong()), field, alt, kmh, 0.0, 5.0), i * 1_000_000_000L)
+        // REC au sol, puis remorqué, vol, atterrissage (sous 10 km/h pendant 30 s)
+        engine.startManual(t)
+        for (i in 0 until 10) gps(i, 0.0)
+        for (i in 10 until 200) gps(i, 90.0, 200.0 + minOf(i - 10, 100) * 4.0)
+        assertTrue(engine.recording)
+        for (i in 200 until 270) gps(i, 3.0)
+        assertFalse(engine.recording)   // arrêt automatique à l'atterrissage (1 min au sol)
+        assertEquals(FlightPhase.LANDED, engine.snapshot(270_000_000_000L, t.plusSeconds(270)).phase)
+        // le chrono s'arrête à l'instant de l'atterrissage (début des 30 s lentes)
+        assertEquals(200L, engine.snapshot(300_000_000_000L, t.plusSeconds(300)).flightSeconds)
+    }
+
+    @Test fun manualModeCarDoesNotStartAFlight() {
+        val engine = FlightEngineCore(igc = { null }, autoTakeoff = { false })
+        val t = Instant.parse("2026-07-14T11:00:00Z")
+        for (i in 0 until 120) engine.onGps(GpsFix(t.plusSeconds(i.toLong()), field, 200.0, 110.0, 0.0, 5.0), i * 1_000_000_000L)
+        assertEquals(FlightPhase.GROUND, engine.snapshot(120_000_000_000L, t.plusSeconds(120)).phase)
+    }
+
+    @Test fun carNeverCountsAsFlight() {
+        val d = TakeoffDetector()
+        val t0 = Instant.parse("2026-07-14T11:00:00Z")
+        fun fix(sec: Long, kmh: Double, alt: Double) = GpsFix(t0.plusSeconds(sec), field, alt, kmh, 0.0, 5.0)
+        var s = 0L
+        // route de montagne : 90 km/h pendant 20 min, relief sous la voiture, montée de 1 m/s
+        var alt = 400.0
+        repeat(1200) { alt += 1.0; assertNull(d.onFix(fix(s++, 90.0, alt), groundElevationM = alt - 2.0)) }
+        assertEquals(FlightPhase.GROUND, d.phase)
+        // sans relief connu, autoroute à plat : pas de gain d'altitude, pas de vol
+        repeat(1200) { assertNull(d.onFix(fix(s++, 130.0, 300.0), groundElevationM = null)) }
+        assertEquals(FlightPhase.GROUND, d.phase)
     }
 }

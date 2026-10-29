@@ -45,6 +45,7 @@ final class Sensors: NSObject, CLLocationManagerDelegate {
     func start() {
         running = true
         location.allowsBackgroundLocationUpdates = true   // vol écran éteint (UIBackgroundModes location)
+        location.showsBackgroundLocationIndicator = true  // pastille bleue : le pilote voit que la trace s'enregistre
         location.pausesLocationUpdatesAutomatically = false
         location.startUpdatingLocation()
         if CMAltimeter.isRelativeAltitudeAvailable() {

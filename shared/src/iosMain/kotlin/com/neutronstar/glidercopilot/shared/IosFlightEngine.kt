@@ -204,6 +204,8 @@ class IosFlightEngine(private val igcDir: String, private val appVersion: String
         announce = { onSpeak(it, 0) },
         autoTakeoff = { autoTakeoff || demo },
         igcEnabled = { !demo },
+        // relief du pack : preuve de vol (≥ 150 m sol) pour ne jamais compter un trajet en voiture
+        groundElevationM = { p -> pack?.terrain?.elevationM(p) },
         baroFreshS = 3.0,   // CMAltimeter : ~1 Hz avec retard (mesuré sur iPhone 15)
         // revue résilience M5 : calage « terrain » seulement sur une altitude mesurée (openAIP, relief) ; le sol du modèle
         // ARPEGE (maille ~10 km) fausserait la marge vers les autres terrains et le relief : calage GPS à la place

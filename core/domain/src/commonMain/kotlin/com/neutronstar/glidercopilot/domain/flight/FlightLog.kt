@@ -36,40 +36,77 @@ sealed interface FlightEvent {
 }
 
 /**
- * Détection automatique : décollage quand la vitesse sol dépasse [takeoffKmh] pendant [takeoffHold]
- * (réglage « Chrono automatique au-dessus de 50 km/h »), atterrissage sous [landingKmh] pendant [landingHold].
+ * Détection automatique du vol (JB, 29/10/2026) : jamais un trajet en voiture compté comme un vol.
+ *
+ * Décollage **confirmé** seulement après [confirmHold] (1 min) depuis le passage au-dessus de [takeoffKmh], avec une
+ * preuve d'altitude incompatible avec une route : au moins [minAglM] au-dessus du relief (si le relief est connu), ou,
+ * sans relief, un gain de [minGainM] depuis le départ. La durée du vol part du passage à 50 km/h ; la trace IGC, elle,
+ * commence à la confirmation (JB : la première minute n'est pas gardée, rien n'est mis en mémoire).
+ * Une baisse de vitesse brève (virage, vent de face) ne remet pas le compte à zéro ; moins de [abortKmh] pendant
+ * [abortHold], si.
+ *
+ * Atterrissage : moins de [landingKmh] pendant [landingHold] (1 min), et près du sol si le relief est connu
+ * (moins de [landingMaxAglM]) — un planeur face au vent en vol de pente n'est pas « posé ».
  */
 class TakeoffDetector(
     private val takeoffKmh: Double = 50.0,
-    private val takeoffHold: Duration = (3).seconds,
+    private val confirmHold: Duration = 1.minutes,
+    private val minAglM: Double = 150.0,
+    private val minGainM: Double = 250.0,
+    private val abortKmh: Double = 30.0,
+    private val abortHold: Duration = 20.seconds,
     private val landingKmh: Double = 10.0,
-    private val landingHold: Duration = (30).seconds,
+    private val landingHold: Duration = 1.minutes,
+    private val landingMaxAglM: Double = 100.0,
 ) {
     var phase = FlightPhase.GROUND; private set
     var takeoffTime: Instant? = null; private set
     var landingTime: Instant? = null; private set
-    private var fastSince: Instant? = null
+    /** Début d'un décollage possible, en attente de confirmation (null sinon). */
+    var candidateSince: Instant? = null; private set
+    private var startAltM: Double? = null
+    private var airborneSeen = false
+    private var abortSince: Instant? = null
     private var slowSince: Instant? = null
 
     fun flightDuration(now: Instant): Duration = takeoffTime?.let { (landingTime ?: now) - it } ?: Duration.ZERO
 
-    fun onFix(fix: GpsFix): FlightEvent? {
+    /** [groundElevationM] : altitude du relief sous le planeur (m), null si inconnue. */
+    fun onFix(fix: GpsFix, groundElevationM: Double? = null): FlightEvent? {
         val speed = fix.groundSpeedKmh ?: return null
+        val alt = fix.altitudeM
+        val agl = if (alt != null && groundElevationM != null) alt - groundElevationM else null
         return when (phase) {
             FlightPhase.GROUND, FlightPhase.LANDED -> {
-                if (speed >= takeoffKmh) {
-                    val since = fastSince ?: fix.time.also { fastSince = it }
-                    if ((fix.time - since) >= takeoffHold) {
-                        phase = FlightPhase.FLYING; takeoffTime = since; landingTime = null; slowSince = null
-                        FlightEvent.Takeoff(since)
-                    } else null
-                } else { fastSince = null; null }
+                val since = candidateSince
+                if (since == null) {
+                    if (speed >= takeoffKmh) { candidateSince = fix.time; startAltM = alt; airborneSeen = false; abortSince = null }
+                    return null
+                }
+                // preuve d'un vol : hauteur sur le relief, ou gain d'altitude sans relief connu
+                if (agl != null) { if (agl >= minAglM) airborneSeen = true }
+                else if (alt != null) {
+                    val a0 = startAltM ?: alt.also { startAltM = it }
+                    if (alt - a0 >= minGainM) airborneSeen = true
+                }
+                // encore au sol (aucune preuve d'altitude) : une vitesse de roulage annule tout de suite (à-coup au roulage)
+                if (speed < abortKmh && !airborneSeen) { candidateSince = null; return null }
+                // en l'air : une baisse brève est tolérée (virage, vent de face) ; trop longue, on abandonne
+                if (speed < abortKmh) {
+                    val a = abortSince ?: fix.time.also { abortSince = it }
+                    if (fix.time - a >= abortHold) { candidateSince = null; return null }
+                } else abortSince = null
+                if (fix.time - since >= confirmHold && airborneSeen) {
+                    phase = FlightPhase.FLYING; takeoffTime = since; landingTime = null; slowSince = null; candidateSince = null
+                    FlightEvent.Takeoff(since)
+                } else null
             }
             FlightPhase.FLYING -> {
-                if (speed < landingKmh) {
+                val nearGround = agl == null || agl < landingMaxAglM
+                if (speed < landingKmh && nearGround) {
                     val since = slowSince ?: fix.time.also { slowSince = it }
                     if ((fix.time - since) >= landingHold) {
-                        phase = FlightPhase.LANDED; landingTime = since; fastSince = null
+                        phase = FlightPhase.LANDED; landingTime = since; candidateSince = null
                         FlightEvent.Landing(since, (since - takeoffTime!!))
                     } else null
                 } else { slowSince = null; null }

@@ -68,7 +68,10 @@ class FlightEngineCore(
     private val baroFreshS: Double = 1.0,
     /** Faux en démo : pas d'IGC voulu, ce n'est pas une panne (pas d'annonce « mémoire pleine »). */
     private val igcEnabled: () -> Boolean = { true },
+    /** Altitude du relief sous une position (m), null si inconnue : preuve qu'on vole (et pas qu'on roule). */
+    private val groundElevationM: (LatLon) -> Double? = { null },
 ) {
+
     private val baroFreshNs = (baroFreshS * 1e9).toLong()
     private val filter = VarioFilter()
     private val display = Damper(1.0)
@@ -132,13 +135,20 @@ class FlightEngineCore(
         lastFixNs = ns
         calibrate(fix, ns)
         val auto = autoTakeoff()
-        val event = if (auto) detector.onFix(fix) else null
+        // détection décollage / atterrissage : en départ automatique, et aussi pendant un enregistrement lancé à la main,
+        // pour que l'atterrissage l'arrête seul (JB, 29/10/2026 : une trace oubliée ne continue plus au sol). Hors
+        // enregistrement en mode manuel, rien ne tourne : rouler à plus de 50 km/h en voiture n'est pas un vol.
+        val event = if (auto || recorder != null) detector.onFix(fix, runCatching { groundElevationM(fix.position) }.getOrNull()) else null
         when (event) {
-            is FlightEvent.Takeoff -> startRecording(event.time)
-            is FlightEvent.Landing -> recorder = null
+            is FlightEvent.Takeoff -> if (auto) startRecording(fix.time)   // trace à partir de la confirmation (JB : la 1re minute n'est pas gardée)
+            is FlightEvent.Landing -> {
+                if (recorder != null && manualStart != null && manualStop == null) manualStop = event.time
+                recorder = null
+            }
             null -> Unit
         }
-        event?.let { e -> policy.onEvent(e, fix.time)?.let(announce) }
+        // en manuel, « Chrono lancé » a déjà été annoncé : pas d'annonce de décollage en plus
+        event?.takeIf { auto || it is FlightEvent.Landing }?.let { e -> policy.onEvent(e, fix.time)?.let(announce) }
         if (recording) policy.onSource(source(ns), fix.time)?.let(announce)
 
         val s = fix.time.epochSeconds
@@ -151,9 +161,8 @@ class FlightEngineCore(
         while (trace.size > 600) trace.removeFirst()
         updateCircling(fix, s, ns)
 
-        recorder?.record(
-            IgcFix(fix.time, fix.position, (fix.accuracyM ?: 99.0) < 50.0, baroAlt.takeIf { !it.isNaN() && baroFresh(ns) }?.let { roundHalfUp(it).toInt() }, (fix.ellipsoidAltM ?: fix.altitudeM)?.let { roundHalfUp(it).toInt() }),
-        )
+        val igcFix = IgcFix(fix.time, fix.position, (fix.accuracyM ?: 99.0) < 50.0, baroAlt.takeIf { !it.isNaN() && baroFresh(ns) }?.let { roundHalfUp(it).toInt() }, (fix.ellipsoidAltM ?: fix.altitudeM)?.let { roundHalfUp(it).toInt() })
+        recorder?.record(igcFix)
     }
 
     /** Mon planeur vu par OGN : secours quand le téléphone n'a pas de baromètre. */

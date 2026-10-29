@@ -275,9 +275,12 @@ final class AppModel: ObservableObject {
     /// Arrière-plan : capteurs et son coupés hors vol (batterie) ; pendant un vol enregistré, tout continue écran éteint
     /// (localisation en arrière-plan + audio, comme le service de premier plan d'Android).
     func enterBackground() {
-        // en vol écran éteint : sécurité, IGC et son continuent ; OGN s'arrête (personne ne regarde la carte,
-        // l'anticollision reste le rôle du FLARM) et reprend au retour (revue énergie 1)
-        guard !engine.inFlight else { traffic?.stop(); inBackground = true; return }
+        // pas d'audio d'arrière-plan (App Review 2.5.4) : vario et voix se taisent écran éteint, on coupe le moteur audio
+        // au lieu de le laisser tourner pour rien ; il repart au retour (enterForeground)
+        tone.stop()
+        // en vol écran éteint, ou en attente du décollage automatique (téléphone mis dans la poche avant le treuil) :
+        // GPS, sécurité et IGC continuent ; OGN s'arrête (l'anticollision reste le rôle du FLARM) et reprend au retour
+        guard !engine.inFlight && !autoTakeoff else { traffic?.stop(); inBackground = true; return }
         engine.stop(); sensors.stop(); timer?.invalidate(); timer = nil
         tone.stop()
         traffic?.stop()   // pas de réseau OGN en arrière-plan hors vol (comme OgnLiveRepository.stop)
@@ -301,9 +304,10 @@ final class AppModel: ObservableObject {
 
     func enterForeground() {
         inBackground = false
+        // son du vario relancé dans tous les cas (il était coupé en arrière-plan), même si le moteur tournait encore
+        if soundOn { tone.start() }
         guard timer == nil else { return }
         startEngine()
-        if soundOn { tone.start() }
     }
 
     private func updateAirspaces(_ p: ActivePack?) {
