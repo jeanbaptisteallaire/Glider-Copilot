@@ -34,19 +34,7 @@ targetTemplates:
         buildPhase: resources
       - path: ../app/src/main/res/drawable-nodpi/wg_logo.webp
         buildPhase: resources
-      # tutoriel : mêmes captures que l'app Android (étapes et textes communs, logic:tutorial)
-      - path: ../app/src/main/res/drawable-nodpi/tour_prevol.webp
-        buildPhase: resources
-      - path: ../app/src/main/res/drawable-nodpi/tour_pilotage.webp
-        buildPhase: resources
-      - path: ../app/src/main/res/drawable-nodpi/tour_terrain.webp
-        buildPhase: resources
-      - path: ../app/src/main/res/drawable-nodpi/tour_rec.webp
-        buildPhase: resources
-      - path: ../app/src/main/res/drawable-nodpi/tour_vols.webp
-        buildPhase: resources
-      - path: ../app/src/main/res/drawable-nodpi/tour_3d.webp
-        buildPhase: resources
+      # tutoriel iOS : captures du nouveau design en français et en anglais (WindGlider/Resources/Tour, 29/10/2026)
       - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_flights_header.webp
         buildPhase: resources
       - path: ../feature/myflights/src/main/res/drawable-nodpi/wg_avatar.webp

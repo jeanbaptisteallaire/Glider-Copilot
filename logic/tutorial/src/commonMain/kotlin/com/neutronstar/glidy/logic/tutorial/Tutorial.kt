@@ -19,11 +19,17 @@ data class TourStep(
     val textFr: String,
     val titleEn: String,
     val textEn: String,
+    /** Zone en anglais quand la capture anglaise diffère (textes plus longs ou plus courts) ; sinon celle du français. */
+    val rectEn: TourRect? = null,
 ) {
+    fun rect(lang: String): TourRect = if (lang != "fr" && rectEn != null) rectEn else TourRect(l, t, r, b)
     fun title(lang: String) = if (lang == "fr") titleFr else titleEn
     fun text(lang: String) = if (lang == "fr") textFr else textEn
     fun header(lang: String, position: Int, total: Int) = "${if (lang == "fr") part.fr else part.en} · $position / $total"
 }
+
+/** Zone mise en valeur, en pixels de l'image (largeur 1080). */
+data class TourRect(val l: Float, val t: Float, val r: Float, val b: Float)
 
 /**
  * Tutoriel Wind Glider (V19.1b « coach marks », V20 obligatoire au premier lancement) : mêmes étapes et mêmes textes
@@ -79,6 +85,40 @@ object Tutorial {
         TourStep(TourPart.MES_VOLS, "tour_3d", 2210, 120f, 560f, 980f, 1480f,
             "Revoir en 3D", "Ouvrez un vol puis « Rejeu 3D » : votre trace sur le relief, spirales comprises.",
             "Replay in 3D", "Open a flight, then « Rejeu 3D »: your track over the terrain, thermals included."),
+    )
+
+    /**
+     * Tutoriel iOS du nouveau design (JB, 29/10/2026) : deux fois moins d'étapes (8 au lieu de 16), sans le rejeu,
+     * ouvert seulement depuis l'onglet Tuto. Captures `tour2_*_fr` / `tour2_*_en` (1080 × 2348) : l'image suit la langue.
+     */
+    val stepsIos: List<TourStep> = listOf(
+        TourStep(TourPart.PREVOL, "tour2_prevol", 2348, 85f, 783f, 387f, 869f,
+            "Carte hors ligne", "Touchez Télécharger : relief et terrains de votre région, pour une marge juste même sans réseau. « Mettre à jour » quand les données aéro sont périmées.",
+            "Offline map", "Tap Download: terrain and airfields of your region, for a correct margin even without network. “Update” when the aero data is out of date.",
+            rectEn = TourRect(85f, 809f, 285f, 895f)),
+        TourStep(TourPart.PREVOL, "tour2_prevol", 2348, 42f, 1059f, 1038f, 1530f,
+            "Appairez votre planeur", "Saisissez l'immatriculation du planeur, puis Appairer : son FLARM est retrouvé dans la base OGN et votre planeur n'apparaît pas comme un trafic.",
+            "Pair your glider", "Enter the glider's registration, then Pair: its FLARM is found in the OGN database and your glider is not shown as traffic.",
+            rectEn = TourRect(42f, 1086f, 1038f, 1555f)),
+        TourStep(TourPart.PILOTAGE, "tour2_pilotage", 2348, 23f, 178f, 787f, 460f,
+            "Marge de sécurité", "L'altitude en plus pour rejoindre le terrain à la finesse choisie (F20), avec la marge d'arrivée réglée en Prévol. Orange sous 50 m, rouge quand elle manque.",
+            "Safety margin", "The height to spare to reach the airfield at the chosen glide ratio (F20), with the arrival margin set in Pre-flight. Orange under 50 m, red when it is missing."),
+        TourStep(TourPart.PILOTAGE, "tour2_pilotage", 2348, 23f, 561f, 139f, 690f,
+            "Déplier la coupe", "Touchez la montagne : la coupe du relief jusqu'au terrain se déplie. Elle s'ouvre aussi seule quand la marge devient faible.",
+            "Unfold the profile", "Tap the mountain: the terrain profile to the airfield unfolds. It also opens by itself when the margin gets low."),
+        TourStep(TourPart.PILOTAGE, "tour2_coupe", 2348, 23f, 559f, 1059f, 875f,
+            "Coupe jusqu'au terrain", "Le relief, votre plané et l'arrivée au-dessus du terrain. Touchez la coupe pour la replier dans le bouton montagne.",
+            "Profile to the airfield", "The terrain, your glide and the arrival height above the airfield. Tap the profile to fold it back into the mountain button."),
+        TourStep(TourPart.PILOTAGE, "tour2_pilotage", 2348, 857f, 559f, 1062f, 1297f,
+            "Vario", "La montée en m/s, aux couleurs de la trace : bleu et vert ça monte, jaune à zéro, rouge ça descend. Affichez-le ou masquez-le dans le menu « ⋯ ».",
+            "Vario", "Climb rate in m/s, in the track's colours: blue and green climbing, yellow at zero, red sinking. Show or hide it from the “⋯” menu."),
+        TourStep(TourPart.PILOTAGE, "tour2_menu", 2348, 26f, 1100f, 700f, 2101f,
+            "Options", "Le bouton « ⋯ » en bas à gauche : vario, fond satellite, zones aéronautiques, fréquence radio du terrain, langue et démo.",
+            "Options", "The “⋯” button at the bottom left: vario, satellite map, airspace, airfield radio frequency, language and demo.",
+            rectEn = TourRect(26f, 1209f, 700f, 2101f)),
+        TourStep(TourPart.PILOTAGE, "tour2_pilotage", 2348, 425f, 1996f, 654f, 2101f,
+            "Enregistrer la trace", "REC lance et arrête l'enregistrement IGC, même écran éteint. Avec le départ automatique, il démarre seul en vol et s'arrête après l'atterrissage.",
+            "Record the track", "REC starts and stops the IGC recording, even with the screen off. With automatic start, it starts by itself in flight and stops after landing."),
     )
 
     /** Onglet Tuto (TutoHomeScreen) : phrase d'accueil et deux boutons. */

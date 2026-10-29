@@ -46,26 +46,20 @@ struct RootView: View {
 
     @EnvironmentObject var app: AppModel
     @AppStorage("disclaimerVersion") private var disclaimerVersion = 0
-    @State private var tab: AppTab = RootView.bench || RootView.resumeInFlight ? .pilotage : .prevol
+    @State private var tab: AppTab = TutorialView.launchStep != nil ? .tuto : RootView.bench || RootView.resumeInFlight ? .pilotage : .prevol
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
     @State private var pilotNoticeSeen = RootView.bench || RootView.resumeInFlight
     @Environment(\.scenePhase) private var phase
     /// couverture + connexion à chaque ouverture tant qu'aucun compte n'est connecté (AppRoot.kt, splashDone)
     @State private var welcomeDone = RootView.bench || RootView.resumeInFlight
     @EnvironmentObject var account: AccountModel
-    /// profils (« guest » ou identifiant du compte) ayant terminé le tutoriel sur cet iPhone (V20.1 d'Android)
-    @AppStorage("tutorialSeen") private var tutorialSeen = ""
+    // Tutoriel : plus imposé au premier lancement (JB, 29/10/2026) ; il ne s'ouvre que depuis l'onglet Tuto.
 
     var body: some View {
         if !welcomeDone {
             WelcomeView { welcomeDone = true }
         } else if disclaimerVersion < DisclaimerView.version {
             DisclaimerView { disclaimerVersion = DisclaimerView.version }
-        } else if !tutorialSeen.split(separator: ",").contains(Substring(account.tutorialKey)) && !app.isRecording && !RootView.resumeInFlight {
-            // tutoriel complet et obligatoire au premier lancement de chaque profil (ni « Passer »)
-            TutorialView(mandatory: true) {
-                tutorialSeen = (tutorialSeen.isEmpty ? "" : tutorialSeen + ",") + account.tutorialKey
-            }
         } else {
             TabView(selection: $tab) {
                 ForEach(AppTab.visible) { t in

@@ -2,15 +2,24 @@ import SwiftUI
 import WindGliderShared
 
 /// Visite guidée (Guide.kt d'Android, V19.1b « coach marks ») : la vraie page en capture, un voile à 50 % et un cadre
-/// bleu lumineux qui glisse d'une zone à l'autre. Étapes et textes communs (logic:tutorial). Dernière page : « Votre avis ».
+/// bleu lumineux qui glisse d'une zone à l'autre. Dernière page : « Votre avis ».
+/// Nouveau design (JB, 29/10/2026) : 8 étapes iOS (Tutorial.stepsIos), captures en français ou en anglais selon le
+/// bouton FR/EN, ouverte seulement depuis l'onglet Tuto (plus de tutoriel imposé au premier lancement).
 struct TutorialView: View {
     @EnvironmentObject var account: AccountModel
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
-    /// tutoriel obligatoire du premier lancement : pas de « Passer »
-    var mandatory = false
     let onClose: () -> Void
-    @State private var index = 0
-    private let steps = Tutorial.shared.steps
+    @State private var index = TutorialView.launchStep ?? 0
+    private let steps = Tutorial.shared.stepsIos
+
+    /// Build de développement : `-tourStep N` ouvre le tutoriel à l'étape N (1 à 8), pour les captures au simulateur.
+    static var launchStep: Int? {
+        #if DEBUG
+        let a = ProcessInfo.processInfo.arguments
+        if let i = a.firstIndex(of: "-tourStep"), i + 1 < a.count, let n = Int(a[i + 1]) { return max(n - 1, 0) }
+        #endif
+        return nil
+    }
 
     var body: some View {
         if index >= steps.count {
@@ -18,9 +27,15 @@ struct TutorialView: View {
         } else {
             SpotlightPage(step: steps[index], position: index + 1, total: steps.count, lang: $lang,
                           onPrevious: { if index > 0 { index -= 1 } }, onNext: { index += 1 },
-                          onSkip: mandatory ? nil : onClose)
+                          onSkip: onClose)
         }
     }
+}
+
+/// Capture de l'étape dans la langue choisie (`tour2_pilotage_fr.jpg`), sinon l'image commune (`tour_*.webp`).
+private func tourImage(_ name: String, lang: String) -> Image? {
+    Bundle.main.path(forResource: "\(name)_\(lang)", ofType: "jpg").flatMap(UIImage.init(contentsOfFile:)).map(Image.init(uiImage:))
+        ?? wgImage(name)
 }
 
 private let glow = Color(red: 0x5A / 255, green: 0xC8 / 255, blue: 0xFA / 255)
@@ -41,21 +56,25 @@ private struct SpotlightPage: View {
             let scale = w / 1080
             let viewport = h / scale
             let bottomReserve = 150 / scale, topReserve = 40 / scale
-            let cy = CGFloat(step.t + step.b) / 2
+            let rect = step.rect(lang: lang)
+            let cy = CGFloat(rect.t + rect.b) / 2
             let maxScroll = CGFloat(step.imageHeight) - viewport + bottomReserve
-            let scroll = min(max(cy - viewport * 0.4, -topReserve), max(-topReserve, maxScroll))
+            // capture plein écran (nouveau design) : posée exactement sur l'écran, comme la vraie page ;
+            // capture plus haute que l'écran : défilement jusqu'à la zone
+            let fitsScreen = CGFloat(step.imageHeight) <= viewport + 2
+            let scroll = fitsScreen ? 0 : min(max(cy - viewport * 0.4, -topReserve), max(-topReserve, maxScroll))
             let pad: CGFloat = 6
-            let hole = CGRect(x: CGFloat(step.l) * scale - pad, y: (CGFloat(step.t) - scroll) * scale - pad,
-                              width: CGFloat(step.r - step.l) * scale + 2 * pad, height: CGFloat(step.b - step.t) * scale + 2 * pad)
+            let hole = CGRect(x: CGFloat(rect.l) * scale - pad, y: (CGFloat(rect.t) - scroll) * scale - pad,
+                              width: CGFloat(rect.r - rect.l) * scale + 2 * pad, height: CGFloat(rect.b - rect.t) * scale + 2 * pad)
             ZStack(alignment: .topLeading) {
-                Color.white.frame(width: w, height: h)
+                WG.page.frame(width: w, height: h)   // sous la capture : fond Godspeed, pas de bande blanche
                 // la page, plein largeur, tenue dans l'écran (pas d'agrandissement de la vue)
                 Color.clear.frame(width: w, height: h)
                     .overlay(alignment: .top) {
-                        if let img = wgImage(step.image) {
+                        if let img = tourImage(step.image, lang: lang) {
                             img.resizable().frame(width: w, height: CGFloat(step.imageHeight) * scale)
                                 .offset(y: -scroll * scale)
-                                .id(step.image)
+                                .id(step.image + lang)
                                 .transition(.opacity)
                         }
                     }
@@ -83,8 +102,8 @@ private struct SpotlightPage: View {
                 // commandes
                 VStack {
                     Spacer()
-                    HStack(spacing: 10) {
-                        if let onSkip { Button(Tutorial.shared.skip(lang: lang), action: onSkip).font(WG.subhead).foregroundStyle(.white.opacity(0.8)).padding(10) }
+                    HStack(spacing: 8) {
+                        if let onSkip { Button(Tutorial.shared.skip(lang: lang), action: onSkip).font(WG.subhead).foregroundStyle(.white.opacity(0.8)).lineLimit(1).fixedSize().padding(.vertical, 10) }
                         LanguageButton(lang: $lang)
                         Spacer()
                         if position > 1 { TourButton(text: Tutorial.shared.previous(lang: lang), filled: false, action: onPrevious) }
@@ -92,7 +111,7 @@ private struct SpotlightPage: View {
                     }
                     .padding(.horizontal, 16).padding(.vertical, 14)
                     .padding(.bottom, 30)   // au-dessus de la barre d'accueil (page en plein écran)
-                    .background(LinearGradient(colors: [.clear, .black.opacity(0.55)], startPoint: .top, endPoint: .bottom))
+                    .background(LinearGradient(colors: [.clear, .black.opacity(0.8)], startPoint: .top, endPoint: .bottom))
                 }
                 .frame(width: w, height: h)
             }
@@ -122,7 +141,8 @@ private struct TourButton: View {
     var body: some View {
         Button(action: action) {
             Text(text).font(WG.headline).foregroundStyle(filled ? Color(red: 0, green: 0x24 / 255, blue: 0x3A / 255) : .white)
-                .padding(.horizontal, 20).frame(height: 44)
+                .lineLimit(1).fixedSize()   // « Précédent » sur une ligne, même sur un iPhone étroit
+                .padding(.horizontal, 16).frame(height: 44)
                 .background(filled ? glow : .clear, in: Capsule())
                 .overlay(Capsule().stroke(filled ? .clear : .white.opacity(0.7)))
         }
@@ -138,6 +158,7 @@ struct LanguageButton: View {
             Text(lang == "fr" ? "EN" : "FR").font(WG.subhead.weight(.semibold))
                 .foregroundStyle(dark ? .white : WG.brandInk)
                 .padding(.horizontal, 12).padding(.vertical, 8)
+                .background(dark ? Color.black.opacity(0.55) : .clear, in: Capsule())   // lisible sur la capture
                 .overlay(Capsule().stroke(dark ? .white.opacity(0.6) : WG.line))
         }
         .accessibilityLabel(lang == "fr" ? "English" : "Français")
@@ -213,7 +234,7 @@ struct FeedbackPage: View {
 /// Onglet Tuto (TutoHomeScreen d'Android) : couverture animée, titre, deux boutons (tutoriel, avis).
 struct TutoHomeView: View {
     @AppStorage("guideLanguage") private var lang = Locale.current.language.languageCode?.identifier == "fr" ? "fr" : "en"
-    @State private var tour = false
+    @State private var tour = TutorialView.launchStep != nil
     @State private var feedback = false
     @State private var shown = false
 
