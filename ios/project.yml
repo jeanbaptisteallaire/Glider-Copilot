@@ -59,17 +59,13 @@ targetTemplates:
       - path: ../app/src/main/assets/cover
         type: folder
         buildPhase: resources
-      # données d'essai (build de développement, argument -testData) : réponses synthétiques des tests precog
-      - path: ../data/precog/src/jvmTest/resources/fixtures
-        type: folder
-        buildPhase: resources
     info:
       path: WindGlider/${target_name}-Info.plist
       properties:
         CFBundleDisplayName: Wind Glider
         CFBundleName: Wind Glider
-        CFBundleShortVersionString: "1.0"
-        CFBundleVersion: "9"
+        CFBundleShortVersionString: "1.1"
+        CFBundleVersion: "10"
         UILaunchScreen: { UIColorName: LaunchBackground }
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         PRECOG_API_KEY: $(PRECOG_API_KEY)
@@ -126,6 +122,14 @@ targetTemplates:
             export JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home"
           fi
           ./gradlew :shared:embedAndSignAppleFrameworkForXcode
+    postBuildScripts:
+      # données d'essai (argument -testData) : réponses synthétiques des tests precog, en Debug seulement (jamais sur l'App Store)
+      - name: Données d'essai (Debug)
+        basedOnDependencyAnalysis: false
+        script: |
+          if [ "$CONFIGURATION" = "Debug" ]; then
+            rsync -a "$SRCROOT/../data/precog/src/jvmTest/resources/fixtures/" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/fixtures/"
+          fi
 
 # Éditions (comme Android : même identifiant, édition choisie à la construction ; BuildConfig.LITE ↔ drapeau FULL)
 targets:
