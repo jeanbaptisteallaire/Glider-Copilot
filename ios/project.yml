@@ -53,7 +53,7 @@ targetTemplates:
         CFBundleDisplayName: Wind Glider
         CFBundleName: Wind Glider
         CFBundleShortVersionString: "1.1"
-        CFBundleVersion: "10"
+        CFBundleVersion: "11"
         UILaunchScreen: { UIColorName: LaunchBackground }
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         PRECOG_API_KEY: $(PRECOG_API_KEY)
@@ -102,6 +102,15 @@ targetTemplates:
           CODE_SIGN_IDENTITY: "Apple Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "WindGlider AppStore"
     preBuildScripts:
+      # Release sans Secrets.xcconfig (nouveau dossier de travail) = app sans météo ni connexion : build 10 refait en 11
+      - name: Secrets présents (Release)
+        basedOnDependencyAnalysis: false
+        script: |
+          if [ "$CONFIGURATION" = "Release" ]; then
+            for k in PRECOG_API_KEY SUPABASE_URL SUPABASE_ANON_KEY GOOGLE_IOS_CLIENT_ID GOOGLE_WEB_CLIENT_ID; do
+              if [ -z "$(eval echo \$$k)" ]; then echo "error: $k vide : copier ios/WindGlider/Secrets.xcconfig"; exit 1; fi
+            done
+          fi
       - name: Métier Kotlin (WindGliderShared)
         basedOnDependencyAnalysis: false
         script: |
