@@ -8,7 +8,7 @@ import com.neutronstar.glidercopilot.domain.aero.Airspace
 import com.neutronstar.glidercopilot.domain.aero.Navaid
 import com.neutronstar.glidercopilot.domain.aero.ReportingPoint
 import com.neutronstar.glidercopilot.precog.Json
-import java.time.Instant
+import kotlinx.datetime.Instant
 
 /** Lecture du fichier <région>-aero.geojson produit par tools/pack/build_region.py. */
 object AeroGeoJson {

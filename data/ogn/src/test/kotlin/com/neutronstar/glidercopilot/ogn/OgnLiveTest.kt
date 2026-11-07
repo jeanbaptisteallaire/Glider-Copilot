@@ -19,6 +19,7 @@ import java.io.InputStreamReader
 import java.net.ServerSocket
 import java.time.Duration
 import java.time.Instant
+import kotlinx.datetime.toKotlinInstant
 import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.math.cos
@@ -291,19 +292,19 @@ class FollowPipelineTest {
         for (f in track) {
             val ns = java.time.Duration.between(t0, f.time).toNanos() + 1
             core.onOgn(f.climbMs, f.altitudeM, 1)
-            val fix = com.neutronstar.glidercopilot.domain.flight.GpsFix(f.time, f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0)
+            val fix = com.neutronstar.glidercopilot.domain.flight.GpsFix(f.time.toKotlinInstant(), f.position, f.altitudeM, f.groundSpeedKmh, f.trackDeg, 15.0)
             core.onGps(fix, ns)
             safety.onFix(fix)
-            val snap = core.snapshot(ns, f.time)
+            val snap = core.snapshot(ns, f.time.toKotlinInstant())
             if (snap.circling) circling++
-            last = safety.update(fix, snap.altitudeM!!, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), f.time, armed = true)
+            last = safety.update(fix, snap.altitudeM!!, snap.avgSpiralMs ?: 0.0, snap.circling, com.neutronstar.glidercopilot.domain.safety.SafetyConfig(20.0), f.time.toKotlinInstant(), armed = true)
             assertEquals(com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN, snap.source)
         }
-        val end = core.snapshot(java.time.Duration.between(t0, track.last().time).toNanos() + 1, track.last().time)
+        val end = core.snapshot(java.time.Duration.between(t0, track.last().time).toNanos() + 1, track.last().time.toKotlinInstant())
         assertTrue("spirales vues sur $circling trames", circling > 30)
         assertTrue("pompe ${end.avgThermalMs}", (end.avgThermalMs ?: 0.0) > 1.0)
         assertEquals(com.neutronstar.glidercopilot.domain.flight.FlightPhase.FLYING, end.phase)
-        assertTrue("vent estimé", safety.wind.wind(track.last().time) != null)
+        assertTrue("vent estimé", safety.wind.wind(track.last().time.toKotlinInstant()) != null)
         val r = last!!.choice.result
         assertEquals("LFNL", r.field.id)
         assertTrue("distance ${r.distanceKm}", r.distanceKm in 5.0..25.0)

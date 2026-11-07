@@ -31,6 +31,7 @@ import com.neutronstar.glidercopilot.designsystem.GcIcons
 import com.neutronstar.glidercopilot.designsystem.GcPill
 import com.neutronstar.glidercopilot.domain.Club
 import com.neutronstar.glidercopilot.domain.aero.AirspaceFamily
+import kotlinx.datetime.toJavaInstant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -138,7 +139,7 @@ internal fun AirspacesCard(ui: OfflineMapUi) {
             }
         }
         Text(
-            "openAIP" + (ui.aeroFetched?.let { " · données du ${DAY.format(it)}" } ?: "") + " · FL en atmosphère standard. Vérifiez SUP AIP et NOTAM avant le vol.",
+            "openAIP" + (ui.aeroFetched?.let { " · données du ${DAY.format(it.toJavaInstant())}" } ?: "") + " · FL en atmosphère standard. Vérifiez SUP AIP et NOTAM avant le vol.",
             style = cardStyle(TextRole.Fine, 10.sp, c.faint, darkLineHeight = 14.sp),
         )
     }

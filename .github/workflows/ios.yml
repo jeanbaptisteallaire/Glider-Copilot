@@ -1,0 +1,34 @@
+name: ios
+# iOS / KMP : métier partagé (core:domain, data:precog) testé sur le simulateur iOS, framework WindGliderShared
+# et app SwiftUI Lite compilés. Le job android reste la référence pour Android (jvmTest inclus dans `test`).
+on:
+  push:
+    branches: [main]
+    paths: ['core/domain/**', 'data/precog/**', 'shared/**', 'ios/**', 'gradle/**', '*.gradle.kts', 'gradle.properties', '.github/workflows/ios.yml']
+  pull_request:
+    paths: ['core/domain/**', 'data/precog/**', 'shared/**', 'ios/**', 'gradle/**', '*.gradle.kts', 'gradle.properties', '.github/workflows/ios.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Tests du métier sur simulateur iOS + framework
+        run: ./gradlew --no-daemon iosSimulatorArm64Test :shared:linkDebugFrameworkIosSimulatorArm64
+      - name: App SwiftUI Lite (simulateur, sans signature)
+        run: |
+          brew install xcodegen
+          cd ios && xcodegen generate
+          xcodebuild -project WindGlider.xcodeproj -scheme WindGlider -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build

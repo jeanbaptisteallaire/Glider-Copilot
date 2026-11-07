@@ -1,5 +1,6 @@
 package com.neutronstar.glidercopilot.feature.prevol
 
+import kotlinx.datetime.toJavaLocalDate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -171,7 +172,7 @@ private fun Header(state: PrevolUiState, onPickClub: () -> Unit, onRefresh: () -
         Text(gcHeading("Prévol"), style = if (social) Gc.type.largeTitle else Gc.type.title, modifier = Modifier.weight(1f))
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                state.day?.let { Fmt.day.format(it.date) } ?: " ",
+                state.day?.let { Fmt.day.format(it.date.toJavaLocalDate()) } ?: " ",
                 style = if (social) Gc.type.footnote else Gc.type.bodySmall.copy(fontSize = 10.sp),
                 maxLines = 1,
             )
@@ -432,7 +433,7 @@ private fun SourcesDialog(state: PrevolUiState, onDismiss: () -> Unit) {
                 } else {
                     item {
                         Text(
-                            "Utilisées pour le ${Fmt.day.format(day.date)}" + (state.club?.let { " · ${it.airfieldIcao ?: it.shortName ?: it.name}" } ?: ""),
+                            "Utilisées pour le ${Fmt.day.format(day.date.toJavaLocalDate())}" + (state.club?.let { " · ${it.airfieldIcao ?: it.shortName ?: it.name}" } ?: ""),
                             style = small.copy(color = c.dim),
                         )
                     }

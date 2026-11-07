@@ -187,7 +187,7 @@ fun FlightScreen(
     }
     val fieldLabel = result?.field?.code ?: map?.fieldId ?: "LFNL"
     var picking by remember { mutableStateOf(false) }
-    val clock = if (real) snap!!.now.epochSecond.toDouble() else t
+    val clock = if (real) snap!!.now.epochSeconds.toDouble() else t
 
     LaunchedEffect(clock.toLong()) {
         val a = alt ?: return@LaunchedEffect
@@ -301,7 +301,7 @@ fun FlightScreen(
     }
 }
 
-private val FlightSnapshotOgn = com.neutronstar.glidercopilot.domain.flight.FlightSnapshot(java.time.Instant.EPOCH, source = com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN)
+private val FlightSnapshotOgn = com.neutronstar.glidercopilot.domain.flight.FlightSnapshot(com.neutronstar.glidercopilot.domain.EPOCH, source = com.neutronstar.glidercopilot.domain.flight.VarioSource.OGN)
 
 /** Chrono manuel quand la détection automatique est coupée : un appui lance, un autre arrête. */
 private fun chronoAction(live: FlightLive, controls: FlightControls?): (() -> Unit)? {

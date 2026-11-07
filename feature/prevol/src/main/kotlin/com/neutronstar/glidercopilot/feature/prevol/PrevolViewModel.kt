@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 
 /** Ce dont Prévol a besoin côté club, fourni par l'app (local aujourd'hui, compte utilisateur demain). */
 interface ClubSource {
@@ -79,7 +80,7 @@ data class PrevolUiState(
     val error: String? = null,
     val day: DayWeather? = null,
     val selectedHour: Int = 0,
-    val now: Instant = Instant.now(),
+    val now: Instant = Clock.System.now(),
     val pairing: PairingUi = PairingUi(),
 )
 
@@ -133,7 +134,7 @@ class PrevolViewModel(
         }
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            _state.update { it.copy(loading = true, error = null, now = Instant.now()) }
+            _state.update { it.copy(loading = true, error = null, now = Clock.System.now()) }
             when (val r = weather.loadDay(pos, club.departement)) {
                 is WeatherResult.Success -> _state.update { s ->
                     val best = r.day.summary.best?.let { b -> r.day.hours.indexOfFirst { it.analysis.validTime == b.validTime } } ?: -1

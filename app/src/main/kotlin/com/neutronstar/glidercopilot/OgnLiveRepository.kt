@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toJavaInstant
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
@@ -290,8 +291,8 @@ class OgnLiveRepository(
     private fun ddbStatusLabel(now: Instant): String {
         val st = glider.ddb.status()
         val at = st.fetchedAt ?: return "Base des immatriculations (DDB) : jamais chargée" + if (replay) " (rejeu, normal)" else " — réessaiera au prochain démarrage"
-        val age = Duration.between(at, now)
-        val ago = if (age.toHours() < 20) "il y a ${age.toMinutes().coerceAtLeast(0)} min" else DDB_FMT.format(at)
+        val age = Duration.between(at.toJavaInstant(), now)
+        val ago = if (age.toHours() < 20) "il y a ${age.toMinutes().coerceAtLeast(0)} min" else DDB_FMT.format(at.toJavaInstant())
         return "Base des immatriculations (DDB) : ${st.deviceCount} appareils, ${if (st.offline) "copie locale" else "à jour"} $ago"
     }
 

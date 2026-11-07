@@ -16,3 +16,24 @@
 - Secrets : jamais dans le dépôt (dépôt public). Clé openAIP = secret GitHub `OPENAIP_KEY`.
 - V19 : textes légaux dans `site/` (GitHub Pages, `pages.yml`), adresses dans `GcLegal` ; conformité Play : `docs/play-store/CONFORMITE-GOOGLE-PLAY.md`. Toute nouvelle donnée collectée = mettre à jour la politique et le formulaire Sécurité des données.
 - CI : `.github/workflows/android.yml` publie journal, résultats de tests, APK et captures sur la branche `ci-data`.
+
+## iOS / KMP
+
+- Décision (JB, 11/10/2026) : version iOS de Wind Glider. Métier partagé en **Kotlin Multiplatform**, interface iOS en **SwiftUI**, **édition Lite d'abord** (Prévol météo + cartes, Pilotage, Mes vols).
+- Ordre de migration KMP : ✅ `core:domain`, ✅ `data:precog` (étape 1) ; puis `data:ogn`, `data:carto`, `core:flightarchive`. Les modules `feature:*` et `app` restent Android (Compose).
+- Disposition : `src/commonMain` (métier), `src/jvmMain` (Android), `src/iosMain` (iOS), `src/commonTest` (lancé sur JVM **et** simulateur iOS), `src/jvmTest` (tests historiques JUnit). Cible `jvm()` consommée telle quelle par Android, cibles `iosArm64` + `iosSimulatorArm64`.
+- Règle d'or : **comportement Android inchangé**. Tout remplaçant d'une API Java rend exactement la même valeur, prouvé par un `JavaParityTest` (jvmTest) ; formats de fichier conservés (cache precog, IGC à l'octet près).
+- Dans `commonMain`, jamais de `java.*` :
+  - temps : `kotlinx.datetime.Instant/LocalDate/TimeZone/Clock`, `kotlin.time.Duration` ; `Duration.between(a, b).seconds` → `secondsBetween(a, b)` (arrondi vers −∞ comme java.time), `Instant.EPOCH` → `EPOCH` ;
+  - maths : `toRadians`/`toDegrees`/`roundHalfUp` (mêmes constantes et arrondis que `java.lang.Math`), `kotlin.math.*` ;
+  - texte : `formatFixed(v, décimales, decimalComma)` pour `String.format("%.nf")`, `Int.zeroPad(n)` pour `%0nd`, `normalizeNfd` ;
+  - fichiers : **Okio** (`FileSystem`, `Path`, `okio.IOException` = `java.io.IOException` sur JVM) ;
+  - réseau : interface commune `HttpClient` ; JVM = `UrlConnectionHttpClient` (inchangé, gzip compris), iOS = `KtorHttpClient` (Ktor, moteur Darwin).
+  - tout le reste passe par `expect`/`actual` dans `Platform.kt` (domain) ou `Http.kt` (precog).
+- Côté Android, les écrans (prevol, app) convertissent aux frontières (`toJavaInstant()`, `toJavaLocalDate()`) : l'affichage java.time ne change pas.
+- `:shared` : framework iOS statique **WindGliderShared** (exporte core:domain + data:precog) et façades Swift (`WindGliderWeather`). Pas de cible Android.
+- `ios/` : app SwiftUI. Projet généré par **XcodeGen** (`cd ios && xcodegen`), `.xcodeproj` non versionné ; la phase de build appelle `./gradlew :shared:embedAndSignAppleFrameworkForXcode`. Jetons de charte dans `ios/WindGlider/Sources/Theme.swift`, miroir de `Theme.kt` : jamais de couleur ni de police codée dans une vue. Clé PRECOG dans `ios/WindGlider/Secrets.xcconfig` (ignoré par git, modèle `Secrets.example.xcconfig`).
+- Mêmes règles qu'Android : aucune fonction de sécurité ne dépend du réseau, toute valeur affichée porte sa source et son hypothèse, mention `PRECOG_CREDIT`.
+- Poste local : `JAVA_HOME` = JBR d'Android Studio, `ANDROID_HOME=~/Library/Android/sdk`, Xcode sélectionné (`xcode-select -p`). Kotlin 2.1.20 compile avec Xcode 27.
+- CI : `.github/workflows/ios.yml` (macOS) : `iosSimulatorArm64Test`, framework, build de l'app sans signature. Le job `android` exécute les `jvmTest` via `test`.
+- Pilotage : la migration a modifié 2 lignes de type dans `FlightScreen.kt` (`epochSeconds`, `EPOCH`), avec accord de JB (11/10/2026), garde-fou régénéré.

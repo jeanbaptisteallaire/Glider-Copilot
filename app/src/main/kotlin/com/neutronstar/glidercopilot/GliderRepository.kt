@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.toJavaInstant
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -117,8 +118,8 @@ class GliderRepository(private val prefs: UserPreferences, val ddb: OgnDeviceDat
 
     override suspend fun setAutoTakeoff(on: Boolean) = prefs.setAutoTakeoff(on)
 
-    private fun source(at: Instant, offline: Boolean): String =
-        (if (offline) "copie locale OGN du " else "base OGN du ") + FMT.format(at)
+    private fun source(at: kotlinx.datetime.Instant, offline: Boolean): String =
+        (if (offline) "copie locale OGN du " else "base OGN du ") + FMT.format(at.toJavaInstant())
 
     private companion object {
         val FMT: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMM HH:mm", Locale.FRANCE).withZone(ZoneId.of("Europe/Paris"))
