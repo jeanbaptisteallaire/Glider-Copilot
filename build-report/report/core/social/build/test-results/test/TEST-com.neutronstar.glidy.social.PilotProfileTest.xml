@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidy.social.PilotProfileTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-07T10:18:45" hostname="runnervm7aw5e" time="0.028">
+  <properties/>
+  <testcase name="regles du pseudo" classname="com.neutronstar.glidy.social.PilotProfileTest" time="0.003"/>
+  <testcase name="validation et total d'heures" classname="com.neutronstar.glidy.social.PilotProfileTest" time="0.008"/>
+  <testcase name="suggestion depuis le nom" classname="com.neutronstar.glidy.social.PilotProfileTest" time="0.009"/>
+  <testcase name="initiales" classname="com.neutronstar.glidy.social.PilotProfileTest" time="0.002"/>
+  <testcase name="pseudo normalise" classname="com.neutronstar.glidy.social.PilotProfileTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.neutronstar.glidercopilot.domain.ClubSearchTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-07T10:18:41" hostname="runnervm7aw5e" time="0.061">
+  <properties/>
+  <testcase name="emptyQueryKeepsAll" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.013"/>
+  <testcase name="findsByClubAcronym" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.009"/>
+  <testcase name="findsByCity" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.006"/>
+  <testcase name="findsByIcaoCaseInsensitive" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.001"/>
+  <testcase name="exactCodeFirst" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.006"/>
+  <testcase name="findsByWordsWithoutAccents" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.015"/>
+  <testcase name="noMatch" classname="com.neutronstar.glidercopilot.domain.ClubSearchTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
