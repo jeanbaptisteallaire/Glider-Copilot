@@ -1,0 +1,37 @@
+{
+ "lines": 21235,
+ "aircraft_beacons": 17097,
+ "receiver_or_status": 4050,
+ "other": 41,
+ "aircraft": 86,
+ "hidden_stealth_or_notrack": 0,
+ "types": {
+  "9": 66,
+  "0": 16,
+  "2": 2,
+  "14": 1,
+  "8": 1
+ },
+ "dstcalls": {
+  "OGADSB": 16797,
+  "OGFLR": 139,
+  "OGFLR7": 116,
+  "OGNTRK": 45
+ },
+ "interval_s": {
+  "n": 12261,
+  "p10": 1,
+  "median": 2,
+  "p90": 5,
+  "mean": 3.36
+ },
+ "latency_s": {
+  "n": 17097,
+  "p10": -0.14899992942810059,
+  "median": 0.3880000114440918,
+  "p90": 1.4849998950958252
+ },
+ "climb_field_ratio": 0.985,
+ "turn_field_ratio": 0.018,
+ "circling_aircraft": 0
+}
