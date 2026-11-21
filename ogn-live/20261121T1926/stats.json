@@ -1,0 +1,26 @@
+{
+ "lines": 1,
+ "aircraft_beacons": 0,
+ "receiver_or_status": 0,
+ "other": 0,
+ "aircraft": 0,
+ "hidden_stealth_or_notrack": 0,
+ "types": {},
+ "dstcalls": {},
+ "interval_s": {
+  "n": 0,
+  "p10": null,
+  "median": null,
+  "p90": null,
+  "mean": null
+ },
+ "latency_s": {
+  "n": 0,
+  "p10": null,
+  "median": null,
+  "p90": null
+ },
+ "climb_field_ratio": null,
+ "turn_field_ratio": null,
+ "circling_aircraft": 0
+}
